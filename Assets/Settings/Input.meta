@@ -1,5 +1,9 @@
 fileFormatVersion: 2
+<<<<<<<< HEAD:Assets/Settings/Controls.meta
+guid: 929e4d2dc59a3bd4db1714ec1904ac0d
+========
 guid: c7e737219c863a2409c60ad7a526337d
+>>>>>>>> main:Assets/Settings/Input.meta
 folderAsset: yes
 DefaultImporter:
   externalObjects: {}
