@@ -149,24 +149,17 @@ public class Tile : MonoBehaviour
 
         #region FACTORY
 
-        
-
-        public static Tile CreateTile(TileInfoSO tileInfoSo, Vector2Int gridCell, int rot = 0)
-        {
-            TileType type = tileInfoSo.type;
-            GameObject go = new GameObject();
-            Tile tile = null;
-            switch (type)
-            {
-                case TileType.Core:     tile = go.AddComponent<CoreTile>(); break;
-                case TileType.Chassis:  tile = go.AddComponent<ChassisTile>(); break;
-                case TileType.Thruster: tile = go.AddComponent<ThrusterTile>(); break;
-                case TileType.Weapon:   tile = go.AddComponent<GunTile>(); break;
-                default:                tile = go.AddComponent<Tile>(); break;
-            }
-            tile.Init(tileInfoSo, gridCell, rot);
-            return tile;
-        }
+    public static Tile CreateTile<T>(
+        TileInfoSO info,
+        Vector2Int gridCell,
+        int rot = 0
+    ) where T : Tile
+    {
+        GameObject go = new($"Tile_{info.tileName}");
+        Tile tile = go.AddComponent<T>();
+        tile.Init(info, gridCell, rot);
+        return tile;
+    }
 
         public static Tile SpawnFloating(TileInfoSO info, Vector3 position, Vector3 velocity)
         {
@@ -195,4 +188,16 @@ public class Tile : MonoBehaviour
         }
         #endregion
     }
+    public static Tile SpawnFloating<T>(
+        TileInfoSO info,
+        Vector3 position,
+        Vector3 velocity
+    ) where T : Tile
+    {
+        GameObject go = new($"Tile_{info.tileName}_floating");
+        Tile tile = go.AddComponent<T>();
+        tile.InitFloating(info, position, velocity);
+        return tile;
+    }
+
 }
