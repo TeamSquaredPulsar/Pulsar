@@ -14,29 +14,6 @@ public class Projectile : MonoBehaviour
 
     private void Start()
     {
-        // TODO: Replace the player object lookup per projectile with a shared player reference
-        GameObject playerObj = GameObject.FindGameObjectWithTag("Player");
-
-        if (playerObj != null)
-        {
-            Vector3 toPlayer
-                = playerObj.transform.position - transform.position;
-            /*
-             * makes the projectile move horizontally on the XZ plane,
-             * ignoring any height difference between its spawn point and the player.
-             */
-            toPlayer.y = 0f;
-            direction = toPlayer.sqrMagnitude > MinAimSquared
-                ? toPlayer.normalized
-                : transform.forward;
-        }
-        else
-        {
-            direction = transform.forward;
-        }
-
-        transform.rotation = Quaternion.LookRotation(direction, Vector3.up);
-
         Destroy(gameObject, lifetime);
     }
 
