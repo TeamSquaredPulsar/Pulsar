@@ -2,18 +2,28 @@ using UnityEngine;
 
 namespace Pulsar.Ship
 {
-    public class Tile : MonoBehaviour
-    {
-        public TileInfoSO TileInfo { get; private set; }
-        public Vector2Int Cell { get; private set; }
-        public float CurrentHp { get; protected set; }
-        public int Rotation { get; private set; } 
+[RequireComponent(typeof(SpriteRenderer), typeof(BoxCollider),
+    typeof(Rigidbody))]
+public class Tile : MonoBehaviour
+{
+    [field: SerializeField]
+    public TileInfoSO TileInfo { get; private set; }
 
-        private SpriteRenderer _spriteRenderer;
-        private BoxCollider _collider;
+    [SerializeField]
+    private SpriteRenderer spriteRenderer;
 
-        private Rigidbody _floatRb;
-        private Color _baseColor = Color.white;
+    [SerializeField]
+    private BoxCollider tileCollider;
+
+    [SerializeField]
+    private Rigidbody floatRb;
+
+    [SerializeField]
+    private Color baseColor = Color.white;
+
+    public Vector2Int Cell { get; private set; }
+    public float CurrentHp { get; protected set; }
+    public int Rotation { get; private set; }
 
         public bool IsAttached { get; private set; }
 
@@ -24,12 +34,13 @@ namespace Pulsar.Ship
             Rotation = rot;
             Cell = gridCell;
 
-            _spriteRenderer = CreateVisual(transform);
+        spriteRenderer = CreateVisual(transform);
 
-            _spriteRenderer.sprite = tileInfoSo.sprite;
-            
-            _collider = gameObject.AddComponent<BoxCollider>();
-            _collider.size = new Vector3(1f, ShipUtilities.TileColliderHeight, 1f);
+        spriteRenderer.sprite = tileInfoSo.sprite;
+
+        tileCollider = gameObject.AddComponent<BoxCollider>();
+        tileCollider.size
+            = new Vector3(1f, ShipUtilities.TileColliderHeight, 1f);
 
             transform.localPosition = ShipUtilities.GridToLocal(gridCell);
             transform.localRotation = ShipUtilities.RotateQuarterOnYAxis(rot);
@@ -41,39 +52,38 @@ namespace Pulsar.Ship
             CurrentHp = tileInfoSo.hp;
             Rotation = 0;
 
-            _spriteRenderer = CreateVisual(transform);
+        spriteRenderer = CreateVisual(transform);
 
-            _spriteRenderer.sprite = tileInfoSo.sprite;
+        spriteRenderer.sprite = tileInfoSo.sprite;
 
-            _collider = gameObject.AddComponent<BoxCollider>();
-            _collider.isTrigger = true;
-            _collider.size = new Vector3(1f, ShipUtilities.TileColliderHeight, 1f);
+        tileCollider = gameObject.AddComponent<BoxCollider>();
+        tileCollider.isTrigger = true;
+        tileCollider.size
+            = new Vector3(1f, ShipUtilities.TileColliderHeight, 1f);
 
             transform.position = position;
             ReleaseToFloating(velocity, Vector3.up * (Random.Range(-45f, 45f) * Mathf.Deg2Rad));
         }
 
-        public void AttachTo(ShipGrid grid, Vector2Int gridCell, int rot)
-        {
-            if (_floatRb != null)
-            {
-                _floatRb.linearVelocity = Vector3.zero;
-                _floatRb.angularVelocity = Vector3.zero;
-                _floatRb.isKinematic = true;
-                _floatRb.detectCollisions = false;
-                // Destroy(_floatRb);
-                // _floatRb = null;
-            }
+    public void AttachTo(ShipGrid grid, Vector2Int gridCell, int rot)
+    {
+        floatRb.linearVelocity = Vector3.zero;
+        floatRb.angularVelocity = Vector3.zero;
+        floatRb.isKinematic = true;
+        floatRb.detectCollisions = false;
+        // Destroy(_floatRb);
+        // _floatRb = null;
 
-            Cell = gridCell;
-            Rotation = rot;
-            transform.SetParent(grid.transform, false);
-            transform.localPosition = ShipUtilities.GridToLocal(gridCell);
-            transform.localRotation = ShipUtilities.RotateQuarterOnYAxis(rot);
-            _collider.isTrigger = false;
-            _spriteRenderer.sortingOrder = 0;
-            Unhighlight();
-        }
+
+        Cell = gridCell;
+        Rotation = rot;
+        transform.SetParent(grid.transform, false);
+        transform.localPosition = ShipUtilities.GridToLocal(gridCell);
+        transform.localRotation = ShipUtilities.RotateQuarterOnYAxis(rot);
+        tileCollider.isTrigger = false;
+        spriteRenderer.sortingOrder = 0;
+        Unhighlight();
+    }
 
         public void ReleaseToFloating(Vector3 velocity, Vector3 angularVelocity)
         {
@@ -85,18 +95,20 @@ namespace Pulsar.Ship
             EnableFloatingPhysics(velocity, angularVelocity);
         }
 
-        private void EnableFloatingPhysics(Vector3 velocity, Vector3 angularVelocity)
-        {
-            if (_floatRb == null) _floatRb = gameObject.AddComponent<Rigidbody>();
-            ShipUtilities.Constrain(_floatRb);
-            _floatRb.isKinematic = false;
-            _floatRb.detectCollisions = true;
-            _floatRb.linearDamping = 0.05f;
-            _floatRb.angularDamping = 0.1f;
-            _floatRb.linearVelocity = new Vector3(velocity.x, 0f, velocity.z);
-            _floatRb.angularVelocity = Vector3.up * angularVelocity.y;
-            _floatRb.maxAngularVelocity = Mathf.Max(_floatRb.maxAngularVelocity, Mathf.Abs(angularVelocity.y));
-        }
+    private void EnableFloatingPhysics(
+        Vector3 velocity,
+        Vector3 angularVelocity)
+    {
+        ShipUtilities.Constrain(floatRb);
+        floatRb.isKinematic = false;
+        floatRb.detectCollisions = true;
+        floatRb.linearDamping = 0.05f;
+        floatRb.angularDamping = 0.1f;
+        floatRb.linearVelocity = new Vector3(velocity.x, 0f, velocity.z);
+        floatRb.angularVelocity = Vector3.up * angularVelocity.y;
+        floatRb.maxAngularVelocity = Mathf.Max(floatRb.maxAngularVelocity,
+            Mathf.Abs(angularVelocity.y));
+    }
 
         public bool EdgeConnectable(int gridDir)
         {
@@ -124,17 +136,16 @@ namespace Pulsar.Ship
             }
         }
 
-        // Highlight on radial menu hover 
+    // Highlight on radial menu hover 
+    public void Highlight(Color tint)
+    {
+        spriteRenderer.color = tint;
+    }
 
-        public void Highlight(Color tint)
-        {
-            if (_spriteRenderer != null) _spriteRenderer.color = tint;
-        }
-
-        public void Unhighlight()
-        {
-            if (_spriteRenderer != null) _spriteRenderer.color = _baseColor;
-        }
+    public void Unhighlight()
+    {
+        spriteRenderer.color = baseColor;
+    }
 
         #region FACTORY
 
