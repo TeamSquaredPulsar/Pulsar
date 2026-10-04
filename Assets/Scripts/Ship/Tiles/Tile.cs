@@ -2,53 +2,52 @@ using UnityEngine;
 
 namespace Pulsar.Ship
 {
-    [RequireComponent(typeof(BoxCollider))]
     public class Tile : MonoBehaviour
     {
-        public TileInfoSO tileInfo;
-        public Vector2Int cell;
-        public float currentHp;
-        public int rotation; 
+        public TileInfoSO TileInfo { get; private set; }
+        public Vector2Int Cell { get; private set; }
+        public float CurrentHp { get; protected set; }
+        public int Rotation { get; private set; } 
 
-        private SpriteRenderer _sr;
-        private BoxCollider _col;
+        private SpriteRenderer _spriteRenderer;
+        private BoxCollider _collider;
 
         private Rigidbody _floatRb;
         private Color _baseColor = Color.white;
 
         public bool IsAttached { get; private set; }
 
-        public virtual void Init(TileInfoSO tileInfoSo, Vector2Int gridCell, int rot = 0)
+        protected void Init(TileInfoSO tileInfoSo, Vector2Int gridCell, int rot = 0)
         {
-            tileInfo = tileInfoSo;
-            cell = gridCell;
-            currentHp = tileInfoSo.hp;
-            rotation = rot;
+            TileInfo = tileInfoSo;
+            CurrentHp = tileInfoSo.hp;
+            Rotation = rot;
+            Cell = gridCell;
 
-            _sr = CreateVisual(transform);
-            _col = GetComponent<BoxCollider>();
+            _spriteRenderer = CreateVisual(transform);
 
-            _sr.sprite = tileInfoSo.sprite;
-            _col.size = new Vector3(1f, ShipUtilities.TileColliderHeight, 1f);
+            _spriteRenderer.sprite = tileInfoSo.sprite;
+            
+            _collider = gameObject.AddComponent<BoxCollider>();
+            _collider.size = new Vector3(1f, ShipUtilities.TileColliderHeight, 1f);
 
             transform.localPosition = ShipUtilities.GridToLocal(gridCell);
             transform.localRotation = ShipUtilities.RotateQuarterOnYAxis(rot);
         }
         
-        public virtual void InitFloating(TileInfoSO tileInfoSo, Vector3 position, Vector3 velocity)
+        protected void InitFloating(TileInfoSO tileInfoSo, Vector3 position, Vector3 velocity)
         {
-            tileInfo = tileInfoSo;
-            currentHp = tileInfoSo.hp;
-            rotation = 0;
+            TileInfo = tileInfoSo;
+            CurrentHp = tileInfoSo.hp;
+            Rotation = 0;
 
-            _sr = CreateVisual(transform);
-            _col = GetComponent<BoxCollider>();
+            _spriteRenderer = CreateVisual(transform);
 
-            _sr.sprite = tileInfoSo.sprite;
-            _baseColor = Color.white;
-            _sr.color = _baseColor;
+            _spriteRenderer.sprite = tileInfoSo.sprite;
 
-            _col.size = new Vector3(1f, ShipUtilities.TileColliderHeight, 1f);
+            _collider = gameObject.AddComponent<BoxCollider>();
+            _collider.isTrigger = true;
+            _collider.size = new Vector3(1f, ShipUtilities.TileColliderHeight, 1f);
 
             transform.position = position;
             ReleaseToFloating(velocity, Vector3.up * (Random.Range(-45f, 45f) * Mathf.Deg2Rad));
@@ -62,17 +61,17 @@ namespace Pulsar.Ship
                 _floatRb.angularVelocity = Vector3.zero;
                 _floatRb.isKinematic = true;
                 _floatRb.detectCollisions = false;
-                Destroy(_floatRb);
-                _floatRb = null;
+                // Destroy(_floatRb);
+                // _floatRb = null;
             }
 
-            cell = gridCell;
-            rotation = rot;
+            Cell = gridCell;
+            Rotation = rot;
             transform.SetParent(grid.transform, false);
             transform.localPosition = ShipUtilities.GridToLocal(gridCell);
             transform.localRotation = ShipUtilities.RotateQuarterOnYAxis(rot);
-            _col.isTrigger = false;
-            _sr.sortingOrder = 0;
+            _collider.isTrigger = false;
+            _spriteRenderer.sortingOrder = 0;
             Unhighlight();
         }
 
@@ -80,8 +79,8 @@ namespace Pulsar.Ship
         {
             transform.SetParent(null, true); // preserve world position and orientation
             IsAttached = false;
-            _col.isTrigger = true; // pass through ship, no physical collision
-            _sr.sortingOrder = 10;
+            _collider.isTrigger = true; // pass through ship, no physical collision
+            _spriteRenderer.sortingOrder = 10;
             Unhighlight();
             EnableFloatingPhysics(velocity, angularVelocity);
         }
@@ -90,6 +89,8 @@ namespace Pulsar.Ship
         {
             if (_floatRb == null) _floatRb = gameObject.AddComponent<Rigidbody>();
             ShipUtilities.Constrain(_floatRb);
+            _floatRb.isKinematic = false;
+            _floatRb.detectCollisions = true;
             _floatRb.linearDamping = 0.05f;
             _floatRb.angularDamping = 0.1f;
             _floatRb.linearVelocity = new Vector3(velocity.x, 0f, velocity.z);
@@ -99,27 +100,27 @@ namespace Pulsar.Ship
 
         public bool EdgeConnectable(int gridDir)
         {
-            int localDir = (gridDir + rotation) % 4;
-            return tileInfo != null && tileInfo.connectableEdges[localDir];
+            int localDir = (gridDir + Rotation) % 4;
+            return TileInfo != null && TileInfo.connectableEdges[localDir];
         }
         
-        public virtual void OnAttached(ShipGrid grid)
+        public virtual void SetAttached(ShipGrid grid)
         {
             IsAttached = true;
         }
 
-        public virtual void OnDetached()
+        public virtual void SetDetached(ShipGrid grid)
         {
             IsAttached = false;
         }
 
         public virtual void TakeDamage(float amount)
         {
-            currentHp -= amount;
-            if (currentHp <= 0f)
+            CurrentHp -= amount;
+            if (CurrentHp <= 0f)
             {
                 ShipGrid grid = GetComponentInParent<ShipGrid>();
-                if (grid != null) grid.DestroyTile(cell);
+                if (grid != null) grid.DestroyTile(Cell);
             }
         }
 
@@ -127,34 +128,47 @@ namespace Pulsar.Ship
 
         public void Highlight(Color tint)
         {
-            if (_sr != null) _sr.color = tint;
+            if (_spriteRenderer != null) _spriteRenderer.color = tint;
         }
 
         public void Unhighlight()
         {
-            if (_sr != null) _sr.color = _baseColor;
+            if (_spriteRenderer != null) _spriteRenderer.color = _baseColor;
         }
 
         #region FACTORY
 
         
 
-        public static Tile CreateTyped(GameObject go, TileType type)
+        public static Tile CreateTile(TileInfoSO tileInfoSo, Vector2Int gridCell, int rot = 0)
         {
+            TileType type = tileInfoSo.type;
+            GameObject go = new GameObject();
+            Tile tile = null;
             switch (type)
             {
-                case TileType.Core:     return go.AddComponent<CoreTile>();
-                case TileType.Chassis:  return go.AddComponent<ChassisTile>();
-                case TileType.Thruster: return go.AddComponent<ThrusterTile>();
-                case TileType.Weapon:   return go.AddComponent<GunTile>();
-                default:                return go.AddComponent<Tile>();
+                case TileType.Core:     tile = go.AddComponent<CoreTile>(); break;
+                case TileType.Chassis:  tile = go.AddComponent<ChassisTile>(); break;
+                case TileType.Thruster: tile = go.AddComponent<ThrusterTile>(); break;
+                case TileType.Weapon:   tile = go.AddComponent<GunTile>(); break;
+                default:                tile = go.AddComponent<Tile>(); break;
             }
+            tile.Init(tileInfoSo, gridCell, rot);
+            return tile;
         }
 
         public static Tile SpawnFloating(TileInfoSO info, Vector3 position, Vector3 velocity)
         {
             GameObject go = new GameObject($"Tile_{info.tileName}_floating");
-            Tile tile = CreateTyped(go, info.type);
+            Tile tile = null;
+            switch (info.type)
+            {
+                case TileType.Core:     tile = go.AddComponent<CoreTile>(); break;
+                case TileType.Chassis:  tile = go.AddComponent<ChassisTile>(); break;
+                case TileType.Thruster: tile = go.AddComponent<ThrusterTile>(); break;
+                case TileType.Weapon:   tile = go.AddComponent<GunTile>(); break;
+                default:                tile = go.AddComponent<Tile>(); break;
+            }
             tile.InitFloating(info, position, velocity);
             return tile;
         }
@@ -163,7 +177,6 @@ namespace Pulsar.Ship
         {
             GameObject visual = new GameObject("Visual");
             visual.transform.SetParent(parent, false);
-            // Sprite +Y becomes ship-local +Z. Keep this tilt off the physics root.
             visual.transform.localRotation = Quaternion.Euler(90f, 0f, 0f);
             SpriteRenderer renderer = visual.AddComponent<SpriteRenderer>();
             renderer.sortingOrder = sortingOrder;

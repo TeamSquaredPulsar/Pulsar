@@ -32,8 +32,8 @@ namespace Pulsar.Ship
         public Tile Core => _core;
         public Rigidbody Rb => _rb;
 
-        public UnityEvent onShipChanged;
-        public UnityEvent onShipDestroyed;
+        public UnityEvent OnShipChanged;
+        public UnityEvent OnShipDestroyed;
 
 
         private void Awake()
@@ -41,31 +41,18 @@ namespace Pulsar.Ship
             _rb = GetComponent<Rigidbody>();
 
             ShipUtilities.Constrain(_rb);
-            _rb.linearDamping = 0.5f;
-            _rb.angularDamping = 0.8f;
 
             if (coreInfoSo != null) SpawnCore();
         }
 
         private void SpawnCore()
         {
-            Tile tile = CreateTileGO(coreInfoSo, Vector2Int.zero, 0);
+            Tile tile = Tile.CreateTile(coreInfoSo, Vector2Int.zero, 0);
+            tile.gameObject.name = "Core";
+            tile.AttachTo(this, Vector2Int.zero, 0);
             _cells[Vector2Int.zero] = tile;
             _core = tile;
-            tile.OnAttached(this);
-        }
-
-
-        public Tile CreateTileGO(TileInfoSO infoSo, Vector2Int cell, int rotation)
-        {
-            GameObject go = new GameObject($"Tile_{infoSo.tileName}_{cell}");
-            go.transform.SetParent(transform, false);
-
-            go.AddComponent<BoxCollider>();
-
-            Tile tile = Tile.CreateTyped(go, infoSo.type);
-            tile.Init(infoSo, cell, rotation);
-            return tile;
+            tile.SetAttached(this);
         }
 
         #region ATTACH-DETACH
@@ -105,12 +92,12 @@ namespace Pulsar.Ship
 
         public bool Attach(Vector2Int pos, Tile tile, int rotation)
         {
-            if (tile == null || tile.IsAttached || tile.tileInfo == null) return false;
-            if (!CanAttach(pos, tile.tileInfo, rotation)) return false;
+            if (tile == null || tile.IsAttached || tile.TileInfo == null) return false;
+            if (!CanAttach(pos, tile.TileInfo, rotation)) return false;
             tile.AttachTo(this, pos, rotation);
             _cells[pos] = tile;
-            tile.OnAttached(this);
-            onShipChanged?.Invoke();
+            tile.SetAttached(this);
+            OnShipChanged?.Invoke();
             return true;
         }
 
@@ -120,15 +107,15 @@ namespace Pulsar.Ship
             if (tile == _core) { OnCoreDestroyed(); return; }
 
             _cells.Remove(pos);
-            tile.OnDetached();
+            tile.SetDetached(this);
             Destroy(tile.gameObject);
             DetachOrphans();
-            onShipChanged?.Invoke();
+            OnShipChanged?.Invoke();
         }
 
-        public void OnCoreDestroyed()
+        private void OnCoreDestroyed()
         {
-            onShipDestroyed?.Invoke();
+            OnShipDestroyed?.Invoke();
         }
         
         public (Vector2Int cell, int rotation)? FindBestAttachment(TileInfoSO infoSo, Vector3 worldPos)
@@ -178,7 +165,7 @@ namespace Pulsar.Ship
 
         private void DetachOrphans()
         {
-            HashSet<Vector2Int> reachable = Flood(_core.cell);
+            HashSet<Vector2Int> reachable = Flood(_core.Cell);
             List<Vector2Int> orphanKeys = _cells.Keys.Where(c => !reachable.Contains(c)).ToList();
             if (orphanKeys.Count == 0) return;
 
@@ -211,7 +198,7 @@ namespace Pulsar.Ship
                 velocity += outward.normalized * speed;
                 float spin = Random.Range(minSpin, maxSpin);
 
-                tile.OnDetached();
+                tile.SetDetached(this);
                 _cells.Remove(c);
                 
                 tile.ReleaseToFloating(velocity, angularVelocity + Vector3.up * spin);

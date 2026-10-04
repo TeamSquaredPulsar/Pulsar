@@ -16,7 +16,7 @@ namespace Pulsar.Building
         [SerializeField] private float hoverRadius = 0.6f;
         [SerializeField] private Color hoverTint = new(0.3f, 1f, 0.8f, 1f);
 
-        private RadialMenu _radialMenu;
+        [SerializeField] private RadialMenu _radialMenu;
         private GhostPreview _ghost;
         private bool _scanActive;
 
@@ -34,10 +34,6 @@ namespace Pulsar.Building
         private void Start()
         {
             if (gameplayCamera == null) gameplayCamera = Camera.main;
-
-            // radial menu
-            GameObject rmGO = new GameObject("RadialMenu");
-            _radialMenu = rmGO.AddComponent<RadialMenu>();
 
             // ghost preview
             GameObject ghostGO = new GameObject("GhostPreview");
@@ -129,7 +125,7 @@ namespace Pulsar.Building
             }
             
             (Vector2Int cell, int rotation)? result = grid.FindBestAttachment(
-                _hoveredTile.tileInfo,
+                _hoveredTile.TileInfo,
                 _hoveredTile.transform.position);
 
             if (result.HasValue)
@@ -141,7 +137,7 @@ namespace Pulsar.Building
                 Vector3 ghostWorld = grid.CellToWorld(_attachCell);
                 Quaternion ghostRot = grid.transform.rotation
                                       * ShipUtilities.RotateQuarterOnYAxis(_attachRotation);
-                _ghost.Show(_hoveredTile.tileInfo.sprite, ghostWorld, true, ghostRot);
+                _ghost.Show(_hoveredTile.TileInfo.sprite, ghostWorld, true, ghostRot);
             }
             else
             {
@@ -151,7 +147,7 @@ namespace Pulsar.Building
 
             if (Input.GetKeyDown(KeyCode.C) && _attachValid)
             {
-                TileInfoSO info = _hoveredTile.tileInfo;
+                TileInfoSO info = _hoveredTile.TileInfo;
                 if (grid.Attach(_attachCell, _hoveredTile, _attachRotation))
                 {
                     _hoveredTile = null;
@@ -195,7 +191,7 @@ namespace Pulsar.Building
 
             if (Input.GetKeyDown(KeyCode.X) && _highlightedTile != null)
             {
-                Vector2Int cell = _highlightedTile.cell;
+                Vector2Int cell = _highlightedTile.Cell;
                 _highlightedTile = null;
                 grid.DestroyTile(cell);
             }
