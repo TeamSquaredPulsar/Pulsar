@@ -2,36 +2,6 @@
 <project version="4">
   <component name="VcsDirectoryMappings">
     <mapping directory="" vcs="Git" />
-    <mapping directory="$PROJECT_DIR$/Tools/Aesprite" vcs="Git" />
-    <mapping directory="$PROJECT_DIR$/Tools/Aesprite/laf" vcs="Git" />
-    <mapping directory="$PROJECT_DIR$/Tools/Aesprite/laf/clip" vcs="Git" />
-    <mapping directory="$PROJECT_DIR$/Tools/Aesprite/laf/third_party/googletest" vcs="Git" />
-    <mapping directory="$PROJECT_DIR$/Tools/Aesprite/src/flic" vcs="Git" />
-    <mapping directory="$PROJECT_DIR$/Tools/Aesprite/src/observable" vcs="Git" />
-    <mapping directory="$PROJECT_DIR$/Tools/Aesprite/src/psd" vcs="Git" />
-    <mapping directory="$PROJECT_DIR$/Tools/Aesprite/src/tga" vcs="Git" />
-    <mapping directory="$PROJECT_DIR$/Tools/Aesprite/src/undo" vcs="Git" />
-    <mapping directory="$PROJECT_DIR$/Tools/Aesprite/third_party/IXWebSocket" vcs="Git" />
-    <mapping directory="$PROJECT_DIR$/Tools/Aesprite/third_party/TinyEXIF" vcs="Git" />
-    <mapping directory="$PROJECT_DIR$/Tools/Aesprite/third_party/benchmark" vcs="Git" />
-    <mapping directory="$PROJECT_DIR$/Tools/Aesprite/third_party/cityhash" vcs="Git" />
-    <mapping directory="$PROJECT_DIR$/Tools/Aesprite/third_party/cmark" vcs="Git" />
-    <mapping directory="$PROJECT_DIR$/Tools/Aesprite/third_party/curl" vcs="Git" />
-    <mapping directory="$PROJECT_DIR$/Tools/Aesprite/third_party/fmt" vcs="Git" />
-    <mapping directory="$PROJECT_DIR$/Tools/Aesprite/third_party/freetype2" vcs="Git" />
-    <mapping directory="$PROJECT_DIR$/Tools/Aesprite/third_party/freetype2/subprojects/dlg" vcs="Git" />
-    <mapping directory="$PROJECT_DIR$/Tools/Aesprite/third_party/giflib" vcs="Git" />
-    <mapping directory="$PROJECT_DIR$/Tools/Aesprite/third_party/harfbuzz" vcs="Git" />
-    <mapping directory="$PROJECT_DIR$/Tools/Aesprite/third_party/json11" vcs="Git" />
-    <mapping directory="$PROJECT_DIR$/Tools/Aesprite/third_party/libarchive" vcs="Git" />
-    <mapping directory="$PROJECT_DIR$/Tools/Aesprite/third_party/libpng" vcs="Git" />
-    <mapping directory="$PROJECT_DIR$/Tools/Aesprite/third_party/libwebp" vcs="Git" />
-    <mapping directory="$PROJECT_DIR$/Tools/Aesprite/third_party/lua" vcs="Git" />
-    <mapping directory="$PROJECT_DIR$/Tools/Aesprite/third_party/pixman" vcs="Git" />
-    <mapping directory="$PROJECT_DIR$/Tools/Aesprite/third_party/qoi" vcs="Git" />
-    <mapping directory="$PROJECT_DIR$/Tools/Aesprite/third_party/simpleini" vcs="Git" />
-    <mapping directory="$PROJECT_DIR$/Tools/Aesprite/third_party/tinyexpr" vcs="Git" />
-    <mapping directory="$PROJECT_DIR$/Tools/Aesprite/third_party/tinyxml2" vcs="Git" />
-    <mapping directory="$PROJECT_DIR$/Tools/Aesprite/third_party/zlib" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$" vcs="Git" />
   </component>
 </project>
