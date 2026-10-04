@@ -1,10 +1,10 @@
 fileFormatVersion: 2
-guid: 37742c25a8e2c184bbb0aec5ca9fcab2
+guid: 43fbfc32a736b1a429c30f2225b82793
 TextureImporter:
   internalIDToNameTable:
   - first:
-      213: -2346302928887187388
-    second: bullet_0
+      213: 9087949445669533045
+    second: testgun 1_0
   externalObjects: {}
   serializedVersion: 13
   mipmaps:
@@ -100,13 +100,13 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: bullet_0
+      name: testgun 1_0
       rect:
         serializedVersion: 2
-        x: 0
-        y: 0
-        width: 16
-        height: 16
+        x: 1
+        y: 2
+        width: 13
+        height: 11
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -115,8 +115,8 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: 448783cdae1407fd0800000000000000
-      internalID: -2346302928887187388
+      spriteID: 57537ddeed1ee1e70800000000000000
+      internalID: 9087949445669533045
       vertices: []
       indices: 
       edges: []
@@ -135,7 +135,7 @@ TextureImporter:
     spriteCustomMetadata:
       entries: []
     nameFileIdTable:
-      bullet_0: -2346302928887187388
+      testgun 1_0: 9087949445669533045
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 
