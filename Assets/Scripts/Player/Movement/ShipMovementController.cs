@@ -4,9 +4,9 @@ using UnityEngine.InputSystem;
 
 public class ShipMovementController : MonoBehaviour
 {
-    private ActiveShipInput movementActions;
-    private InputAction movement;
-    private InputAction rotation;
+    
+    [SerializeField]
+    private InputReader inputReader;
 
     [SerializeField]
     private Rigidbody rb;
@@ -20,72 +20,89 @@ public class ShipMovementController : MonoBehaviour
     [SerializeField]
     private ThrusterManager thrusterManager;
 
+    private Vector3 _moveInput;
+    private float _rotInput;
+
     private void Awake()
     {
-        movementActions = new ActiveShipInput();
-        movement = movementActions.Movement.Movement;
-        rotation = movementActions.Movement.Rotation;
-
         if (rb == null)
         {
             rb = GetComponent<Rigidbody>();
         }
-        
+
         if (thrusterManager == null)
         {
             thrusterManager = GetComponent<ThrusterManager>();
         }
     }
 
-    private void OnEnable()
+    private void Start()
     {
-        movement.Enable();
-        rotation.Enable();
+        inputReader.RotateEvent += HandleRotation;
+        inputReader.MoveEvent += HandleThrust;
+        
+        inputReader.EnablePlayerActions();
     }
 
-    private void OnDisable()
+    private void OnDestroy()
     {
-        movement.Disable();
-        rotation.Disable();
+        inputReader.RotateEvent -= HandleRotation;
+        inputReader.MoveEvent -= HandleThrust;
     }
 
     private void FixedUpdate()
     {
-        float rotInput = rotation.ReadValue<float>();
-        rb.AddRelativeTorque(Vector3.up * (rotInput * rotationalThrust),
+        ApplyRotation();
+        ApplyThrust();
+    }
+
+    private void ApplyRotation()
+    {
+        rb.AddRelativeTorque(Vector3.up * (_rotInput * rotationalThrust),
             ForceMode.Force);
-        
-        Vector3 moveInput = movement.ReadValue<Vector3>();
+    }
+
+    private void ApplyThrust()
+    {
         Vector3 localForce = Vector3.zero;
 
-        if (moveInput.z > 0)
+        if (_moveInput.z > 0)
         {
             DirectionThrust t
                 = thrusterManager.GetDirectionThrust(
                     ThrusterOrientation.Forward);
-            localForce.z = moveInput.z * (t.thrust + coreThrust);
+            localForce.z = _moveInput.z * (t.thrust + coreThrust);
         }
-        else if (moveInput.z < 0)
+        else if (_moveInput.z < 0)
         {
             DirectionThrust t =  thrusterManager.GetDirectionThrust(
                 ThrusterOrientation.Backward);
-            localForce.z = moveInput.z * (t.thrust + coreThrust);
+            localForce.z = _moveInput.z * (t.thrust + coreThrust);
         }
 
-        if (moveInput.x > 0)
+        if (_moveInput.x > 0)
         {
             DirectionThrust t = thrusterManager.GetDirectionThrust(
                 ThrusterOrientation.Right);
-            localForce.x = moveInput.x * (t.thrust + coreThrust);
+            localForce.x = _moveInput.x * (t.thrust + coreThrust);
         }
-        else if (moveInput.x < 0)
+        else if (_moveInput.x < 0)
         {
             DirectionThrust t = thrusterManager.GetDirectionThrust(
                 ThrusterOrientation.Left);
-            localForce.x = moveInput.x * (t.thrust + coreThrust);
+            localForce.x = _moveInput.x * (t.thrust + coreThrust);
         }
         
         rb.AddRelativeForce(localForce, ForceMode.Force);
-        
+    }
+    
+    private void HandleRotation(float rot)
+    {
+        _rotInput = rot;
+    }
+
+    private void HandleThrust(Vector2 thrust)
+    {
+        _moveInput = new Vector3(thrust.x, 0, thrust.y);
     }
 }

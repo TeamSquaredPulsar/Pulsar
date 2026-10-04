@@ -529,11 +529,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7984923aba667664bb2697a17d2a99da, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ShipMovementController
+  inputReader: {fileID: 11400000, guid: c5eb4fca90495374ca60a24df65307ec, type: 2}
   rb: {fileID: 767009187}
-  maxSpeed: 3
-  thrust: 1
+  coreThrust: 1
   rotationalThrust: 0.1
-  maxRotationalSpeed: 0.5
   thrusterManager: {fileID: 767009192}
 --- !u!54 &767009187
 Rigidbody:
@@ -799,7 +798,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ThrusterBlock
   thrust: 5
-  maxSpeed: 10
   orientation: 0
 --- !u!1 &1968389241
 GameObject:
