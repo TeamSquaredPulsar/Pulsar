@@ -68,6 +68,7 @@ public class EnemyFollow : MonoBehaviour
 
     private void Update()
     {
+        // TODO: Make this a coroutine
         if (player == null)
         {
             return;
