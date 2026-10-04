@@ -35,15 +35,19 @@ namespace Pulsar.Ship
         public UnityEvent OnShipChanged;
         public UnityEvent OnShipDestroyed;
 
+    private void Awake()
+    {
+        Rb = GetComponent<Rigidbody>();
 
-        private void Awake()
+        ShipUtilities.Constrain(Rb);
+
+        if (coreInfoSo != null)
         {
-            _rb = GetComponent<Rigidbody>();
-
-            ShipUtilities.Constrain(_rb);
-
-            if (coreInfoSo != null) SpawnCore();
+            SpawnCore();
         }
+    }
+
+    public static int Opposite(int d) => (d + 2) % 4;
 
         private void SpawnCore()
         {
