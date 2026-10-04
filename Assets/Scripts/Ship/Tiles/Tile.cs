@@ -25,14 +25,14 @@ public class Tile : MonoBehaviour
     public float CurrentHp { get; protected set; }
     public int Rotation { get; private set; }
 
-        public bool IsAttached { get; private set; }
+    public bool IsAttached { get; private set; }
 
-        protected void Init(TileInfoSO tileInfoSo, Vector2Int gridCell, int rot = 0)
-        {
-            TileInfo = tileInfoSo;
-            CurrentHp = tileInfoSo.hp;
-            Rotation = rot;
-            Cell = gridCell;
+    protected void Init(TileInfoSO tileInfoSo, Vector2Int gridCell, int rot = 0)
+    {
+        TileInfo = tileInfoSo;
+        CurrentHp = tileInfoSo.hp;
+        Rotation = rot;
+        Cell = gridCell;
 
         spriteRenderer = CreateVisual(transform);
 
@@ -42,15 +42,18 @@ public class Tile : MonoBehaviour
         tileCollider.size
             = new Vector3(1f, ShipUtilities.TileColliderHeight, 1f);
 
-            transform.localPosition = ShipUtilities.GridToLocal(gridCell);
-            transform.localRotation = ShipUtilities.RotateQuarterOnYAxis(rot);
-        }
-        
-        protected void InitFloating(TileInfoSO tileInfoSo, Vector3 position, Vector3 velocity)
-        {
-            TileInfo = tileInfoSo;
-            CurrentHp = tileInfoSo.hp;
-            Rotation = 0;
+        transform.localPosition = ShipUtilities.GridToLocal(gridCell);
+        transform.localRotation = ShipUtilities.RotateQuarterOnYAxis(rot);
+    }
+
+    protected void InitFloating(
+        TileInfoSO tileInfoSo,
+        Vector3 position,
+        Vector3 velocity)
+    {
+        TileInfo = tileInfoSo;
+        CurrentHp = tileInfoSo.hp;
+        Rotation = 0;
 
         spriteRenderer = CreateVisual(transform);
 
@@ -61,9 +64,10 @@ public class Tile : MonoBehaviour
         tileCollider.size
             = new Vector3(1f, ShipUtilities.TileColliderHeight, 1f);
 
-            transform.position = position;
-            ReleaseToFloating(velocity, Vector3.up * (Random.Range(-45f, 45f) * Mathf.Deg2Rad));
-        }
+        transform.position = position;
+        ReleaseToFloating(velocity,
+            Vector3.up * (Random.Range(-45f, 45f) * Mathf.Deg2Rad));
+    }
 
     public void AttachTo(ShipGrid grid, Vector2Int gridCell, int rot)
     {
@@ -85,15 +89,17 @@ public class Tile : MonoBehaviour
         Unhighlight();
     }
 
-        public void ReleaseToFloating(Vector3 velocity, Vector3 angularVelocity)
-        {
-            transform.SetParent(null, true); // preserve world position and orientation
-            IsAttached = false;
-            _collider.isTrigger = true; // pass through ship, no physical collision
-            _spriteRenderer.sortingOrder = 10;
-            Unhighlight();
-            EnableFloatingPhysics(velocity, angularVelocity);
-        }
+    public void ReleaseToFloating(Vector3 velocity, Vector3 angularVelocity)
+    {
+        transform.SetParent(null,
+            true); // preserve world position and orientation
+        IsAttached = false;
+        tileCollider.isTrigger
+            = true; // pass through ship, no physical collision
+        spriteRenderer.sortingOrder = 10;
+        Unhighlight();
+        EnableFloatingPhysics(velocity, angularVelocity);
+    }
 
     private void EnableFloatingPhysics(
         Vector3 velocity,
@@ -110,31 +116,34 @@ public class Tile : MonoBehaviour
             Mathf.Abs(angularVelocity.y));
     }
 
-        public bool EdgeConnectable(int gridDir)
-        {
-            int localDir = (gridDir + Rotation) % 4;
-            return TileInfo != null && TileInfo.connectableEdges[localDir];
-        }
-        
-        public virtual void SetAttached(ShipGrid grid)
-        {
-            IsAttached = true;
-        }
+    public bool EdgeConnectable(int gridDir)
+    {
+        int localDir = (gridDir + Rotation) % 4;
+        return TileInfo != null && TileInfo.connectableEdges[localDir];
+    }
 
-        public virtual void SetDetached(ShipGrid grid)
-        {
-            IsAttached = false;
-        }
+    public virtual void SetAttached(ShipGrid grid)
+    {
+        IsAttached = true;
+    }
 
-        public virtual void TakeDamage(float amount)
+    public virtual void SetDetached(ShipGrid grid)
+    {
+        IsAttached = false;
+    }
+
+    public virtual void TakeDamage(float amount)
+    {
+        CurrentHp -= amount;
+        if (CurrentHp <= 0f)
         {
-            CurrentHp -= amount;
-            if (CurrentHp <= 0f)
+            ShipGrid grid = GetComponentInParent<ShipGrid>();
+            if (grid != null)
             {
-                ShipGrid grid = GetComponentInParent<ShipGrid>();
-                if (grid != null) grid.DestroyTile(Cell);
+                grid.DestroyTile(Cell);
             }
         }
+    }
 
     // Highlight on radial menu hover 
     public void Highlight(Color tint)
@@ -147,7 +156,7 @@ public class Tile : MonoBehaviour
         spriteRenderer.color = baseColor;
     }
 
-        #region FACTORY
+    #region FACTORY
 
     public static Tile CreateTile<T>(
         TileInfoSO info,
@@ -161,33 +170,6 @@ public class Tile : MonoBehaviour
         return tile;
     }
 
-        public static Tile SpawnFloating(TileInfoSO info, Vector3 position, Vector3 velocity)
-        {
-            GameObject go = new GameObject($"Tile_{info.tileName}_floating");
-            Tile tile = null;
-            switch (info.type)
-            {
-                case TileType.Core:     tile = go.AddComponent<CoreTile>(); break;
-                case TileType.Chassis:  tile = go.AddComponent<ChassisTile>(); break;
-                case TileType.Thruster: tile = go.AddComponent<ThrusterTile>(); break;
-                case TileType.Weapon:   tile = go.AddComponent<GunTile>(); break;
-                default:                tile = go.AddComponent<Tile>(); break;
-            }
-            tile.InitFloating(info, position, velocity);
-            return tile;
-        }
-        
-        public static SpriteRenderer CreateVisual(Transform parent, int sortingOrder = 0)
-        {
-            GameObject visual = new GameObject("Visual");
-            visual.transform.SetParent(parent, false);
-            visual.transform.localRotation = Quaternion.Euler(90f, 0f, 0f);
-            SpriteRenderer renderer = visual.AddComponent<SpriteRenderer>();
-            renderer.sortingOrder = sortingOrder;
-            return renderer;
-        }
-        #endregion
-    }
     public static Tile SpawnFloating<T>(
         TileInfoSO info,
         Vector3 position,
@@ -200,4 +182,18 @@ public class Tile : MonoBehaviour
         return tile;
     }
 
+    public static SpriteRenderer CreateVisual(
+        Transform parent,
+        int sortingOrder = 0)
+    {
+        GameObject visual = new("Visual");
+        visual.transform.SetParent(parent, false);
+        visual.transform.localRotation = Quaternion.Euler(90f, 0f, 0f);
+        SpriteRenderer renderer = visual.AddComponent<SpriteRenderer>();
+        renderer.sortingOrder = sortingOrder;
+        return renderer;
+    }
+
+    #endregion
+}
 }
