@@ -46,7 +46,8 @@ public class EnemyFollow : MonoBehaviour
     private float aimTolerance = 15f;
 
     private Transform player;
-    private float timeBtwShots;
+        // TODO: make this a boolean value with a coroutine to handle if you can fire or not
+        private float timeBtwShots;
     private Vector3 velocity;
     private float weaveOffset;
 
