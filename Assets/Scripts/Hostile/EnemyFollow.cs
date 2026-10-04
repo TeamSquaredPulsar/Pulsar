@@ -52,6 +52,8 @@ public class EnemyFollow : MonoBehaviour
 
     private void Start()
     {
+        // TODO: Change this to use dependency injection.
+        // In the future we could have a manager class that can get us a static player reference.
         GameObject playerObj = GameObject.FindWithTag("Player");
         if (playerObj == null)
         {
