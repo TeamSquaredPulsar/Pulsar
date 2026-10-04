@@ -2,15 +2,11 @@ using UnityEngine;
 
 public class Projectile : MonoBehaviour
 {
-    private const float MinAimSquared = 0.0001f;
-
     [SerializeField]
     private float speed = 10f;
 
     [SerializeField]
     private float lifetime = 5f;
-
-    private Vector3 direction;
 
     private void Start()
     {
@@ -19,7 +15,8 @@ public class Projectile : MonoBehaviour
 
     private void Update()
     {
-        transform.position += direction * speed * Time.deltaTime;
+        // Fly in the direction the projectile is facing.
+        transform.position += transform.forward * speed * Time.deltaTime;
     }
 
     private void OnTriggerEnter(Collider other)
@@ -27,12 +24,7 @@ public class Projectile : MonoBehaviour
         if (other.CompareTag("Player"))
         {
             // TODO: damage the player here
-            DestroyProjectile();
+            Destroy(gameObject);
         }
-    }
-
-    private void DestroyProjectile()
-    {
-        Destroy(gameObject);
     }
 }
