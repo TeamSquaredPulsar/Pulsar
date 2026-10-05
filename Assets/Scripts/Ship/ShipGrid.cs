@@ -1,7 +1,8 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
-using UnityEngine.Events;
+using Random = UnityEngine.Random;
 
 namespace Pulsar.Ship
 {
@@ -32,9 +33,6 @@ public class ShipGrid : MonoBehaviour
     [field: SerializeField]
     public Rigidbody Rb { get; private set; }
 
-    public UnityEvent OnShipChanged;
-    public UnityEvent OnShipDestroyed;
-
     private readonly Dictionary<Vector2Int, Tile> _cells = new();
 
     public IReadOnlyDictionary<Vector2Int, Tile> Cells => _cells;
@@ -51,11 +49,14 @@ public class ShipGrid : MonoBehaviour
         }
     }
 
+    public event Action OnShipChanged;
+    public event Action OnShipDestroyed;
+
     public static int Opposite(int d) => (d + 2) % 4;
 
     private void SpawnCore()
     {
-        Tile tile = Tile.CreateTile<CoreTile>(coreInfoSo, Vector2Int.zero, 0);
+        Tile tile = Tile.CreateTile<CoreTile>(coreInfoSo, Vector2Int.zero);
         tile.gameObject.name = "Core";
         tile.AttachTo(this, Vector2Int.zero, 0);
         _cells[Vector2Int.zero] = tile;
@@ -221,7 +222,7 @@ public class ShipGrid : MonoBehaviour
                 continue;
             }
 
-            float dist = Vector2.Distance(localPos, (Vector2)candidate);
+            float dist = Vector2.Distance(localPos, candidate);
 
             for (int rot = 0; rot < 4; rot++)
             {
@@ -321,16 +322,16 @@ public class ShipGrid : MonoBehaviour
         {
             Vector2Int c = open.Dequeue();
             Tile tile = _cells[c];
-            for (int d = 0; d < 4; d++)
+            for (int direction = 0; direction < 4; direction++)
             {
-                Vector2Int n = c + Dirs[d];
-                if (closed.Contains(n) || !_cells.ContainsKey(n))
+                Vector2Int n = c + Dirs[direction];
+                if (closed.Contains(n) || !_cells.TryGetValue(n, out Tile cell))
                 {
                     continue;
                 }
 
-                if (!tile.EdgeConnectable(d) ||
-                    !_cells[n].EdgeConnectable(Opposite(d)))
+                if (!tile.EdgeConnectable(direction) ||
+                    !cell.EdgeConnectable(Opposite(direction)))
                 {
                     continue;
                 }
