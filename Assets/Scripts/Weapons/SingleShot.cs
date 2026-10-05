@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 
 /// <summary>
@@ -16,16 +17,12 @@ public class SingleShot : WeaponStrategy
     /// Fire method
     /// </summary>
     /// <param name="firePoint"></param>
-    /// <param name="layer"></param>
-    public override void Fire(Transform firePoint, Weapon weapon)
+    /// <param name="weapon"></param>
+    public override void Fire(
+        Transform firePoint,
+        Weapon weapon,
+        Func<Transform, GameObject> SpawnProjectile)
     {
-        GameObject projectile = Instantiate(
-            projectilePrefab,
-            firePoint.position,
-            firePoint.rotation
-        );
-
-        Projectile projectileComponent = projectile.GetComponent<Projectile>();
-        projectileComponent.SetSpeed(projectileSpeed);
+        SpawnProjectile(firePoint);
     }
 }

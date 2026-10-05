@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 
 /// <summary>
@@ -22,15 +23,15 @@ public class TripleShot : WeaponStrategy
     [SerializeField]
     private float k_DefaultRotation = 0f;
 
-    /// <summary>
-    /// Shoots three times at different angles
-    /// </summary>
-    /// <param name="firePoint"></param>
-    public override void Fire(Transform firePoint, Weapon weapon)
+    /// <inheritdoc/>
+    public override void Fire(
+        Transform firePoint,
+        Weapon weapon,
+        Func<Transform, GameObject> spawnProjectile)
     {
-        Shoot(firePoint, k_LeftAngle);
-        Shoot(firePoint, k_MiddleAngle);
-        Shoot(firePoint, k_RightAngle);
+        Shoot(firePoint, k_LeftAngle, spawnProjectile);
+        Shoot(firePoint, k_MiddleAngle, spawnProjectile);
+        Shoot(firePoint, k_RightAngle, spawnProjectile);
     }
 
     /// <summary>
@@ -39,18 +40,13 @@ public class TripleShot : WeaponStrategy
     /// </summary>
     /// <param name="firePoint"></param>
     /// <param name="angle"></param>
-    private void Shoot(Transform firePoint, float angle)
+    private void Shoot(
+        Transform firePoint,
+        float angle,
+        Func<Transform, GameObject> SpawnProjectile)
     {
-        GameObject projectile = Instantiate(
-            projectilePrefab,
-            firePoint.position,
-            firePoint.rotation * Quaternion.Euler(
-                k_DefaultRotation,
-                k_DefaultRotation,
-                angle)
-        );
-
-        Projectile projectileComponent = projectile.GetComponent<Projectile>();
-        projectileComponent.SetSpeed(projectileSpeed);
+        Transform newPoint = firePoint;
+        newPoint.Rotate(new Vector3(0, 0, angle));
+        SpawnProjectile(newPoint);
     }
 }

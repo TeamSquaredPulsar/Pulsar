@@ -1,3 +1,4 @@
+using System.Collections;
 using UnityEngine;
 
 /// <summary>
@@ -10,11 +11,32 @@ using UnityEngine;
 /// </summary>
 public class Weapon : MonoBehaviour
 {
+    [Header("References")]
+    [SerializeField]
+    protected GameObject projectilePrefab;
+
+    [SerializeField]
+    protected Collider2D parentCollider;
+
     [SerializeField]
     protected WeaponStrategy weaponStrategy;
 
     [SerializeField]
     protected Transform firePoint;
+
+    [field: SerializeField]
+    public float FireRatePerSecond { get; protected set; } = 0.5f;
+
+    private Coroutine _fireTimerRoutine;
+
+    private Projectile _projectile;
+
+    public bool CanFire => _fireTimerRoutine == null;
+
+    private void Start()
+    {
+        _projectile = projectilePrefab.gameObject.GetComponent<Projectile>();
+    }
 
     /// <summary>
     /// Setter for weapon strategy
@@ -23,5 +45,30 @@ public class Weapon : MonoBehaviour
     private void SetWeaponStrategy(WeaponStrategy strat)
     {
         weaponStrategy = strat;
+    }
+
+    private GameObject _spawnProjectile(Transform spawnPoint) =>
+        _projectile.SpawnProjectile(spawnPoint, parentCollider);
+
+    public virtual void Fire()
+    {
+        if (!CanFire)
+        {
+            return;
+        }
+
+        weaponStrategy.Fire(firePoint, this, _spawnProjectile);
+        StartFireTimer();
+    }
+
+    private void StartFireTimer()
+    {
+        _fireTimerRoutine = StartCoroutine(ActivateFireTimer());
+    }
+
+    private IEnumerator ActivateFireTimer()
+    {
+        yield return new WaitForSeconds(1 / FireRatePerSecond);
+        _fireTimerRoutine = null;
     }
 }

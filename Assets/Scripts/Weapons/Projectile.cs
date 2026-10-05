@@ -1,4 +1,3 @@
-using System;
 using UnityEngine;
 
 /// <summary>
@@ -9,42 +8,29 @@ using UnityEngine;
 /// @author Alfredo Luzardo
 /// @version 1.1
 /// </summary>
+[RequireComponent(typeof(Rigidbody2D))]
 public class Projectile : MonoBehaviour
 {
+    [field: SerializeField]
+    public int Damage { get; protected set; } = 10;
+
     [SerializeField]
-    private float speed;
+    protected float damageRadius = 1f;
+
+    [SerializeField]
+    protected float speed = 10f;
 
     [SerializeField]
     private float lifeTime;
 
     [SerializeField]
-    private GameObject launchEffectPrefab;
-
-    [SerializeField]
     private GameObject hitEffectPrefab;
-
-    // Some useful setters
-    public void SetSpeed(float input) => speed = input;
 
     /// <summary>
     /// Start method.
     /// </summary>
     private void Start()
     {
-        transform.SetParent(null);
-        // launch effect
-        if (launchEffectPrefab != null)
-        {
-            Debug.Log("launch Effect");
-        }
-    }
-
-    /// <summary>
-    /// Move the projectile
-    /// </summary>
-    private void Update()
-    {
-        transform.position += transform.up * (speed * Time.deltaTime);
         Destroy(gameObject, lifeTime);
     }
 
@@ -56,7 +42,7 @@ public class Projectile : MonoBehaviour
     private void OnCollisionEnter2D(Collision2D collision)
     {
         // Bullets cant collide
-        if (collision.gameObject.GetComponent<Projectile>() != null)
+        if (collision.gameObject.GetComponent<Projectile>())
         {
             return;
         }
@@ -67,8 +53,27 @@ public class Projectile : MonoBehaviour
             Debug.Log("Hit Effect");
         }
 
-        // Will need to deal damage here?
+        // [AL] TODO: Will need to deal damage here?
 
         Destroy(gameObject);
+    }
+
+    public GameObject SpawnProjectile(
+        Transform spawnTransform,
+        Collider2D parentCollider)
+    {
+        GameObject projectile = Instantiate(gameObject,
+            spawnTransform.position, Quaternion.identity);
+        projectile.transform.up = spawnTransform.up;
+
+        Physics2D.IgnoreCollision(projectile.GetComponent<Collider2D>(),
+            parentCollider);
+
+        if (projectile.TryGetComponent(out Rigidbody2D rb))
+        {
+            rb.linearVelocity = rb.transform.up * speed;
+        }
+
+        return projectile;
     }
 }

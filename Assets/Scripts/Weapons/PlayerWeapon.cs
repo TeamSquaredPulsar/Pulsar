@@ -1,7 +1,3 @@
-using System;
-using UnityEngine;
-using UnityEngine.InputSystem;
-
 /// <summary>
 /// Represents a single player weapon
 /// - each of the players weapon tiles will likely have this
@@ -13,29 +9,13 @@ using UnityEngine.InputSystem;
 /// </summary>
 public class PlayerWeapon : Weapon
 {
-    private float fireTimer;
-
-    // TODO: Refactor into coroutine/async func
-    //   - In order to not need to do this every frame
-    //   - Can set bool, run coroutine for n seconds,
-    //     then reset the bool
-    /// <summary>
-    /// Trigger the weapon fire if the button is clicked
-    /// </summary>
-    private void Update()
+    public override void Fire()
     {
-        fireTimer += Time.deltaTime;
-    }
-
-    public void Fire()
-    {
-        if (!isActiveAndEnabled ||
-            fireTimer < weaponStrategy.fireRate)
+        if (!isActiveAndEnabled || !CanFire)
         {
             return;
         }
 
-        weaponStrategy.Fire(firePoint, this);
-        fireTimer = 0f;
+        base.Fire();
     }
 }
