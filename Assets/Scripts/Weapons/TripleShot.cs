@@ -20,8 +20,6 @@ public class TripleShot : WeaponStrategy
     [SerializeField]
     private float k_RightAngle = 45f;
 
-    [SerializeField]
-    private float k_DefaultRotation = 0f;
 
     /// <inheritdoc/>
     public override void Fire(
