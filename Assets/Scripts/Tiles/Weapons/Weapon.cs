@@ -9,7 +9,7 @@ using UnityEngine;
 /// @author Alfredo Luzardo
 /// @version 1.1
 /// </summary>
-public class Weapon : MonoBehaviour
+public class Weapon : Tile
 {
     [Header("References")]
     [SerializeField]
@@ -70,5 +70,10 @@ public class Weapon : MonoBehaviour
     {
         yield return new WaitForSeconds(1 / FireRatePerSecond);
         _fireTimerRoutine = null;
+    }
+
+    public void SetParentCollider(Collider2D newCollider)
+    {
+        parentCollider = newCollider;
     }
 }
