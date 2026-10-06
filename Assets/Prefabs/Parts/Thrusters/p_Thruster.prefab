@@ -9,9 +9,9 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1486952502805023581}
+  - component: {fileID: 3589442038005289041}
   - component: {fileID: 8688311974718774552}
   - component: {fileID: 6303449030629206126}
-  - component: {fileID: 3589442038005289041}
   m_Layer: 0
   m_Name: p_Thruster
   m_TagString: Untagged
@@ -34,6 +34,20 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &3589442038005289041
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 9113379072927920375}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e02251dc92abf4843bc52a4ed29cdf53, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Thruster
+  spriteRenderer: {fileID: 8688311974718774552}
+  boxCollider: {fileID: 6303449030629206126}
 --- !u!212 &8688311974718774552
 SpriteRenderer:
   serializedVersion: 2
@@ -139,17 +153,3 @@ BoxCollider2D:
   m_AutoTiling: 0
   m_Size: {x: 1, y: 1}
   m_EdgeRadius: 0
---- !u!114 &3589442038005289041
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 9113379072927920375}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e02251dc92abf4843bc52a4ed29cdf53, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::Thruster
-  spriteRenderer: {fileID: 8688311974718774552}
-  boxCollider: {fileID: 6303449030629206126}

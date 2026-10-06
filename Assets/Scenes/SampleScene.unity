@@ -781,7 +781,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ShipManager
   compositeCollider: {fileID: 1318591096}
-  rigidBody: {fileID: 0}
+  rigidBody: {fileID: 1318591097}
   tiles: []
   weapons: []
   thrusters: []
@@ -932,9 +932,29 @@ PrefabInstance:
     m_TransformParent: {fileID: 517141605}
     m_Modifications:
     - target: {fileID: 1061347067363448382, guid: aa5c391c67940fe428fad2e4cebfb98c, type: 3}
+      propertyPath: firePoint
+      value: 
+      objectReference: {fileID: 3999228403730086581}
+    - target: {fileID: 1061347067363448382, guid: aa5c391c67940fe428fad2e4cebfb98c, type: 3}
+      propertyPath: boxCollider
+      value: 
+      objectReference: {fileID: 1904813142}
+    - target: {fileID: 1061347067363448382, guid: aa5c391c67940fe428fad2e4cebfb98c, type: 3}
       propertyPath: parentCollider
       value: 
       objectReference: {fileID: 1318591096}
+    - target: {fileID: 1061347067363448382, guid: aa5c391c67940fe428fad2e4cebfb98c, type: 3}
+      propertyPath: spriteRenderer
+      value: 
+      objectReference: {fileID: 3999228403730086580}
+    - target: {fileID: 1061347067363448382, guid: aa5c391c67940fe428fad2e4cebfb98c, type: 3}
+      propertyPath: projectilePrefab
+      value: 
+      objectReference: {fileID: 1682859016921356063, guid: a133161848d51234b97f8554a243a1ab, type: 3}
+    - target: {fileID: 1113316170954926131, guid: aa5c391c67940fe428fad2e4cebfb98c, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0.36
+      objectReference: {fileID: 0}
     - target: {fileID: 1283674777054792067, guid: aa5c391c67940fe428fad2e4cebfb98c, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0
@@ -979,11 +999,26 @@ PrefabInstance:
       propertyPath: m_Name
       value: p_BasicGun
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    - target: {fileID: 9156844168472924138, guid: aa5c391c67940fe428fad2e4cebfb98c, type: 3}
+      propertyPath: parentCollider
+      value: 
+      objectReference: {fileID: 1318591096}
+    m_RemovedComponents:
+    - {fileID: 1061347067363448382, guid: aa5c391c67940fe428fad2e4cebfb98c, type: 3}
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: aa5c391c67940fe428fad2e4cebfb98c, type: 3}
+--- !u!212 &3999228403730086580 stripped
+SpriteRenderer:
+  m_CorrespondingSourceObject: {fileID: 4676953174740963180, guid: aa5c391c67940fe428fad2e4cebfb98c, type: 3}
+  m_PrefabInstance: {fileID: 3999228403730086579}
+  m_PrefabAsset: {fileID: 0}
+--- !u!4 &3999228403730086581 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 1113316170954926131, guid: aa5c391c67940fe428fad2e4cebfb98c, type: 3}
+  m_PrefabInstance: {fileID: 3999228403730086579}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &4046666775193322912
 PrefabInstance:
   m_ObjectHideFlags: 0

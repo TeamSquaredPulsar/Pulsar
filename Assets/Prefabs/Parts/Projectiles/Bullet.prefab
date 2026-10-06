@@ -44,13 +44,13 @@ MonoBehaviour:
   m_GameObject: {fileID: 1682859016921356063}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 0817033cb3ce5674d9161327aa5065fc, type: 3}
+  m_Script: {fileID: 11500000, guid: 98785c749364c9b4d88e4d028d12516b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Projectile
   <Damage>k__BackingField: 10
   damageRadius: 1
-  speed: 5
-  lifeTime: 4
+  speed: 1
+  lifeTime: 5
   hitEffectPrefab: {fileID: 0}
 --- !u!212 &5810745852898598321
 SpriteRenderer:

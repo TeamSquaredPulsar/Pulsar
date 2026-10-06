@@ -26,6 +26,12 @@ public class Projectile : MonoBehaviour
     [SerializeField]
     private GameObject hitEffectPrefab;
 
+    //TODO: Remove this
+    private void Awake()
+    {
+        Debug.Log("Oh boy, here I go killing again!");
+    }
+
     /// <summary>
     /// Start method.
     /// </summary>
