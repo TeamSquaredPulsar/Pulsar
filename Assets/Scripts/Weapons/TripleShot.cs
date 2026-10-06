@@ -30,7 +30,7 @@ public class TripleShot : WeaponStrategy
         Func<Transform, GameObject> spawnProjectile)
     {
         Shoot(firePoint, k_LeftAngle, spawnProjectile);
-        Shoot(firePoint, k_MiddleAngle, spawnProjectile);
+        Shoot(firePoint, k_DefaultRotation, spawnProjectile);
         Shoot(firePoint, k_RightAngle, spawnProjectile);
     }
 
