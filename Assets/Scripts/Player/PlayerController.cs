@@ -30,9 +30,12 @@ public class PlayerController : MonoBehaviour
         input.EnablePlayerActions();
     }
 
-    private void HandleRotate(float amount)
+    // TODO: Can make an event where the player
+    //  can listen for it and manage the player weapon list themselves.
+    //  For performance reasons
+    private void HandleRotate(float obj)
     {
-        Debug.Log($"rotate: {amount}");
+        Debug.Log($"rotate: {obj}");
     }
 
     // TODO: Can make an event where the player

@@ -16,10 +16,11 @@ public abstract class WeaponStrategy : ScriptableObject
 {
     /// <summary>
     /// Abstract Fire function
-    ///
+    /// 
     /// </summary>
     /// <param name="firePoint"></param>
     ///  <param name="weapon"></param>
+    /// <param name="spawnProjectile"></param>
     public abstract void
         Fire(
             Transform firePoint,

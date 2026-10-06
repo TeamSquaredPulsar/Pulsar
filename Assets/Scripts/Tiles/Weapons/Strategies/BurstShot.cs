@@ -18,7 +18,7 @@ public class BurstShot : WeaponStrategy
     private int k_MaxBullets = 3;
 
     [SerializeField]
-    private int k_BulletStart = 0;
+    private int k_BulletStart;
 
     [SerializeField]
     private float k_bulletGapTime = 0.1f;
@@ -27,19 +27,20 @@ public class BurstShot : WeaponStrategy
     public override void Fire(
         Transform firePoint,
         Weapon weapon,
-        Func<Transform, GameObject> SpawnProjectile)
+        Func<Transform, GameObject> spawnProjectile)
     {
-        weapon.StartCoroutine(Burst(firePoint, SpawnProjectile));
+        weapon.StartCoroutine(Burst(firePoint, spawnProjectile));
     }
 
     /// <summary>
     /// Burst method, IEnumerator for delaying time
     /// </summary>
     /// <param name="firePoint"></param>
+    /// <param name="spawnProjectile"></param>
     /// <returns></returns>
     private IEnumerator Burst(
         Transform firePoint,
-        Func<Transform, GameObject> SpawnProjectile)
+        Func<Transform, GameObject> spawnProjectile)
     {
         for (int i = k_BulletStart; i < k_MaxBullets; i++)
         {
@@ -48,7 +49,7 @@ public class BurstShot : WeaponStrategy
                 yield break;
             }
 
-            SpawnProjectile(firePoint);
+            spawnProjectile(firePoint);
 
             yield return new WaitForSeconds(k_bulletGapTime);
         }

@@ -15,13 +15,13 @@ public class TripleShot : WeaponStrategy
     private float k_LeftAngle = -45f;
 
     [SerializeField]
-    private float k_MiddleAngle = 0f;
+    private float k_MiddleAngle;
 
     [SerializeField]
     private float k_RightAngle = 45f;
 
     [SerializeField]
-    private float k_DefaultRotation = 0f;
+    private float k_DefaultRotation;
 
     /// <inheritdoc/>
     public override void Fire(
@@ -40,13 +40,14 @@ public class TripleShot : WeaponStrategy
     /// </summary>
     /// <param name="firePoint"></param>
     /// <param name="angle"></param>
+    /// <param name="spawnProjectile"></param>
     private void Shoot(
         Transform firePoint,
         float angle,
-        Func<Transform, GameObject> SpawnProjectile)
+        Func<Transform, GameObject> spawnProjectile)
     {
         Transform newPoint = firePoint;
         newPoint.Rotate(new Vector3(0, 0, angle));
-        SpawnProjectile(newPoint);
+        spawnProjectile(newPoint);
     }
 }
