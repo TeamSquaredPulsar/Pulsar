@@ -63,7 +63,6 @@ public class ShipMovementController : MonoBehaviour
     private void ApplyThrust()
     {
         Vector2 localForce = Vector2.zero;
-
         if (_moveInput.y != 0)
         {
             DirectionThrust thrustY = thrusterManager.GetDirectionThrust(
@@ -83,8 +82,8 @@ public class ShipMovementController : MonoBehaviour
             DirectionThrust thrustX = thrusterManager.GetDirectionThrust(
                 _moveInput.x switch
                 {
-                    > 0 => ThrusterOrientation.Forward,
-                    < 0 => ThrusterOrientation.Backward,
+                    > 0 => ThrusterOrientation.Right,
+                    < 0 => ThrusterOrientation.Left,
                     _ => throw new ArgumentOutOfRangeException(
                         nameof(_moveInput) + ".X",
                         "Already checked X could not be 0!"),
