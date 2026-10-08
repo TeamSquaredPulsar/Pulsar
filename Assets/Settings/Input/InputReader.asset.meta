@@ -1,6 +1,12 @@
 fileFormatVersion: 2
+<<<<<<<< HEAD:Assets/Settings/Input.meta
+guid: c7e737219c863a2409c60ad7a526337d
+folderAsset: yes
+DefaultImporter:
+========
 guid: c5eb4fca90495374ca60a24df65307ec
 NativeFormatImporter:
+>>>>>>>> main:Assets/Settings/Input/InputReader.asset.meta
   externalObjects: {}
   mainObjectFileID: 11400000
   userData: 
