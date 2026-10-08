@@ -1,10 +1,8 @@
 using System;
 using UnityEngine;
-using UnityEngine.InputSystem;
 
 public class ShipMovementController : MonoBehaviour
 {
-    
     [SerializeField]
     private InputReader inputReader;
 
@@ -16,11 +14,11 @@ public class ShipMovementController : MonoBehaviour
 
     [SerializeField]
     private float rotationalThrust;
-    
+
     [SerializeField]
     private ThrusterManager thrusterManager;
 
-    private Vector3 _moveInput;
+    private Vector2 _moveInput;
     private float _rotInput;
 
     private void Awake()
@@ -40,14 +38,8 @@ public class ShipMovementController : MonoBehaviour
     {
         inputReader.RotateEvent += HandleRotation;
         inputReader.MoveEvent += HandleThrust;
-        
-        inputReader.EnablePlayerActions();
-    }
 
-    private void OnDestroy()
-    {
-        inputReader.RotateEvent -= HandleRotation;
-        inputReader.MoveEvent -= HandleThrust;
+        inputReader.EnablePlayerActions();
     }
 
     private void FixedUpdate()
@@ -56,46 +48,53 @@ public class ShipMovementController : MonoBehaviour
         ApplyThrust();
     }
 
+    private void OnDestroy()
+    {
+        inputReader.RotateEvent -= HandleRotation;
+        inputReader.MoveEvent -= HandleThrust;
+    }
+
     private void ApplyRotation()
     {
-        rb.AddRelativeTorque(Vector3.up * (_rotInput * rotationalThrust),
+        rb.AddRelativeTorque(Vector3.forward * (_rotInput * rotationalThrust),
             ForceMode.Force);
     }
 
     private void ApplyThrust()
     {
-        Vector3 localForce = Vector3.zero;
+        Vector2 localForce = Vector2.zero;
 
-        if (_moveInput.z > 0)
+        if (_moveInput.y != 0)
         {
-            DirectionThrust t
-                = thrusterManager.GetDirectionThrust(
-                    ThrusterOrientation.Forward);
-            localForce.z = _moveInput.z * (t.thrust + coreThrust);
-        }
-        else if (_moveInput.z < 0)
-        {
-            DirectionThrust t =  thrusterManager.GetDirectionThrust(
-                ThrusterOrientation.Backward);
-            localForce.z = _moveInput.z * (t.thrust + coreThrust);
+            DirectionThrust thrustY = thrusterManager.GetDirectionThrust(
+                _moveInput.y switch
+                {
+                    > 0 => ThrusterOrientation.Forward,
+                    < 0 => ThrusterOrientation.Backward,
+                    _ => throw new ArgumentOutOfRangeException(
+                        nameof(_moveInput) + ".y",
+                        "Already checked Y could not be 0!"),
+                });
+            localForce.y = _moveInput.y * (thrustY.thrust + coreThrust);
         }
 
-        if (_moveInput.x > 0)
+        if (_moveInput.x != 0)
         {
-            DirectionThrust t = thrusterManager.GetDirectionThrust(
-                ThrusterOrientation.Right);
-            localForce.x = _moveInput.x * (t.thrust + coreThrust);
+            DirectionThrust thrustX = thrusterManager.GetDirectionThrust(
+                _moveInput.x switch
+                {
+                    > 0 => ThrusterOrientation.Forward,
+                    < 0 => ThrusterOrientation.Backward,
+                    _ => throw new ArgumentOutOfRangeException(
+                        nameof(_moveInput) + ".X",
+                        "Already checked X could not be 0!"),
+                });
+            localForce.x = _moveInput.x * (thrustX.thrust + coreThrust);
         }
-        else if (_moveInput.x < 0)
-        {
-            DirectionThrust t = thrusterManager.GetDirectionThrust(
-                ThrusterOrientation.Left);
-            localForce.x = _moveInput.x * (t.thrust + coreThrust);
-        }
-        
+
         rb.AddRelativeForce(localForce, ForceMode.Force);
     }
-    
+
     private void HandleRotation(float rot)
     {
         _rotInput = rot;
@@ -103,6 +102,6 @@ public class ShipMovementController : MonoBehaviour
 
     private void HandleThrust(Vector2 thrust)
     {
-        _moveInput = new Vector3(thrust.x, 0, thrust.y);
+        _moveInput = thrust;
     }
 }
