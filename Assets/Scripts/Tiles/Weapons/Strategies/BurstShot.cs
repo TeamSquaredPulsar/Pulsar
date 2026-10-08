@@ -1,5 +1,6 @@
-using UnityEngine;
+using System;
 using System.Collections;
+using UnityEngine;
 
 /// <summary>
 /// Represents a BurstShot
@@ -17,26 +18,29 @@ public class BurstShot : WeaponStrategy
     private int k_MaxBullets = 3;
 
     [SerializeField]
-    private int k_BulletStart = 0;
+    private int k_BulletStart;
 
     [SerializeField]
     private float k_bulletGapTime = 0.1f;
 
-    /// <summary>
-    /// Fire method
-    /// </summary>
-    /// <param name="firePoint"></param>
-    public override void Fire(Transform firePoint, Weapon weapon)
+    /// <inheritdoc/>
+    public override void Fire(
+        Transform firePoint,
+        Weapon weapon,
+        Func<Transform, GameObject> spawnProjectile)
     {
-        weapon.StartCoroutine(Burst(firePoint));
+        weapon.StartCoroutine(Burst(firePoint, spawnProjectile));
     }
 
     /// <summary>
     /// Burst method, IEnumerator for delaying time
     /// </summary>
     /// <param name="firePoint"></param>
+    /// <param name="spawnProjectile"></param>
     /// <returns></returns>
-    private IEnumerator Burst(Transform firePoint)
+    private IEnumerator Burst(
+        Transform firePoint,
+        Func<Transform, GameObject> spawnProjectile)
     {
         for (int i = k_BulletStart; i < k_MaxBullets; i++)
         {
@@ -45,10 +49,7 @@ public class BurstShot : WeaponStrategy
                 yield break;
             }
 
-            GameObject bullet = Instantiate(
-                projectilePrefab, firePoint.position, firePoint.rotation);
-
-            bullet.GetComponent<Projectile>().SetSpeed(projectileSpeed);
+            spawnProjectile(firePoint);
 
             yield return new WaitForSeconds(k_bulletGapTime);
         }

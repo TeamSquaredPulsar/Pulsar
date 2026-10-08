@@ -1,20 +1,18 @@
 using UnityEngine;
 
+[RequireComponent(typeof(ShipManager))]
 public class PlayerController : MonoBehaviour
 {
     [SerializeField]
     private InputReader input;
 
     [SerializeField]
-    private PlayerWeapon[] weapons;
+    private ShipManager shipManager;
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     private void Start()
     {
-        input.MoveEvent += HandleMove;
-        input.ShootEvent += HandleShoot;
-        input.RotateEvent += HandleRotate;
-        input.EnablePlayerActions();
+        RegisterInputCallbacks();
     }
 
     private void OnDestroy()
@@ -24,6 +22,17 @@ public class PlayerController : MonoBehaviour
         input.RotateEvent -= HandleRotate;
     }
 
+    private void RegisterInputCallbacks()
+    {
+        input.MoveEvent += HandleMove;
+        input.ShootEvent += HandleShoot;
+        input.RotateEvent += HandleRotate;
+        input.EnablePlayerActions();
+    }
+
+    // TODO: Can make an event where the player
+    //  can listen for it and manage the player weapon list themselves.
+    //  For performance reasons
     private void HandleRotate(float obj)
     {
         Debug.Log($"rotate: {obj}");
@@ -34,17 +43,11 @@ public class PlayerController : MonoBehaviour
     //  For performance reasons
     private void HandleShoot()
     {
-        foreach (PlayerWeapon weapon in weapons)
-        {
-            if (weapon != null)
-            {
-                weapon.Fire();
-            }
-        }
+        shipManager.Fire();
     }
 
-    private void HandleMove(Vector2 obj)
+    private void HandleMove(Vector2 direction)
     {
-        Debug.Log("Handling move: " + obj);
+        shipManager.Move(direction);
     }
 }
