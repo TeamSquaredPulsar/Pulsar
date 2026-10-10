@@ -38,7 +38,8 @@ public class Tile : MonoBehaviour
 
         spriteRenderer.sprite = tileInfoSo.sprite;
 
-        tileCollider = gameObject.AddComponent<BoxCollider>();
+        floatRb = GetComponent<Rigidbody>();
+        tileCollider = GetComponent<BoxCollider>();
         tileCollider.size
             = new Vector3(1f, ShipUtilities.TileColliderHeight, 1f);
 
@@ -59,7 +60,8 @@ public class Tile : MonoBehaviour
 
         spriteRenderer.sprite = tileInfoSo.sprite;
 
-        tileCollider = gameObject.AddComponent<BoxCollider>();
+        floatRb = GetComponent<Rigidbody>();
+        tileCollider = GetComponent<BoxCollider>();
         tileCollider.isTrigger = true;
         tileCollider.size
             = new Vector3(1f, ShipUtilities.TileColliderHeight, 1f);

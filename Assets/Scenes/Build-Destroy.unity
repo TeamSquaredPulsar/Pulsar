@@ -211,13 +211,11 @@ MonoBehaviour:
   m_GameObject: {fileID: 308855590}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4082f082cf71fe94597089cfb10f408c, type: 3}
+  m_Script: {fileID: 11500000, guid: 4844bdb24a97162419f1a20e2b7dbbad, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::Pulsar.Testing.BuildDestroyTestSetup
+  m_EditorClassIdentifier: Assembly-CSharp::Pulsar.Testing.TESTSCRIPT
   tileInfos:
   - {fileID: 11400000, guid: 9c0e50de41345d743a48948f1809c761, type: 2}
-  - {fileID: 11400000, guid: 71fb61585e3013a43b3726d73a977655, type: 2}
-  - {fileID: 11400000, guid: efe30156b410eb149aa1cabe593e8f6d, type: 2}
   spawnMinRadius: 5
   spawnMaxRadius: 8
   driftSpeedMin: 0.3
@@ -287,6 +285,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlayerController
   input: {fileID: 11400000, guid: c5eb4fca90495374ca60a24df65307ec, type: 2}
+  weapons: []
 --- !u!1 &1093924889
 GameObject:
   m_ObjectHideFlags: 0
@@ -752,12 +751,8 @@ MonoBehaviour:
   coreInfoSo: {fileID: 11400000, guid: 2fc0edad448d5f34e831dd954138aabd, type: 2}
   detachRadiateLinearVelocity: {x: 2, y: 5}
   detachRadiateAngularVelocity: {x: -180, y: 180}
-  onShipChanged:
-    m_PersistentCalls:
-      m_Calls: []
-  onShipDestroyed:
-    m_PersistentCalls:
-      m_Calls: []
+  <Core>k__BackingField: {fileID: 0}
+  <Rb>k__BackingField: {fileID: 0}
 --- !u!54 &2120018149
 Rigidbody:
   m_ObjectHideFlags: 0
