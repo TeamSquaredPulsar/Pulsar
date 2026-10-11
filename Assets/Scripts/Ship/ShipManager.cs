@@ -27,14 +27,14 @@ public class ShipManager : MonoBehaviour
     [SerializeField]
     private Vector2 detachRadiateAngularVelocity = new(-180f, 180f);
 
-    public Tile Core { get; private set; }
+    public Tile Core => GridData.Core;
 
     [field: SerializeField]
     public Rigidbody2D Rb { get; private set; }
 
-    private readonly Dictionary<Vector2Int, Tile> _cells = new();
+    public ShipGridData GridData { get; } = new();
 
-    public IReadOnlyDictionary<Vector2Int, Tile> Cells => _cells;
+    public IReadOnlyDictionary<Vector2Int, Tile> Cells => GridData.Cells;
 
     private void Awake()
     {
@@ -58,14 +58,13 @@ public class ShipManager : MonoBehaviour
         Tile tile = Tile.CreateTile<CoreTile>(coreInfoSo, Vector2Int.zero);
         tile.gameObject.name = "Core";
         tile.AttachTo(this, Vector2Int.zero, 0);
-        _cells[Vector2Int.zero] = tile;
-        Core = tile;
+        GridData.SetCore(Vector2Int.zero, tile);
         tile.SetAttached(this);
     }
 
     public Bounds GetLocalBounds()
     {
-        if (_cells.Count == 0)
+        if (Cells.Count == 0)
         {
             return new Bounds(Vector3.zero,
                 new Vector3(1f, 1f, 0f));
@@ -73,7 +72,7 @@ public class ShipManager : MonoBehaviour
 
         Vector2 min = new(float.MaxValue, float.MaxValue);
         Vector2 max = new(float.MinValue, float.MinValue);
-        foreach (Vector2Int c in _cells.Keys)
+        foreach (Vector2Int c in Cells.Keys)
         {
             min = Vector2.Min(min, c);
             max = Vector2.Max(max, c);
@@ -93,7 +92,7 @@ public class ShipManager : MonoBehaviour
             = ShipUtilities.LocalToGrid(
                 transform.InverseTransformPoint(worldPos));
         Vector2Int cell = Vector2Int.RoundToInt(local);
-        _cells.TryGetValue(cell, out Tile tile);
+        GridData.TryGetTile(cell, out Tile tile);
         return tile;
     }
 
@@ -101,7 +100,7 @@ public class ShipManager : MonoBehaviour
 
     public bool CanAttach(Vector2Int pos, TileInfoSO infoSo, int rotation)
     {
-        if (_cells.ContainsKey(pos))
+        if (GridData.ContainsCell(pos))
         {
             return false;
         }
@@ -115,7 +114,7 @@ public class ShipManager : MonoBehaviour
             }
 
             Vector2Int neighborPos = pos + Dirs[d];
-            if (_cells.TryGetValue(neighborPos, out Tile neighbor)
+            if (GridData.TryGetTile(neighborPos, out Tile neighbor)
                 && neighbor.EdgeConnectable(Opposite(d)))
             {
                 return true;
@@ -137,7 +136,7 @@ public class ShipManager : MonoBehaviour
             }
 
             Vector2Int neighborPos = pos + Dirs[d];
-            if (_cells.TryGetValue(neighborPos, out Tile neighbor)
+            if (GridData.TryGetTile(neighborPos, out Tile neighbor)
                 && neighbor.EdgeConnectable(Opposite(d)))
             {
                 count++;
@@ -160,7 +159,7 @@ public class ShipManager : MonoBehaviour
         }
 
         tile.AttachTo(this, pos, rotation);
-        _cells[pos] = tile;
+        GridData.SetTile(pos, tile);
         tile.SetAttached(this);
         OnShipChanged?.Invoke();
         return true;
@@ -168,7 +167,7 @@ public class ShipManager : MonoBehaviour
 
     public void DestroyTile(Vector2Int pos)
     {
-        if (!_cells.TryGetValue(pos, out Tile tile))
+        if (!GridData.TryGetTile(pos, out Tile tile))
         {
             return;
         }
@@ -179,7 +178,7 @@ public class ShipManager : MonoBehaviour
             return;
         }
 
-        _cells.Remove(pos);
+        GridData.RemoveTile(pos);
         tile.SetDetached(this);
         Destroy(tile.gameObject);
         DetachOrphans();
@@ -206,7 +205,7 @@ public class ShipManager : MonoBehaviour
 
         // gather all candidate empty cells adjacent to existing tiles
         HashSet<Vector2Int> candidates = new();
-        foreach (Vector2Int occupied in _cells.Keys)
+        foreach (Vector2Int occupied in Cells.Keys)
         {
             for (int d = 0; d < 4; d++)
             {
@@ -216,7 +215,7 @@ public class ShipManager : MonoBehaviour
 
         foreach (Vector2Int candidate in candidates)
         {
-            if (_cells.ContainsKey(candidate))
+            if (GridData.ContainsCell(candidate))
             {
                 continue;
             }
@@ -257,7 +256,7 @@ public class ShipManager : MonoBehaviour
     {
         HashSet<Vector2Int> reachable = Flood(Core.Cell);
         List<Vector2Int> orphanKeys
-            = _cells.Keys.Where(c => !reachable.Contains(c)).ToList();
+            = Cells.Keys.Where(c => !reachable.Contains(c)).ToList();
         if (orphanKeys.Count == 0)
         {
             return;
@@ -281,7 +280,7 @@ public class ShipManager : MonoBehaviour
         // Release each orphan as a free-floating tile
         foreach (Vector2Int c in orphanKeys)
         {
-            if (!_cells.TryGetValue(c, out Tile tile))
+            if (!GridData.TryGetTile(c, out Tile tile))
             {
                 continue;
             }
@@ -304,7 +303,7 @@ public class ShipManager : MonoBehaviour
             float spin = Random.Range(minSpin, maxSpin);
 
             tile.SetDetached(this);
-            _cells.Remove(c);
+            GridData.RemoveTile(c);
 
             tile.ReleaseToFloating(velocity,
                 angularVelocity + spin);
@@ -320,11 +319,11 @@ public class ShipManager : MonoBehaviour
         while (open.Count > 0)
         {
             Vector2Int c = open.Dequeue();
-            Tile tile = _cells[c];
+            Tile tile = Cells[c];
             for (int direction = 0; direction < 4; direction++)
             {
                 Vector2Int n = c + Dirs[direction];
-                if (closed.Contains(n) || !_cells.TryGetValue(n, out Tile cell))
+                if (closed.Contains(n) || !GridData.TryGetTile(n, out Tile cell))
                 {
                     continue;
                 }

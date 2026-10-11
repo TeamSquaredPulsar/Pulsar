@@ -248,7 +248,7 @@ MonoBehaviour:
   spawnMaxRadius: 8
   driftSpeedMin: 0.3
   driftSpeedMax: 1.5
-  shipGrid: {fileID: 2120018148}
+  shipManager: {fileID: 2120018148}
 --- !u!1 &562475101
 GameObject:
   m_ObjectHideFlags: 0
@@ -279,7 +279,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 12a026fb2ba7c724a928fa2495773864, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Pulsar.Building.BuildManager
-  grid: {fileID: 2120018148}
+  manager: {fileID: 2120018148}
   gameplayCamera: {fileID: 1093924891}
   scanPadding: 2.5
   hoverRadius: 0.6
