@@ -6,7 +6,7 @@ namespace Pulsar.Building
     public class BuildManager : MonoBehaviour
     {
         [Header("References")]
-        [SerializeField] private ShipGrid grid;
+        [SerializeField] private ShipManager manager;
         [SerializeField] private Camera gameplayCamera;
 
         [Header("Scan Zone")]
@@ -78,13 +78,13 @@ namespace Pulsar.Building
 
         private void UpdateScanZoneShape()
         {
-            Bounds b = grid.GetLocalBounds();
+            Bounds b = manager.GetLocalBounds();
             float rx = b.extents.x + scanPadding;
-            float rz = b.extents.z + scanPadding;
-            Vector3 center = grid.transform.TransformPoint(b.center);
-            Quaternion rot = grid.transform.rotation;
+            float ry = b.extents.y + scanPadding;
+            Vector3 center = manager.transform.TransformPoint(b.center);
+            Quaternion rot = manager.transform.rotation;
 
-            _radialMenu.UpdateShape(center, rx, rz, rot);
+            _radialMenu.UpdateShape(center, rx, ry, rot);
         }
         
 
@@ -124,7 +124,7 @@ namespace Pulsar.Building
                 _hoveredTile.Highlight(hoverTint);
             }
             
-            (Vector2Int cell, int rotation)? result = grid.FindBestAttachment(
+            (Vector2Int cell, int rotation)? result = manager.FindBestAttachment(
                 _hoveredTile.TileInfo,
                 _hoveredTile.transform.position);
 
@@ -134,9 +134,9 @@ namespace Pulsar.Building
                 _attachRotation = result.Value.rotation;
                 _attachValid = true;
 
-                Vector3 ghostWorld = grid.CellToWorld(_attachCell);
-                Quaternion ghostRot = grid.transform.rotation
-                                      * ShipUtilities.RotateQuarterOnYAxis(_attachRotation);
+                Vector3 ghostWorld = manager.CellToWorld(_attachCell);
+                Quaternion ghostRot = manager.transform.rotation
+                                      * ShipUtilities.RotateQuarterOnZAxis(_attachRotation);
                 _ghost.Show(_hoveredTile.TileInfo.sprite, ghostWorld, true, ghostRot);
             }
             else
@@ -148,7 +148,7 @@ namespace Pulsar.Building
             if (Input.GetKeyDown(KeyCode.C) && _attachValid)
             {
                 TileInfoSO info = _hoveredTile.TileInfo;
-                if (grid.Attach(_attachCell, _hoveredTile, _attachRotation))
+                if (manager.Attach(_attachCell, _hoveredTile, _attachRotation))
                 {
                     _hoveredTile = null;
                     _attachValid = false;
@@ -174,7 +174,7 @@ namespace Pulsar.Building
         private void UpdateDestroyMode()
         {
             Vector3 cursorWorld = _cursorWorld;
-            Tile tile = grid.GetTileAtWorldPos(cursorWorld);
+            Tile tile = manager.GetTileAtWorldPos(cursorWorld);
 
             // un-highlight previous
             if (_highlightedTile != null && _highlightedTile != tile)
@@ -183,7 +183,7 @@ namespace Pulsar.Building
             }
 
             // highlight current 
-            if (tile != null && tile != grid.Core && _highlightedTile != tile)
+            if (tile != null && tile != manager.Core && _highlightedTile != tile)
             {
                 _highlightedTile = tile;
                 tile.Highlight(Color.red);
@@ -193,7 +193,7 @@ namespace Pulsar.Building
             {
                 Vector2Int cell = _highlightedTile.Cell;
                 _highlightedTile = null;
-                grid.DestroyTile(cell);
+                manager.DestroyTile(cell);
             }
         }
 
@@ -207,8 +207,8 @@ namespace Pulsar.Building
         private bool TryGetCursorWorld(out Vector3 worldPoint)
         {
             worldPoint = default;
-            if (gameplayCamera == null || grid == null) return false;
-            Plane plane = new Plane(Vector3.up, grid.transform.position);
+            if (gameplayCamera == null || manager == null) return false;
+            Plane plane = new Plane(Vector3.forward, manager.transform.position);
             Ray ray = gameplayCamera.ScreenPointToRay(Input.mousePosition);
             if (!plane.Raycast(ray, out float distance)) return false;
             worldPoint = ray.GetPoint(distance);

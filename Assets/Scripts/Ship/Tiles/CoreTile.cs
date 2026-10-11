@@ -4,9 +4,9 @@ namespace Pulsar.Ship
 {
     public class CoreTile : Tile
     {
-        public override void SetAttached(ShipGrid grid)
+        public override void SetAttached(ShipManager manager)
         {
-            base.SetAttached(grid);
+            base.SetAttached(manager);
         }
     }
 }

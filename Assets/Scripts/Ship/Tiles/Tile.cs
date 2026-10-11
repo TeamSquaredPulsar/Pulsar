@@ -2,8 +2,7 @@ using UnityEngine;
 
 namespace Pulsar.Ship
 {
-[RequireComponent(typeof(SpriteRenderer), typeof(BoxCollider),
-    typeof(Rigidbody))]
+[RequireComponent(typeof(BoxCollider2D), typeof(Rigidbody2D))]
 public class Tile : MonoBehaviour
 {
     [field: SerializeField]
@@ -13,10 +12,10 @@ public class Tile : MonoBehaviour
     private SpriteRenderer spriteRenderer;
 
     [SerializeField]
-    private BoxCollider tileCollider;
+    private BoxCollider2D tileCollider;
 
     [SerializeField]
-    private Rigidbody floatRb;
+    private Rigidbody2D floatRb;
 
     [SerializeField]
     private Color baseColor = Color.white;
@@ -38,19 +37,19 @@ public class Tile : MonoBehaviour
 
         spriteRenderer.sprite = tileInfoSo.sprite;
 
-        floatRb = GetComponent<Rigidbody>();
-        tileCollider = GetComponent<BoxCollider>();
+        floatRb = GetComponent<Rigidbody2D>();
+        tileCollider = GetComponent<BoxCollider2D>();
         tileCollider.size
-            = new Vector3(1f, ShipUtilities.TileColliderHeight, 1f);
+            = Vector2.one;
 
         transform.localPosition = ShipUtilities.GridToLocal(gridCell);
-        transform.localRotation = ShipUtilities.RotateQuarterOnYAxis(rot);
+        transform.localRotation = ShipUtilities.RotateQuarterOnZAxis(rot);
     }
 
     protected void InitFloating(
         TileInfoSO tileInfoSo,
         Vector3 position,
-        Vector3 velocity)
+        Vector2 velocity)
     {
         TileInfo = tileInfoSo;
         CurrentHp = tileInfoSo.hp;
@@ -59,39 +58,33 @@ public class Tile : MonoBehaviour
         spriteRenderer = CreateVisual(transform);
 
         spriteRenderer.sprite = tileInfoSo.sprite;
-
-        floatRb = GetComponent<Rigidbody>();
-        tileCollider = GetComponent<BoxCollider>();
+        
+        floatRb = GetComponent<Rigidbody2D>();
+        tileCollider = GetComponent<BoxCollider2D>();
         tileCollider.isTrigger = true;
         tileCollider.size
-            = new Vector3(1f, ShipUtilities.TileColliderHeight, 1f);
+            = Vector2.one;
 
         transform.position = position;
         ReleaseToFloating(velocity,
-            Vector3.up * (Random.Range(-45f, 45f) * Mathf.Deg2Rad));
+            Random.Range(-45f, 45f));
     }
 
-    public void AttachTo(ShipGrid grid, Vector2Int gridCell, int rot)
+    public void AttachTo(ShipManager manager, Vector2Int gridCell, int rot)
     {
-        floatRb.linearVelocity = Vector3.zero;
-        floatRb.angularVelocity = Vector3.zero;
-        floatRb.isKinematic = true;
-        floatRb.detectCollisions = false;
-        // Destroy(_floatRb);
-        // _floatRb = null;
-
+        floatRb.bodyType = RigidbodyType2D.Static;
 
         Cell = gridCell;
         Rotation = rot;
-        transform.SetParent(grid.transform, false);
+        transform.SetParent(manager.transform, false);
         transform.localPosition = ShipUtilities.GridToLocal(gridCell);
-        transform.localRotation = ShipUtilities.RotateQuarterOnYAxis(rot);
+        transform.localRotation = ShipUtilities.RotateQuarterOnZAxis(rot);
         tileCollider.isTrigger = false;
         spriteRenderer.sortingOrder = 0;
         Unhighlight();
     }
 
-    public void ReleaseToFloating(Vector3 velocity, Vector3 angularVelocity)
+    public void ReleaseToFloating(Vector2 velocity, float angularVelocity)
     {
         transform.SetParent(null,
             true); // preserve world position and orientation
@@ -104,18 +97,13 @@ public class Tile : MonoBehaviour
     }
 
     private void EnableFloatingPhysics(
-        Vector3 velocity,
-        Vector3 angularVelocity)
+        Vector2 velocity,
+        float angularVelocity)
     {
         ShipUtilities.Constrain(floatRb);
-        floatRb.isKinematic = false;
-        floatRb.detectCollisions = true;
-        floatRb.linearDamping = 0.05f;
-        floatRb.angularDamping = 0.1f;
-        floatRb.linearVelocity = new Vector3(velocity.x, 0f, velocity.z);
-        floatRb.angularVelocity = Vector3.up * angularVelocity.y;
-        floatRb.maxAngularVelocity = Mathf.Max(floatRb.maxAngularVelocity,
-            Mathf.Abs(angularVelocity.y));
+        floatRb.bodyType = RigidbodyType2D.Dynamic;
+        floatRb.linearVelocity = velocity;
+        floatRb.angularVelocity = angularVelocity;
     }
 
     public bool EdgeConnectable(int gridDir)
@@ -124,12 +112,12 @@ public class Tile : MonoBehaviour
         return TileInfo != null && TileInfo.connectableEdges[localDir];
     }
 
-    public virtual void SetAttached(ShipGrid grid)
+    public virtual void SetAttached(ShipManager manager)
     {
         IsAttached = true;
     }
 
-    public virtual void SetDetached(ShipGrid grid)
+    public virtual void SetDetached(ShipManager manager)
     {
         IsAttached = false;
     }
@@ -139,10 +127,10 @@ public class Tile : MonoBehaviour
         CurrentHp -= amount;
         if (CurrentHp <= 0f)
         {
-            ShipGrid grid = GetComponentInParent<ShipGrid>();
-            if (grid != null)
+            ShipManager manager = GetComponentInParent<ShipManager>();
+            if (manager != null)
             {
-                grid.DestroyTile(Cell);
+                manager.DestroyTile(Cell);
             }
         }
     }
@@ -175,7 +163,7 @@ public class Tile : MonoBehaviour
     public static Tile SpawnFloating<T>(
         TileInfoSO info,
         Vector3 position,
-        Vector3 velocity
+        Vector2 velocity
     ) where T : Tile
     {
         GameObject go = new($"Tile_{info.tileName}_floating");
@@ -190,7 +178,7 @@ public class Tile : MonoBehaviour
     {
         GameObject visual = new("Visual");
         visual.transform.SetParent(parent, false);
-        visual.transform.localRotation = Quaternion.Euler(90f, 0f, 0f);
+        visual.transform.localRotation = Quaternion.identity;
         SpriteRenderer renderer = visual.AddComponent<SpriteRenderer>();
         renderer.sortingOrder = sortingOrder;
         return renderer;

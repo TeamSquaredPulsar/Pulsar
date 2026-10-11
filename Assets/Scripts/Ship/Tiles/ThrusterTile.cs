@@ -4,15 +4,15 @@ namespace Pulsar.Ship
 {
     public class ThrusterTile : Tile
     {
-        public override void SetAttached(ShipGrid grid)
+        public override void SetAttached(ShipManager manager)
         {
-            base.SetAttached(grid);
+            base.SetAttached(manager);
             // register with ship thruster groups
         }
 
-        public override void SetDetached(ShipGrid grid)
+        public override void SetDetached(ShipManager manager)
         {
-            base.SetDetached(grid);
+            base.SetDetached(manager);
             // unregister from ship thruster groups
         }
     }

@@ -4,14 +4,14 @@ namespace Pulsar.Ship
 {
     public class GunTile : Tile
     {
-        public override void SetAttached(ShipGrid grid)
+        public override void SetAttached(ShipManager manager)
         {
-            base.SetAttached(grid);
+            base.SetAttached(manager);
         }
 
-        public override void SetDetached(ShipGrid grid)
+        public override void SetDetached(ShipManager manager)
         {
-            base.SetDetached(grid);
+            base.SetDetached(manager);
         }
     }
 }

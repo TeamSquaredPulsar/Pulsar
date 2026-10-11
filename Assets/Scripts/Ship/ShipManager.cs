@@ -6,8 +6,8 @@ using Random = UnityEngine.Random;
 
 namespace Pulsar.Ship
 {
-[RequireComponent(typeof(Rigidbody))]
-public class ShipGrid : MonoBehaviour
+[RequireComponent(typeof(Rigidbody2D))]
+public class ShipManager : MonoBehaviour
 {
     public static readonly Vector2Int[] Dirs =
     {
@@ -27,11 +27,10 @@ public class ShipGrid : MonoBehaviour
     [SerializeField]
     private Vector2 detachRadiateAngularVelocity = new(-180f, 180f);
 
-    [field: SerializeField]
     public Tile Core { get; private set; }
 
     [field: SerializeField]
-    public Rigidbody Rb { get; private set; }
+    public Rigidbody2D Rb { get; private set; }
 
     private readonly Dictionary<Vector2Int, Tile> _cells = new();
 
@@ -39,7 +38,7 @@ public class ShipGrid : MonoBehaviour
 
     private void Awake()
     {
-        Rb = GetComponent<Rigidbody>();
+        Rb = GetComponent<Rigidbody2D>();
 
         ShipUtilities.Constrain(Rb);
 
@@ -52,7 +51,7 @@ public class ShipGrid : MonoBehaviour
     public event Action OnShipChanged;
     public event Action OnShipDestroyed;
 
-    public static int Opposite(int d) => (d + 2) % 4;
+    private static int Opposite(int d) => (d + 2) % 4;
 
     private void SpawnCore()
     {
@@ -69,7 +68,7 @@ public class ShipGrid : MonoBehaviour
         if (_cells.Count == 0)
         {
             return new Bounds(Vector3.zero,
-                new Vector3(1f, ShipUtilities.TileColliderHeight, 1f));
+                new Vector3(1f, 1f, 0f));
         }
 
         Vector2 min = new(float.MaxValue, float.MaxValue);
@@ -82,7 +81,7 @@ public class ShipGrid : MonoBehaviour
 
         Vector2 size = max - min + Vector2.one;
         return new Bounds(ShipUtilities.GridToLocal((min + max) * 0.5f),
-            new Vector3(size.x, ShipUtilities.TileColliderHeight, size.y));
+            new Vector3(size.x, size.y, 0f));
     }
 
     public Vector3 CellToWorld(Vector2Int cell) =>
@@ -264,10 +263,10 @@ public class ShipGrid : MonoBehaviour
             return;
         }
 
-        Vector3 centerOfMass = Rb.worldCenterOfMass;
-        Vector3 linearVelocity = Rb.linearVelocity;
-        Vector3 angularVelocity = Rb.angularVelocity;
-        Vector3 explosionCenter = Core.transform.position;
+        Vector2 centerOfMass = Rb.worldCenterOfMass;
+        Vector2 linearVelocity = Rb.linearVelocity;
+        float angularVelocity = Rb.angularVelocity;
+        Vector2 explosionCenter = Core.transform.position;
         float minSpeed = Mathf.Max(0f,
             Mathf.Min(detachRadiateLinearVelocity.x,
                 detachRadiateLinearVelocity.y));
@@ -275,9 +274,9 @@ public class ShipGrid : MonoBehaviour
             Mathf.Max(detachRadiateLinearVelocity.x,
                 detachRadiateLinearVelocity.y));
         float minSpin = Mathf.Min(detachRadiateAngularVelocity.x,
-            detachRadiateAngularVelocity.y) * Mathf.Deg2Rad;
+            detachRadiateAngularVelocity.y);
         float maxSpin = Mathf.Max(detachRadiateAngularVelocity.x,
-            detachRadiateAngularVelocity.y) * Mathf.Deg2Rad;
+            detachRadiateAngularVelocity.y);
 
         // Release each orphan as a free-floating tile
         foreach (Vector2Int c in orphanKeys)
@@ -287,17 +286,17 @@ public class ShipGrid : MonoBehaviour
                 continue;
             }
 
-            Vector3 worldPos = tile.transform.position;
+            Vector2 worldPos = tile.transform.position;
 
-            Vector3 velocity = linearVelocity +
-                               Vector3.Cross(angularVelocity,
-                                   worldPos - centerOfMass);
-            Vector3 outward = worldPos - explosionCenter;
-            outward.y = 0f;
+            Vector2 offset = worldPos - centerOfMass;
+            Vector2 velocity = linearVelocity +
+                               new Vector2(-offset.y, offset.x) *
+                               (angularVelocity * Mathf.Deg2Rad);
+            Vector2 outward = worldPos - explosionCenter;
             if (outward.sqrMagnitude < 0.0001f)
             {
                 float angle = Random.Range(0f, 2f * Mathf.PI);
-                outward = new Vector3(Mathf.Cos(angle), 0f, Mathf.Sin(angle));
+                outward = new Vector2(Mathf.Cos(angle), Mathf.Sin(angle));
             }
 
             float speed = Random.Range(minSpeed, maxSpeed);
@@ -308,7 +307,7 @@ public class ShipGrid : MonoBehaviour
             _cells.Remove(c);
 
             tile.ReleaseToFloating(velocity,
-                angularVelocity + Vector3.up * spin);
+                angularVelocity + spin);
         }
     }
 
