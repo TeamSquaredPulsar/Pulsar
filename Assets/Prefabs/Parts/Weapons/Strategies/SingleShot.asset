@@ -9,13 +9,6 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ad203df573398b6499f2d8d4f0d23506, type: 3}
+  m_Script: {fileID: 11500000, guid: 97ebc552411a9c44f9c66643541a6ecd, type: 3}
   m_Name: SingleShot
   m_EditorClassIdentifier: Assembly-CSharp::SingleShot
-  damage: 10
-  fireRate: 0.5
-  radius: 1
-  cooldown: 1
-  projectileSpeed: 3
-  lifeTime: 4
-  projectilePrefab: {fileID: 1682859016921356063, guid: a133161848d51234b97f8554a243a1ab, type: 3}

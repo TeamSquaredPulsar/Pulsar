@@ -1,4 +1,4 @@
-﻿%YAML 1.1
+%YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
 --- !u!1 &1843940356141040302
 GameObject:
@@ -50,7 +50,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 285fe86de7dfad94d922d4b5fbc230f2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlayerController
-  input: {fileID: 11400000, guid: c5eb4fca90495374ca60a24df65307ec, type: 2}
+  input: {fileID: 11400000, guid: c7e737219c863a2409c60ad7a526337d, type: 2}
   shipManager: {fileID: 7830473904832805222}
 --- !u!114 &7830473904832805222
 MonoBehaviour:
