@@ -25,11 +25,11 @@ public class BurstShot : WeaponStrategy
 
     /// <inheritdoc/>
     public override void Fire(
-        Transform firePoint,
+        Transform[] firePoints,
         Weapon weapon,
         Func<Transform, GameObject> spawnProjectile)
     {
-        weapon.StartCoroutine(Burst(firePoint, spawnProjectile));
+        weapon.StartCoroutine(Burst(firePoints, spawnProjectile));
     }
 
     /// <summary>
@@ -39,17 +39,17 @@ public class BurstShot : WeaponStrategy
     /// <param name="spawnProjectile"></param>
     /// <returns></returns>
     private IEnumerator Burst(
-        Transform firePoint,
+        Transform[] firePoints,
         Func<Transform, GameObject> spawnProjectile)
     {
         for (int i = k_BulletStart; i < k_MaxBullets; i++)
         {
-            if (firePoint == null)
+            if (firePoints == null)
             {
                 yield break;
             }
 
-            spawnProjectile(firePoint);
+            spawnProjectile(firePoints[0]);
 
             yield return new WaitForSeconds(k_bulletGapTime);
         }

@@ -13,6 +13,8 @@ using UnityEngine;
     menuName = "Scriptable Objects/SingleShot")]
 public class SingleShot : WeaponStrategy
 {
+    private const int k_mainFirePoint = 0;
+
     /// <summary>
     /// Fire method
     /// </summary>
@@ -20,10 +22,15 @@ public class SingleShot : WeaponStrategy
     /// <param name="weapon"></param>
     /// <param name="spawnProjectile"></param>
     public override void Fire(
-        Transform firePoint,
+        Transform[] firePoints,
         Weapon weapon,
         Func<Transform, GameObject> spawnProjectile)
     {
-        spawnProjectile(firePoint);
+        if (firePoints == null || firePoints.Length == 0)
+        {
+            return;
+        }
+
+        spawnProjectile(firePoints[k_mainFirePoint]);
     }
 }
