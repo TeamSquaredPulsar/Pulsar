@@ -17,16 +17,16 @@ public class ThrusterManager : MonoBehaviour
     private void Awake()
     {
         directedThrust = new DirectionThrust[4];
-        
+
         for (int i = 0; i < 4; i++)
         {
-            directedThrust[i] = new DirectionThrust 
-            { 
-                orientation = (ThrusterOrientation)i, 
-                thrust = 0f, 
+            directedThrust[i] = new DirectionThrust
+            {
+                orientation = (ThrusterOrientation)i,
+                thrust = 0f,
             };
-            
         }
+
         CalculateThrusters();
     }
 
@@ -43,5 +43,4 @@ public class ThrusterManager : MonoBehaviour
     {
         return directedThrust[(int)orientation];
     }
-    
 }

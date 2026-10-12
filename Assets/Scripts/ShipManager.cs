@@ -15,10 +15,10 @@ public class ShipManager : MonoBehaviour
     private List<Tile> tiles = new(20);
 
     [SerializeField]
-    private List<Weapon> weapons = new(10);
+    private List<Thruster> thrusters = new(10);
 
     [SerializeField]
-    private List<Thruster> thrusters = new(10);
+    private List<Weapon> weapons = new(10);
 
     // [CB] Commenting out so Unity doesn't show warnings. We can uncomment as we need them.
     // public event Action<Tile> onNewTileAdded;
