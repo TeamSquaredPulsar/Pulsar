@@ -1,17 +1,14 @@
 using UnityEngine;
 
-namespace Pulsar.Ship
+public class ChassisTile : Tile
 {
-    public class ChassisTile : Tile
+    public override void SetAttached(ShipManager manager)
     {
-        public override void SetAttached(ShipManager manager)
-        {
-            base.SetAttached(manager);
-        }
+        base.SetAttached(manager);
+    }
 
-        public override void SetDetached(ShipManager manager)
-        {
-            base.SetDetached(manager);
-        }
+    public override void SetDetached(ShipManager manager)
+    {
+        base.SetDetached(manager);
     }
 }

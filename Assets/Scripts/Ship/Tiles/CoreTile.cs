@@ -1,12 +1,9 @@
 using UnityEngine;
 
-namespace Pulsar.Ship
+public class CoreTile : Tile
 {
-    public class CoreTile : Tile
+    public override void SetAttached(ShipManager manager)
     {
-        public override void SetAttached(ShipManager manager)
-        {
-            base.SetAttached(manager);
-        }
+        base.SetAttached(manager);
     }
 }

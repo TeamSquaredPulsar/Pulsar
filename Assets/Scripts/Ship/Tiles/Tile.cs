@@ -1,7 +1,7 @@
+using System;
 using UnityEngine;
+using Random = UnityEngine.Random;
 
-namespace Pulsar.Ship
-{
 [RequireComponent(typeof(BoxCollider2D), typeof(Rigidbody2D))]
 public class Tile : MonoBehaviour
 {
@@ -58,6 +58,7 @@ public class Tile : MonoBehaviour
         tileCollider = GetComponent<BoxCollider2D>();
         tileCollider.size
             = Vector2.one;
+        tileCollider.compositeOperation = Collider2D.CompositeOperation.Merge;
 
         transform.localPosition = ShipUtilities.GridToLocal(gridCell);
         transform.localRotation = ShipUtilities.RotateQuarterOnZAxis(rot);
@@ -154,7 +155,7 @@ public class Tile : MonoBehaviour
             ShipManager manager = GetComponentInParent<ShipManager>();
             if (manager != null)
             {
-                manager.DestroyTile(Cell);
+                manager.DestroyTileAt(Cell);
             }
         }
     }
@@ -209,5 +210,4 @@ public class Tile : MonoBehaviour
     }
 
     #endregion
-}
 }

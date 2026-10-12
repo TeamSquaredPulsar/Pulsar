@@ -35,6 +35,46 @@
                     "interactions": "",
                     "initialStateCheck": true,
                     "priority": 0
+                },
+                {
+                    "name": "ToggleRadialMenu",
+                    "type": "Button",
+                    "id": "fb5450f8-f430-45dc-be3f-f3a348a03728",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false,
+                    "priority": 0
+                },
+                {
+                    "name": "SelectFloatingTile",
+                    "type": "Button",
+                    "id": "e0487f61-c830-42db-8b26-6b13d2cc4b39",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false,
+                    "priority": 0
+                },
+                {
+                    "name": "BuildTile",
+                    "type": "Button",
+                    "id": "055f7cb4-a94c-454a-b8d7-f6b5c0965bf6",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false,
+                    "priority": 0
+                },
+                {
+                    "name": "DetachTile",
+                    "type": "Button",
+                    "id": "1ff18678-0c9d-4d62-9970-ec764b993ce5",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false,
+                    "priority": 0
                 }
             ],
             "bindings": [
@@ -202,6 +242,50 @@
                     "action": "Rotate",
                     "isComposite": false,
                     "isPartOfComposite": true
+                },
+                {
+                    "name": "",
+                    "id": "f027ab95-fd2f-4f78-89ea-926948b3f4be",
+                    "path": "<Keyboard>/tab",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "ToggleRadialMenu",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "8b4e0df5-1c6d-41b2-ae92-df3e36bb60e7",
+                    "path": "<Keyboard>/c",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "BuildTile",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "3d050224-e2bf-4814-ae28-d47b640fb3d0",
+                    "path": "<Keyboard>/x",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "DetachTile",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "d5121413-3f48-4b0e-a5d6-0c3c208bb667",
+                    "path": "<Mouse>/leftButton",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "SelectFloatingTile",
+                    "isComposite": false,
+                    "isPartOfComposite": false
                 }
             ]
         }

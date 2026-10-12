@@ -1,7 +1,5 @@
 using UnityEngine;
 using Pulsar.Ship;
-namespace Pulsar.Building
-{
 
 public class GhostPreview : MonoBehaviour
 {
@@ -25,5 +23,4 @@ public class GhostPreview : MonoBehaviour
     {
         gameObject.SetActive(false);
     }
-}
 }

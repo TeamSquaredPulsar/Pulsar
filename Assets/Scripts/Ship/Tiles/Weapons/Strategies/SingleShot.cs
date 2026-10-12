@@ -17,11 +17,11 @@ public class SingleShot : WeaponStrategy
     /// Fire method
     /// </summary>
     /// <param name="firePoint"></param>
-    /// <param name="weapon"></param>
+    /// <param name="weaponTile"></param>
     /// <param name="spawnProjectile"></param>
     public override void Fire(
         Transform firePoint,
-        Weapon weapon,
+        WeaponTile weaponTile,
         Func<Transform, GameObject> spawnProjectile)
     {
         spawnProjectile(firePoint);

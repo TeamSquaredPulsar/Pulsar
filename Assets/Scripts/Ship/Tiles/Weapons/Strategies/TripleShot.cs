@@ -23,7 +23,7 @@ public class TripleShot : WeaponStrategy
     /// <inheritdoc/>
     public override void Fire(
         Transform firePoint,
-        Weapon weapon,
+        WeaponTile weaponTile,
         Func<Transform, GameObject> spawnProjectile)
     {
         Shoot(firePoint, k_LeftAngle, spawnProjectile);

@@ -19,12 +19,12 @@ public abstract class WeaponStrategy : ScriptableObject
     /// 
     /// </summary>
     /// <param name="firePoint"></param>
-    ///  <param name="weapon"></param>
+    ///  <param name="weaponTile"></param>
     /// <param name="spawnProjectile"></param>
     public abstract void
         Fire(
             Transform firePoint,
-            Weapon
-                weapon,
+            WeaponTile
+                weaponTile,
             Func<Transform, GameObject> spawnProjectile);
 }

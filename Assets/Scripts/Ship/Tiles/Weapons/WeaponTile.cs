@@ -1,4 +1,5 @@
 using System.Collections;
+using Pulsar.Ship;
 using UnityEngine;
 
 /// <summary>
@@ -9,7 +10,7 @@ using UnityEngine;
 /// @author Alfredo Luzardo
 /// @version 1.1
 /// </summary>
-public class Weapon : Tile
+public class WeaponTile : Tile
 {
     [Header("References")]
     [SerializeField]

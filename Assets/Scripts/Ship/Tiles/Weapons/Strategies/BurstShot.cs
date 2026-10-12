@@ -26,10 +26,10 @@ public class BurstShot : WeaponStrategy
     /// <inheritdoc/>
     public override void Fire(
         Transform firePoint,
-        Weapon weapon,
+        WeaponTile weaponTile,
         Func<Transform, GameObject> spawnProjectile)
     {
-        weapon.StartCoroutine(Burst(firePoint, spawnProjectile));
+        weaponTile.StartCoroutine(Burst(firePoint, spawnProjectile));
     }
 
     /// <summary>

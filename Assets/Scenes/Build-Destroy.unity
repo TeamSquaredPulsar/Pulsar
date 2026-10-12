@@ -170,57 +170,6 @@ Transform:
   - {fileID: 1493806212}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!1 &308855590
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 308855592}
-  - component: {fileID: 308855593}
-  m_Layer: 0
-  m_Name: Test
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &308855592
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 308855590}
-  serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 0}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &308855593
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 308855590}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4844bdb24a97162419f1a20e2b7dbbad, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::Pulsar.Testing.TESTSCRIPT
-  tileInfos:
-  - {fileID: 11400000, guid: 9c0e50de41345d743a48948f1809c761, type: 2}
-  spawnMinRadius: 5
-  spawnMaxRadius: 8
-  driftSpeedMin: 0.3
-  driftSpeedMax: 1.5
-  shipManager: {fileID: 2120018148}
 --- !u!1 &562475101
 GameObject:
   m_ObjectHideFlags: 0
@@ -714,7 +663,9 @@ GameObject:
   m_Component:
   - component: {fileID: 2120018150}
   - component: {fileID: 2120018149}
+  - component: {fileID: 2120018151}
   - component: {fileID: 2120018148}
+  - component: {fileID: 2120018152}
   m_Layer: 0
   m_Name: PlayerShip
   m_TagString: Untagged
@@ -735,9 +686,15 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Pulsar.Ship.ShipGrid
   coreInfoSo: {fileID: 11400000, guid: 2fc0edad448d5f34e831dd954138aabd, type: 2}
+  compositeCollider: {fileID: 2120018151}
+  <Rb>k__BackingField: {fileID: 2120018149}
+  <PlayerController>k__BackingField: {fileID: 0}
+  weapons: []
+  thrusters: []
   detachRadiateLinearVelocity: {x: 2, y: 5}
   detachRadiateAngularVelocity: {x: -180, y: 180}
-  <Rb>k__BackingField: {fileID: 2120018149}
+  spawnTestTiles:
+  - {fileID: 11400000, guid: 9c0e50de41345d743a48948f1809c761, type: 2}
 --- !u!50 &2120018149
 Rigidbody2D:
   serializedVersion: 5
@@ -780,12 +737,71 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!66 &2120018151
+CompositeCollider2D:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2120018147}
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Density: 1
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_ForceSendLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_ForceReceiveLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_ContactCaptureLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_CallbackLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_IsTrigger: 0
+  m_UsedByEffector: 0
+  m_CompositeOperation: 0
+  m_CompositeOrder: 0
+  m_Offset: {x: 0, y: 0}
+  m_GeometryType: 0
+  m_GenerationType: 0
+  m_EdgeRadius: 0
+  m_ColliderPaths: []
+  m_CompositePaths:
+    m_Paths: []
+  m_VertexDistance: 0.0005
+  m_OffsetDistance: 0.00005
+  m_UseDelaunayMesh: 0
+  m_CompositeGameObject: {fileID: 2120018147}
+--- !u!114 &2120018152
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2120018147}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 285fe86de7dfad94d922d4b5fbc230f2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PlayerController
+  input: {fileID: 11400000, guid: c5eb4fca90495374ca60a24df65307ec, type: 2}
+  shipManager: {fileID: 2120018148}
+  buildManager: {fileID: 562475102}
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0
   m_Roots:
   - {fileID: 1093924892}
-  - {fileID: 308855592}
   - {fileID: 2120018150}
   - {fileID: 562475103}
   - {fileID: 123308311}

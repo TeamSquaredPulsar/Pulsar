@@ -1,12 +1,11 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Pulsar.Ship;
 using UnityEngine;
 using Random = UnityEngine.Random;
 
-namespace Pulsar.Ship
-{
-[RequireComponent(typeof(Rigidbody2D))]
+[RequireComponent(typeof(CompositeCollider2D))]
 public class ShipManager : MonoBehaviour
 {
     public static readonly Vector2Int[] Dirs =
@@ -17,8 +16,19 @@ public class ShipManager : MonoBehaviour
         Vector2Int.left,
     };
 
+    [Header("Refs")]
     [SerializeField]
     private TileInfoSO coreInfoSo;
+    [SerializeField]
+    private CompositeCollider2D compositeCollider;
+    [field: SerializeField]
+    public Rigidbody2D Rb { get; private set; }
+    [field: SerializeField]
+    public PlayerController PlayerController { get; private set; }
+    [SerializeField]
+    private List<WeaponTile> weapons = new(10);
+    [SerializeField]
+    private List<ThrusterTile> thrusters = new(10);
 
     [Header("Detach Explosion")]
     [SerializeField]
@@ -29,13 +39,20 @@ public class ShipManager : MonoBehaviour
 
     public Tile Core => GridData.Core;
 
-    [field: SerializeField]
-    public Rigidbody2D Rb { get; private set; }
 
     public ShipGridData GridData { get; } = new();
 
     public IReadOnlyDictionary<Vector2Int, Tile> Cells => GridData.Cells;
 
+    public event Action OnTileAdded;
+    public event Action<int> OnTilesRemoved;
+    public event Action OnShipDestroyed;
+    // [CB] Commenting out so Unity doesn't show warnings. We can uncomment as we need them.
+    // public event Action<Tile> onNewTileAdded;
+    // public event Action<Weapon> onNewWeaponAdded;
+    // public event Action<Thruster> onNewThrusterAdded;
+    
+    
     private void Awake()
     {
         Rb = GetComponent<Rigidbody2D>();
@@ -48,9 +65,44 @@ public class ShipManager : MonoBehaviour
         }
     }
 
-    public event Action OnTileAdded;
-    public event Action<int> OnTilesRemoved;
-    public event Action OnShipDestroyed;
+    private void Start()
+    {
+        weapons = Cells.Values.OfType<WeaponTile>().ToList();
+        thrusters = Cells.Values.OfType<ThrusterTile>().ToList();
+        UpdateWeaponColliders();
+    }
+
+    public void Fire()
+    {
+        foreach (WeaponTile weapon in weapons)
+        {
+            weapon.Fire();
+        }
+    }
+
+    public void Move(Vector2 position)
+    {
+        // TODO: Add logic to figure out which thrusters to fire, and by how much
+        foreach (ThrusterTile thruster in thrusters)
+        {
+            //! [CB] PLACEHOLDER LOGIC
+            thruster.Move(position.x, Rb);
+        }
+    }
+
+    public void Rotate(float rotateForce)
+    {
+        //TODO: Add logic for rotating
+        Debug.Log("Manager moving");
+    }
+
+    private void UpdateWeaponColliders()
+    {
+        foreach (WeaponTile weapon in weapons)
+        {
+            weapon.SetParentCollider(compositeCollider);
+        }
+    }
 
     private static int Opposite(int d) => (d + 2) % 4;
 
@@ -166,7 +218,7 @@ public class ShipManager : MonoBehaviour
         return true;
     }
 
-    public void DestroyTile(Vector2Int pos)
+    public void DestroyTileAt(Vector2Int pos)
     {
         if (!GridData.TryGetTile(pos, out Tile tile))
         {
@@ -361,5 +413,48 @@ public class ShipManager : MonoBehaviour
     }
 
     #endregion
-}
+
+
+    #region TESTING
+
+#if UNITY_EDITOR
+    [SerializeField] private List<TileInfoSO> spawnTestTiles;
+    [ContextMenu("SpawnRandomFloater")]
+    private void SpawnRandomFloater()
+    {
+        TileInfoSO infor = spawnTestTiles[Random.Range(0, spawnTestTiles.Count)];
+
+        float angle = Random.Range(0f, 360f) * Mathf.Deg2Rad;
+        float dist = 6.5f;
+        Vector2 shipPos = transform.position;
+        Vector2 pos = shipPos + new Vector2(Mathf.Cos(angle), Mathf.Sin(angle)) * dist;
+
+        Vector2 toShip = (shipPos - pos).normalized;
+        Vector2 velocity = toShip + Random.insideUnitCircle * 0.3f;
+
+        Tile.SpawnFloating<ChassisTile>(infor, pos, velocity);
+    }
+    private void OnGUI()
+    {
+        GUIStyle style = new GUIStyle(GUI.skin.box)
+        {
+            fontSize = 30,
+            alignment = TextAnchor.UpperLeft,
+            richText = true
+        };
+
+        string info =
+            "<b>BUILD & DESTROY TEST</b>\n\n" +
+            "<b>Tab</b>        — Toggle scan zone\n" +
+            "<b>Click</b>      — Select a tile\n" +
+            "<b>Hold C</b>     — Rotate selected tile \n" +
+            "<b>Release C</b>  — Attach selected tile \n" +
+            "<b>X</b>          — Destroy ship tile\n\n";
+
+        GUI.Box(new Rect(10, 10, 540, 300), info, style);
+    }
+#endif
+    
+
+    #endregion
 }

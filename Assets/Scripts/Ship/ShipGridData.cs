@@ -1,9 +1,8 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using Pulsar.Ship;
 using UnityEngine;
 
-namespace Pulsar.Ship
-{
 public class ShipGridData
 {
     private readonly Dictionary<Vector2Int, Tile> _cells = new();
@@ -30,5 +29,4 @@ public class ShipGridData
     internal void SetTile(Vector2Int cell, Tile tile) => _cells[cell] = tile;
 
     internal bool RemoveTile(Vector2Int cell) => _cells.Remove(cell);
-}
 }
