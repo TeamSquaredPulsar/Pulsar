@@ -36,15 +36,15 @@ public class EnemyController : MonoBehaviour
     [SerializeField]
     private AICombatStats combatStats;
 
+    [SerializeField]
+    private ShipManager shipManager;
+
     private Transform _player;
 
     // TODO: make this a boolean value with a coroutine to handle if you can fire or not
     private float _timeBtwShots;
     private Vector3 _velocity;
     private float _weaveOffset;
-
-    [SerializeField]
-    private ShipManager shipManager;
 
     private void Start()
     {
@@ -137,8 +137,9 @@ public class EnemyController : MonoBehaviour
             return;
         }
 
-        Quaternion targetRotation
-            = Quaternion.LookRotation(lookDir, Vector3.up);
+        // Turn around Z so the ship's local up direction faces the target.
+        float angle = Mathf.Atan2(lookDir.y, lookDir.x) * Mathf.Rad2Deg - 90f;
+        Quaternion targetRotation = Quaternion.Euler(0f, 0f, angle);
 
         // [CB] TODO: Make this call shipManager.Rotate
         float turnAmount
@@ -160,7 +161,7 @@ public class EnemyController : MonoBehaviour
             return;
         }
 
-        float angleToPlayer = Vector3.Angle(transform.forward, dirToPlayer);
+        float angleToPlayer = Vector3.Angle(transform.up, dirToPlayer);
         if (angleToPlayer > combatStats.aimTolerance)
         {
             return;
