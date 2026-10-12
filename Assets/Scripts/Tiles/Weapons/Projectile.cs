@@ -21,10 +21,17 @@ public class Projectile : MonoBehaviour
     protected float speed = 10f;
 
     [SerializeField]
-    private float lifeTime;
+    [Range(0.1f, 10f)]
+    private float lifeTime = 4;
 
     [SerializeField]
     private GameObject hitEffectPrefab;
+
+    //TODO: Remove this
+    private void Awake()
+    {
+        Debug.Log("Oh boy, here I go killing again!");
+    }
 
     /// <summary>
     /// Start method.
@@ -53,7 +60,7 @@ public class Projectile : MonoBehaviour
             Debug.Log("Hit Effect");
         }
 
-        // [AL] TODO: Will need to deal damage here?
+        //? [AL] TODO: Will need to deal damage here?
 
         Destroy(gameObject);
     }
