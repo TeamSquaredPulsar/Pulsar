@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.Serialization;
 using Pulsar.Ship;
 
 namespace Pulsar.Building
@@ -7,37 +8,32 @@ namespace Pulsar.Building
     {
         [Header("References")]
         [SerializeField] private ShipManager manager;
-        [SerializeField] private Camera gameplayCamera;
+        [SerializeField] private RadialMenu radialMenu;
 
         [Header("Scan Zone")]
-        [SerializeField] private float scanPadding = 2.5f;
+        [SerializeField, Min(0.1f)] private float scanPadding = 2.5f;
 
-        [Header("Hover")]
-        [SerializeField] private float hoverRadius = 0.6f;
-        [SerializeField] private Color hoverTint = new(0.3f, 1f, 0.8f, 1f);
+        [Header("Selection")]
+        [SerializeField] private Color selectedTint = new(0.3f, 1f, 0.8f, 1f);
+        [SerializeField] private Color detachTint = Color.red;
+        [SerializeField, Min(0.1f)] private float pullSpeed = 8f;
+        [SerializeField, Min(0.1f)] private float orbitDegreesPerSecond = 90f;
 
-        [SerializeField] private RadialMenu _radialMenu;
         private GhostPreview _ghost;
         private bool _scanActive;
-
-        // hover tile
-        private Tile _hoveredTile;
+        private Tile _selectedTile;
+        private bool _atOutline;
+        private float _orbitAngle;
+        private bool _orbitHeld;
         private Vector2Int _attachCell;
         private int _attachRotation;
         private bool _attachValid;
-
-        // destroy tile
         private Tile _highlightedTile;
-        private Vector3 _cursorWorld;
-
 
         private void Start()
         {
-            if (gameplayCamera == null) gameplayCamera = Camera.main;
-
-            // ghost preview
-            GameObject ghostGO = new GameObject("GhostPreview");
-            _ghost = ghostGO.AddComponent<GhostPreview>();
+            _ghost = new GameObject("GhostPreview").AddComponent<GhostPreview>();
+            radialMenu.Hide();
         }
 
         private void Update()
@@ -45,150 +41,134 @@ namespace Pulsar.Building
             if (Input.GetKeyDown(KeyCode.Tab))
             {
                 _scanActive = !_scanActive;
-                if (_scanActive)
-                {
-                    _radialMenu.Show();
-                    Debug.Log("Activate radial menu");
-                }
+                if (_scanActive) radialMenu.Show();
                 else
                 {
-                    _radialMenu.Hide();
-                    ClearHover();
-                    Debug.Log("Inactivate radial menu");
+                    radialMenu.Hide();
+                    ClearSelection();
                 }
-            }
-
-            if (!TryGetCursorWorld(out _cursorWorld))
-            {
-                ClearHover();
-                ClearDestroyHighlight();
-                return;
             }
 
             if (_scanActive)
             {
                 UpdateScanZoneShape();
-                UpdateHover();
+                if (Input.GetMouseButtonDown(0)) SelectTile();
+                UpdateSelectedTile();
             }
 
-            // destroy is always available when not hovering a floating tile
-            if (_hoveredTile == null)
-                UpdateDestroyMode();
+            if (_selectedTile == null) UpdateDestroyMode();
+            else ClearDestroyHighlight();
         }
 
         private void UpdateScanZoneShape()
         {
             Bounds b = manager.GetLocalBounds();
-            float rx = b.extents.x + scanPadding;
-            float ry = b.extents.y + scanPadding;
-            Vector3 center = manager.transform.TransformPoint(b.center);
-            Quaternion rot = manager.transform.rotation;
 
-            _radialMenu.UpdateShape(center, rx, ry, rot);
+            Vector3 core = manager.Core != null
+                ? manager.Core.transform.position : manager.transform.position;
+            Vector3 coreLocal = manager.transform.InverseTransformPoint(core);
+            float rx = Mathf.Max(Mathf.Abs(b.min.x - coreLocal.x), Mathf.Abs(b.max.x - coreLocal.x))
+                       + Mathf.Max(0.1f, scanPadding);
+            float ry = Mathf.Max(Mathf.Abs(b.min.y - coreLocal.y), Mathf.Abs(b.max.y - coreLocal.y))
+                       + Mathf.Max(0.1f, scanPadding);
+            radialMenu.UpdateShape(core, rx, ry, manager.transform.rotation);
         }
-        
 
-        private void UpdateHover()
+        private void SelectTile()
         {
-            Vector2 cursor = ShipUtilities.LocalToGrid(_cursorWorld);
+            if(_selectedTile != null) return;
+            Tile tile = Tile.Hovered;
+            if (tile == null || tile.IsAttached || tile.TileInfo == null || tile == _selectedTile) return;
+            ClearSelection();
+            ClearDestroyHighlight();
+            _selectedTile = tile;
+            _selectedTile.BeginBuildControl();
+            _selectedTile.Highlight(selectedTint);
+            Vector3 core = manager.Core != null
+                ? manager.Core.transform.position : manager.transform.position;
+            _orbitAngle = radialMenu.OutlineAngleFromCore(core, tile.transform.position);
+        }
 
-            // Find the floating tile closest to cursor
-            Tile best = null;
-            float bestDist = float.MaxValue;
-
-            Tile[] allTiles = FindObjectsByType<Tile>(FindObjectsSortMode.None);
-            foreach (Tile t in allTiles)
+        private void UpdateSelectedTile()
+        {
+            if (_selectedTile == null || _selectedTile.IsAttached)
             {
-                if (t.IsAttached) continue;
-                if (!_radialMenu.IsInside(t.transform.position)) continue;
-
-                float d = Vector2.Distance(cursor, ShipUtilities.LocalToGrid(t.transform.position));
-                if (d < bestDist)
-                {
-                    bestDist = d;
-                    best = t;
-                }
-            }
-
-            if (best == null || bestDist > hoverRadius)
-            {
-                ClearHover();
+                ClearSelection();
                 return;
             }
 
-            if (best != _hoveredTile)
+            Vector3 target = radialMenu.PointOnOutline(_orbitAngle);
+            if (!_atOutline)
             {
-                ClearHover();
-                ClearDestroyHighlight();
-                _hoveredTile = best;
-                _hoveredTile.Highlight(hoverTint);
-            }
-            
-            (Vector2Int cell, int rotation)? result = manager.FindBestAttachment(
-                _hoveredTile.TileInfo,
-                _hoveredTile.transform.position);
-
-            if (result.HasValue)
-            {
-                _attachCell = result.Value.cell;
-                _attachRotation = result.Value.rotation;
-                _attachValid = true;
-
-                Vector3 ghostWorld = manager.CellToWorld(_attachCell);
-                Quaternion ghostRot = manager.transform.rotation
-                                      * ShipUtilities.RotateQuarterOnZAxis(_attachRotation);
-                _ghost.Show(_hoveredTile.TileInfo.sprite, ghostWorld, true, ghostRot);
-            }
-            else
-            {
-                _attachValid = false;
-                _ghost.Hide();
+                _selectedTile.transform.position = Vector3.MoveTowards(
+                    _selectedTile.transform.position, target, Mathf.Max(0.1f, pullSpeed) * Time.deltaTime);
+                _atOutline = (_selectedTile.transform.position - target).sqrMagnitude < 0.0001f;
+                if (!_atOutline) return;
             }
 
-            if (Input.GetKeyDown(KeyCode.C) && _attachValid)
+            if (Input.GetKey(KeyCode.C))
             {
-                TileInfoSO info = _hoveredTile.TileInfo;
-                if (manager.Attach(_attachCell, _hoveredTile, _attachRotation))
-                {
-                    _hoveredTile = null;
-                    _attachValid = false;
-                    _ghost.Hide();
-                    Debug.Log($"Attached {info.tileName} at {_attachCell}");
-                }
+                _orbitHeld = true;
+                _orbitAngle = Mathf.Repeat(_orbitAngle
+                    - Mathf.Max(0.1f, orbitDegreesPerSecond) * Mathf.Deg2Rad * Time.deltaTime,
+                    Mathf.PI * 2f);
+            }
+            _selectedTile.transform.position = radialMenu.PointOnOutline(_orbitAngle);
+            UpdatePreview();
+
+            if (Input.GetKeyUp(KeyCode.C))
+            {
+                bool shouldAttach = _orbitHeld && _attachValid;
+                _orbitHeld = false;
+                if (shouldAttach && manager.Attach(_attachCell, _selectedTile, _attachRotation))
+                    ClearSelection();
             }
         }
 
-        private void ClearHover()
+        private void UpdatePreview()
         {
-            if (_hoveredTile != null)
+            (Vector2Int cell, int rotation)? result = manager.FindBestAttachment(
+                _selectedTile.TileInfo, _selectedTile.transform.position, nearestCellOnly: true);
+            _attachValid = result.HasValue;
+            if (!_attachValid)
             {
-                if (_hoveredTile.gameObject != null)
-                    _hoveredTile.Unhighlight();
-                _hoveredTile = null;
+                _ghost.Hide();
+                return;
             }
-            _attachValid = false;
-            _ghost.Hide();
+            _attachCell = result.Value.cell;
+            _attachRotation = result.Value.rotation;
+            Quaternion rotation = manager.transform.rotation
+                                  * ShipUtilities.RotateQuarterOnZAxis(_attachRotation);
+            _ghost.Show(_selectedTile.TileInfo.sprite, manager.CellToWorld(_attachCell), true, rotation);
         }
 
+        private void ClearSelection()
+        {
+            if (_selectedTile != null)
+            {
+                if (!_selectedTile.IsAttached)
+                    _selectedTile.ReleaseToFloating(Vector2.zero, 0f);
+                _selectedTile.Unhighlight();
+            }
+            _selectedTile = null;
+            _atOutline = false;
+            _orbitHeld = false;
+            _attachValid = false;
+            if (_ghost != null) _ghost.Hide();
+        }
 
         private void UpdateDestroyMode()
         {
-            Vector3 cursorWorld = _cursorWorld;
-            Tile tile = manager.GetTileAtWorldPos(cursorWorld);
-
-            // un-highlight previous
-            if (_highlightedTile != null && _highlightedTile != tile)
-            {
-                ClearDestroyHighlight();
-            }
-
-            // highlight current 
+            Tile tile = Tile.Hovered;
+            if (tile != null && (!tile.IsAttached || tile == manager.Core
+                || !manager.Cells.TryGetValue(tile.Cell, out Tile ownedTile) || ownedTile != tile))
+                tile = null;
+            if (_highlightedTile != null && _highlightedTile != tile) ClearDestroyHighlight();
             if (tile != null && tile != manager.Core && _highlightedTile != tile)
             {
                 _highlightedTile = tile;
-                tile.Highlight(Color.red);
+                tile.Highlight(detachTint);
             }
-
             if (Input.GetKeyDown(KeyCode.X) && _highlightedTile != null)
             {
                 Vector2Int cell = _highlightedTile.Cell;
@@ -197,27 +177,23 @@ namespace Pulsar.Building
             }
         }
 
-
         private void ClearDestroyHighlight()
         {
             if (_highlightedTile != null) _highlightedTile.Unhighlight();
             _highlightedTile = null;
         }
 
-        private bool TryGetCursorWorld(out Vector3 worldPoint)
+        private void OnDisable()
         {
-            worldPoint = default;
-            if (gameplayCamera == null || manager == null) return false;
-            Plane plane = new Plane(Vector3.forward, manager.transform.position);
-            Ray ray = gameplayCamera.ScreenPointToRay(Input.mousePosition);
-            if (!plane.Raycast(ray, out float distance)) return false;
-            worldPoint = ray.GetPoint(distance);
-            return true;
+            ClearSelection();
+            ClearDestroyHighlight();
+            _scanActive = false;
+            if (radialMenu != null) radialMenu.Hide();
         }
 
         private void OnDestroy()
         {
-            if (_radialMenu != null) Destroy(_radialMenu.gameObject);
+            if (radialMenu != null) Destroy(radialMenu.gameObject);
             if (_ghost != null) Destroy(_ghost.gameObject);
         }
     }

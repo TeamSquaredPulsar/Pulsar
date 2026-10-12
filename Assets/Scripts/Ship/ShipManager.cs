@@ -48,7 +48,8 @@ public class ShipManager : MonoBehaviour
         }
     }
 
-    public event Action OnShipChanged;
+    public event Action OnTileAdded;
+    public event Action<int> OnTilesRemoved;
     public event Action OnShipDestroyed;
 
     private static int Opposite(int d) => (d + 2) % 4;
@@ -161,7 +162,7 @@ public class ShipManager : MonoBehaviour
         tile.AttachTo(this, pos, rotation);
         GridData.SetTile(pos, tile);
         tile.SetAttached(this);
-        OnShipChanged?.Invoke();
+        OnTileAdded?.Invoke();
         return true;
     }
 
@@ -181,8 +182,8 @@ public class ShipManager : MonoBehaviour
         GridData.RemoveTile(pos);
         tile.SetDetached(this);
         Destroy(tile.gameObject);
-        DetachOrphans();
-        OnShipChanged?.Invoke();
+        int orphanTilesNum = DetachOrphans();
+        OnTilesRemoved?.Invoke(orphanTilesNum + 1);
     }
 
     private void OnCoreDestroyed()
@@ -192,7 +193,8 @@ public class ShipManager : MonoBehaviour
 
     public (Vector2Int cell, int rotation)? FindBestAttachment(
         TileInfoSO infoSo,
-        Vector3 worldPos)
+        Vector3 worldPos,
+        bool nearestCellOnly = false)
     {
         Vector2 localPos
             = ShipUtilities.LocalToGrid(
@@ -213,6 +215,16 @@ public class ShipManager : MonoBehaviour
             }
         }
 
+        float nearestDistance = float.MaxValue;
+        if (nearestCellOnly)
+        {
+            foreach (Vector2Int candidate in candidates)
+            {
+                if (!GridData.ContainsCell(candidate))
+                    nearestDistance = Mathf.Min(nearestDistance, Vector2.Distance(localPos, candidate));
+            }
+        }
+
         foreach (Vector2Int candidate in candidates)
         {
             if (GridData.ContainsCell(candidate))
@@ -221,6 +233,7 @@ public class ShipManager : MonoBehaviour
             }
 
             float dist = Vector2.Distance(localPos, candidate);
+            if (nearestCellOnly && dist > nearestDistance + 0.01f) continue;
 
             for (int rot = 0; rot < 4; rot++)
             {
@@ -252,14 +265,14 @@ public class ShipManager : MonoBehaviour
         return (bestCell, bestRot);
     }
 
-    private void DetachOrphans()
+    private int DetachOrphans()
     {
         HashSet<Vector2Int> reachable = Flood(Core.Cell);
         List<Vector2Int> orphanKeys
             = Cells.Keys.Where(c => !reachable.Contains(c)).ToList();
         if (orphanKeys.Count == 0)
         {
-            return;
+            return 0;
         }
 
         Vector2 centerOfMass = Rb.worldCenterOfMass;
@@ -278,6 +291,7 @@ public class ShipManager : MonoBehaviour
             detachRadiateAngularVelocity.y);
 
         // Release each orphan as a free-floating tile
+        int orphanTiles = 0;
         foreach (Vector2Int c in orphanKeys)
         {
             if (!GridData.TryGetTile(c, out Tile tile))
@@ -307,7 +321,11 @@ public class ShipManager : MonoBehaviour
 
             tile.ReleaseToFloating(velocity,
                 angularVelocity + spin);
+
+            orphanTiles++;
         }
+
+        return orphanTiles;
     }
 
     private HashSet<Vector2Int> Flood(Vector2Int start)

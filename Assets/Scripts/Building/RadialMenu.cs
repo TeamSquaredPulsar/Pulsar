@@ -55,13 +55,34 @@ namespace Pulsar.Building
             }
         }
 
-        public bool IsInside(Vector3 worldPoint)
+        public Vector3 PointOnOutline(float angle)
         {
-            if (_rx <= 0f || _ry <= 0f) return false;
-            Vector3 local = Quaternion.Inverse(_rotation) * (worldPoint - _center);
-            float normalizedX = local.x / _rx;
-            float normalizedY = local.y / _ry;
-            return (normalizedX * normalizedX + normalizedY * normalizedY) <= 1f;
+            return _center + _rotation * new Vector3(
+                Mathf.Cos(angle) * _rx, Mathf.Sin(angle) * _ry, 0f);
+        }
+
+        // Intersect the ray from the core through the tile with the ellipse
+        public float OutlineAngleFromCore(Vector3 core, Vector3 tile)
+        {
+            //Ray: P(t) = origin + t * direction
+            Vector3 origin = Quaternion.Inverse(_rotation) * (core - _center);
+            Vector3 direction = Quaternion.Inverse(_rotation) * (tile - core);
+            direction.z = 0f;
+            if (direction.sqrMagnitude < 0.0001f) direction = Vector3.right;
+ 
+            // Px = ox + t*dx
+            // Py = oy + t*dy
+            // Px^2/rx^2 + Py^2/ry^2 = 1
+
+            float a = direction.x * direction.x / (_rx * _rx)
+                    + direction.y * direction.y / (_ry * _ry);
+            float b = 2f * (origin.x * direction.x / (_rx * _rx)
+                         + origin.y * direction.y / (_ry * _ry));
+            float c = origin.x * origin.x / (_rx * _rx)
+                    + origin.y * origin.y / (_ry * _ry) - 1f;
+            float distance = (-b + Mathf.Sqrt(Mathf.Max(0f, b * b - 4f * a * c))) / (2f * a);
+            Vector3 point = origin + direction * distance;
+            return Mathf.Atan2(point.y / _ry, point.x / _rx);
         }
 
         public void Show() => gameObject.SetActive(true);

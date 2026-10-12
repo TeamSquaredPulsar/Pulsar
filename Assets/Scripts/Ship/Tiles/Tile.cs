@@ -26,6 +26,23 @@ public class Tile : MonoBehaviour
 
     public bool IsAttached { get; private set; }
 
+    public static Tile Hovered { get; private set; }
+
+    protected virtual void OnMouseEnter()
+    {
+        Hovered = this;
+    }
+
+    protected virtual void OnMouseExit()
+    {
+        if (Hovered == this) Hovered = null;
+    }
+
+    protected virtual void OnDisable()
+    {
+        if (Hovered == this) Hovered = null;
+    }
+
     protected void Init(TileInfoSO tileInfoSo, Vector2Int gridCell, int rot = 0)
     {
         TileInfo = tileInfoSo;
@@ -94,6 +111,13 @@ public class Tile : MonoBehaviour
         spriteRenderer.sortingOrder = 10;
         Unhighlight();
         EnableFloatingPhysics(velocity, angularVelocity);
+    }
+
+    public void BeginBuildControl()
+    {
+        floatRb.linearVelocity = Vector2.zero;
+        floatRb.angularVelocity = 0f;
+        floatRb.bodyType = RigidbodyType2D.Kinematic;
     }
 
     private void EnableFloatingPhysics(
