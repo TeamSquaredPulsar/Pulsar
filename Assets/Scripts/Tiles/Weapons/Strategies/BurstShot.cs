@@ -15,10 +15,10 @@ using UnityEngine;
 public class BurstShot : WeaponStrategy
 {
     [SerializeField]
-    private int k_MaxBullets = 3;
+    private int k_BulletStart;
 
     [SerializeField]
-    private int k_BulletStart;
+    private int k_MaxBullets = 3;
 
     [SerializeField]
     private float k_bulletGapTime = 0.1f;
