@@ -4,8 +4,8 @@ using UnityEngine;
 
 public struct DirectionThrust
 {
-    public ThrusterOrientation orientation;
-    public float thrust;
+    public Rotation Orientation;
+    public float Thrust;
 }
 
 public class ThrusterManager : MonoBehaviour
@@ -17,15 +17,15 @@ public class ThrusterManager : MonoBehaviour
 
     private void Awake()
     {
-        int directions = Enum.GetNames(typeof(ThrusterOrientation)).Length;
+        int directions = Enum.GetNames(typeof(Rotation)).Length;
         _directedThrust = new DirectionThrust[directions];
 
         for (int i = 0; i < directions; i++)
         {
             _directedThrust[i] = new DirectionThrust
             {
-                orientation = (ThrusterOrientation)i,
-                thrust = 0f,
+                Orientation = (Rotation)i,
+                Thrust = 0f,
             };
         }
 
@@ -36,12 +36,12 @@ public class ThrusterManager : MonoBehaviour
     {
         foreach (ThrusterBlock thruster in thrusters)
         {
-            _directedThrust[(int)thruster.GetOrientation()].thrust
+            _directedThrust[(int)thruster.GetOrientation()].Thrust
                 += thruster.GetThrust();
         }
     }
 
     public DirectionThrust
-        GetDirectionThrust(ThrusterOrientation orientation) =>
+        GetDirectionThrust(Rotation orientation) =>
         _directedThrust[(int)orientation];
 }
