@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -12,21 +13,22 @@ public class ThrusterManager : MonoBehaviour
     [SerializeField]
     private List<ThrusterBlock> thrusters;
 
-    private DirectionThrust[] directedThrust;
+    private DirectionThrust[] _directedThrust;
 
     private void Awake()
     {
-        directedThrust = new DirectionThrust[4];
-        
-        for (int i = 0; i < 4; i++)
+        int directions = Enum.GetNames(typeof(ThrusterOrientation)).Length;
+        _directedThrust = new DirectionThrust[directions];
+
+        for (int i = 0; i < directions; i++)
         {
-            directedThrust[i] = new DirectionThrust 
-            { 
-                orientation = (ThrusterOrientation)i, 
-                thrust = 0f, 
+            _directedThrust[i] = new DirectionThrust
+            {
+                orientation = (ThrusterOrientation)i,
+                thrust = 0f,
             };
-            
         }
+
         CalculateThrusters();
     }
 
@@ -34,14 +36,12 @@ public class ThrusterManager : MonoBehaviour
     {
         foreach (ThrusterBlock thruster in thrusters)
         {
-            directedThrust[(int)thruster.GetOrientation()].thrust
+            _directedThrust[(int)thruster.GetOrientation()].thrust
                 += thruster.GetThrust();
         }
     }
 
-    public DirectionThrust GetDirectionThrust(ThrusterOrientation orientation)
-    {
-        return directedThrust[(int)orientation];
-    }
-    
+    public DirectionThrust
+        GetDirectionThrust(ThrusterOrientation orientation) =>
+        _directedThrust[(int)orientation];
 }

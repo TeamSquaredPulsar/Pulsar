@@ -1,0 +1,18 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e795fe7f1470b7e4e98c9daf4edf2af0, type: 3}
+  m_Name: TripleShot
+  m_EditorClassIdentifier: Assembly-CSharp::TripleShot
+  k_LeftAngle: -45
+  k_MiddleAngle: 0
+  k_RightAngle: 45
+  k_DefaultRotation: 0

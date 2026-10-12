@@ -5,7 +5,7 @@ public enum ThrusterOrientation
     Forward = 0,
     Backward = 1,
     Left = 2,
-    Right = 3
+    Right = 3,
 }
 
 public class ThrusterBlock : MonoBehaviour
@@ -16,6 +16,7 @@ public class ThrusterBlock : MonoBehaviour
     [SerializeField]
     private ThrusterOrientation orientation = ThrusterOrientation.Forward;
 
+    [SerializeField]
     private float defaultSpeed = 0.1f;
 
     private void Awake()
@@ -27,13 +28,7 @@ public class ThrusterBlock : MonoBehaviour
         }
     }
 
-    public float GetThrust()
-    {
-        return thrust;
-    }
+    public float GetThrust() => thrust;
 
-    public ThrusterOrientation GetOrientation()
-    {
-        return orientation;
-    }
+    public ThrusterOrientation GetOrientation() => orientation;
 }
