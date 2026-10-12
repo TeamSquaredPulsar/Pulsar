@@ -14,7 +14,7 @@ public class InputReader : ScriptableObject, IPlayerActions, IInputReader
 {
     private Controls _controls;
 
-    private void Awake()
+    private void OnEnable()
     {
         if (_controls != null)
         {
@@ -23,11 +23,6 @@ public class InputReader : ScriptableObject, IPlayerActions, IInputReader
 
         _controls = new Controls();
         _controls.Player.SetCallbacks(this);
-    }
-
-    private void OnEnable()
-    {
-        _controls.Player.Enable();
     }
 
     private void OnDisable()
