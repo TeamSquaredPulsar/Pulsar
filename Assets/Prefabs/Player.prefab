@@ -9,7 +9,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 7376437609368605663}
-  - component: {fileID: 6370343626992969303}
+  - component: {fileID: -8036254237484742949}
   - component: {fileID: 7830473904832805222}
   - component: {fileID: 8716755017154123671}
   - component: {fileID: 70888490315140228}
@@ -38,7 +38,7 @@ Transform:
   - {fileID: 304936923055663208}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &6370343626992969303
+--- !u!114 &-8036254237484742949
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -47,7 +47,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 1843940356141040302}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 285fe86de7dfad94d922d4b5fbc230f2, type: 3}
+  m_Script: {fileID: 11500000, guid: 0a1bc48df7810e64a8a875bab28d8d19, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlayerController
   input: {fileID: 11400000, guid: c7e737219c863a2409c60ad7a526337d, type: 2}
