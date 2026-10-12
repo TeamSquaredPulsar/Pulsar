@@ -1,24 +1,16 @@
 using UnityEngine;
 
-public enum ThrusterOrientation
-{
-    Forward = 0,
-    Backward = 1,
-    Left = 2,
-    Right = 3,
-}
-
 public class Thruster : Tile
 {
     [SerializeField]
     private float thrust = 0.1f;
 
     [SerializeField]
-    private ThrusterOrientation orientation = ThrusterOrientation.Forward;
+    private Rotation orientation = Rotation.Up;
     
     public float GetThrust() => thrust;
 
-    public ThrusterOrientation GetOrientation() => orientation;
+    public Rotation GetOrientation() => orientation;
     
     //public void Move(float amount, Rigidbody2D rb)
     //{
