@@ -75,6 +75,26 @@
                     "interactions": "",
                     "initialStateCheck": false,
                     "priority": 0
+                },
+                {
+                    "name": "MouseCursor",
+                    "type": "Value",
+                    "id": "333b1a98-fbb1-431d-9993-ddc930befcd9",
+                    "expectedControlType": "Vector2",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": true,
+                    "priority": 0
+                },
+                {
+                    "name": "ControllerRightStickCorsor",
+                    "type": "Value",
+                    "id": "ff664a1e-6d17-408f-9e2f-d623d744d78f",
+                    "expectedControlType": "Vector2",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": true,
+                    "priority": 0
                 }
             ],
             "bindings": [
@@ -284,6 +304,28 @@
                     "processors": "",
                     "groups": "",
                     "action": "SelectFloatingTile",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "379f5d68-8dac-48ee-8454-f14a3632c246",
+                    "path": "<Mouse>/position",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "MouseCursor",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "3b52504a-a1a2-451e-b9f9-61e7f199b595",
+                    "path": "<Gamepad>/rightStick",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "ControllerRightStickCorsor",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }

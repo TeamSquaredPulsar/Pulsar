@@ -161,6 +161,26 @@ public partial class @Controls: IInputActionCollection2, IDisposable
                     ""interactions"": """",
                     ""initialStateCheck"": false,
                     ""priority"": 0
+                },
+                {
+                    ""name"": ""MouseCursor"",
+                    ""type"": ""Value"",
+                    ""id"": ""333b1a98-fbb1-431d-9993-ddc930befcd9"",
+                    ""expectedControlType"": ""Vector2"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": true,
+                    ""priority"": 0
+                },
+                {
+                    ""name"": ""ControllerRightStickCorsor"",
+                    ""type"": ""Value"",
+                    ""id"": ""ff664a1e-6d17-408f-9e2f-d623d744d78f"",
+                    ""expectedControlType"": ""Vector2"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": true,
+                    ""priority"": 0
                 }
             ],
             ""bindings"": [
@@ -372,6 +392,28 @@ public partial class @Controls: IInputActionCollection2, IDisposable
                     ""action"": ""SelectFloatingTile"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""379f5d68-8dac-48ee-8454-f14a3632c246"",
+                    ""path"": ""<Mouse>/position"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""MouseCursor"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""3b52504a-a1a2-451e-b9f9-61e7f199b595"",
+                    ""path"": ""<Gamepad>/rightStick"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""ControllerRightStickCorsor"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         }
@@ -404,6 +446,8 @@ public partial class @Controls: IInputActionCollection2, IDisposable
         m_Player_SelectFloatingTile = m_Player.FindAction("SelectFloatingTile", throwIfNotFound: true);
         m_Player_BuildTile = m_Player.FindAction("BuildTile", throwIfNotFound: true);
         m_Player_DetachTile = m_Player.FindAction("DetachTile", throwIfNotFound: true);
+        m_Player_MouseCursor = m_Player.FindAction("MouseCursor", throwIfNotFound: true);
+        m_Player_ControllerRightStickCorsor = m_Player.FindAction("ControllerRightStickCorsor", throwIfNotFound: true);
     }
 
     ~@Controls()
@@ -491,6 +535,8 @@ public partial class @Controls: IInputActionCollection2, IDisposable
     private readonly InputAction m_Player_SelectFloatingTile;
     private readonly InputAction m_Player_BuildTile;
     private readonly InputAction m_Player_DetachTile;
+    private readonly InputAction m_Player_MouseCursor;
+    private readonly InputAction m_Player_ControllerRightStickCorsor;
     /// <summary>
     /// Provides access to input actions defined in input action map "Player".
     /// </summary>
@@ -530,6 +576,14 @@ public partial class @Controls: IInputActionCollection2, IDisposable
         /// Provides access to the underlying input action "Player/DetachTile".
         /// </summary>
         public InputAction @DetachTile => m_Wrapper.m_Player_DetachTile;
+        /// <summary>
+        /// Provides access to the underlying input action "Player/MouseCursor".
+        /// </summary>
+        public InputAction @MouseCursor => m_Wrapper.m_Player_MouseCursor;
+        /// <summary>
+        /// Provides access to the underlying input action "Player/ControllerRightStickCorsor".
+        /// </summary>
+        public InputAction @ControllerRightStickCorsor => m_Wrapper.m_Player_ControllerRightStickCorsor;
         /// <summary>
         /// Provides access to the underlying input action map instance.
         /// </summary>
@@ -577,6 +631,12 @@ public partial class @Controls: IInputActionCollection2, IDisposable
             @DetachTile.started += instance.OnDetachTile;
             @DetachTile.performed += instance.OnDetachTile;
             @DetachTile.canceled += instance.OnDetachTile;
+            @MouseCursor.started += instance.OnMouseCursor;
+            @MouseCursor.performed += instance.OnMouseCursor;
+            @MouseCursor.canceled += instance.OnMouseCursor;
+            @ControllerRightStickCorsor.started += instance.OnControllerRightStickCorsor;
+            @ControllerRightStickCorsor.performed += instance.OnControllerRightStickCorsor;
+            @ControllerRightStickCorsor.canceled += instance.OnControllerRightStickCorsor;
         }
 
         /// <summary>
@@ -609,6 +669,12 @@ public partial class @Controls: IInputActionCollection2, IDisposable
             @DetachTile.started -= instance.OnDetachTile;
             @DetachTile.performed -= instance.OnDetachTile;
             @DetachTile.canceled -= instance.OnDetachTile;
+            @MouseCursor.started -= instance.OnMouseCursor;
+            @MouseCursor.performed -= instance.OnMouseCursor;
+            @MouseCursor.canceled -= instance.OnMouseCursor;
+            @ControllerRightStickCorsor.started -= instance.OnControllerRightStickCorsor;
+            @ControllerRightStickCorsor.performed -= instance.OnControllerRightStickCorsor;
+            @ControllerRightStickCorsor.canceled -= instance.OnControllerRightStickCorsor;
         }
 
         /// <summary>
@@ -711,5 +777,19 @@ public partial class @Controls: IInputActionCollection2, IDisposable
         /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
         /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
         void OnDetachTile(InputAction.CallbackContext context);
+        /// <summary>
+        /// Method invoked when associated input action "MouseCursor" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
+        /// </summary>
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
+        void OnMouseCursor(InputAction.CallbackContext context);
+        /// <summary>
+        /// Method invoked when associated input action "ControllerRightStickCorsor" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
+        /// </summary>
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
+        void OnControllerRightStickCorsor(InputAction.CallbackContext context);
     }
 }

@@ -62,6 +62,16 @@ public class InputReader : ScriptableObject, IPlayerActions, IInputReader
         ToggleRadialMenuEvent?.Invoke(context.started);
     }
 
+    public void OnMouseCursor(InputAction.CallbackContext context)
+    {
+        MouseCursorEvent?.Invoke(context.ReadValue<Vector2>());
+    }
+
+    public void OnControllerRightStickCorsor(InputAction.CallbackContext context)
+    {
+        ControllerRightStickCorsor?.Invoke(context.ReadValue<Vector2>());
+    }
+
     public void OnSelectFloatingTile(InputAction.CallbackContext context)
     {
         SelectFloatingTileEvent?.Invoke(context.started);
@@ -82,6 +92,8 @@ public class InputReader : ScriptableObject, IPlayerActions, IInputReader
     public event Action<float> RotateEvent;
     public event Action<bool> DetachTileEvent;
     public event Action<bool> SelectFloatingTileEvent;
+    public event Action<Vector2> MouseCursorEvent;
+    public event Action<Vector2> ControllerRightStickCorsor;
     public event Action<bool> ToggleRadialMenuEvent;
     public event Action<InputAction.CallbackContext> BuildTileEvent;
 }

@@ -688,7 +688,7 @@ MonoBehaviour:
   coreInfoSo: {fileID: 11400000, guid: 2fc0edad448d5f34e831dd954138aabd, type: 2}
   compositeCollider: {fileID: 2120018151}
   <Rb>k__BackingField: {fileID: 2120018149}
-  <PlayerController>k__BackingField: {fileID: 0}
+  <PlayerController>k__BackingField: {fileID: 2120018152}
   weapons: []
   thrusters: []
   detachRadiateLinearVelocity: {x: 2, y: 5}
