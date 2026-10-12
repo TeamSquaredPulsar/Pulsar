@@ -9,13 +9,10 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e5430940aea3d41458703d4e1346b7b6, type: 3}
+  m_Script: {fileID: 11500000, guid: e795fe7f1470b7e4e98c9daf4edf2af0, type: 3}
   m_Name: TripleShot
   m_EditorClassIdentifier: Assembly-CSharp::TripleShot
-  damage: 10
-  fireRate: 0.5
-  radius: 1
-  cooldown: 1
-  projectileSpeed: 3
-  lifeTime: 4
-  projectilePrefab: {fileID: 1682859016921356063, guid: a133161848d51234b97f8554a243a1ab, type: 3}
+  k_LeftAngle: -45
+  k_MiddleAngle: 0
+  k_RightAngle: 45
+  k_DefaultRotation: 0
