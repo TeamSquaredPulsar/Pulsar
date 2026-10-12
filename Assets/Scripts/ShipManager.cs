@@ -12,6 +12,9 @@ public class ShipManager : MonoBehaviour
     private Rigidbody2D rigidBody; // [CB] Created with CompositeCollider
 
     [SerializeField]
+    private ThrusterManager thrusterManager;
+
+    [SerializeField]
     private List<Tile> tiles = new(20);
 
     [SerializeField]
@@ -43,18 +46,12 @@ public class ShipManager : MonoBehaviour
 
     public void Move(Vector2 position)
     {
-        // TODO: Add logic to figure out which thrusters to fire, and by how much
-        foreach (Thruster thruster in thrusters)
-        {
-            //! [CB] PLACEHOLDER LOGIC
-            thruster.Move(position.x, rigidBody);
-        }
+        thrusterManager.HandleThrust(position);
     }
 
     public void Rotate(float rotateForce)
     {
-        //TODO: Add logic for rotating
-        Debug.Log("Manager moving");
+        thrusterManager.HandleRotation(rotateForce);
     }
 
     private void UpdateWeaponColliders()

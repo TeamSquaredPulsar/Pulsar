@@ -35,7 +35,7 @@ public class PlayerController : MonoBehaviour
     //  For performance reasons
     private void HandleRotate(float obj)
     {
-        Debug.Log($"rotate: {obj}");
+        shipManager.Rotate(obj);
     }
 
     // TODO: Can make an event where the player
