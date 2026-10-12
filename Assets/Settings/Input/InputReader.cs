@@ -31,7 +31,7 @@ public class InputReader : ScriptableObject, IPlayerActions, IInputReader
             CreateNewControls();
         }
 
-        _controls.Player.Enable();
+        _controls?.Player.Enable();
     }
 
     private void OnDisable()
