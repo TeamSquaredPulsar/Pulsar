@@ -14,25 +14,35 @@ public class InputReader : ScriptableObject, IPlayerActions, IInputReader
 {
     private Controls _controls;
 
-    private void OnEnable()
+    private void Awake()
     {
-        if (_controls != null)
+        if (_controls is not null)
         {
             return;
         }
 
-        _controls = new Controls();
-        _controls.Player.SetCallbacks(this);
+        CreateNewControls();
+    }
+
+    private void OnEnable()
+    {
+        if (_controls is null)
+        {
+            CreateNewControls();
+        }
+
+        _controls?.Player.Enable();
     }
 
     private void OnDisable()
     {
-        _controls.Player.Disable();
+        _controls?.Player.Disable();
     }
 
     private void OnDestroy()
     {
         _controls.Dispose();
+        _controls = null;
     }
 
     public Vector2 MoveDirection => _controls.Player.Move.ReadValue<Vector2>();
@@ -69,19 +79,26 @@ public class InputReader : ScriptableObject, IPlayerActions, IInputReader
 
     public void OnBuildTile(InputAction.CallbackContext context)
     {
-        BuildTileEvent?.Invoke(context);
+        // We want true on all outputs except for canceled.
+        BuildTileEvent?.Invoke(!context.canceled);
     }
 
     public void OnDetachTile(InputAction.CallbackContext context)
     {
         DetachTileEvent?.Invoke(context.started);
     }
-    
+
     public event Action<Vector2> MoveEvent;
     public event Action ShootEvent;
     public event Action<float> RotateEvent;
     public event Action<bool> DetachTileEvent;
     public event Action<bool> SelectFloatingTileEvent;
     public event Action<bool> ToggleRadialMenuEvent;
-    public event Action<InputAction.CallbackContext> BuildTileEvent;
+    public event Action<bool> BuildTileEvent;
+
+    private void CreateNewControls()
+    {
+        _controls = new Controls();
+        _controls.Player.SetCallbacks(this);
+    }
 }

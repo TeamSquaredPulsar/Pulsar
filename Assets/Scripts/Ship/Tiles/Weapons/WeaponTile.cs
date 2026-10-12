@@ -1,5 +1,4 @@
 using System.Collections;
-using Pulsar.Ship;
 using UnityEngine;
 
 /// <summary>
@@ -20,13 +19,13 @@ public class WeaponTile : Tile
     protected Collider2D parentCollider;
 
     [SerializeField]
-    protected WeaponStrategy weaponStrategy;
-
-    [SerializeField]
     protected Transform firePoint;
 
     [field: SerializeField]
     public float FireRatePerSecond { get; protected set; } = 0.5f;
+
+    [SerializeField]
+    protected WeaponStrategy weaponStrategy;
 
     private Coroutine _fireTimerRoutine;
 

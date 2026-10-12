@@ -1,6 +1,4 @@
 using UnityEngine;
-using Pulsar.Ship;
-using UnityEngine.InputSystem;
 
 [RequireComponent(typeof(ShipManager))]
 public class PlayerController : MonoBehaviour
@@ -10,7 +8,7 @@ public class PlayerController : MonoBehaviour
 
     [SerializeField]
     private ShipManager shipManager;
-    
+
     [SerializeField]
     private BuildManager buildManager;
 
@@ -29,9 +27,7 @@ public class PlayerController : MonoBehaviour
         input.SelectFloatingTileEvent -= HandleSelectFloatingTileEvent;
         input.BuildTileEvent -= HandleBuildTileEvent;
         input.DetachTileEvent -= HandleDetachTileTileEvent;
-        
     }
-
 
     private void RegisterInputCallbacks()
     {
@@ -61,15 +57,11 @@ public class PlayerController : MonoBehaviour
         }
     }
 
-    private void HandleBuildTileEvent(InputAction.CallbackContext obj)
+    private void HandleBuildTileEvent(bool obj)
     {
-        if (obj.performed)
+        buildManager.OrbitHeld = obj;
+        if (!buildManager.OrbitHeld)
         {
-            buildManager.OrbitHeld = true;
-        }
-        else if (obj.canceled)
-        {
-            buildManager.OrbitHeld = false;
             buildManager.TryAttachTile();
         }
     }
@@ -81,8 +73,9 @@ public class PlayerController : MonoBehaviour
             buildManager.ToggleRadialMenu();
         }
     }
+
     // TODO: Can make an event where the player
-    //  can listen for it and manage the player weapon list themselves.
+    //  can listen for it and manage the player thruster list themselves.
     //  For performance reasons
     private void HandleRotate(float obj)
     {
@@ -97,6 +90,9 @@ public class PlayerController : MonoBehaviour
         shipManager.Fire();
     }
 
+    // TODO: Can make an event where the player
+    //  can listen for it and manage the player thruster list themselves.
+    //  For performance reasons
     private void HandleMove(Vector2 direction)
     {
         shipManager.Move(direction);
