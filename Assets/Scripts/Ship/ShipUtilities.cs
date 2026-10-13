@@ -6,7 +6,7 @@ public static class ShipUtilities
     public static Vector2 LocalToGrid(Vector3 local) => new(local.x, local.y);
     public static Quaternion RotateQuarterOnZAxis(int rotation) => Quaternion.Euler(0f, 0f, 90f * rotation);
 
-    public static void Constrain(Rigidbody2D rb)
+    public static void FloatingTileRbConstrain(Rigidbody2D rb)
     {
         rb.gravityScale = 0f;
         rb.constraints = RigidbodyConstraints2D.None;

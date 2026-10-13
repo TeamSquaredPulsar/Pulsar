@@ -57,7 +57,7 @@ public class ShipManager : MonoBehaviour
     {
         Rb = GetComponent<Rigidbody2D>();
 
-        ShipUtilities.Constrain(Rb);
+        ShipUtilities.FloatingTileRbConstrain(Rb);
 
         if (coreInfoSo != null)
         {
@@ -115,6 +115,7 @@ public class ShipManager : MonoBehaviour
         tile.SetAttached(this);
     }
 
+    // returns a rectangle enclosing all ship tiles in the ship’s local space
     public Bounds GetLocalBounds()
     {
         if (Cells.Count == 0)
@@ -153,6 +154,7 @@ public class ShipManager : MonoBehaviour
 
     public bool CanAttach(Vector2Int pos, TileInfoSO infoSo, int rotation)
     {
+        // Cannot attach to an occupied cell
         if (GridData.ContainsCell(pos))
         {
             return false;
@@ -160,12 +162,14 @@ public class ShipManager : MonoBehaviour
 
         for (int d = 0; d < 4; d++)
         {
+            // Get the tile edge facing this direction after rotation
             int localDir = (d + rotation) % 4;
             if (!infoSo.connectableEdges[localDir])
             {
                 continue;
             }
 
+            // Check the neighbor's opposite edge; both touching edges must connect
             Vector2Int neighborPos = pos + Dirs[d];
             if (GridData.TryGetTile(neighborPos, out Tile neighbor)
                 && neighbor.EdgeConnectable(Opposite(d)))
@@ -179,15 +183,18 @@ public class ShipManager : MonoBehaviour
 
     public int CountConnections(Vector2Int pos, TileInfoSO infoSo, int rotation)
     {
+        // Count all neighbors that can connect at this position and rotation
         int count = 0;
         for (int d = 0; d < 4; d++)
         {
+            // Get the tile edge after rotation
             int localDir = (d + rotation) % 4;
             if (!infoSo.connectableEdges[localDir])
             {
                 continue;
             }
 
+            // Count only when both touching edges can connect
             Vector2Int neighborPos = pos + Dirs[d];
             if (GridData.TryGetTile(neighborPos, out Tile neighbor)
                 && neighbor.EdgeConnectable(Opposite(d)))
@@ -245,19 +252,18 @@ public class ShipManager : MonoBehaviour
 
     public (Vector2Int cell, int rotation)? FindBestAttachment(
         TileInfoSO infoSo,
-        Vector3 worldPos,
-        bool nearestCellOnly = false)
+        Vector3 worldPos)
     {
+        // Convert world position to ship grid position
         Vector2 localPos
             = ShipUtilities.LocalToGrid(
                 transform.InverseTransformPoint(worldPos));
 
         float bestDist = float.MaxValue;
-        int bestRot = -1;
-        int bestConns = 0;
+        int bestRot = -1; 
+        int bestConnectionCount = 0;
         Vector2Int bestCell = default;
 
-        // gather all candidate empty cells adjacent to existing tiles
         HashSet<Vector2Int> candidates = new();
         foreach (Vector2Int occupied in Cells.Keys)
         {
@@ -268,25 +274,25 @@ public class ShipManager : MonoBehaviour
         }
 
         float nearestDistance = float.MaxValue;
-        if (nearestCellOnly)
-        {
+
             foreach (Vector2Int candidate in candidates)
             {
                 if (!GridData.ContainsCell(candidate))
                     nearestDistance = Mathf.Min(nearestDistance, Vector2.Distance(localPos, candidate));
             }
-        }
 
         foreach (Vector2Int candidate in candidates)
         {
+            // Skip occupied cells
             if (GridData.ContainsCell(candidate))
             {
                 continue;
             }
 
             float dist = Vector2.Distance(localPos, candidate);
-            if (nearestCellOnly && dist > nearestDistance + 0.01f) continue;
+            if (dist > nearestDistance + 0.01f) continue;
 
+            // Try all 4 rotations
             for (int rot = 0; rot < 4; rot++)
             {
                 if (!CanAttach(candidate, infoSo, rot))
@@ -294,23 +300,26 @@ public class ShipManager : MonoBehaviour
                     continue;
                 }
 
-                int conns = CountConnections(candidate, infoSo, rot);
+                
+                // prefer more connections
+                int connectionCount = CountConnections(candidate, infoSo, rot);
 
                 if (bestRot == -1
                     || dist < bestDist - 0.01f
                     || (Mathf.Abs(dist - bestDist) < 0.01f &&
-                        conns > bestConns))
+                        connectionCount > bestConnectionCount))
                 {
                     bestDist = dist;
                     bestCell = candidate;
                     bestRot = rot;
-                    bestConns = conns;
+                    bestConnectionCount = connectionCount;
                 }
             }
         }
 
         if (bestRot == -1)
         {
+            // No cell and rotation could connect
             return null;
         }
 
@@ -319,7 +328,10 @@ public class ShipManager : MonoBehaviour
 
     private int DetachOrphans()
     {
+        // Get all tiles still connect to Core
         HashSet<Vector2Int> reachable = Flood(Core.Cell);
+        
+        // Remove all tiles still in Cells which not connect to Core
         List<Vector2Int> orphanKeys
             = Cells.Keys.Where(c => !reachable.Contains(c)).ToList();
         if (orphanKeys.Count == 0)
@@ -327,10 +339,12 @@ public class ShipManager : MonoBehaviour
             return 0;
         }
 
+        // Save the ship's motion so released tiles inherit it.
         Vector2 centerOfMass = Rb.worldCenterOfMass;
         Vector2 linearVelocity = Rb.linearVelocity;
         float angularVelocity = Rb.angularVelocity;
         Vector2 explosionCenter = Core.transform.position;
+
         float minSpeed = Mathf.Max(0f,
             Mathf.Min(detachRadiateLinearVelocity.x,
                 detachRadiateLinearVelocity.y));
@@ -353,10 +367,13 @@ public class ShipManager : MonoBehaviour
 
             Vector2 worldPos = tile.transform.position;
 
+            // Inherit movement 
             Vector2 offset = worldPos - centerOfMass;
             Vector2 velocity = linearVelocity +
                                new Vector2(-offset.y, offset.x) *
                                (angularVelocity * Mathf.Deg2Rad);
+            
+            // Push away from Core
             Vector2 outward = worldPos - explosionCenter;
             if (outward.sqrMagnitude < 0.0001f)
             {
@@ -364,22 +381,25 @@ public class ShipManager : MonoBehaviour
                 outward = new Vector2(Mathf.Cos(angle), Mathf.Sin(angle));
             }
 
+            // Add an outward push and random spin to the inherited ship motion.
             float speed = Random.Range(minSpeed, maxSpeed);
             velocity += outward.normalized * speed;
             float spin = Random.Range(minSpin, maxSpin);
 
             tile.SetDetached(this);
             GridData.RemoveTile(c);
-
+            
             tile.ReleaseToFloating(velocity,
                 angularVelocity + spin);
 
             orphanTiles++;
         }
-
+        
         return orphanTiles;
     }
 
+    
+    // BFS
     private HashSet<Vector2Int> Flood(Vector2Int start)
     {
         Queue<Vector2Int> open = new();

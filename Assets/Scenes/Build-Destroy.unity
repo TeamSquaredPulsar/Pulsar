@@ -797,6 +797,7 @@ MonoBehaviour:
   input: {fileID: 11400000, guid: c5eb4fca90495374ca60a24df65307ec, type: 2}
   shipManager: {fileID: 2120018148}
   buildManager: {fileID: 562475102}
+  cursorPrefab: {fileID: 7942368267813462927, guid: 76a7ad1b6d7754e4187eb22384deec73, type: 3}
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0

@@ -13,10 +13,17 @@ public class PlayerController : MonoBehaviour
     
     [SerializeField]
     private BuildManager buildManager;
+    
+    [SerializeField] private GameObject cursorPrefab;
+    
+    private Cursor _cursor;
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     private void Start()
     {
+        _cursor = Instantiate(cursorPrefab).GetComponent<Cursor>();
+        _cursor.Initialize(input);
+        buildManager.SetCursor(_cursor);
         RegisterInputCallbacks();
     }
 

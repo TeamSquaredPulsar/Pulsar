@@ -5,6 +5,9 @@ using Random = UnityEngine.Random;
 [RequireComponent(typeof(BoxCollider2D), typeof(Rigidbody2D))]
 public class Tile : MonoBehaviour
 {
+    
+    private const int FloatingSortingOrder = 10;
+    
     [field: SerializeField]
     public TileInfoSO TileInfo { get; private set; }
 
@@ -21,27 +24,14 @@ public class Tile : MonoBehaviour
     private Color baseColor = Color.white;
 
     public Vector2Int Cell { get; private set; }
+    
+    // 0 1 2 3 = 0 90 180 270 (counterclockwise)
     public float CurrentHp { get; protected set; }
+    
+    
     public int Rotation { get; private set; }
 
     public bool IsAttached { get; private set; }
-
-    public static Tile Hovered { get; private set; }
-
-    protected virtual void OnMouseEnter()
-    {
-        Hovered = this;
-    }
-
-    protected virtual void OnMouseExit()
-    {
-        if (Hovered == this) Hovered = null;
-    }
-
-    protected virtual void OnDisable()
-    {
-        if (Hovered == this) Hovered = null;
-    }
 
     protected void Init(TileInfoSO tileInfoSo, Vector2Int gridCell, int rot = 0)
     {
@@ -105,11 +95,11 @@ public class Tile : MonoBehaviour
     public void ReleaseToFloating(Vector2 velocity, float angularVelocity)
     {
         transform.SetParent(null,
-            true); // preserve world position and orientation
+            true); 
         IsAttached = false;
         tileCollider.isTrigger
-            = true; // pass through ship, no physical collision
-        spriteRenderer.sortingOrder = 10;
+            = true; 
+        spriteRenderer.sortingOrder = FloatingSortingOrder;
         Unhighlight();
         EnableFloatingPhysics(velocity, angularVelocity);
     }
@@ -125,16 +115,23 @@ public class Tile : MonoBehaviour
         Vector2 velocity,
         float angularVelocity)
     {
-        ShipUtilities.Constrain(floatRb);
+        ShipUtilities.FloatingTileRbConstrain(floatRb);
         floatRb.bodyType = RigidbodyType2D.Dynamic;
         floatRb.linearVelocity = velocity;
         floatRb.angularVelocity = angularVelocity;
     }
 
-    public bool EdgeConnectable(int gridDir)
+    //To ask whether the rotated tile can connect from dir
+    /*
+     * example: tile is true:0 false:1 false:2 false:3 (allow connect from top only)
+     * tile.Rotation = 1 -> tile now allows connect from left
+     * pass EdgeConnectable(3) -> (3+1)%4==0 -> true
+     * => can connect 
+     */
+    public bool EdgeConnectable(int dir)
     {
-        int localDir = (gridDir + Rotation) % 4;
-        return TileInfo != null && TileInfo.connectableEdges[localDir];
+        int localDir = (dir + Rotation) % 4;
+        return TileInfo.connectableEdges[localDir];
     }
 
     public virtual void SetAttached(ShipManager manager)
@@ -160,7 +157,6 @@ public class Tile : MonoBehaviour
         }
     }
 
-    // Highlight on radial menu hover 
     public void Highlight(Color tint)
     {
         spriteRenderer.color = tint;

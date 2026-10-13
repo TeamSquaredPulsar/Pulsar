@@ -20,13 +20,13 @@ public class ShipGridData
     public bool TryGetTile(Vector2Int cell, out Tile tile) =>
         _cells.TryGetValue(cell, out tile);
 
-    internal void SetCore(Vector2Int cell, Tile tile)
+    public void SetCore(Vector2Int cell, Tile tile)
     {
         SetTile(cell, tile);
         Core = tile;
     }
 
-    internal void SetTile(Vector2Int cell, Tile tile) => _cells[cell] = tile;
+    public void SetTile(Vector2Int cell, Tile tile) => _cells[cell] = tile;
 
-    internal bool RemoveTile(Vector2Int cell) => _cells.Remove(cell);
+    public bool RemoveTile(Vector2Int cell) => _cells.Remove(cell);
 }

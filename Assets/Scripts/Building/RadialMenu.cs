@@ -31,7 +31,7 @@ public class RadialMenu : MonoBehaviour
         outline.endColor = outlineColor;
         outline.sortingOrder = ScanZoneSortingOrder + 1;
     }
-        
+    
     public void UpdateShape(Vector3 worldCenter, float rx, float ry, Quaternion rotation)
     {
         _center = worldCenter;
@@ -43,6 +43,7 @@ public class RadialMenu : MonoBehaviour
 
         fillTransform.localScale = new Vector3(rx, ry, 1f);
 
+        // each segment angle
         for (int i = 0; i < Segments; i++)
         {
             float angle = i * Mathf.PI * 2f / Segments;
@@ -53,6 +54,7 @@ public class RadialMenu : MonoBehaviour
         }
     }
 
+    // From angle to point on ellipse
     public Vector3 PointOnOutline(float angle)
     {
         return _center + _rotation * new Vector3(
@@ -60,7 +62,7 @@ public class RadialMenu : MonoBehaviour
     }
 
     // Intersect the ray from the core through the tile with the ellipse
-    public float OutlineAngleFromCore(Vector3 core, Vector3 tile)
+    public float GetOutlineAngleFromTileToCore(Vector3 core, Vector3 tile)
     {
         //Ray: P(t) = origin + t * direction
         Vector3 origin = Quaternion.Inverse(_rotation) * (core - _center);
@@ -71,6 +73,7 @@ public class RadialMenu : MonoBehaviour
         // Px = ox + t*dx
         // Py = oy + t*dy
         // Px^2/rx^2 + Py^2/ry^2 = 1
+        // Solve for t (at^2 + bt + c = 0) 
 
         float a = direction.x * direction.x / (_rx * _rx)
                   + direction.y * direction.y / (_ry * _ry);
@@ -78,7 +81,7 @@ public class RadialMenu : MonoBehaviour
                         + origin.y * direction.y / (_ry * _ry));
         float c = origin.x * origin.x / (_rx * _rx)
             + origin.y * origin.y / (_ry * _ry) - 1f;
-        float distance = (-b + Mathf.Sqrt(Mathf.Max(0f, b * b - 4f * a * c))) / (2f * a);
+        float distance = (-b + Mathf.Sqrt(Mathf.Max(0f, b * b - 4f * a * c))) / (2f * a); // get the positive only
         Vector3 point = origin + direction * distance;
         return Mathf.Atan2(point.y / _ry, point.x / _rx);
     }

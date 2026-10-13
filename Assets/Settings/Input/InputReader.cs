@@ -36,6 +36,7 @@ public class InputReader : ScriptableObject, IPlayerActions, IInputReader
     }
 
     public Vector2 MoveDirection => _controls.Player.Move.ReadValue<Vector2>();
+    public Vector2 MouseScreenPosition => _controls.Player.MouseCursor.ReadValue<Vector2>();
 
     public void EnablePlayerActions()
     {
@@ -69,7 +70,7 @@ public class InputReader : ScriptableObject, IPlayerActions, IInputReader
 
     public void OnControllerRightStickCorsor(InputAction.CallbackContext context)
     {
-        ControllerRightStickCorsor?.Invoke(context.ReadValue<Vector2>());
+        ControllerRightStickCursor?.Invoke(context.ReadValue<Vector2>());
     }
 
     public void OnSelectFloatingTile(InputAction.CallbackContext context)
@@ -93,7 +94,7 @@ public class InputReader : ScriptableObject, IPlayerActions, IInputReader
     public event Action<bool> DetachTileEvent;
     public event Action<bool> SelectFloatingTileEvent;
     public event Action<Vector2> MouseCursorEvent;
-    public event Action<Vector2> ControllerRightStickCorsor;
+    public event Action<Vector2> ControllerRightStickCursor;
     public event Action<bool> ToggleRadialMenuEvent;
     public event Action<InputAction.CallbackContext> BuildTileEvent;
 }

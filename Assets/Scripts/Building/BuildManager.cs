@@ -7,6 +7,10 @@ public class BuildManager : MonoBehaviour
     [Header("References")]
     [SerializeField] private ShipManager manager;
     [SerializeField] private RadialMenu radialMenu;
+    [SerializeField] private GhostPreview ghostPreview;
+    private Cursor _cursor;
+
+    public void SetCursor(Cursor cursor) => _cursor = cursor;
 
     [Header("Scan Zone")]
     [SerializeField, Min(0.1f)] private float scanPadding = 2.5f;
@@ -17,7 +21,6 @@ public class BuildManager : MonoBehaviour
     [SerializeField, Min(0.1f)] private float pullSpeed = 8f;
     [SerializeField, Min(0.1f)] private float orbitDegreesPerSecond = 90f;
 
-    private GhostPreview _ghost;
     private bool _scanActive;
     private Tile _selectedTile;
     private bool _atOutline;
@@ -31,7 +34,6 @@ public class BuildManager : MonoBehaviour
     
     private void Start()
     {
-        _ghost = new GameObject("GhostPreview").AddComponent<GhostPreview>();
         radialMenu.Hide();
     }
 
@@ -62,22 +64,22 @@ public class BuildManager : MonoBehaviour
 
     private void UpdateScanZoneShape()
     {
+        // Get the ship bounds in local space
         Bounds b = manager.GetLocalBounds();
 
         Vector3 core = manager.Core != null
             ? manager.Core.transform.position : manager.transform.position;
         Vector3 coreLocal = manager.transform.InverseTransformPoint(core);
-        float rx = Mathf.Max(Mathf.Abs(b.min.x - coreLocal.x), Mathf.Abs(b.max.x - coreLocal.x))
-                   + Mathf.Max(0.1f, scanPadding);
-        float ry = Mathf.Max(Mathf.Abs(b.min.y - coreLocal.y), Mathf.Abs(b.max.y - coreLocal.y))
-                   + Mathf.Max(0.1f, scanPadding);
+
+        float rx = Mathf.Max(Mathf.Abs(b.min.x - coreLocal.x), Mathf.Abs(b.max.x - coreLocal.x)) + scanPadding;
+        float ry = Mathf.Max(Mathf.Abs(b.min.y - coreLocal.y), Mathf.Abs(b.max.y - coreLocal.y)) + scanPadding;
         radialMenu.UpdateShape(core, rx, ry, manager.transform.rotation);
     }
 
     public void SelectTile()
     {
         if(_selectedTile != null || !_scanActive) return;
-        Tile tile = Tile.Hovered;
+        Tile tile = _cursor != null ? _cursor.RefreshHoveredTile() : null;
         if (tile == null || tile.IsAttached || tile.TileInfo == null || tile == _selectedTile) return;
         ClearSelection();
         ClearDestroyHighlight();
@@ -86,7 +88,7 @@ public class BuildManager : MonoBehaviour
         _selectedTile.Highlight(selectedTint);
         Vector3 core = manager.Core != null
             ? manager.Core.transform.position : manager.transform.position;
-        _orbitAngle = radialMenu.OutlineAngleFromCore(core, tile.transform.position);
+        _orbitAngle = radialMenu.GetOutlineAngleFromTileToCore(core, tile.transform.position);
     }
 
     private void UpdateSelectedTile()
@@ -98,6 +100,7 @@ public class BuildManager : MonoBehaviour
         }
 
         Vector3 target = radialMenu.PointOnOutline(_orbitAngle);
+        // Pull the tile to the outline before allowing orbit and showing a preview
         if (!_atOutline)
         {
             _selectedTile.transform.position = Vector3.MoveTowards(
@@ -108,10 +111,13 @@ public class BuildManager : MonoBehaviour
 
         if (OrbitHeld)
         {
+            // Move around the oval; keep the angle between 0 and 2 PI
             _orbitAngle = Mathf.Repeat(_orbitAngle
                                        - Mathf.Max(0.1f, orbitDegreesPerSecond) * Mathf.Deg2Rad * Time.deltaTime,
                 Mathf.PI * 2f);
         }
+        
+        // Keep the tile on the outline as the ship moves and rotates
         _selectedTile.transform.position = radialMenu.PointOnOutline(_orbitAngle);
         UpdatePreview();
     }
@@ -128,19 +134,24 @@ public class BuildManager : MonoBehaviour
 
     private void UpdatePreview()
     {
+        // Find a valid rotation at the nearest empty cells around the ship
         (Vector2Int cell, int rotation)? result = manager.FindBestAttachment(
-            _selectedTile.TileInfo, _selectedTile.transform.position, nearestCellOnly: true);
+            _selectedTile.TileInfo, _selectedTile.transform.position);
         _attachValid = result.HasValue;
         if (!_attachValid)
         {
-            _ghost.Hide();
+            // Hide the preview when no attachment is possible there
+            ghostPreview.Hide();
             return;
         }
+
         _attachCell = result.Value.cell;
         _attachRotation = result.Value.rotation;
+        
+        // apply _attachRotation to selectedTile to display the preview in world space
         Quaternion rotation = manager.transform.rotation
                               * ShipUtilities.RotateQuarterOnZAxis(_attachRotation);
-        _ghost.Show(_selectedTile.TileInfo.sprite, manager.CellToWorld(_attachCell), true, rotation);
+        ghostPreview.Show(_selectedTile.TileInfo.sprite, manager.CellToWorld(_attachCell), rotation);
     }
 
     private void ClearSelection()
@@ -155,12 +166,12 @@ public class BuildManager : MonoBehaviour
         _atOutline = false;
         OrbitHeld = false;
         _attachValid = false;
-        if (_ghost != null) _ghost.Hide();
+        if (ghostPreview != null) ghostPreview.Hide();
     }
 
     private void UpdateDestroyMode()
     {
-        Tile tile = Tile.Hovered;
+        Tile tile = _cursor != null ? _cursor.RefreshHoveredTile() : null;
         if (tile != null && (!tile.IsAttached || tile == manager.Core
                                               || !manager.Cells.TryGetValue(tile.Cell, out Tile ownedTile) || ownedTile != tile))
             tile = null;
@@ -199,6 +210,6 @@ public class BuildManager : MonoBehaviour
     private void OnDestroy()
     {
         if (radialMenu != null) Destroy(radialMenu.gameObject);
-        if (_ghost != null) Destroy(_ghost.gameObject);
+        if (ghostPreview != null) Destroy(ghostPreview.gameObject);
     }
 }
