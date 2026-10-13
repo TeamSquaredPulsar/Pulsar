@@ -14,7 +14,7 @@ public class InputReader : ScriptableObject, IPlayerActions, IInputReader
 {
     private Controls _controls;
 
-    private void OnEnable()
+    private void Awake()
     {
         if (_controls is not null)
         {

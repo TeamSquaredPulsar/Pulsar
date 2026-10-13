@@ -34,7 +34,12 @@ public class Cursor : MonoBehaviour
 
     public void Initialize(InputReader reader)
     {
+        Unsubscribe();
         _input = reader;
+        if (isActiveAndEnabled)
+        {
+            Subscribe();
+        }
     }
 
     private void OnEnable()
