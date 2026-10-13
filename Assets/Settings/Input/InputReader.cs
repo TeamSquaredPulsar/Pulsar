@@ -16,23 +16,33 @@ public class InputReader : ScriptableObject, IPlayerActions, IInputReader
 
     private void OnEnable()
     {
-        if (_controls != null)
+        if (_controls is not null)
         {
             return;
         }
 
-        _controls = new Controls();
-        _controls.Player.SetCallbacks(this);
+        CreateNewControls();
+    }
+
+    private void OnEnable()
+    {
+        if (_controls is null)
+        {
+            CreateNewControls();
+        }
+
+        _controls?.Player.Enable();
     }
 
     private void OnDisable()
     {
-        _controls.Player.Disable();
+        _controls?.Player.Disable();
     }
 
     private void OnDestroy()
     {
         _controls.Dispose();
+        _controls = null;
     }
 
     public Vector2 MoveDirection => _controls.Player.Move.ReadValue<Vector2>();
@@ -56,6 +66,12 @@ public class InputReader : ScriptableObject, IPlayerActions, IInputReader
     public void OnRotate(InputAction.CallbackContext context)
     {
         RotateEvent?.Invoke(context.ReadValue<float>());
+    }
+
+    private void CreateNewControls()
+    {
+        _controls = new Controls();
+        _controls.Player.SetCallbacks(this);
     }
 
     public void OnToggleRadialMenu(InputAction.CallbackContext context)

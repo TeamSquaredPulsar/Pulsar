@@ -68,13 +68,13 @@ public class ShipMovementController : MonoBehaviour
             DirectionThrust thrustY = thrusterManager.GetDirectionThrust(
                 _moveInput.y switch
                 {
-                    > 0 => ThrusterOrientation.Forward,
-                    < 0 => ThrusterOrientation.Backward,
+                    > 0 => Rotation.Up,
+                    < 0 => Rotation.Down,
                     _ => throw new ArgumentOutOfRangeException(
                         nameof(_moveInput) + ".y",
                         "Already checked Y could not be 0!"),
                 });
-            localForce.y = _moveInput.y * (thrustY.thrust + coreThrust);
+            localForce.y = _moveInput.y * (thrustY.Thrust + coreThrust);
         }
 
         if (_moveInput.x != 0)
@@ -82,13 +82,13 @@ public class ShipMovementController : MonoBehaviour
             DirectionThrust thrustX = thrusterManager.GetDirectionThrust(
                 _moveInput.x switch
                 {
-                    > 0 => ThrusterOrientation.Right,
-                    < 0 => ThrusterOrientation.Left,
+                    > 0 => Rotation.Right,
+                    < 0 => Rotation.Left,
                     _ => throw new ArgumentOutOfRangeException(
                         nameof(_moveInput) + ".X",
                         "Already checked X could not be 0!"),
                 });
-            localForce.x = _moveInput.x * (thrustX.thrust + coreThrust);
+            localForce.x = _moveInput.x * (thrustX.Thrust + coreThrust);
         }
 
         rb.AddRelativeForce(localForce, ForceMode.Force);

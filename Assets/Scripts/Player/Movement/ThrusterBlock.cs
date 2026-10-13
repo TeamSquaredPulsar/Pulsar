@@ -1,21 +1,14 @@
 using UnityEngine;
 
-public enum ThrusterOrientation
-{
-    Forward = 0,
-    Backward = 1,
-    Left = 2,
-    Right = 3
-}
-
 public class ThrusterBlock : MonoBehaviour
 {
     [SerializeField]
     private float thrust;
 
     [SerializeField]
-    private ThrusterOrientation orientation = ThrusterOrientation.Forward;
+    private Rotation orientation = Rotation.Up;
 
+    [SerializeField]
     private float defaultSpeed = 0.1f;
 
     private void Awake()
@@ -27,13 +20,7 @@ public class ThrusterBlock : MonoBehaviour
         }
     }
 
-    public float GetThrust()
-    {
-        return thrust;
-    }
+    public float GetThrust() => thrust;
 
-    public ThrusterOrientation GetOrientation()
-    {
-        return orientation;
-    }
+    public Rotation GetOrientation() => orientation;
 }
