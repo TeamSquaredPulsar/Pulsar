@@ -2,36 +2,29 @@ using System;
 using System.Collections.Generic;
 using UnityEngine;
 
+/// <summary>
+/// Shoots a single bullet at a time
+/// </summary>
 [CreateAssetMenu(fileName = "DoubleShot",
     menuName = "Scriptable Objects/DoubleShot")]
 public class DoubleShot : WeaponStrategy
 {
-    private const char k_left = 'L';
-    private const char k_right = 'R';
-    private const int k_max_firePoints = 2;
-    private readonly Stack<char> firePointStack = new();
+    private int k_leftFirePoint = 0;
+    private int k_rightFirePoint = 1;
+    private int k_max_firePoints = 2;
 
+    /// <inheritdoc/>
     public override void Fire(
         Transform[] firePoints,
         Weapon weapon,
-        Func<Transform, GameObject> spawnProjectiles)
+        Func<Transform, GameObject> spawnProjectile)
     {
         if (firePoints == null || firePoints.Length < k_max_firePoints)
         {
             return;
         }
 
-        if (firePointStack.Count == 0)
-        {
-            firePointStack.Push(k_right);
-            firePointStack.Push(k_left);
-        }
-
-        char side = firePointStack.Pop();
-
-        Transform selectedFirePoint =
-            side == k_left ? firePoints[0] : firePoints[1];
-
-        spawnProjectiles(selectedFirePoint);
+        spawnProjectile(firePoints[k_leftFirePoint]);
+        spawnProjectile(firePoints[k_rightFirePoint]);
     }
 }

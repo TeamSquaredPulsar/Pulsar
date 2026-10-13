@@ -18,12 +18,12 @@ public abstract class WeaponStrategy : ScriptableObject
     /// Abstract Fire function
     /// 
     /// </summary>
-    /// <param name="firePoint"></param>
+    /// <param name="firePoints"></param>
     ///  <param name="weapon"></param>
     /// <param name="spawnProjectile"></param>
     public abstract void
         Fire(
-            Transform[] firePoint,
+            Transform[] firePoints,
             Weapon
                 weapon,
             Func<Transform, GameObject> spawnProjectile);

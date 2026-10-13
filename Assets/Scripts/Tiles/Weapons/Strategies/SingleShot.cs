@@ -13,14 +13,9 @@ using UnityEngine;
     menuName = "Scriptable Objects/SingleShot")]
 public class SingleShot : WeaponStrategy
 {
-    private const int k_mainFirePoint = 0;
+    private int k_mainFirePoint = 0;
 
-    /// <summary>
-    /// Fire method
-    /// </summary>
-    /// <param name="firePoint"></param>
-    /// <param name="weapon"></param>
-    /// <param name="spawnProjectile"></param>
+    /// <inheritdoc/>
     public override void Fire(
         Transform[] firePoints,
         Weapon weapon,
