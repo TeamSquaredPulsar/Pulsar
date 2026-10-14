@@ -13,6 +13,7 @@ GameObject:
   - component: {fileID: 7830473904832805222}
   - component: {fileID: 8716755017154123671}
   - component: {fileID: 70888490315140228}
+  - component: {fileID: 8893891361912782109}
   m_Layer: 0
   m_Name: Player
   m_TagString: Player
@@ -66,7 +67,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::ShipManager
   compositeCollider: {fileID: 70888490315140228}
   rigidBody: {fileID: 8716755017154123671}
-  thrusterManager: {fileID: 4257743073800486742}
+  thrusterManager: {fileID: 8893891361912782109}
   tiles: []
   thrusters: []
   weapons: []
@@ -176,6 +177,23 @@ CompositeCollider2D:
   m_OffsetDistance: 0.00005
   m_UseDelaunayMesh: 0
   m_CompositeGameObject: {fileID: 1843940356141040302}
+--- !u!114 &8893891361912782109
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1843940356141040302}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4a065edf6c6f717428c6f24af01794d8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::ThrusterManager
+  thrusters:
+  - {fileID: 1279473623295174912}
+  rb: {fileID: 8716755017154123671}
+  coreThrust: 2
+  rotationalThrust: 2
 --- !u!1 &2338699837009507944
 GameObject:
   m_ObjectHideFlags: 0
@@ -185,7 +203,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 4349335060442021690}
-  - component: {fileID: 4257743073800486742}
   m_Layer: 0
   m_Name: Thrusters
   m_TagString: Untagged
@@ -209,23 +226,6 @@ Transform:
   - {fileID: 3797501589586391564}
   m_Father: {fileID: 7376437609368605663}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &4257743073800486742
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2338699837009507944}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4a065edf6c6f717428c6f24af01794d8, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::ThrusterManager
-  thrusters:
-  - {fileID: 1279473623295174912}
-  rb: {fileID: 8716755017154123671}
-  coreThrust: 2
-  rotationalThrust: 2
 --- !u!1 &3374588415946693909
 GameObject:
   m_ObjectHideFlags: 0
