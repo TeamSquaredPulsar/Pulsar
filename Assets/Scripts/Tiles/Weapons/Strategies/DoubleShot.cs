@@ -19,10 +19,7 @@ public class DoubleShot : WeaponStrategy
         Weapon weapon,
         Func<Transform, GameObject> spawnProjectile)
     {
-        if (firePoints == null || firePoints.Length < k_max_firePoints)
-        {
-            return;
-        }
+        verifyFirePoints(firePoints, k_max_firePoints);
 
         spawnProjectile(firePoints[k_leftFirePoint]);
         spawnProjectile(firePoints[k_rightFirePoint]);

@@ -11,11 +11,8 @@ using UnityEngine;
     menuName = "Scriptable Objects/TripleShot")]
 public class TripleShot : WeaponStrategy
 {
-    // private int k_leftFirePoint = 0;
-    // private int k_mainFirePoint = 1;
-    // private int k_rightFirePoint = 2;
-
     private int maxBullets = 3;
+    private int k_max_firePoints = 3;
 
     /// <inheritdoc/>
     public override void Fire(
@@ -23,24 +20,11 @@ public class TripleShot : WeaponStrategy
         Weapon weapon,
         Func<Transform, GameObject> spawnProjectile)
     {
-        if (firePoints == null || firePoints.Length == 0)
-        {
-            return;
-        }
+        verifyFirePoints(firePoints, k_max_firePoints);
 
         foreach (Transform firePoint in firePoints[..maxBullets])
         {
             spawnProjectile(firePoint);
         }
-
-
-        // for (int i = 0; i < maxBullets; i++)
-        // {
-        //     spawnProjectile(firePoints[i]);
-        // }
-
-        // spawnProjectile(firePoints[k_leftFirePoint]);
-        // spawnProjectile(firePoints[k_mainFirePoint]);
-        // spawnProjectile(firePoints[k_rightFirePoint]);
     }
 }

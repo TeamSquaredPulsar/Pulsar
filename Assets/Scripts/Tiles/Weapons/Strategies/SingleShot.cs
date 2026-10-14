@@ -14,6 +14,7 @@ using UnityEngine;
 public class SingleShot : WeaponStrategy
 {
     private int k_mainFirePoint = 0;
+    private int k_max_firePoints = 1;
 
     /// <inheritdoc/>
     public override void Fire(
@@ -21,10 +22,7 @@ public class SingleShot : WeaponStrategy
         Weapon weapon,
         Func<Transform, GameObject> spawnProjectile)
     {
-        if (firePoints == null || firePoints.Length == 0)
-        {
-            return;
-        }
+        verifyFirePoints(firePoints, k_max_firePoints);
 
         spawnProjectile(firePoints[k_mainFirePoint]);
     }

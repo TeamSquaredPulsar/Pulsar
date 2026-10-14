@@ -27,4 +27,15 @@ public abstract class WeaponStrategy : ScriptableObject
             Weapon
                 weapon,
             Func<Transform, GameObject> spawnProjectile);
+
+    protected void verifyFirePoints(
+        Transform[] firePoints,
+        int maxFirePoints)
+    {
+        if (firePoints == null || firePoints.Length < maxFirePoints)
+        {
+            throw new ArgumentOutOfRangeException(nameof(firePoints),
+                "Fire points must be at least " + maxFirePoints);
+        }
+    }
 }

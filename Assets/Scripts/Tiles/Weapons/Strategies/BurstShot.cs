@@ -23,12 +23,16 @@ public class BurstShot : WeaponStrategy
     [SerializeField]
     private float k_bulletGapTime = 0.1f;
 
+    private int k_max_firePoints = 1;
+
     /// <inheritdoc/>
     public override void Fire(
         Transform[] firePoints,
         Weapon weapon,
         Func<Transform, GameObject> spawnProjectile)
     {
+        verifyFirePoints(firePoints, k_max_firePoints);
+
         weapon.StartCoroutine(Burst(firePoints, spawnProjectile));
     }
 
@@ -42,15 +46,9 @@ public class BurstShot : WeaponStrategy
         Transform[] firePoints,
         Func<Transform, GameObject> spawnProjectile)
     {
-        for (int i = k_BulletStart; i < k_MaxBullets; i++)
+        foreach (Transform firePoint in firePoints[..k_MaxBullets])
         {
-            if (firePoints == null)
-            {
-                yield break;
-            }
-
-            spawnProjectile(firePoints[0]);
-
+            spawnProjectile(firePoint);
             yield return new WaitForSeconds(k_bulletGapTime);
         }
     }
