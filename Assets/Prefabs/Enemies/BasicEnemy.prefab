@@ -196,6 +196,7 @@ GameObject:
   - component: {fileID: 5534935226238068877}
   - component: {fileID: 2408445827146903298}
   - component: {fileID: 640629331049388650}
+  - component: {fileID: 8617872407729157336}
   - component: {fileID: 2776980645195997529}
   - component: {fileID: 2214052083980208980}
   m_Layer: 0
@@ -262,9 +263,26 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::ShipManager
   compositeCollider: {fileID: 2214052083980208980}
   rigidBody: {fileID: 2776980645195997529}
+  thrusterManager: {fileID: 8617872407729157336}
   tiles: []
-  weapons: []
   thrusters: []
+  weapons: []
+--- !u!114 &8617872407729157336
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8188435154698411991}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4a065edf6c6f717428c6f24af01794d8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::ThrusterManager
+  thrusters: []
+  rb: {fileID: 2776980645195997529}
+  coreThrust: 2
+  rotationalThrust: 2
 --- !u!50 &2776980645195997529
 Rigidbody2D:
   serializedVersion: 5
