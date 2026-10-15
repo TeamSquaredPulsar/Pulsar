@@ -60,9 +60,25 @@ public class Projectile : MonoBehaviour
             Debug.Log("Hit Effect");
         }
 
-        //? [AL] TODO: Will need to deal damage here?
+        // Debug.Log(collision.gameObject.GetComponentInChildren(typeof(Health))
+        //     .ToString());
+
+        Component health
+            = collision.gameObject.GetComponentInChildren(typeof(Health));
+
+        DealDamage(health as Health);
+        // if (collision.gameObject.TryGetComponent<Health>(out Health health))
+        // {
+        //     Debug.Log("Hit Tile");
+        //     DealDamage(health);
+        // }
 
         Destroy(gameObject);
+    }
+
+    private void DealDamage(Health health)
+    {
+        health.TakeDamage(Damage);
     }
 
     public GameObject SpawnProjectile(

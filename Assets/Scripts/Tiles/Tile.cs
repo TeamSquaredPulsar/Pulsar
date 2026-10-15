@@ -1,6 +1,7 @@
 using UnityEngine;
 
 [RequireComponent(typeof(BoxCollider2D), typeof(SpriteRenderer))]
+[RequireComponent(typeof(Health))]
 public class Tile : MonoBehaviour
 {
     private static Color _errorColor = Color.rebeccaPurple;

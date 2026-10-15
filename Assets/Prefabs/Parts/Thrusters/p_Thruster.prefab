@@ -12,6 +12,7 @@ GameObject:
   - component: {fileID: 3589442038005289041}
   - component: {fileID: 8688311974718774552}
   - component: {fileID: 6303449030629206126}
+  - component: {fileID: 6745827802133853090}
   m_Layer: 0
   m_Name: p_Thruster
   m_TagString: Untagged
@@ -48,6 +49,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::Thruster
   spriteRenderer: {fileID: 8688311974718774552}
   boxCollider: {fileID: 6303449030629206126}
+  thrust: 0.1
+  orientation: 0
 --- !u!212 &8688311974718774552
 SpriteRenderer:
   serializedVersion: 2
@@ -153,3 +156,16 @@ BoxCollider2D:
   m_AutoTiling: 0
   m_Size: {x: 1, y: 1}
   m_EdgeRadius: 0
+--- !u!114 &6745827802133853090
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 9113379072927920375}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d1236c1e551165b48b0864561b6c2156, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Health
+  <HealthAmount>k__BackingField: 10
