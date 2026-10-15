@@ -46,6 +46,7 @@ public class InputReader : ScriptableObject, IPlayerActions, IInputReader
     }
 
     public Vector2 MoveDirection => _controls.Player.Move.ReadValue<Vector2>();
+    public Vector2 MouseScreenPosition => _controls.Player.MouseCursor.ReadValue<Vector2>();
 
     public void EnablePlayerActions()
     {
@@ -73,7 +74,43 @@ public class InputReader : ScriptableObject, IPlayerActions, IInputReader
         _controls.Player.SetCallbacks(this);
     }
 
+    public void OnToggleRadialMenu(InputAction.CallbackContext context)
+    {
+        ToggleRadialMenuEvent?.Invoke(context.started);
+    }
+
+    public void OnMouseCursor(InputAction.CallbackContext context)
+    {
+        MouseCursorEvent?.Invoke(context.ReadValue<Vector2>());
+    }
+
+    public void OnControllerRightStickCorsor(InputAction.CallbackContext context)
+    {
+        ControllerRightStickCursor?.Invoke(context.ReadValue<Vector2>());
+    }
+
+    public void OnSelectFloatingTile(InputAction.CallbackContext context)
+    {
+        SelectFloatingTileEvent?.Invoke(context.started);
+    }
+
+    public void OnBuildTile(InputAction.CallbackContext context)
+    {
+        BuildTileEvent?.Invoke(context);
+    }
+
+    public void OnDetachTile(InputAction.CallbackContext context)
+    {
+        DetachTileEvent?.Invoke(context.started);
+    }
+    
     public event Action<Vector2> MoveEvent;
     public event Action ShootEvent;
     public event Action<float> RotateEvent;
+    public event Action<bool> DetachTileEvent;
+    public event Action<bool> SelectFloatingTileEvent;
+    public event Action<Vector2> MouseCursorEvent;
+    public event Action<Vector2> ControllerRightStickCursor;
+    public event Action<bool> ToggleRadialMenuEvent;
+    public event Action<InputAction.CallbackContext> BuildTileEvent;
 }
