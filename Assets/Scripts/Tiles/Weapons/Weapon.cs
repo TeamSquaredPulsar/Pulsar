@@ -19,7 +19,7 @@ public class Weapon : Tile
     protected Collider2D parentCollider;
 
     [SerializeField]
-    protected Transform firePoint;
+    protected Transform[] firePoints;
 
     [field: SerializeField]
     public float FireRatePerSecond { get; protected set; } = 0.5f;
@@ -57,7 +57,7 @@ public class Weapon : Tile
             return;
         }
 
-        weaponStrategy.Fire(firePoint, this, _spawnProjectile);
+        weaponStrategy.Fire(firePoints, this, _spawnProjectile);
         StartFireTimer();
     }
 

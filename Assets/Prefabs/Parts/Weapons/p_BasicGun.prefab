@@ -51,9 +51,10 @@ MonoBehaviour:
   boxCollider: {fileID: 6394848136817018224}
   projectilePrefab: {fileID: 1682859016921356063, guid: a133161848d51234b97f8554a243a1ab, type: 3}
   parentCollider: {fileID: 0}
-  weaponStrategy: {fileID: 11400000, guid: 67d68c3e0a11e41479e9131cdc4b126a, type: 2}
-  firePoint: {fileID: 1113316170954926131}
+  firePoints:
+  - {fileID: 1113316170954926131}
   <FireRatePerSecond>k__BackingField: 0.5
+  weaponStrategy: {fileID: 11400000, guid: 67d68c3e0a11e41479e9131cdc4b126a, type: 2}
 --- !u!212 &4676953174740963180
 SpriteRenderer:
   serializedVersion: 2

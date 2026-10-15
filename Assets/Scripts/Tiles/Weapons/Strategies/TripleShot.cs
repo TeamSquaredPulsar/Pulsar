@@ -11,40 +11,20 @@ using UnityEngine;
     menuName = "Scriptable Objects/TripleShot")]
 public class TripleShot : WeaponStrategy
 {
-    [SerializeField]
-    private float k_LeftAngle = -45f;
-
-    [SerializeField]
-    private float k_MiddleAngle;
-
-    [SerializeField]
-    private float k_RightAngle = 45f;
+    private int maxBullets = 3;
+    private int k_max_firePoints = 3;
 
     /// <inheritdoc/>
     public override void Fire(
-        Transform firePoint,
+        Transform[] firePoints,
         Weapon weapon,
         Func<Transform, GameObject> spawnProjectile)
     {
-        Shoot(firePoint, k_LeftAngle, spawnProjectile);
-        Shoot(firePoint, k_MiddleAngle, spawnProjectile);
-        Shoot(firePoint, k_RightAngle, spawnProjectile);
-    }
+        verifyFirePoints(firePoints, k_max_firePoints);
 
-    /// <summary>
-    /// Helper method, so that I can specify the angle for each one easier
-    /// cut down code
-    /// </summary>
-    /// <param name="firePoint"></param>
-    /// <param name="angle"></param>
-    /// <param name="spawnProjectile"></param>
-    private void Shoot(
-        Transform firePoint,
-        float angle,
-        Func<Transform, GameObject> spawnProjectile)
-    {
-        Transform newPoint = firePoint;
-        newPoint.Rotate(new Vector3(0, 0, angle));
-        spawnProjectile(newPoint);
+        foreach (Transform firePoint in firePoints[..maxBullets])
+        {
+            spawnProjectile(firePoint);
+        }
     }
 }
