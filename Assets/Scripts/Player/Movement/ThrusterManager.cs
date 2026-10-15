@@ -4,14 +4,14 @@ using UnityEngine;
 
 public struct ThrustAtRotation
 {
-    public Rotation Orientation;
+    public TileRotationEnum Orientation;
     public float Thrust;
 }
 
 public class ThrusterManager : MonoBehaviour
 {
     [SerializeField]
-    private List<Thruster> thrusters;
+    private List<ThrusterTile> thrusters;
     
     [SerializeField]
     private Rigidbody2D rb;
@@ -67,8 +67,8 @@ public class ThrusterManager : MonoBehaviour
             ThrustAtRotation thrustY = GetThrustAtRotation(
                 _moveInput.y switch
                 {
-                    > 0 => Rotation.Up,
-                    < 0 => Rotation.Down,
+                    > 0 => TileRotationEnum.Up,
+                    < 0 => TileRotationEnum.Down,
                     _ => throw new ArgumentOutOfRangeException(
                         nameof(_moveInput) + ".y",
                         "Already checked Y could not be 0!"),
@@ -81,8 +81,8 @@ public class ThrusterManager : MonoBehaviour
             ThrustAtRotation thrustX = GetThrustAtRotation(
                 _moveInput.x switch
                 {
-                    > 0 => Rotation.Right,
-                    < 0 => Rotation.Left,
+                    > 0 => TileRotationEnum.Right,
+                    < 0 => TileRotationEnum.Left,
                     _ => throw new ArgumentOutOfRangeException(
                         nameof(_moveInput) + ".X",
                         "Already checked X could not be 0!"),
@@ -99,27 +99,27 @@ public class ThrusterManager : MonoBehaviour
     #region Thrust Calculations
     private void CalculateThrusters()
     {
-        int directions = Enum.GetNames(typeof(Rotation)).Length;
+        int directions = Enum.GetNames(typeof(TileRotationEnum)).Length;
         _directedThrust = new ThrustAtRotation[directions];
         
         for (int i = 0; i < directions; i++)
         {
             _directedThrust[i] = new ThrustAtRotation
             {
-                Orientation = (Rotation)i,
+                Orientation = (TileRotationEnum)i,
                 Thrust = 0f,
             };
         }
         
-        foreach (Thruster thruster in thrusters)
+        foreach (ThrusterTile thruster in thrusters)
         {
-            _directedThrust[(int)thruster.GetOrientation()].Thrust
+            _directedThrust[(int)thruster.Orientation].Thrust
                 += thruster.GetThrust();
         }
     }
 
     private ThrustAtRotation
-        GetThrustAtRotation(Rotation orientation) =>
+        GetThrustAtRotation(TileRotationEnum orientation) =>
         _directedThrust[(int)orientation];
     #endregion
 }

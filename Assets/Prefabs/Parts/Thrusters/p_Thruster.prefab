@@ -9,9 +9,10 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1486952502805023581}
-  - component: {fileID: 3589442038005289041}
+  - component: {fileID: 31458138794939124}
   - component: {fileID: 8688311974718774552}
   - component: {fileID: 6303449030629206126}
+  - component: {fileID: 4236213788445675535}
   m_Layer: 0
   m_Name: p_Thruster
   m_TagString: Untagged
@@ -34,7 +35,7 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &3589442038005289041
+--- !u!114 &31458138794939124
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -43,11 +44,15 @@ MonoBehaviour:
   m_GameObject: {fileID: 9113379072927920375}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e02251dc92abf4843bc52a4ed29cdf53, type: 3}
+  m_Script: {fileID: 11500000, guid: c73fc15b171ddc347ab826efbd8c2757, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::Thruster
+  m_EditorClassIdentifier: Assembly-CSharp::ThrusterTile
+  <TileInfo>k__BackingField: {fileID: 11400000, guid: efe30156b410eb149aa1cabe593e8f6d, type: 2}
   spriteRenderer: {fileID: 8688311974718774552}
-  boxCollider: {fileID: 6303449030629206126}
+  tileCollider: {fileID: 6303449030629206126}
+  floatRb: {fileID: 4236213788445675535}
+  baseColor: {r: 1, g: 1, b: 1, a: 1}
+  thrust: 0.1
 --- !u!212 &8688311974718774552
 SpriteRenderer:
   serializedVersion: 2
@@ -153,3 +158,30 @@ BoxCollider2D:
   m_AutoTiling: 0
   m_Size: {x: 1, y: 1}
   m_EdgeRadius: 0
+--- !u!50 &4236213788445675535
+Rigidbody2D:
+  serializedVersion: 5
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 9113379072927920375}
+  m_BodyType: 0
+  m_Simulated: 1
+  m_UseFullKinematicContacts: 0
+  m_UseAutoMass: 0
+  m_Mass: 1
+  m_LinearDamping: 0
+  m_AngularDamping: 0.05
+  m_GravityScale: 0
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_Interpolate: 0
+  m_SleepingMode: 1
+  m_CollisionDetection: 0
+  m_Constraints: 0
