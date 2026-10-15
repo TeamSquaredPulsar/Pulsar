@@ -5,7 +5,7 @@ using Pulsar.Ship;
 using UnityEngine;
 using Random = UnityEngine.Random;
 
-[RequireComponent(typeof(CompositeCollider2D))]
+[RequireComponent(typeof(CompositeCollider2D), typeof(Rigidbody2D))]
 public class ShipManager : MonoBehaviour
 {
     public static readonly Vector2Int[] Dirs =
@@ -23,8 +23,6 @@ public class ShipManager : MonoBehaviour
     private CompositeCollider2D compositeCollider;
     [field: SerializeField]
     public Rigidbody2D Rb { get; private set; }
-    [field: SerializeField]
-    public PlayerController PlayerController { get; private set; }
     [SerializeField]
     private List<WeaponTile> weapons = new(10);
     [SerializeField]
@@ -55,10 +53,10 @@ public class ShipManager : MonoBehaviour
     
     private void Awake()
     {
-        Rb = GetComponent<Rigidbody2D>();
+        Rb??= GetComponent<Rigidbody2D>();
 
         ShipUtilities.FloatingTileRbConstrain(Rb);
-
+        
         if (coreInfoSo != null)
         {
             SpawnCore();
@@ -442,7 +440,7 @@ public class ShipManager : MonoBehaviour
     [ContextMenu("SpawnRandomFloater")]
     private void SpawnRandomFloater()
     {
-        TileInfoSO infor = spawnTestTiles[Random.Range(0, spawnTestTiles.Count)];
+        TileInfoSO info = spawnTestTiles[Random.Range(0, spawnTestTiles.Count)];
 
         float angle = Random.Range(0f, 360f) * Mathf.Deg2Rad;
         float dist = 6.5f;
@@ -452,7 +450,7 @@ public class ShipManager : MonoBehaviour
         Vector2 toShip = (shipPos - pos).normalized;
         Vector2 velocity = toShip + Random.insideUnitCircle * 0.3f;
 
-        Tile.SpawnFloating<ChassisTile>(infor, pos, velocity);
+        Tile.SpawnFloating<ChassisTile>(info, pos, velocity);
     }
     private void OnGUI()
     {

@@ -5,7 +5,6 @@ using Random = UnityEngine.Random;
 [RequireComponent(typeof(BoxCollider2D), typeof(Rigidbody2D))]
 public class Tile : MonoBehaviour
 {
-    
     public TileRotationEnum GetRotationInt(int rot)
     {
         switch (rot)
@@ -17,9 +16,9 @@ public class Tile : MonoBehaviour
             default: return TileRotationEnum.Right;
         }
     }
-    
+
     private const int FloatingSortingOrder = 10;
-    
+
     [field: SerializeField]
     public TileInfoSO TileInfo { get; private set; }
 
@@ -36,11 +35,10 @@ public class Tile : MonoBehaviour
     private Color baseColor = Color.white;
 
     public Vector2Int Cell { get; private set; }
-    
+
     // 0 1 2 3 = 0 90 180 270 (counterclockwise)
     public float CurrentHp { get; protected set; }
-    
-    
+
     public int Rotation { get; private set; }
 
     public bool IsAttached { get; private set; }
@@ -78,7 +76,7 @@ public class Tile : MonoBehaviour
         spriteRenderer = CreateVisual(transform);
 
         spriteRenderer.sprite = tileInfoSo.sprite;
-        
+
         floatRb = GetComponent<Rigidbody2D>();
         tileCollider = GetComponent<BoxCollider2D>();
         tileCollider.isTrigger = true;
@@ -107,10 +105,10 @@ public class Tile : MonoBehaviour
     public void ReleaseToFloating(Vector2 velocity, float angularVelocity)
     {
         transform.SetParent(null,
-            true); 
+            true);
         IsAttached = false;
         tileCollider.isTrigger
-            = true; 
+            = true;
         spriteRenderer.sortingOrder = FloatingSortingOrder;
         Unhighlight();
         EnableFloatingPhysics(velocity, angularVelocity);
@@ -138,7 +136,7 @@ public class Tile : MonoBehaviour
      * example: tile is true:0 false:1 false:2 false:3 (allow connect from top only)
      * tile.Rotation = 1 -> tile now allows connect from left
      * pass EdgeConnectable(3) -> (3+1)%4==0 -> true
-     * => can connect 
+     * => can connect
      */
     public bool EdgeConnectable(int dir)
     {
