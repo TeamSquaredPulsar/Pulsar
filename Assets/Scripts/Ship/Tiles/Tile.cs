@@ -2,20 +2,13 @@ using System;
 using UnityEngine;
 using Random = UnityEngine.Random;
 
-[RequireComponent(typeof(BoxCollider2D), typeof(Rigidbody2D))]
+[RequireComponent(typeof(BoxCollider2D), typeof(Rigidbody2D),
+    typeof(SpriteRenderer))]
 public class Tile : MonoBehaviour
 {
-    public TileRotationEnum GetRotationInt(int rot)
-    {
-        switch (rot)
-        {
-            case 0: return TileRotationEnum.Up;
-            case 1: return TileRotationEnum.Right;
-            case 2: return TileRotationEnum.Down;
-            case 3: return TileRotationEnum.Left;
-            default: return TileRotationEnum.Right;
-        }
-    }
+    public static TileRotationEnum GetRotationInt(int rot) =>
+        (TileRotationEnum)(rot % Enum.GetNames(typeof(TileRotationEnum))
+            .Length);
 
     private const int FloatingSortingOrder = 10;
 
