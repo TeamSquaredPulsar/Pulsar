@@ -6,6 +6,18 @@ using Random = UnityEngine.Random;
 public class Tile : MonoBehaviour
 {
     
+    public TileRotationEnum GetRotationInt(int rot)
+    {
+        switch (rot)
+        {
+            case 0: return TileRotationEnum.Up;
+            case 1: return TileRotationEnum.Right;
+            case 2: return TileRotationEnum.Down;
+            case 3: return TileRotationEnum.Left;
+            default: return TileRotationEnum.Right;
+        }
+    }
+    
     private const int FloatingSortingOrder = 10;
     
     [field: SerializeField]

@@ -4,12 +4,12 @@ public class Thruster : Tile
 {
     [SerializeField]
     private float thrust = 0.1f;
-
-    [SerializeField]
-    private Rotation orientation = Rotation.Up;
+    
+    // [SerializeField]
+    private TileRotationEnum orientation => GetRotationInt(Rotation);
     
     public float GetThrust() => thrust;
 
-    public Rotation GetOrientation() => orientation;
+    public TileRotationEnum GetOrientation() => orientation;
     
 }
