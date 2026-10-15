@@ -19,7 +19,7 @@ public class SingleShot : WeaponStrategy
     /// <inheritdoc/>
     public override void Fire(
         Transform[] firePoints,
-        Weapon weapon,
+        WeaponTile weapon,
         Func<Transform, GameObject> spawnProjectile)
     {
         verifyFirePoints(firePoints, k_max_firePoints);
