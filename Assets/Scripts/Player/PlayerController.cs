@@ -29,10 +29,7 @@ public class PlayerController : MonoBehaviour
         input.RotateEvent += HandleRotate;
         input.EnablePlayerActions();
     }
-
-    // TODO: Can make an event where the player
-    //  can listen for it and manage the player weapon list themselves.
-    //  For performance reasons
+    
     private void HandleRotate(float obj)
     {
         shipManager.Rotate(obj);

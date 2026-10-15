@@ -68,6 +68,7 @@ MonoBehaviour:
   coreInfoSo: {fileID: 0}
   compositeCollider: {fileID: 70888490315140228}
   <Rb>k__BackingField: {fileID: 8716755017154123671}
+  thrusterManager: {fileID: 8893891361912782109}
   weapons: []
   thrusters: []
   detachRadiateLinearVelocity: {x: 2, y: 5}
@@ -248,6 +249,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 7376437609368605663}
     m_Modifications:
+    - target: {fileID: 513743139472434182, guid: 9d9b88b2fc3b2374c83c9e59dadfb864, type: 3}
+      propertyPath: m_Simulated
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 1923082867568248035, guid: 9d9b88b2fc3b2374c83c9e59dadfb864, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0
@@ -310,6 +315,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 4349335060442021690}
     m_Modifications:
+    - target: {fileID: 31458138794939124, guid: d41f92095f77c0c419e9feb661d7963f, type: 3}
+      propertyPath: thrust
+      value: 5
+      objectReference: {fileID: 0}
     - target: {fileID: 1486952502805023581, guid: d41f92095f77c0c419e9feb661d7963f, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0
@@ -426,6 +435,10 @@ PrefabInstance:
     - target: {fileID: 2402461002857692903, guid: aa5c391c67940fe428fad2e4cebfb98c, type: 3}
       propertyPath: m_Name
       value: p_BasicGun
+      objectReference: {fileID: 0}
+    - target: {fileID: 2522681453652910296, guid: aa5c391c67940fe428fad2e4cebfb98c, type: 3}
+      propertyPath: m_Simulated
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 9156844168472924138, guid: aa5c391c67940fe428fad2e4cebfb98c, type: 3}
       propertyPath: parentCollider
