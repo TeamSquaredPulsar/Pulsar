@@ -13,17 +13,17 @@ using UnityEngine;
     menuName = "Scriptable Objects/SingleShot")]
 public class SingleShot : WeaponStrategy
 {
-    /// <summary>
-    /// Fire method
-    /// </summary>
-    /// <param name="firePoint"></param>
-    /// <param name="weaponTile"></param>
-    /// <param name="spawnProjectile"></param>
+    private int k_mainFirePoint = 0;
+    private int k_max_firePoints = 1;
+
+    /// <inheritdoc/>
     public override void Fire(
-        Transform firePoint,
-        WeaponTile weaponTile,
+        Transform[] firePoints,
+        Weapon weapon,
         Func<Transform, GameObject> spawnProjectile)
     {
-        spawnProjectile(firePoint);
+        verifyFirePoints(firePoints, k_max_firePoints);
+
+        spawnProjectile(firePoints[k_mainFirePoint]);
     }
 }

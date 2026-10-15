@@ -18,13 +18,24 @@ public abstract class WeaponStrategy : ScriptableObject
     /// Abstract Fire function
     /// 
     /// </summary>
-    /// <param name="firePoint"></param>
-    ///  <param name="weaponTile"></param>
+    /// <param name="firePoints"></param>
+    ///  <param name="weapon"></param>
     /// <param name="spawnProjectile"></param>
     public abstract void
         Fire(
-            Transform firePoint,
-            WeaponTile
-                weaponTile,
+            Transform[] firePoints,
+            Weapon
+                weapon,
             Func<Transform, GameObject> spawnProjectile);
+
+    protected void verifyFirePoints(
+        Transform[] firePoints,
+        int maxFirePoints)
+    {
+        if (firePoints == null || firePoints.Length < maxFirePoints)
+        {
+            throw new ArgumentOutOfRangeException(nameof(firePoints),
+                "Fire points must be at least " + maxFirePoints);
+        }
+    }
 }
