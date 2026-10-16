@@ -52,6 +52,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlayerController
   input: {fileID: 11400000, guid: c7e737219c863a2409c60ad7a526337d, type: 2}
+  shipManager: {fileID: 35744134826503047}
 --- !u!114 &35744134826503047
 MonoBehaviour:
   m_ObjectHideFlags: 0

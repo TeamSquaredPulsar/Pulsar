@@ -5,7 +5,7 @@ public class PlayerController : MonoBehaviour
     [SerializeField]
     private InputReader input;
 
-    [Autohook]
+    [SerializeField]
     private ShipManager shipManager;
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
