@@ -28,6 +28,8 @@ public class ShipManager : MonoBehaviour
     // public event Action<Weapon> onNewWeaponAdded;
     // public event Action<Thruster> onNewThrusterAdded;
 
+    public List<Tile> GetTiles() => tiles;
+
     private void Start()
     {
         tiles = gameObject.GetComponentsInChildren<Tile>().ToList();

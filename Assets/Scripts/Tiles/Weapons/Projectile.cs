@@ -1,4 +1,7 @@
+using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
+using UnityEngine.Rendering;
 
 /// <summary>
 /// Represents a Projectile
@@ -27,11 +30,7 @@ public class Projectile : MonoBehaviour
     [SerializeField]
     private GameObject hitEffectPrefab;
 
-    //TODO: Remove this
-    private void Awake()
-    {
-        Debug.Log("Oh boy, here I go killing again!");
-    }
+    private int ContactPointIndex = 0;
 
     /// <summary>
     /// Start method.
@@ -56,22 +55,17 @@ public class Projectile : MonoBehaviour
 
         if (hitEffectPrefab != null)
         {
-            // Hit Effect
             Debug.Log("Hit Effect");
         }
 
-        // Debug.Log(collision.gameObject.GetComponentInChildren(typeof(Health))
-        //     .ToString());
+        Vector2 hitPoint = collision.GetContact(ContactPointIndex).point;
+        Health health
+            = GetColliderHealthComponent(collision.gameObject, hitPoint);
 
-        Component health
-            = collision.gameObject.GetComponentInChildren(typeof(Health));
-
-        DealDamage(health as Health);
-        // if (collision.gameObject.TryGetComponent<Health>(out Health health))
-        // {
-        //     Debug.Log("Hit Tile");
-        //     DealDamage(health);
-        // }
+        if (health != null)
+        {
+            DealDamage(health);
+        }
 
         Destroy(gameObject);
     }
@@ -79,6 +73,41 @@ public class Projectile : MonoBehaviour
     private void DealDamage(Health health)
     {
         health.TakeDamage(Damage);
+    }
+
+    private static Health GetColliderHealthComponent(
+        GameObject collisionGameObject,
+        Vector2 hitPoint)
+    {
+        Health colliderHealth = null;
+
+        if (collisionGameObject.TryGetComponent(
+                out ShipManager shipManager))
+        {
+            Debug.Log("COLLIDING SHIP MANAGER");
+            List<Tile> tiles = shipManager.GetTiles();
+
+            foreach (Tile tile in tiles)
+            {
+                Collider2D tileCollider = tile.GetComponent<Collider2D>();
+
+                Vector2 closest = tileCollider.ClosestPoint(hitPoint);
+                bool isCloseEnough = (closest - hitPoint).sqrMagnitude < 0.01f;
+
+                if (isCloseEnough)
+                {
+                    colliderHealth = tile.GetComponent<Health>();
+                    break;
+                }
+            }
+        }
+        else if (collisionGameObject.TryGetComponent(out Health health))
+        {
+            colliderHealth = health;
+            Debug.Log("FOUND RAND COLLIDER");
+        }
+
+        return colliderHealth;
     }
 
     public GameObject SpawnProjectile(

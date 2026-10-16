@@ -10,12 +10,12 @@ public class Health : MonoBehaviour
     public void TakeDamage(float damage)
     {
         Debug.Log("Hit. Current Health: " + HealthAmount);
-        HealthAmount = HealthAmount - damage;
+        HealthAmount -= damage;
     }
 
     public void AddHealth(float health)
     {
-        HealthAmount = HealthAmount + health;
+        HealthAmount += health;
     }
 
     private void Update()
