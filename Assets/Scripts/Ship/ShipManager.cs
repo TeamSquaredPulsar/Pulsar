@@ -73,6 +73,7 @@ public class ShipManager : MonoBehaviour
                     break;
                 case WeaponTile weapon:
                     weapons.Add(weapon);
+                    weapon.SetParentCollider(compositeCollider);
                     break;
             }
         }
@@ -83,7 +84,6 @@ public class ShipManager : MonoBehaviour
 
     public void Fire()
     {
-        Debug.Log("Ship controller firing");
         foreach (WeaponTile weapon in weapons)
         {
             weapon.Fire();

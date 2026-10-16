@@ -39,7 +39,6 @@ public class PlayerController : MonoBehaviour
     //  For performance reasons
     private void HandleShoot()
     {
-        Debug.Log("Player controller firing");
         shipManager.Fire();
     }
 

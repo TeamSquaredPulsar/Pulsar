@@ -36,6 +36,7 @@ public class WeaponTile : Tile
 
     private void Start()
     {
+        
         _projectile = projectilePrefab.gameObject.GetComponent<Projectile>();
     }
 
@@ -48,16 +49,19 @@ public class WeaponTile : Tile
         weaponStrategy = strat;
     }
 
-    private GameObject _spawnProjectile(Transform spawnPoint) =>
-        _projectile.SpawnProjectile(spawnPoint, parentCollider);
-
+    private GameObject _spawnProjectile(Transform spawnPoint)
+    {
+        GameObject projectile = _projectile.SpawnProjectile(spawnPoint, parentCollider);
+        Physics2D.IgnoreCollision(projectile.GetComponent<Collider2D>(),
+            this.GetComponent<Collider2D>());
+        return projectile;
+    }
     public virtual void Fire()
     {
         if (!CanFire)
         {
             return;
         }
-        Debug.Log($"{gameObject.name} firing");
         weaponStrategy.Fire(firePoints, this, _spawnProjectile);
         StartFireTimer();
     }
