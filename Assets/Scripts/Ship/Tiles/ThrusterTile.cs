@@ -10,17 +10,6 @@ public class ThrusterTile : Tile
     
     public float GetThrust() => thrust;
     
-    public override void SetAttached(ShipManager manager)
-    {
-        base.SetAttached(manager);
-        // register with ship thruster groups
-    }
-
-    public override void SetDetached(ShipManager manager)
-    {
-        base.SetDetached(manager);
-        // unregister from ship thruster groups
-    }
         
     public void Move(float amount, Rigidbody2D rb)
     {
@@ -28,6 +17,4 @@ public class ThrusterTile : Tile
         //TODO: Add movement logic here
         // Apply force to rigidbody at the point i exist at
     }
-    
-
 }

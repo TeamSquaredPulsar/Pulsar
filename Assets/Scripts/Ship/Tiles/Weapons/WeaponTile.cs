@@ -57,7 +57,7 @@ public class WeaponTile : Tile
         {
             return;
         }
-
+        Debug.Log($"{gameObject.name} firing");
         weaponStrategy.Fire(firePoints, this, _spawnProjectile);
         StartFireTimer();
     }

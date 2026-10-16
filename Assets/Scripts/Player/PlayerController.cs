@@ -1,12 +1,11 @@
 using UnityEngine;
-
 [RequireComponent(typeof(ShipManager))]
 public class PlayerController : MonoBehaviour
 {
     [SerializeField]
     private InputReader input;
 
-    [SerializeField]
+    [Autohook]
     private ShipManager shipManager;
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
@@ -40,6 +39,7 @@ public class PlayerController : MonoBehaviour
     //  For performance reasons
     private void HandleShoot()
     {
+        Debug.Log("Player controller firing");
         shipManager.Fire();
     }
 
