@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 
 public class Health : MonoBehaviour
@@ -11,6 +12,11 @@ public class Health : MonoBehaviour
     {
         Debug.Log("Hit. Current Health: " + HealthAmount);
         HealthAmount -= damage;
+
+        if (HealthAmount <= NoHealth)
+        {
+            DestroyEvent?.Invoke(this);
+        }
     }
 
     public void AddHealth(float health)
@@ -18,11 +24,5 @@ public class Health : MonoBehaviour
         HealthAmount += health;
     }
 
-    private void Update()
-    {
-        if (HealthAmount <= NoHealth)
-        {
-            Destroy(gameObject);
-        }
-    }
+    public event Action<Health> DestroyEvent;
 }
