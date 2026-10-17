@@ -12,7 +12,17 @@ public interface IInputReader
 [CreateAssetMenu(fileName = "NewInputReader", menuName = "Input/Input Reader")]
 public class InputReader : ScriptableObject, IPlayerActions, IInputReader
 {
+    private Camera _mainCamera;
     private Controls _controls;
+    
+    public event Action<Vector2> MoveEvent;
+    public event Action ShootEvent;
+    public event Action<float> RotateEvent;
+    public event Action<bool> DetachTileEvent;
+    public event Action<bool> SelectFloatingTileEvent;
+    public event Action<Vector2> MoveCursorEvent;
+    public event Action<bool> ToggleRadialMenuEvent;
+    public event Action<InputAction.CallbackContext> BuildTileEvent;
 
     private void Awake()
     {
@@ -30,7 +40,7 @@ public class InputReader : ScriptableObject, IPlayerActions, IInputReader
         {
             CreateNewControls();
         }
-
+        _mainCamera =  Camera.main;
         _controls?.Player.Enable();
     }
 
@@ -46,6 +56,7 @@ public class InputReader : ScriptableObject, IPlayerActions, IInputReader
     }
 
     public Vector2 MoveDirection => _controls.Player.Move.ReadValue<Vector2>();
+    // public Vector2 MouseScreenPosition => _controls.Player.MoveCursor.ReadValue<Vector2>();
 
     public void EnablePlayerActions()
     {
@@ -73,7 +84,40 @@ public class InputReader : ScriptableObject, IPlayerActions, IInputReader
         _controls.Player.SetCallbacks(this);
     }
 
-    public event Action<Vector2> MoveEvent;
-    public event Action ShootEvent;
-    public event Action<float> RotateEvent;
+    public void OnToggleRadialMenu(InputAction.CallbackContext context)
+    {
+        ToggleRadialMenuEvent?.Invoke(context.started);
+    }
+    
+    // [CB] Annoyingly, Unity will overwrite the controller inputs with mouse
+    // inputs if we don't use 2 different functions. At least the event is unified :)
+    public void OnMoveCursorGamepad(InputAction.CallbackContext context)
+    {
+        Vector2 input = context.ReadValue<Vector2>() * new Vector2(
+            _mainCamera.pixelWidth,
+            _mainCamera.pixelHeight);
+        MoveCursorEvent?.Invoke(input);
+    }
+
+    public void OnMoveCursorMouse(InputAction.CallbackContext context)
+    {
+        MoveCursorEvent?.Invoke(context.ReadValue<Vector2>());
+    }
+    
+    public void OnSelectFloatingTile(InputAction.CallbackContext context)
+    {
+        SelectFloatingTileEvent?.Invoke(context.started);
+    }
+
+    public void OnBuildTile(InputAction.CallbackContext context)
+    {
+        BuildTileEvent?.Invoke(context);
+    }
+
+    public void OnDetachTile(InputAction.CallbackContext context)
+    {
+        DetachTileEvent?.Invoke(context.started);
+    }
+
+
 }

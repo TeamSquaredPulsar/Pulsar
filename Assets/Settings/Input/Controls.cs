@@ -121,6 +121,66 @@ public partial class @Controls: IInputActionCollection2, IDisposable
                     ""interactions"": """",
                     ""initialStateCheck"": true,
                     ""priority"": 0
+                },
+                {
+                    ""name"": ""ToggleRadialMenu"",
+                    ""type"": ""Button"",
+                    ""id"": ""fb5450f8-f430-45dc-be3f-f3a348a03728"",
+                    ""expectedControlType"": """",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false,
+                    ""priority"": 0
+                },
+                {
+                    ""name"": ""SelectFloatingTile"",
+                    ""type"": ""Button"",
+                    ""id"": ""e0487f61-c830-42db-8b26-6b13d2cc4b39"",
+                    ""expectedControlType"": """",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false,
+                    ""priority"": 0
+                },
+                {
+                    ""name"": ""BuildTile"",
+                    ""type"": ""Button"",
+                    ""id"": ""055f7cb4-a94c-454a-b8d7-f6b5c0965bf6"",
+                    ""expectedControlType"": """",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false,
+                    ""priority"": 0
+                },
+                {
+                    ""name"": ""DetachTile"",
+                    ""type"": ""Button"",
+                    ""id"": ""1ff18678-0c9d-4d62-9970-ec764b993ce5"",
+                    ""expectedControlType"": """",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false,
+                    ""priority"": 0
+                },
+                {
+                    ""name"": ""MoveCursorGamepad"",
+                    ""type"": ""Value"",
+                    ""id"": ""065c7c4d-a813-4b13-abe3-2750a5fbaa06"",
+                    ""expectedControlType"": """",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": true,
+                    ""priority"": 0
+                },
+                {
+                    ""name"": ""MoveCursorMouse"",
+                    ""type"": ""Button"",
+                    ""id"": ""ed710a79-81d0-4a79-973a-96fcd3c8d0ef"",
+                    ""expectedControlType"": """",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false,
+                    ""priority"": 0
                 }
             ],
             ""bindings"": [
@@ -184,7 +244,7 @@ public partial class @Controls: IInputActionCollection2, IDisposable
                     ""id"": ""ca9f579a-6184-41a1-a365-5a28107a1788"",
                     ""path"": ""<Gamepad>/leftStick"",
                     ""interactions"": """",
-                    ""processors"": """",
+                    ""processors"": ""StickDeadzone"",
                     ""groups"": """",
                     ""action"": ""Move"",
                     ""isComposite"": false,
@@ -240,7 +300,7 @@ public partial class @Controls: IInputActionCollection2, IDisposable
                     ""path"": ""<Keyboard>/q"",
                     ""interactions"": """",
                     ""processors"": """",
-                    ""groups"": """",
+                    ""groups"": "";Keyboard & Mouse"",
                     ""action"": ""Rotate"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": true
@@ -251,7 +311,7 @@ public partial class @Controls: IInputActionCollection2, IDisposable
                     ""path"": ""<Keyboard>/e"",
                     ""interactions"": """",
                     ""processors"": """",
-                    ""groups"": """",
+                    ""groups"": "";Keyboard & Mouse"",
                     ""action"": ""Rotate"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": true
@@ -273,7 +333,7 @@ public partial class @Controls: IInputActionCollection2, IDisposable
                     ""path"": ""<Gamepad>/leftShoulder"",
                     ""interactions"": """",
                     ""processors"": """",
-                    ""groups"": """",
+                    ""groups"": "";Controller"",
                     ""action"": ""Rotate"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": true
@@ -284,38 +344,93 @@ public partial class @Controls: IInputActionCollection2, IDisposable
                     ""path"": ""<Gamepad>/rightShoulder"",
                     ""interactions"": """",
                     ""processors"": """",
-                    ""groups"": """",
+                    ""groups"": "";Controller"",
                     ""action"": ""Rotate"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": true
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""f027ab95-fd2f-4f78-89ea-926948b3f4be"",
+                    ""path"": ""<Keyboard>/tab"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": "";Keyboard & Mouse"",
+                    ""action"": ""ToggleRadialMenu"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""8b4e0df5-1c6d-41b2-ae92-df3e36bb60e7"",
+                    ""path"": ""<Keyboard>/c"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": "";Keyboard & Mouse"",
+                    ""action"": ""BuildTile"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""3d050224-e2bf-4814-ae28-d47b640fb3d0"",
+                    ""path"": ""<Keyboard>/x"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": "";Keyboard & Mouse"",
+                    ""action"": ""DetachTile"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""d5121413-3f48-4b0e-a5d6-0c3c208bb667"",
+                    ""path"": ""<Mouse>/leftButton"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": "";Keyboard & Mouse"",
+                    ""action"": ""SelectFloatingTile"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""46ce79a6-a67b-4e33-a7f6-bea5dba28099"",
+                    ""path"": ""<Gamepad>/rightStick"",
+                    ""interactions"": """",
+                    ""processors"": ""StickDeadzone"",
+                    ""groups"": "";Controller"",
+                    ""action"": ""MoveCursorGamepad"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""e19148b7-c8e9-4b25-84a8-1958a39d424a"",
+                    ""path"": ""<Mouse>/position"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": "";Keyboard & Mouse"",
+                    ""action"": ""MoveCursorMouse"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         }
     ],
-    ""controlSchemes"": [
-        {
-            ""name"": ""Keyboard & Mouse"",
-            ""bindingGroup"": ""Keyboard & Mouse"",
-            ""devices"": [
-                {
-                    ""devicePath"": ""<Keyboard>"",
-                    ""isOptional"": false,
-                    ""isOR"": false
-                },
-                {
-                    ""devicePath"": ""<Mouse>"",
-                    ""isOptional"": false,
-                    ""isOR"": false
-                }
-            ]
-        }
-    ]
+    ""controlSchemes"": []
 }");
         // Player
         m_Player = asset.FindActionMap("Player", throwIfNotFound: true);
         m_Player_Move = m_Player.FindAction("Move", throwIfNotFound: true);
         m_Player_Shoot = m_Player.FindAction("Shoot", throwIfNotFound: true);
         m_Player_Rotate = m_Player.FindAction("Rotate", throwIfNotFound: true);
+        m_Player_ToggleRadialMenu = m_Player.FindAction("ToggleRadialMenu", throwIfNotFound: true);
+        m_Player_SelectFloatingTile = m_Player.FindAction("SelectFloatingTile", throwIfNotFound: true);
+        m_Player_BuildTile = m_Player.FindAction("BuildTile", throwIfNotFound: true);
+        m_Player_DetachTile = m_Player.FindAction("DetachTile", throwIfNotFound: true);
+        m_Player_MoveCursorGamepad = m_Player.FindAction("MoveCursorGamepad", throwIfNotFound: true);
+        m_Player_MoveCursorMouse = m_Player.FindAction("MoveCursorMouse", throwIfNotFound: true);
     }
 
     ~@Controls()
@@ -399,6 +514,12 @@ public partial class @Controls: IInputActionCollection2, IDisposable
     private readonly InputAction m_Player_Move;
     private readonly InputAction m_Player_Shoot;
     private readonly InputAction m_Player_Rotate;
+    private readonly InputAction m_Player_ToggleRadialMenu;
+    private readonly InputAction m_Player_SelectFloatingTile;
+    private readonly InputAction m_Player_BuildTile;
+    private readonly InputAction m_Player_DetachTile;
+    private readonly InputAction m_Player_MoveCursorGamepad;
+    private readonly InputAction m_Player_MoveCursorMouse;
     /// <summary>
     /// Provides access to input actions defined in input action map "Player".
     /// </summary>
@@ -422,6 +543,30 @@ public partial class @Controls: IInputActionCollection2, IDisposable
         /// Provides access to the underlying input action "Player/Rotate".
         /// </summary>
         public InputAction @Rotate => m_Wrapper.m_Player_Rotate;
+        /// <summary>
+        /// Provides access to the underlying input action "Player/ToggleRadialMenu".
+        /// </summary>
+        public InputAction @ToggleRadialMenu => m_Wrapper.m_Player_ToggleRadialMenu;
+        /// <summary>
+        /// Provides access to the underlying input action "Player/SelectFloatingTile".
+        /// </summary>
+        public InputAction @SelectFloatingTile => m_Wrapper.m_Player_SelectFloatingTile;
+        /// <summary>
+        /// Provides access to the underlying input action "Player/BuildTile".
+        /// </summary>
+        public InputAction @BuildTile => m_Wrapper.m_Player_BuildTile;
+        /// <summary>
+        /// Provides access to the underlying input action "Player/DetachTile".
+        /// </summary>
+        public InputAction @DetachTile => m_Wrapper.m_Player_DetachTile;
+        /// <summary>
+        /// Provides access to the underlying input action "Player/MoveCursorGamepad".
+        /// </summary>
+        public InputAction @MoveCursorGamepad => m_Wrapper.m_Player_MoveCursorGamepad;
+        /// <summary>
+        /// Provides access to the underlying input action "Player/MoveCursorMouse".
+        /// </summary>
+        public InputAction @MoveCursorMouse => m_Wrapper.m_Player_MoveCursorMouse;
         /// <summary>
         /// Provides access to the underlying input action map instance.
         /// </summary>
@@ -457,6 +602,24 @@ public partial class @Controls: IInputActionCollection2, IDisposable
             @Rotate.started += instance.OnRotate;
             @Rotate.performed += instance.OnRotate;
             @Rotate.canceled += instance.OnRotate;
+            @ToggleRadialMenu.started += instance.OnToggleRadialMenu;
+            @ToggleRadialMenu.performed += instance.OnToggleRadialMenu;
+            @ToggleRadialMenu.canceled += instance.OnToggleRadialMenu;
+            @SelectFloatingTile.started += instance.OnSelectFloatingTile;
+            @SelectFloatingTile.performed += instance.OnSelectFloatingTile;
+            @SelectFloatingTile.canceled += instance.OnSelectFloatingTile;
+            @BuildTile.started += instance.OnBuildTile;
+            @BuildTile.performed += instance.OnBuildTile;
+            @BuildTile.canceled += instance.OnBuildTile;
+            @DetachTile.started += instance.OnDetachTile;
+            @DetachTile.performed += instance.OnDetachTile;
+            @DetachTile.canceled += instance.OnDetachTile;
+            @MoveCursorGamepad.started += instance.OnMoveCursorGamepad;
+            @MoveCursorGamepad.performed += instance.OnMoveCursorGamepad;
+            @MoveCursorGamepad.canceled += instance.OnMoveCursorGamepad;
+            @MoveCursorMouse.started += instance.OnMoveCursorMouse;
+            @MoveCursorMouse.performed += instance.OnMoveCursorMouse;
+            @MoveCursorMouse.canceled += instance.OnMoveCursorMouse;
         }
 
         /// <summary>
@@ -477,6 +640,24 @@ public partial class @Controls: IInputActionCollection2, IDisposable
             @Rotate.started -= instance.OnRotate;
             @Rotate.performed -= instance.OnRotate;
             @Rotate.canceled -= instance.OnRotate;
+            @ToggleRadialMenu.started -= instance.OnToggleRadialMenu;
+            @ToggleRadialMenu.performed -= instance.OnToggleRadialMenu;
+            @ToggleRadialMenu.canceled -= instance.OnToggleRadialMenu;
+            @SelectFloatingTile.started -= instance.OnSelectFloatingTile;
+            @SelectFloatingTile.performed -= instance.OnSelectFloatingTile;
+            @SelectFloatingTile.canceled -= instance.OnSelectFloatingTile;
+            @BuildTile.started -= instance.OnBuildTile;
+            @BuildTile.performed -= instance.OnBuildTile;
+            @BuildTile.canceled -= instance.OnBuildTile;
+            @DetachTile.started -= instance.OnDetachTile;
+            @DetachTile.performed -= instance.OnDetachTile;
+            @DetachTile.canceled -= instance.OnDetachTile;
+            @MoveCursorGamepad.started -= instance.OnMoveCursorGamepad;
+            @MoveCursorGamepad.performed -= instance.OnMoveCursorGamepad;
+            @MoveCursorGamepad.canceled -= instance.OnMoveCursorGamepad;
+            @MoveCursorMouse.started -= instance.OnMoveCursorMouse;
+            @MoveCursorMouse.performed -= instance.OnMoveCursorMouse;
+            @MoveCursorMouse.canceled -= instance.OnMoveCursorMouse;
         }
 
         /// <summary>
@@ -510,19 +691,6 @@ public partial class @Controls: IInputActionCollection2, IDisposable
     /// Provides a new <see cref="PlayerActions" /> instance referencing this action map.
     /// </summary>
     public PlayerActions @Player => new PlayerActions(this);
-    private int m_KeyboardMouseSchemeIndex = -1;
-    /// <summary>
-    /// Provides access to the input control scheme.
-    /// </summary>
-    /// <seealso cref="UnityEngine.InputSystem.InputControlScheme" />
-    public InputControlScheme KeyboardMouseScheme
-    {
-        get
-        {
-            if (m_KeyboardMouseSchemeIndex == -1) m_KeyboardMouseSchemeIndex = asset.FindControlSchemeIndex("Keyboard & Mouse");
-            return asset.controlSchemes[m_KeyboardMouseSchemeIndex];
-        }
-    }
     /// <summary>
     /// Interface to implement callback methods for all input action callbacks associated with input actions defined by "Player" which allows adding and removing callbacks.
     /// </summary>
@@ -551,5 +719,47 @@ public partial class @Controls: IInputActionCollection2, IDisposable
         /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
         /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
         void OnRotate(InputAction.CallbackContext context);
+        /// <summary>
+        /// Method invoked when associated input action "ToggleRadialMenu" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
+        /// </summary>
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
+        void OnToggleRadialMenu(InputAction.CallbackContext context);
+        /// <summary>
+        /// Method invoked when associated input action "SelectFloatingTile" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
+        /// </summary>
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
+        void OnSelectFloatingTile(InputAction.CallbackContext context);
+        /// <summary>
+        /// Method invoked when associated input action "BuildTile" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
+        /// </summary>
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
+        void OnBuildTile(InputAction.CallbackContext context);
+        /// <summary>
+        /// Method invoked when associated input action "DetachTile" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
+        /// </summary>
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
+        void OnDetachTile(InputAction.CallbackContext context);
+        /// <summary>
+        /// Method invoked when associated input action "MoveCursorGamepad" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
+        /// </summary>
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
+        void OnMoveCursorGamepad(InputAction.CallbackContext context);
+        /// <summary>
+        /// Method invoked when associated input action "MoveCursorMouse" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
+        /// </summary>
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
+        void OnMoveCursorMouse(InputAction.CallbackContext context);
     }
 }
