@@ -12,9 +12,6 @@ public interface IInputReader
 [CreateAssetMenu(fileName = "NewInputReader", menuName = "Input/Input Reader")]
 public class InputReader : ScriptableObject, IPlayerActions, IInputReader
 {
-    private Camera _mainCamera;
-    private Controls _controls;
-    
     public event Action<Vector2> MoveEvent;
     public event Action ShootEvent;
     public event Action<float> RotateEvent;
@@ -23,6 +20,10 @@ public class InputReader : ScriptableObject, IPlayerActions, IInputReader
     public event Action<Vector2> MoveCursorEvent;
     public event Action<bool> ToggleRadialMenuEvent;
     public event Action<InputAction.CallbackContext> BuildTileEvent;
+
+    private Camera _mainCamera;
+    private Controls _controls;
+    private float _worldUnitsPerPixel;
 
     private void Awake()
     {
@@ -40,7 +41,14 @@ public class InputReader : ScriptableObject, IPlayerActions, IInputReader
         {
             CreateNewControls();
         }
-        _mainCamera =  Camera.main;
+
+        _mainCamera = Camera.main;
+        if (_mainCamera is null)
+        {
+            throw new NullReferenceException(
+                $"Could not find main camera");
+        }
+
         _controls?.Player.Enable();
     }
 
@@ -56,7 +64,6 @@ public class InputReader : ScriptableObject, IPlayerActions, IInputReader
     }
 
     public Vector2 MoveDirection => _controls.Player.Move.ReadValue<Vector2>();
-    // public Vector2 MouseScreenPosition => _controls.Player.MoveCursor.ReadValue<Vector2>();
 
     public void EnablePlayerActions()
     {
@@ -88,22 +95,37 @@ public class InputReader : ScriptableObject, IPlayerActions, IInputReader
     {
         ToggleRadialMenuEvent?.Invoke(context.started);
     }
-    
+
     // [CB] Annoyingly, Unity will overwrite the controller inputs with mouse
     // inputs if we don't use 2 different functions. At least the event is unified :)
     public void OnMoveCursorGamepad(InputAction.CallbackContext context)
     {
-        Vector2 input = context.ReadValue<Vector2>() * new Vector2(
+        //Input comes in -1 to 1
+        Vector2 input = context.ReadValue<Vector2>();
+        
+        //divide by 2 because we're measuring from the centre
+        // of the screen, so we want -0.5 to 0.5
+        input /= 2;
+        
+        // Multiply by camera dimensions so we can get full screen size
+        input *= new Vector2(
             _mainCamera.pixelWidth,
-            _mainCamera.pixelHeight);
+            _mainCamera.pixelHeight
+        );
+        
         MoveCursorEvent?.Invoke(input);
     }
 
     public void OnMoveCursorMouse(InputAction.CallbackContext context)
     {
-        MoveCursorEvent?.Invoke(context.ReadValue<Vector2>());
+        Vector2 halfScreen = new Vector2(
+            _mainCamera.pixelWidth,
+            _mainCamera.pixelHeight
+        ) / 2;
+        Vector2 input = context.ReadValue<Vector2>() - halfScreen;
+        MoveCursorEvent?.Invoke(input);
     }
-    
+
     public void OnSelectFloatingTile(InputAction.CallbackContext context)
     {
         SelectFloatingTileEvent?.Invoke(context.started);
@@ -118,6 +140,4 @@ public class InputReader : ScriptableObject, IPlayerActions, IInputReader
     {
         DetachTileEvent?.Invoke(context.started);
     }
-
-
 }
