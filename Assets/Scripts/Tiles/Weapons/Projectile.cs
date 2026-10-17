@@ -58,58 +58,100 @@ public class Projectile : MonoBehaviour
             Debug.Log("Hit Effect");
         }
 
-        Vector2 hitPoint = collision.GetContact(ContactPointIndex).point;
-        Health health
-            = GetColliderHealthComponent(collision.gameObject, hitPoint);
 
-        if (health != null)
+        Health hp = GetColliderHealthComponent(collision);
+
+        if (hp != null)
         {
-            DealDamage(health);
+            DealDamage(hp);
         }
 
         Destroy(gameObject);
     }
 
+    /// <summary>
+    /// Deal Damage to what it hit
+    /// </summary>
+    /// <param name="health"></param>
     private void DealDamage(Health health)
     {
         health.TakeDamage(Damage);
     }
 
-    private static Health GetColliderHealthComponent(
-        GameObject collisionGameObject,
-        Vector2 hitPoint)
+    /// <summary>
+    /// Gets the health component of what the projectile hit
+    /// </summary>
+    /// <param name="colGameObject"></param>
+    /// <param name="hitPoint"></param>
+    /// <returns></returns>
+    private Health GetColliderHealthComponent(Collision2D collision)
     {
         Health colliderHealth = null;
+        Vector2 hitPoint = collision.GetContact(ContactPointIndex).point;
 
-        if (collisionGameObject.TryGetComponent(
-                out ShipManager shipManager))
+        if (collision.gameObject.TryGetComponent(out ShipManager shipManager))
         {
-            Debug.Log("COLLIDING SHIP MANAGER");
-            List<Tile> tiles = shipManager.GetTiles();
+            Tile closestTile = GetClosestTile(shipManager, hitPoint);
 
-            foreach (Tile tile in tiles)
+            if (closestTile != null)
             {
-                Collider2D tileCollider = tile.GetComponent<Collider2D>();
-
-                Vector2 closest = tileCollider.ClosestPoint(hitPoint);
-                bool isCloseEnough = (closest - hitPoint).sqrMagnitude < 0.01f;
-
-                if (isCloseEnough)
-                {
-                    colliderHealth = tile.GetComponent<Health>();
-                    break;
-                }
+                colliderHealth = closestTile.GetComponent<Health>();
             }
         }
-        else if (collisionGameObject.TryGetComponent(out Health health))
+        else if (collision.gameObject.TryGetComponent(out Health health))
         {
             colliderHealth = health;
-            Debug.Log("FOUND RAND COLLIDER");
         }
 
         return colliderHealth;
     }
 
+    /// <summary>
+    /// Gets the closest tile to the projectiles hit point on the ship
+    /// </summary>
+    /// <param name="shipManager"></param>
+    /// <param name="hitPoint"></param>
+    /// <returns></returns>
+    private static Tile GetClosestTile(
+        ShipManager shipManager,
+        Vector2 hitPoint)
+    {
+        Tile closestTile = null;
+        float bestDistanceSquared = float.PositiveInfinity;
+        float bestCenterDistanceSquared = float.PositiveInfinity;
+
+        foreach (Tile tile in shipManager.GetTiles())
+        {
+            Collider2D tileCollider = tile.GetComponent<Collider2D>();
+
+            Vector2 closestPoint = tileCollider.ClosestPoint(hitPoint);
+            float distanceSquared = (closestPoint - hitPoint).sqrMagnitude;
+            float centerDistanceSquared =
+                ((Vector2)tile.transform.position - hitPoint).sqrMagnitude;
+
+            // Prefer the closest collider,
+            // and if two tiles tie at a shared edge then
+            // prefer the tile whose center is closest to the hit point
+            if (distanceSquared < bestDistanceSquared ||
+                (Mathf.Approximately(
+                     distanceSquared, bestDistanceSquared) &&
+                 centerDistanceSquared < bestCenterDistanceSquared))
+            {
+                closestTile = tile;
+                bestDistanceSquared = distanceSquared;
+                bestCenterDistanceSquared = centerDistanceSquared;
+            }
+        }
+
+        return closestTile;
+    }
+
+    /// <summary>
+    /// Spawns the projectile
+    /// </summary>
+    /// <param name="spawnTransform"></param>
+    /// <param name="parentCollider"></param>
+    /// <returns></returns>
     public GameObject SpawnProjectile(
         Transform spawnTransform,
         Collider2D parentCollider)
