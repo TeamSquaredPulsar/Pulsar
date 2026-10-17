@@ -49,16 +49,12 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::ThrusterTile
   <TileInfo>k__BackingField: {fileID: 11400000, guid: efe30156b410eb149aa1cabe593e8f6d, type: 2}
   spriteRenderer: {fileID: 8688311974718774552}
-<<<<<<< HEAD
   boxCollider: {fileID: 6303449030629206126}
-  thrust: 0.1
   orientation: 0
-=======
   tileCollider: {fileID: 6303449030629206126}
   floatRb: {fileID: 0}
   baseColor: {r: 1, g: 1, b: 1, a: 1}
   thrust: 0.1
->>>>>>> dev
 --- !u!212 &8688311974718774552
 SpriteRenderer:
   serializedVersion: 2

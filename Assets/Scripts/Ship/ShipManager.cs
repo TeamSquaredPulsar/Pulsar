@@ -34,7 +34,7 @@ public class ShipManager : MonoBehaviour
     [SerializeField]
     private Vector2 detachRadiateAngularVelocity = new(-180f, 180f);
 
-    public List<Tile> Tiles { get; private set; }
+    public List<Tile> Tiles { get; private set; } = new();
     
     public Tile Core => GridData.Core;
     
