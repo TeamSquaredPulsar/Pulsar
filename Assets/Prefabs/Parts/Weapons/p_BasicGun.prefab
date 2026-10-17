@@ -14,7 +14,6 @@ GameObject:
   - component: {fileID: 6394848136817018224}
   - component: {fileID: 3439183271994269019}
   - component: {fileID: 5928138776274610662}
-  - component: {fileID: 4659405939408436251}
   m_Layer: 0
   m_Name: p_BasicGun
   m_TagString: Untagged
@@ -181,7 +180,7 @@ FixedJoint2D:
   m_BreakAction: 3
   m_AutoConfigureConnectedAnchor: 1
   m_Anchor: {x: 0, y: 0}
-  m_ConnectedAnchor: {x: 0, y: 1}
+  m_ConnectedAnchor: {x: 0.45938, y: 1.60778}
   m_DampingRatio: 0
   m_Frequency: 0
 --- !u!50 &5928138776274610662
@@ -199,7 +198,7 @@ Rigidbody2D:
   m_Mass: 1
   m_LinearDamping: 0
   m_AngularDamping: 0.05
-  m_GravityScale: 1
+  m_GravityScale: 0
   m_Material: {fileID: 0}
   m_IncludeLayers:
     serializedVersion: 2
@@ -211,25 +210,6 @@ Rigidbody2D:
   m_SleepingMode: 1
   m_CollisionDetection: 0
   m_Constraints: 0
---- !u!255 &4659405939408436251
-FixedJoint2D:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2402461002857692903}
-  m_Enabled: 1
-  serializedVersion: 4
-  m_EnableCollision: 0
-  m_ConnectedRigidBody: {fileID: 0}
-  m_BreakForce: Infinity
-  m_BreakTorque: Infinity
-  m_BreakAction: 3
-  m_AutoConfigureConnectedAnchor: 1
-  m_Anchor: {x: 0, y: 0}
-  m_ConnectedAnchor: {x: 0, y: 1}
-  m_DampingRatio: 0
-  m_Frequency: 0
 --- !u!1 &4329379618448448082
 GameObject:
   m_ObjectHideFlags: 0

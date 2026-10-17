@@ -14,7 +14,6 @@ GameObject:
   - component: {fileID: 6303449030629206126}
   - component: {fileID: 7961569873050750638}
   - component: {fileID: 8993274152522921009}
-  - component: {fileID: 7104587906449742241}
   m_Layer: 0
   m_Name: p_Thruster
   m_TagString: Untagged
@@ -175,7 +174,7 @@ FixedJoint2D:
   m_BreakAction: 3
   m_AutoConfigureConnectedAnchor: 1
   m_Anchor: {x: 0, y: 0}
-  m_ConnectedAnchor: {x: 0, y: -1}
+  m_ConnectedAnchor: {x: 0.45938, y: -0.39222002}
   m_DampingRatio: 0
   m_Frequency: 0
 --- !u!50 &8993274152522921009
@@ -193,7 +192,7 @@ Rigidbody2D:
   m_Mass: 1
   m_LinearDamping: 0
   m_AngularDamping: 0.05
-  m_GravityScale: 1
+  m_GravityScale: 0
   m_Material: {fileID: 0}
   m_IncludeLayers:
     serializedVersion: 2
@@ -205,22 +204,3 @@ Rigidbody2D:
   m_SleepingMode: 1
   m_CollisionDetection: 0
   m_Constraints: 0
---- !u!255 &7104587906449742241
-FixedJoint2D:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 9113379072927920375}
-  m_Enabled: 1
-  serializedVersion: 4
-  m_EnableCollision: 0
-  m_ConnectedRigidBody: {fileID: 0}
-  m_BreakForce: Infinity
-  m_BreakTorque: Infinity
-  m_BreakAction: 3
-  m_AutoConfigureConnectedAnchor: 1
-  m_Anchor: {x: 0, y: 0}
-  m_ConnectedAnchor: {x: 0, y: -1}
-  m_DampingRatio: 0
-  m_Frequency: 0
