@@ -12,6 +12,17 @@ public interface IInputReader
 [CreateAssetMenu(fileName = "NewInputReader", menuName = "Input/Input Reader")]
 public class InputReader : ScriptableObject, IPlayerActions, IInputReader
 {
+    public event Action<Vector2> MoveEvent;
+    public event Action ShootEvent;
+    public event Action<float> RotateEvent;
+    public event Action<bool> DetachTileEvent;
+    public event Action<bool> SelectFloatingTileEvent;
+    public event Action<Vector2> MoveCursorEvent;
+    public event Action<bool> ToggleRadialMenuEvent;
+    public event Action<InputAction.CallbackContext> BuildTileEvent;
+
+    [SerializeField]
+    private CameraData camData;
     private Controls _controls;
 
     private void Awake()
@@ -73,7 +84,49 @@ public class InputReader : ScriptableObject, IPlayerActions, IInputReader
         _controls.Player.SetCallbacks(this);
     }
 
-    public event Action<Vector2> MoveEvent;
-    public event Action ShootEvent;
-    public event Action<float> RotateEvent;
+    public void OnToggleRadialMenu(InputAction.CallbackContext context)
+    {
+        ToggleRadialMenuEvent?.Invoke(context.started);
+    }
+
+    // [CB] Annoyingly, Unity will overwrite the controller inputs with mouse
+    // inputs if we don't use 2 different functions. At least the event is unified :)
+    public void OnMoveCursorGamepad(InputAction.CallbackContext context)
+    {
+        //Input comes in -1 to 1
+        Vector2 input = context.ReadValue<Vector2>();
+
+        //divide by 2 because we're measuring from the centre
+        // of the screen, so we want -0.5 to 0.5
+        input /= 2;
+
+        // Multiply by camera dimensions so we can get full screen size
+        input *= camData.ScreenSize;
+
+        MoveCursorEvent?.Invoke(input);
+    }
+
+    public void OnMoveCursorMouse(InputAction.CallbackContext context)
+    {
+        //Inputs are measured from bottom-left, so subtract half a screen from
+        // the input to make it measure from the centre.
+        Vector2 halfScreen = camData.ScreenSize / 2;
+        Vector2 input = context.ReadValue<Vector2>() - halfScreen;
+        MoveCursorEvent?.Invoke(input);
+    }
+
+    public void OnSelectFloatingTile(InputAction.CallbackContext context)
+    {
+        SelectFloatingTileEvent?.Invoke(context.started);
+    }
+
+    public void OnBuildTile(InputAction.CallbackContext context)
+    {
+        BuildTileEvent?.Invoke(context);
+    }
+
+    public void OnDetachTile(InputAction.CallbackContext context)
+    {
+        DetachTileEvent?.Invoke(context.started);
+    }
 }
