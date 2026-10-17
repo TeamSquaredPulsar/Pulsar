@@ -21,9 +21,9 @@ public class InputReader : ScriptableObject, IPlayerActions, IInputReader
     public event Action<bool> ToggleRadialMenuEvent;
     public event Action<InputAction.CallbackContext> BuildTileEvent;
 
-    private Camera _mainCamera;
+    [SerializeField]
+    private CameraData camData;
     private Controls _controls;
-    private float _worldUnitsPerPixel;
 
     private void Awake()
     {
@@ -40,13 +40,6 @@ public class InputReader : ScriptableObject, IPlayerActions, IInputReader
         if (_controls is null)
         {
             CreateNewControls();
-        }
-
-        _mainCamera = Camera.main;
-        if (_mainCamera is null)
-        {
-            throw new NullReferenceException(
-                $"Could not find main camera");
         }
 
         _controls?.Player.Enable();
@@ -102,26 +95,22 @@ public class InputReader : ScriptableObject, IPlayerActions, IInputReader
     {
         //Input comes in -1 to 1
         Vector2 input = context.ReadValue<Vector2>();
-        
+
         //divide by 2 because we're measuring from the centre
         // of the screen, so we want -0.5 to 0.5
         input /= 2;
-        
+
         // Multiply by camera dimensions so we can get full screen size
-        input *= new Vector2(
-            _mainCamera.pixelWidth,
-            _mainCamera.pixelHeight
-        );
-        
+        input *= camData.ScreenSize;
+
         MoveCursorEvent?.Invoke(input);
     }
 
     public void OnMoveCursorMouse(InputAction.CallbackContext context)
     {
-        Vector2 halfScreen = new Vector2(
-            _mainCamera.pixelWidth,
-            _mainCamera.pixelHeight
-        ) / 2;
+        //Inputs are measured from bottom-left, so subtract half a screen from
+        // the input to make it measure from the centre.
+        Vector2 halfScreen = camData.ScreenSize / 2;
         Vector2 input = context.ReadValue<Vector2>() - halfScreen;
         MoveCursorEvent?.Invoke(input);
     }
