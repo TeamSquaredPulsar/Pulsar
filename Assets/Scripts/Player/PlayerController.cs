@@ -1,4 +1,6 @@
 using UnityEngine;
+using UnityEngine.InputSystem.UI;
+
 [RequireComponent(typeof(ShipManager))]
 public class PlayerController : MonoBehaviour
 {
@@ -28,7 +30,7 @@ public class PlayerController : MonoBehaviour
         input.RotateEvent += HandleRotate;
         input.EnablePlayerActions();
     }
-    
+
     private void HandleRotate(float obj)
     {
         shipManager.Rotate(obj);
