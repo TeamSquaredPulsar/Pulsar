@@ -63,6 +63,7 @@ public class Projectile : MonoBehaviour
         if (hp != null)
         {
             DealDamage(hp);
+            Debug.Log($"Projectile hit {collision.collider.name} (body: {collision.rigidbody?.name})");
         }
 
         Destroy(gameObject);
