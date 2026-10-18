@@ -12,9 +12,9 @@ GameObject:
   - component: {fileID: 9156844168472924138}
   - component: {fileID: 4676953174740963180}
   - component: {fileID: 6394848136817018224}
-  - component: {fileID: 8471640493239534823}
   - component: {fileID: 2522681453652910296}
   - component: {fileID: 3439183271994269019}
+  - component: {fileID: -8815025657336327204}
   m_Layer: 0
   m_Name: p_DoubleGun
   m_TagString: Untagged
@@ -167,19 +167,6 @@ BoxCollider2D:
   m_AutoTiling: 0
   m_Size: {x: 1, y: 1}
   m_EdgeRadius: 0
---- !u!114 &8471640493239534823
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2402461002857692903}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d1236c1e551165b48b0864561b6c2156, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::Health
-  <HealthAmount>k__BackingField: 10
 --- !u!50 &2522681453652910296
 Rigidbody2D:
   serializedVersion: 5
@@ -226,6 +213,19 @@ FixedJoint2D:
   m_ConnectedAnchor: {x: 0, y: 0}
   m_DampingRatio: 0
   m_Frequency: 0
+--- !u!114 &-8815025657336327204
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2402461002857692903}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d1236c1e551165b48b0864561b6c2156, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Pulsar.Ship::Health
+  <HealthAmount>k__BackingField: 10
 --- !u!1 &4329379618448448082
 GameObject:
   m_ObjectHideFlags: 0

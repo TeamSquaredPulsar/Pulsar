@@ -12,3 +12,4 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7eac483e5a0efa04598600ffbdcaa559, type: 3}
   m_Name: InputReader
   m_EditorClassIdentifier: Assembly-CSharp::InputReader
+  camData: {fileID: 11400000, guid: 3422a4889e5877b4fafae9f0099db266, type: 2}
