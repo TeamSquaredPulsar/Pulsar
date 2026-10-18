@@ -101,6 +101,19 @@ public class ShipManager : MonoBehaviour
     {
         thrusterManager.HandleRotation(rotation);
     }
+    
+    private void SubscribeToTile(Tile tile)
+    {
+        if (tile.TryGetComponent(out Health health))
+        {
+            health.DestroyEvent += HandleTileDestroyed;
+        }
+    }
+
+    private void HandleTileDestroyed(Health health)
+    {
+        //TODO implement tile destruction logic here
+    }
 
     // private void UpdateWeaponColliders()
     // {
