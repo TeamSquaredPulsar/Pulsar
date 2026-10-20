@@ -83,18 +83,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5ba67c83c42d025438ce9548f5b4effb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::EnemyController
-  movementStats:
-    speed: 4
-    acceleration: 6
-    stoppingDistance: 6
-    retreatDistance: 3
-    turnSpeed: 4
-    driftAmount: 0.3
-    weaveFrequency: 1.5
-  combatStats:
-    startTimeBtwShots: 1.5
-    shootingRange: 8
-    aimTolerance: 15
+  enemyInfo: {fileID: 11400000, guid: 5e1657929b5b4d998ca60905e22a3b08, type: 2}
   shipManager: {fileID: 8839766604302627257}
 --- !u!114 &8839766604302627257
 MonoBehaviour:
@@ -148,7 +137,7 @@ Rigidbody2D:
   m_Mass: 1
   m_LinearDamping: 0
   m_AngularDamping: 0.05
-  m_GravityScale: 1
+  m_GravityScale: 0
   m_Material: {fileID: 0}
   m_IncludeLayers:
     serializedVersion: 2
