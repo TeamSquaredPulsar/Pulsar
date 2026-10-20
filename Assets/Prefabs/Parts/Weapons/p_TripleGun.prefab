@@ -55,6 +55,7 @@ MonoBehaviour:
   <TileInfo>k__BackingField: {fileID: 11400000, guid: 71fb61585e3013a43b3726d73a977655, type: 2}
   spriteRenderer: {fileID: 4676953174740963180}
   tileCollider: {fileID: 6394848136817018224}
+  health: {fileID: -4585569959407033398}
   baseColor: {r: 1, g: 1, b: 1, a: 1}
   projectilePrefab: {fileID: 1682859016921356063, guid: a133161848d51234b97f8554a243a1ab, type: 3}
   parentCollider: {fileID: 0}
@@ -227,7 +228,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d1236c1e551165b48b0864561b6c2156, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Pulsar.Ship::Health
-  <HealthAmount>k__BackingField: 10
+  <MaxHealth>k__BackingField: 0
 --- !u!1 &3921503724067729608
 GameObject:
   m_ObjectHideFlags: 0

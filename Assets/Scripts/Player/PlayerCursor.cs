@@ -1,3 +1,5 @@
+using JetBrains.Annotations;
+using Nrjwolf.Tools.AttachAttributes;
 using UnityEngine;
 
 [RequireComponent(typeof(SpriteRenderer))]
@@ -6,7 +8,7 @@ public class PlayerCursor : MonoBehaviour
     [SerializeField]
     private InputReader input;
 
-    [SerializeField]
+    [GetComponent][SerializeField]
     private SpriteRenderer visual;
 
     private Tile _hoveredTile;
@@ -41,46 +43,61 @@ public class PlayerCursor : MonoBehaviour
     {
         //OrthographicSize is 1/2 camera height
         float worldHeight = 2f * _mainCamera.orthographicSize;
-        
+
         // [CB] This worked when the game is in full screen.
         // _worldUnitsPerPixel = worldHeight / Screen.height;
         _worldUnitsPerPixel = worldHeight / _mainCamera.pixelHeight;
     }
 
-    // public Tile RefreshHoveredTile() => _hoveredTile != null ? _hoveredTile : null;
-    //
-    // private void OnTriggerStay2D(Collider2D other)
-    // {
-    //     if (other.TryGetComponent(out Tile tile))
-    //     {
-    //         _hoveredTile = tile;
-    //     }
-    //     else if (other.TryGetComponent(out ShipManager ship))
-    //     {
-    //         Vector3 localPosition
-    //             = ship.transform.InverseTransformPoint(transform.position);
-    //         Vector2 gridPosition = ShipUtilities.LocalToGrid(localPosition);
-    //         Vector2Int cell = Vector2Int.RoundToInt(gridPosition);
-    //         ship.Cells.TryGetValue(cell, out Tile attachedTile);
-    //         _hoveredTile = attachedTile;
-    //     }
-    // }
-    //
-    // private void OnTriggerExit2D(Collider2D other)
-    // {
-    //     if (other.TryGetComponent(out Tile tile) && _hoveredTile == tile)
-    //     {
-    //         _hoveredTile = null;
-    //     }
-    //     else if (other.TryGetComponent(out ShipManager ship)
-    //              && _hoveredTile != null
-    //              && ship.Cells.TryGetValue(_hoveredTile.Cell,
-    //                  out Tile attachedTile)
-    //              && attachedTile == _hoveredTile)
-    //     {
-    //         _hoveredTile = null;
-    //     }
-    // }
+    [CanBeNull]
+    public Tile RefreshHoveredTile() => _hoveredTile ? _hoveredTile : null;
+
+    private void OnTriggerStay2D(Collider2D other)
+    {
+        if (TryProcessColliderTrigger(other, out Tile collidedTile))
+        {
+            _hoveredTile = collidedTile;
+        }
+    }
+
+    private void Update()
+    {
+        if(_hoveredTile)
+        {
+            Debug.Log($"Hovering over {_hoveredTile.name}");
+        }
+    }
+
+    private bool TryProcessColliderTrigger(
+        Collider2D other,
+        out Tile collidedTile)
+    {
+        collidedTile = null;
+        if (other.TryGetComponent(out Tile tile))
+        {
+            collidedTile = tile;
+        }
+        else if (other.TryGetComponent(out ShipManager ship))
+        {
+            Vector3 localPosition
+                = ship.transform.InverseTransformPoint(transform.position);
+            Vector2 gridPosition = ShipUtilities.LocalToGrid(localPosition);
+            Vector2Int cell = Vector2Int.RoundToInt(gridPosition);
+            ship.Cells.TryGetValue(cell, out Tile attachedTile);
+            collidedTile = attachedTile;
+        }
+
+        return collidedTile == null;
+    }
+
+    private void OnTriggerExit2D(Collider2D other)
+    {
+        if (TryProcessColliderTrigger(other, out Tile collidedTile) &&
+            collidedTile == _hoveredTile)
+        {
+            _hoveredTile = null;
+        }
+    }
 
     // // Fire a ray from cam through ScreenPosition, then get the intersection with _plane
     // private void UpdatePosition()
