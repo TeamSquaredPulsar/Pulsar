@@ -1,5 +1,4 @@
 using UnityEngine;
-using UnityEngine.InputSystem.UI;
 
 [RequireComponent(typeof(ShipManager))]
 public class PlayerController : MonoBehaviour

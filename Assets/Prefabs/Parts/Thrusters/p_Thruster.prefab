@@ -14,6 +14,7 @@ GameObject:
   - component: {fileID: 6303449030629206126}
   - component: {fileID: 7961569873050750638}
   - component: {fileID: 8993274152522921009}
+  - component: {fileID: 8159396282816949206}
   m_Layer: 0
   m_Name: p_Thruster
   m_TagString: Untagged
@@ -51,6 +52,7 @@ MonoBehaviour:
   <TileInfo>k__BackingField: {fileID: 11400000, guid: efe30156b410eb149aa1cabe593e8f6d, type: 2}
   spriteRenderer: {fileID: 8688311974718774552}
   tileCollider: {fileID: 6303449030629206126}
+  health: {fileID: 8159396282816949206}
   baseColor: {r: 1, g: 1, b: 1, a: 1}
   thrust: 5
 --- !u!212 &8688311974718774552
@@ -174,7 +176,7 @@ FixedJoint2D:
   m_BreakAction: 3
   m_AutoConfigureConnectedAnchor: 1
   m_Anchor: {x: 0, y: 0}
-  m_ConnectedAnchor: {x: 0.45938, y: -0.39222002}
+  m_ConnectedAnchor: {x: 0, y: -1}
   m_DampingRatio: 0
   m_Frequency: 0
 --- !u!50 &8993274152522921009
@@ -204,3 +206,16 @@ Rigidbody2D:
   m_SleepingMode: 1
   m_CollisionDetection: 0
   m_Constraints: 0
+--- !u!114 &8159396282816949206
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 9113379072927920375}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d1236c1e551165b48b0864561b6c2156, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Pulsar.Ship::Health
+  <MaxHealth>k__BackingField: 0

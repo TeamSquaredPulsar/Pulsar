@@ -1,5 +1,5 @@
-
 using System.Collections.Generic;
+using Nrjwolf.Tools.AttachAttributes;
 using UnityEngine;
 
 [RequireComponent(typeof(CompositeCollider2D), typeof(Rigidbody2D))]
@@ -14,16 +14,18 @@ public class ShipManager : MonoBehaviour
     };
 
     [Header("Refs")]
-    [SerializeField]
-    private TileInfoSO coreInfoSo;
-    [SerializeField]
+    [GetComponent][SerializeField]
     private CompositeCollider2D compositeCollider;
-    [field: SerializeField]
-    public Rigidbody2D Rb { get; private set; }
-    [SerializeField] 
+
+    [GetComponent][SerializeField]
+    private Rigidbody2D rb;
+
+    [GetComponent][SerializeField]
     private ThrusterManager thrusterManager;
+
     [SerializeField]
     private List<WeaponTile> weapons = new(10);
+
     [SerializeField]
     private List<ThrusterTile> thrusters = new(10);
 
@@ -33,9 +35,6 @@ public class ShipManager : MonoBehaviour
 
     [SerializeField]
     private Vector2 detachRadiateAngularVelocity = new(-180f, 180f);
-
-    public Tile Core => GridData.Core;
-
 
     public ShipGridData GridData { get; } = new();
 
@@ -47,14 +46,13 @@ public class ShipManager : MonoBehaviour
     // public event Action OnShipDestroyed;
     // public event Action<Weapon> onNewWeaponAdded;
     // public event Action<Thruster> onNewThrusterAdded;
-    
-    
+
     private void Awake()
     {
-        Rb??= GetComponent<Rigidbody2D>();
+        rb ??= GetComponent<Rigidbody2D>();
 
         // ShipUtilities.FloatingTileRbConstrain(Rb);
-        
+
         // if (coreInfoSo != null)
         // {
         //     SpawnCore();
@@ -65,7 +63,7 @@ public class ShipManager : MonoBehaviour
     {
         foreach (Tile tile in GetComponentsInChildren<Tile>())
         {
-            tile.GetComponent<FixedJoint2D>().connectedBody = Rb;
+            tile.GetComponent<FixedJoint2D>().connectedBody = rb;
             switch (tile)
             {
                 case ThrusterTile thruster:
@@ -76,6 +74,11 @@ public class ShipManager : MonoBehaviour
                     weapon.SetParentCollider(compositeCollider);
                     break;
             }
+
+            GridData.SetTile(
+                new Vector2Int((int)tile.transform.position.x,
+                    (int)tile.transform.position.y), tile);
+            tile.DestroyEvent += HandleTileDestroyed;
         }
         // weapons = Cells.Values.OfType<WeaponTile>().ToList();
         // thrusters = Cells.Values.OfType<ThrusterTile>().ToList();
@@ -90,6 +93,22 @@ public class ShipManager : MonoBehaviour
         }
     }
 
+    private void OnCollisionEnter2D(Collision2D other)
+    {
+        const int contactPointIndex = 0;
+        if (!GridData.TryGetClosestTile(
+                other.GetContact(contactPointIndex).point,
+                out Tile tile))
+        {
+            return;
+        }
+
+        if (other.gameObject.TryGetComponent(out Projectile projectile))
+        {
+            tile.TakeDamage(projectile.Damage);
+        }
+    }
+
     public void Move(Vector2 position)
     {
         thrusterManager.HandleThrust(position);
@@ -98,6 +117,11 @@ public class ShipManager : MonoBehaviour
     public void Rotate(float rotation)
     {
         thrusterManager.HandleRotation(rotation);
+    }
+
+    private void HandleTileDestroyed(Tile tile)
+    {
+        //TODO implement tile destruction logic here
     }
 
     // private void UpdateWeaponColliders()
@@ -173,7 +197,7 @@ public class ShipManager : MonoBehaviour
                 continue;
             }
 
-            // Check the neighbor's opposite edge; both touching edges must connect
+            // Check the neighbour's opposite edge; both touching edges must connect
             Vector2Int neighborPos = pos + Dirs[d];
             if (GridData.TryGetTile(neighborPos, out Tile neighbor)
                 && neighbor.EdgeConnectable(Opposite(d)))
@@ -187,7 +211,7 @@ public class ShipManager : MonoBehaviour
 
     public int CountConnections(Vector2Int pos, TileInfoSO infoSo, int rotation)
     {
-        // Count all neighbors that can connect at this position and rotation
+        // Count all neighbours that can connect at this position and rotation
         int count = 0;
         for (int d = 0; d < 4; d++)
         {
@@ -402,7 +426,6 @@ public class ShipManager : MonoBehaviour
     //     return orphanTiles;
     // }
 
-    
     // BFS
     private HashSet<Vector2Int> Flood(Vector2Int start)
     {
@@ -417,7 +440,8 @@ public class ShipManager : MonoBehaviour
             for (int direction = 0; direction < 4; direction++)
             {
                 Vector2Int n = c + Dirs[direction];
-                if (closed.Contains(n) || !GridData.TryGetTile(n, out Tile cell))
+                if (closed.Contains(n) ||
+                    !GridData.TryGetTile(n, out Tile cell))
                 {
                     continue;
                 }
@@ -438,7 +462,6 @@ public class ShipManager : MonoBehaviour
 
     #endregion
 
-
     #region TESTING
 
 #if UNITY_EDITOR
@@ -458,27 +481,7 @@ public class ShipManager : MonoBehaviour
     //
     //     Tile.SpawnFloating<ChassisTile>(info, pos, velocity);
     // }
-    private void OnGUI()
-    {
-        // GUIStyle style = new GUIStyle(GUI.skin.box)
-        // {
-        //     fontSize = 30,
-        //     alignment = TextAnchor.UpperLeft,
-        //     richText = true
-        // };
-        //
-        // string info =
-        //     "<b>BUILD & DESTROY TEST</b>\n\n" +
-        //     "<b>Tab</b>        — Toggle scan zone\n" +
-        //     "<b>Click</b>      — Select a tile\n" +
-        //     "<b>Hold C</b>     — Rotate selected tile \n" +
-        //     "<b>Release C</b>  — Attach selected tile \n" +
-        //     "<b>X</b>          — Destroy ship tile\n\n";
-        //
-        // GUI.Box(new Rect(10, 10, 540, 300), info, style);
-    }
 #endif
-    
 
     #endregion
 }

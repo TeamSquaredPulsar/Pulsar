@@ -14,6 +14,7 @@ GameObject:
   - component: {fileID: 6394848136817018224}
   - component: {fileID: 2522681453652910296}
   - component: {fileID: 3439183271994269019}
+  - component: {fileID: -4585569959407033398}
   m_Layer: 0
   m_Name: p_TripleGun
   m_TagString: Untagged
@@ -54,6 +55,7 @@ MonoBehaviour:
   <TileInfo>k__BackingField: {fileID: 11400000, guid: 71fb61585e3013a43b3726d73a977655, type: 2}
   spriteRenderer: {fileID: 4676953174740963180}
   tileCollider: {fileID: 6394848136817018224}
+  health: {fileID: -4585569959407033398}
   baseColor: {r: 1, g: 1, b: 1, a: 1}
   projectilePrefab: {fileID: 1682859016921356063, guid: a133161848d51234b97f8554a243a1ab, type: 3}
   parentCollider: {fileID: 0}
@@ -214,6 +216,19 @@ FixedJoint2D:
   m_ConnectedAnchor: {x: 0, y: 0}
   m_DampingRatio: 0
   m_Frequency: 0
+--- !u!114 &-4585569959407033398
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2402461002857692903}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d1236c1e551165b48b0864561b6c2156, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Pulsar.Ship::Health
+  <MaxHealth>k__BackingField: 0
 --- !u!1 &3921503724067729608
 GameObject:
   m_ObjectHideFlags: 0
