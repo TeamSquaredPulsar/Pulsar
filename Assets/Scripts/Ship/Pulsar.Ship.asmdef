@@ -1,8 +1,13 @@
 {
-    "name": "Pulsar.Ship",
-    "rootNamespace": "Pulsar.Ship",
+    "name": "Ship",
+    "rootNamespace": "Pulsar",
     "references": [
-        "GUID:4b4794e38edc74eb8986ad993a5ad5c8"
+        "GUID:4b4794e38edc74eb8986ad993a5ad5c8",
+        "GUID:bd9e1f1715d621147881d1b0790de60b",
+        "GUID:14998d3a33c0bb649904fe38abb554f3",
+        "GUID:924fea6d752fd37439f517bf5013eca3",
+        "GUID:79ea8987a0b114145af912fe21e11a1d",
+        "GUID:aa86c6edaf847b544b44790230e36643"
     ],
     "includePlatforms": [],
     "excludePlatforms": [],

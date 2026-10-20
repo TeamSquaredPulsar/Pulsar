@@ -52,6 +52,7 @@ MonoBehaviour:
   <TileInfo>k__BackingField: {fileID: 11400000, guid: 2fc0edad448d5f34e831dd954138aabd, type: 2}
   spriteRenderer: {fileID: 497275641067805184}
   tileCollider: {fileID: 2260344807008050488}
+  _health: {fileID: 2303072813145309213}
   baseColor: {r: 1, g: 1, b: 1, a: 1}
 --- !u!212 &497275641067805184
 SpriteRenderer:
@@ -216,4 +217,4 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d1236c1e551165b48b0864561b6c2156, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Pulsar.Ship::Health
-  <HealthAmount>k__BackingField: 10
+  <MaxHealth>k__BackingField: 0

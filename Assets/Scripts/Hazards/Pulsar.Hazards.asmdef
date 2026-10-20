@@ -1,0 +1,16 @@
+{
+    "name": "Hazards",
+    "rootNamespace": "Pulsar.Hazards",
+    "references": [
+        "GUID:aa86c6edaf847b544b44790230e36643"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

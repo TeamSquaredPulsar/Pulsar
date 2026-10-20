@@ -266,10 +266,6 @@ PrefabInstance:
       propertyPath: m_ConnectedAnchor.y
       value: -1
       objectReference: {fileID: 0}
-    - target: {fileID: 6370343626992969303, guid: b8226397bde29ab4abb516fe64e2ab6f, type: 3}
-      propertyPath: input
-      value: 
-      objectReference: {fileID: 11400000, guid: c5eb4fca90495374ca60a24df65307ec, type: 2}
     - target: {fileID: 7304871683680960300, guid: b8226397bde29ab4abb516fe64e2ab6f, type: 3}
       propertyPath: m_ConnectedAnchor.x
       value: 0

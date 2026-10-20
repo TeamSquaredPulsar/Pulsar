@@ -66,9 +66,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a034e607a278aa44885ca99f4aa1be33, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ShipManager
-  coreInfoSo: {fileID: 0}
   compositeCollider: {fileID: 70888490315140228}
-  <Rb>k__BackingField: {fileID: 8716755017154123671}
+  rb: {fileID: 8716755017154123671}
   thrusterManager: {fileID: 8893891361912782109}
   weapons: []
   thrusters: []
@@ -215,6 +214,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Core
       objectReference: {fileID: 0}
+    - target: {fileID: 4175188780896644608, guid: 9d9b88b2fc3b2374c83c9e59dadfb864, type: 3}
+      propertyPath: _health
+      value: 
+      objectReference: {fileID: 107342763603487894}
     - target: {fileID: 5645610968371623086, guid: 9d9b88b2fc3b2374c83c9e59dadfb864, type: 3}
       propertyPath: m_ConnectedAnchor.x
       value: 0
@@ -237,6 +240,17 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 9d9b88b2fc3b2374c83c9e59dadfb864, type: 3}
+--- !u!114 &107342763603487894 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 2303072813145309213, guid: 9d9b88b2fc3b2374c83c9e59dadfb864, type: 3}
+  m_PrefabInstance: {fileID: 2200979466231590027}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d1236c1e551165b48b0864561b6c2156, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Pulsar.Ship::Health
 --- !u!4 &304936923055663208 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 1923082867568248035, guid: 9d9b88b2fc3b2374c83c9e59dadfb864, type: 3}
@@ -250,6 +264,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 7376437609368605663}
     m_Modifications:
+    - target: {fileID: 31458138794939124, guid: d41f92095f77c0c419e9feb661d7963f, type: 3}
+      propertyPath: _health
+      value: 
+      objectReference: {fileID: 5848530288298627719}
     - target: {fileID: 1486952502805023581, guid: d41f92095f77c0c419e9feb661d7963f, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0
@@ -335,6 +353,17 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 1486952502805023581, guid: d41f92095f77c0c419e9feb661d7963f, type: 3}
   m_PrefabInstance: {fileID: 2310866674331777361}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &5848530288298627719 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 8159396282816949206, guid: d41f92095f77c0c419e9feb661d7963f, type: 3}
+  m_PrefabInstance: {fileID: 2310866674331777361}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d1236c1e551165b48b0864561b6c2156, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Pulsar.Ship::Health
 --- !u!1001 &2722873561899598647
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -408,6 +437,10 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 9156844168472924138, guid: aa5c391c67940fe428fad2e4cebfb98c, type: 3}
+      propertyPath: _health
+      value: 
+      objectReference: {fileID: 1596742554215668286}
+    - target: {fileID: 9156844168472924138, guid: aa5c391c67940fe428fad2e4cebfb98c, type: 3}
       propertyPath: parentCollider
       value: 
       objectReference: {fileID: 70888490315140228}
@@ -416,6 +449,17 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: aa5c391c67940fe428fad2e4cebfb98c, type: 3}
+--- !u!114 &1596742554215668286 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: -5485010578142242551, guid: aa5c391c67940fe428fad2e4cebfb98c, type: 3}
+  m_PrefabInstance: {fileID: 2722873561899598647}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d1236c1e551165b48b0864561b6c2156, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Pulsar.Ship::Health
 --- !u!4 &3754049891638102708 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 1283674777054792067, guid: aa5c391c67940fe428fad2e4cebfb98c, type: 3}

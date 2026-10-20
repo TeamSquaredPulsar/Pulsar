@@ -31,11 +31,11 @@ public class WeaponTile : Tile
 
     private Projectile _projectile;
 
-    public bool CanFire => _fireTimerRoutine == null;
+    private bool CanFire => _fireTimerRoutine == null;
 
-    private void Start()
+    private new void Start()
     {
-        
+        base.Start();
         _projectile = projectilePrefab.gameObject.GetComponent<Projectile>();
     }
 

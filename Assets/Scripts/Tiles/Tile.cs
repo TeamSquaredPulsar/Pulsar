@@ -1,8 +1,10 @@
 using System;
+using Nrjwolf.Tools.AttachAttributes;
 using UnityEngine;
 
 [RequireComponent(typeof(BoxCollider2D),
     typeof(SpriteRenderer), typeof(FixedJoint2D))]
+[RequireComponent(typeof(Health))]
 public abstract class Tile : MonoBehaviour
 {
     public static TileRotationEnum GetRotationInt(int rot) =>
@@ -14,13 +16,13 @@ public abstract class Tile : MonoBehaviour
     [field: SerializeField]
     public TileInfoSO TileInfo { get; private set; }
 
-    [SerializeField]
+    [GetComponent][SerializeField]
     private SpriteRenderer spriteRenderer;
 
-    [SerializeField]
+    [GetComponent][SerializeField]
     private BoxCollider2D tileCollider;
 
-    [Autohook]
+    [GetComponent][SerializeField]
     private Health _health;
 
     public event Action<Tile> DestroyEvent;
@@ -75,6 +77,8 @@ public abstract class Tile : MonoBehaviour
         transform.localPosition = ShipUtilities.GridToLocal(gridCell);
         transform.localRotation = ShipUtilities.RotateQuarterOnZAxis(rot);
     }
+
+    public void TakeDamage(float damage) => _health.TakeDamage(damage);
 
     // protected void InitFloating(
     //     TileInfoSO tileInfoSo,

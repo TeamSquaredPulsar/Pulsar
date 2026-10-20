@@ -127,6 +127,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 35744134826503047, guid: b8226397bde29ab4abb516fe64e2ab6f, type: 3}
+      propertyPath: rb
+      value: 
+      objectReference: {fileID: 388805902}
     - target: {fileID: 1843940356141040302, guid: b8226397bde29ab4abb516fe64e2ab6f, type: 3}
       propertyPath: m_Name
       value: Player
@@ -180,6 +184,11 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: b8226397bde29ab4abb516fe64e2ab6f, type: 3}
+--- !u!50 &388805902 stripped
+Rigidbody2D:
+  m_CorrespondingSourceObject: {fileID: 8716755017154123671, guid: b8226397bde29ab4abb516fe64e2ab6f, type: 3}
+  m_PrefabInstance: {fileID: 388805901}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &1742667459
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -285,15 +294,84 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 6613301959153488413, guid: 9dc0c2dda0134b64e8cb399608f4b80b, type: 3}
+      propertyPath: _health
+      value: 
+      objectReference: {fileID: 1119905114914020955}
+    - target: {fileID: 7955686589560264125, guid: 9dc0c2dda0134b64e8cb399608f4b80b, type: 3}
+      propertyPath: _health
+      value: 
+      objectReference: {fileID: 1119905114914020959}
     - target: {fileID: 8188435154698411991, guid: 9dc0c2dda0134b64e8cb399608f4b80b, type: 3}
       propertyPath: m_Name
       value: Enemy
       objectReference: {fileID: 0}
+    - target: {fileID: 8720240163463303466, guid: 9dc0c2dda0134b64e8cb399608f4b80b, type: 3}
+      propertyPath: _health
+      value: 
+      objectReference: {fileID: 1119905114914020956}
+    - target: {fileID: 8839766604302627257, guid: 9dc0c2dda0134b64e8cb399608f4b80b, type: 3}
+      propertyPath: rb
+      value: 
+      objectReference: {fileID: 1119905114914020957}
+    - target: {fileID: 8839766604302627257, guid: 9dc0c2dda0134b64e8cb399608f4b80b, type: 3}
+      propertyPath: thrusterManager
+      value: 
+      objectReference: {fileID: 1119905114914020958}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 9dc0c2dda0134b64e8cb399608f4b80b, type: 3}
+--- !u!114 &1119905114914020955 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 1672486545468212478, guid: 9dc0c2dda0134b64e8cb399608f4b80b, type: 3}
+  m_PrefabInstance: {fileID: 1119905114914020954}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d1236c1e551165b48b0864561b6c2156, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Pulsar.Ship::Health
+--- !u!114 &1119905114914020956 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 599181648949127176, guid: 9dc0c2dda0134b64e8cb399608f4b80b, type: 3}
+  m_PrefabInstance: {fileID: 1119905114914020954}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d1236c1e551165b48b0864561b6c2156, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Pulsar.Ship::Health
+--- !u!50 &1119905114914020957 stripped
+Rigidbody2D:
+  m_CorrespondingSourceObject: {fileID: 2776980645195997529, guid: 9dc0c2dda0134b64e8cb399608f4b80b, type: 3}
+  m_PrefabInstance: {fileID: 1119905114914020954}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &1119905114914020958 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 8617872407729157336, guid: 9dc0c2dda0134b64e8cb399608f4b80b, type: 3}
+  m_PrefabInstance: {fileID: 1119905114914020954}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4a065edf6c6f717428c6f24af01794d8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::ThrusterManager
+--- !u!114 &1119905114914020959 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 5219441461925034912, guid: 9dc0c2dda0134b64e8cb399608f4b80b, type: 3}
+  m_PrefabInstance: {fileID: 1119905114914020954}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d1236c1e551165b48b0864561b6c2156, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Pulsar.Ship::Health
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0
