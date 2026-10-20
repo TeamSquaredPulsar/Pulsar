@@ -79,6 +79,8 @@ public class ShipManager : MonoBehaviour
             }
             Tiles.Add(tile);
             tile.DestroyEvent += HandleTileDestroyed;
+            //TODO Shouldn't be reaching into a tiles sub-components for
+            // events.
         }
         // weapons = Cells.Values.OfType<WeaponTile>().ToList();
         // thrusters = Cells.Values.OfType<ThrusterTile>().ToList();

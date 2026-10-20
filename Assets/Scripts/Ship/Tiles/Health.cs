@@ -4,18 +4,31 @@ using UnityEngine;
 public class Health : MonoBehaviour
 {
     [field: SerializeField]
-    public float HealthAmount { get; private set; }
+    public float MaxHealth { get; set; }
+
+    public float CurrentHealth
+    {
+        get => _currentHealth;
+        private set => _currentHealth = Mathf.Clamp(value, NoHealth, MaxHealth);
+    }
+    
+    private float _currentHealth;
 
     private const float NoHealth = 0;
 
     public event Action<Health> DestroyEvent;
 
+    private void Awake()
+    {
+        CurrentHealth = MaxHealth;
+    }
+
     public void TakeDamage(float damage)
     {
         // Debug.Log("Hit. Current Health: " + HealthAmount);
-        HealthAmount -= damage;
-
-        if (HealthAmount <= NoHealth)
+        CurrentHealth -= damage;
+        
+        if (CurrentHealth <= NoHealth)
         {
             DestroyEvent?.Invoke(this);
         }
@@ -23,6 +36,6 @@ public class Health : MonoBehaviour
 
     public void AddHealth(float health)
     {
-        HealthAmount += health;
+        CurrentHealth += health;
     }
 }

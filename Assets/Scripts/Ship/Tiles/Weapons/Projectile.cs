@@ -27,7 +27,7 @@ public class Projectile : MonoBehaviour
     [SerializeField]
     private GameObject hitEffectPrefab;
 
-    private int ContactPointIndex = 0;
+    private const int ContactPointIndex = 0;
 
     /// <summary>
     /// Start method.
