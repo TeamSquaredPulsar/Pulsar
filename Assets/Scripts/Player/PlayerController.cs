@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.InputSystem.UI;
 
 [RequireComponent(typeof(ShipManager))]
 public class PlayerController : MonoBehaviour
@@ -30,12 +31,9 @@ public class PlayerController : MonoBehaviour
         input.EnablePlayerActions();
     }
 
-    // TODO: Can make an event where the player
-    //  can listen for it and manage the player weapon list themselves.
-    //  For performance reasons
     private void HandleRotate(float obj)
     {
-        Debug.Log($"rotate: {obj}");
+        shipManager.Rotate(obj);
     }
 
     // TODO: Can make an event where the player

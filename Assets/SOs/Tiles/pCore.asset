@@ -1,0 +1,25 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 01a7f6ea17a9ed54a89b607ada273835, type: 3}
+  m_Name: pCore
+  m_EditorClassIdentifier: Assembly-CSharp::Pulsar.Ship.TileDef
+  tileName: pCore
+  type: 0
+  sprite: {fileID: -638504700, guid: 12e6d06eb1ce26d438b5d1d620179b8b, type: 3}
+  hp: 10
+  mass: 1
+  connectableEdges: 01010101
+  thrustForce: 5
+  fireRate: 3
+  damage: 5
+  projectileSpeed: 15
+  projectileLifetime: 2
