@@ -1,6 +1,5 @@
 using System;
 using UnityEngine;
-using Random = UnityEngine.Random;
 
 [RequireComponent(typeof(BoxCollider2D),
     typeof(SpriteRenderer), typeof(FixedJoint2D))]
@@ -20,6 +19,26 @@ public abstract class Tile : MonoBehaviour
 
     [SerializeField]
     private BoxCollider2D tileCollider;
+
+    [Autohook]
+    private Health _health;
+
+    public event Action<Tile> DestroyEvent;
+
+    public void Start()
+    {
+        _health.DestroyEvent += OnDead;
+    }
+
+    public void OnDestroy()
+    {
+        _health.DestroyEvent -= OnDead;
+    }
+
+    private void OnDead(Health health)
+    {
+        DestroyEvent?.Invoke(this);
+    }
 
     // [SerializeField]
     // private Rigidbody2D floatRb;

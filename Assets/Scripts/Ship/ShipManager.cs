@@ -78,6 +78,7 @@ public class ShipManager : MonoBehaviour
                     break;
             }
             Tiles.Add(tile);
+            tile.DestroyEvent += HandleTileDestroyed;
         }
         // weapons = Cells.Values.OfType<WeaponTile>().ToList();
         // thrusters = Cells.Values.OfType<ThrusterTile>().ToList();
@@ -101,16 +102,8 @@ public class ShipManager : MonoBehaviour
     {
         thrusterManager.HandleRotation(rotation);
     }
-    
-    private void SubscribeToTile(Tile tile)
-    {
-        if (tile.TryGetComponent(out Health health))
-        {
-            health.DestroyEvent += HandleTileDestroyed;
-        }
-    }
 
-    private void HandleTileDestroyed(Health health)
+    private void HandleTileDestroyed(Tile tile)
     {
         //TODO implement tile destruction logic here
     }
