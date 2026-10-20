@@ -444,7 +444,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 4131287922259776958, guid: 23b839cb7fca3b247ba1200fcaa33286, type: 3}
       propertyPath: m_LocalPosition.x
-      value: -2.40368
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4131287922259776958, guid: 23b839cb7fca3b247ba1200fcaa33286, type: 3}
       propertyPath: m_LocalPosition.y
@@ -452,7 +452,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4131287922259776958, guid: 23b839cb7fca3b247ba1200fcaa33286, type: 3}
       propertyPath: m_LocalPosition.z
-      value: -1.84573
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4131287922259776958, guid: 23b839cb7fca3b247ba1200fcaa33286, type: 3}
       propertyPath: m_LocalRotation.w
@@ -486,6 +486,30 @@ PrefabInstance:
       propertyPath: Targets.Array.data[0].Object
       value: 
       objectReference: {fileID: 43064406}
+    - target: {fileID: 7067975659105368029, guid: 23b839cb7fca3b247ba1200fcaa33286, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 5.719695e-13
+      objectReference: {fileID: 0}
+    - target: {fileID: 7067975659105368029, guid: 23b839cb7fca3b247ba1200fcaa33286, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0.0000045949764
+      objectReference: {fileID: 0}
+    - target: {fileID: 7710444508102941617, guid: 23b839cb7fca3b247ba1200fcaa33286, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 3.1458323e-12
+      objectReference: {fileID: 0}
+    - target: {fileID: 7710444508102941617, guid: 23b839cb7fca3b247ba1200fcaa33286, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: -7.9999747
+      objectReference: {fileID: 0}
+    - target: {fileID: 7781254101354357636, guid: 23b839cb7fca3b247ba1200fcaa33286, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 3.1458323e-12
+      objectReference: {fileID: 0}
+    - target: {fileID: 7781254101354357636, guid: 23b839cb7fca3b247ba1200fcaa33286, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: -7.9999747
+      objectReference: {fileID: 0}
     - target: {fileID: 8255171805618094538, guid: 23b839cb7fca3b247ba1200fcaa33286, type: 3}
       propertyPath: m_Name
       value: CameraGroup
