@@ -1,4 +1,3 @@
-using JetBrains.Annotations;
 using Nrjwolf.Tools.AttachAttributes;
 using UnityEngine;
 
@@ -10,7 +9,7 @@ public class PlayerCursor : MonoBehaviour
 
     [GetComponent][SerializeField]
     private SpriteRenderer visual;
-
+    
     private Tile _hoveredTile;
     private Camera _mainCamera;
     private float _worldUnitsPerPixel;
@@ -49,23 +48,14 @@ public class PlayerCursor : MonoBehaviour
         _worldUnitsPerPixel = worldHeight / _mainCamera.pixelHeight;
     }
 
-    [CanBeNull]
-    public Tile RefreshHoveredTile() => _hoveredTile ? _hoveredTile : null;
 
-    private void OnTriggerStay2D(Collider2D other)
+    private void OnTriggerEnter2D(Collider2D other)
     {
-        if (TryProcessColliderTrigger(other, out Tile collidedTile))
+        if (!TryProcessColliderTrigger(other, out Tile collidedTile))
         {
-            _hoveredTile = collidedTile;
+            return;
         }
-    }
-
-    private void Update()
-    {
-        if(_hoveredTile)
-        {
-            Debug.Log($"Hovering over {_hoveredTile.name}");
-        }
+        _hoveredTile = collidedTile;
     }
 
     private bool TryProcessColliderTrigger(
@@ -87,36 +77,19 @@ public class PlayerCursor : MonoBehaviour
             collidedTile = attachedTile;
         }
 
-        return collidedTile == null;
+        return collidedTile;
     }
 
     private void OnTriggerExit2D(Collider2D other)
     {
-        if (TryProcessColliderTrigger(other, out Tile collidedTile) &&
-            collidedTile == _hoveredTile)
+        // If the tile we exited from is not the tile we're currently tracking,
+        // we don't care.
+        if (!TryProcessColliderTrigger(other, out Tile collidedTile) ||
+            collidedTile != _hoveredTile)
         {
-            _hoveredTile = null;
+            return;
         }
+        
+        _hoveredTile = null;
     }
-
-    // // Fire a ray from cam through ScreenPosition, then get the intersection with _plane
-    // private void UpdatePosition()
-    // {
-    //     if (!_controllerActive && input)
-    //     {
-    //         // ScreenPosition = input.MouseScreenPosition;
-    //     }
-    //
-    //     Rect viewport = _gameplayCamera.pixelRect;
-    //     ScreenPosition = new Vector2(Mathf.Clamp(ScreenPosition.x, viewport.xMin, viewport.xMax),
-    //         Mathf.Clamp(ScreenPosition.y, viewport.yMin, viewport.yMax));
-    //     Ray ray = _gameplayCamera.ScreenPointToRay(ScreenPosition);
-    //     if (!_plane.Raycast(ray, out float distance))
-    //     {
-    //         return;
-    //     }
-    //
-    //     Vector3 world = ray.GetPoint(distance); 
-    //     transform.position = world;
-    // }
 }
