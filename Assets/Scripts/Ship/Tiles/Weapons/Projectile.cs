@@ -1,7 +1,4 @@
-using System.Collections.Generic;
-using System.Linq;
 using UnityEngine;
-using UnityEngine.Rendering;
 
 /// <summary>
 /// Represents a Projectile
@@ -29,8 +26,9 @@ public class Projectile : MonoBehaviour
 
     [SerializeField]
     private GameObject hitEffectPrefab;
-    
+
     private int ContactPointIndex = 0;
+
     /// <summary>
     /// Start method.
     /// </summary>
@@ -63,7 +61,8 @@ public class Projectile : MonoBehaviour
         if (hp != null)
         {
             DealDamage(hp);
-            Debug.Log($"Projectile hit {collision.collider.name} (body: {collision.rigidbody?.name})");
+            Debug.Log(
+                $"Projectile hit {collision.collider.name} (body: {collision.rigidbody?.name})");
         }
 
         Destroy(gameObject);
@@ -81,22 +80,18 @@ public class Projectile : MonoBehaviour
     /// <summary>
     /// Gets the health component of what the projectile hit
     /// </summary>
-    /// <param name="colGameObject"></param>
-    /// <param name="hitPoint"></param>
+    /// <param name="collision"></param>
     /// <returns></returns>
     private Health GetColliderHealthComponent(Collision2D collision)
     {
         Health colliderHealth = null;
         Vector2 hitPoint = collision.GetContact(ContactPointIndex).point;
 
-        if (collision.gameObject.TryGetComponent(out ShipManager shipManager))
+        if (collision.gameObject.TryGetComponent(out ShipManager shipManager)
+            && TryGetClosestTile(shipManager, hitPoint, out Tile closestTile)
+           )
         {
-            Tile closestTile = GetClosestTile(shipManager, hitPoint);
-
-            if (closestTile != null)
-            {
-                colliderHealth = closestTile.GetComponent<Health>();
-            }
+            colliderHealth = closestTile.GetComponent<Health>();
         }
         else if (collision.gameObject.TryGetComponent(out Health health))
         {
@@ -132,10 +127,10 @@ public class Projectile : MonoBehaviour
             // Prefer the closest collider,
             // and if two tiles tie at a shared edge then
             // prefer the tile whose center is closest to the hit point
-            if (distanceSquared < bestDistanceSquared ||
-                (Mathf.Approximately(
-                     distanceSquared, bestDistanceSquared) &&
-                 centerDistanceSquared < bestCenterDistanceSquared))
+            if (distanceSquared < bestDistanceSquared
+                || (Mathf.Approximately(distanceSquared, bestDistanceSquared)
+                    && centerDistanceSquared < bestCenterDistanceSquared)
+               )
             {
                 closestTile = tile;
                 bestDistanceSquared = distanceSquared;
@@ -144,6 +139,15 @@ public class Projectile : MonoBehaviour
         }
 
         return closestTile;
+    }
+
+    private static bool TryGetClosestTile(
+        ShipManager shipManager,
+        Vector2 hitPoint,
+        out Tile closestTile)
+    {
+        closestTile = GetClosestTile(shipManager, hitPoint);
+        return closestTile != null;
     }
 
     /// <summary>
