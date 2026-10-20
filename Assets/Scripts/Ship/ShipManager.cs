@@ -34,9 +34,10 @@ public class ShipManager : MonoBehaviour
     [SerializeField]
     private Vector2 detachRadiateAngularVelocity = new(-180f, 180f);
 
+    public List<Tile> Tiles { get; private set; } = new();
+    
     public Tile Core => GridData.Core;
-
-
+    
     public ShipGridData GridData { get; } = new();
 
     public IReadOnlyDictionary<Vector2Int, Tile> Cells => GridData.Cells;
@@ -76,6 +77,10 @@ public class ShipManager : MonoBehaviour
                     weapon.SetParentCollider(compositeCollider);
                     break;
             }
+            Tiles.Add(tile);
+            tile.DestroyEvent += HandleTileDestroyed;
+            //TODO Shouldn't be reaching into a tiles sub-components for
+            // events.
         }
         // weapons = Cells.Values.OfType<WeaponTile>().ToList();
         // thrusters = Cells.Values.OfType<ThrusterTile>().ToList();
@@ -98,6 +103,11 @@ public class ShipManager : MonoBehaviour
     public void Rotate(float rotation)
     {
         thrusterManager.HandleRotation(rotation);
+    }
+
+    private void HandleTileDestroyed(Tile tile)
+    {
+        //TODO implement tile destruction logic here
     }
 
     // private void UpdateWeaponColliders()

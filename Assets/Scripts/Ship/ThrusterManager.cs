@@ -19,12 +19,14 @@ public class ThrusterManager : MonoBehaviour
     //Temp field until the core has its own thruster values
     [SerializeField]
     private float coreThrust = 2;
+
     [SerializeField]
     private float rotationalThrust = 2;
 
+    private ThrustAtRotation[] _directedThrust;
+
     private Vector2 _moveInput;
     private float _rotInput;
-    private ThrustAtRotation[] _directedThrust;
 
     private void Awake()
     {
@@ -32,10 +34,10 @@ public class ThrusterManager : MonoBehaviour
         {
             rb = GetComponent<Rigidbody2D>();
         }
-        
+
         CalculateThrusters();
     }
-    
+
     private void FixedUpdate()
     {
         ApplyRotation();
@@ -43,7 +45,7 @@ public class ThrusterManager : MonoBehaviour
     }
 
     #region Thruster Use
-    
+
     public void HandleRotation(float rot)
     {
         _rotInput = rot * -1f;
@@ -94,14 +96,14 @@ public class ThrusterManager : MonoBehaviour
     }
 
     #endregion
-    
 
     #region Thrust Calculations
+
     private void CalculateThrusters()
     {
         int directions = Enum.GetNames(typeof(TileRotationEnum)).Length;
         _directedThrust = new ThrustAtRotation[directions];
-        
+
         for (int i = 0; i < directions; i++)
         {
             _directedThrust[i] = new ThrustAtRotation
@@ -121,5 +123,6 @@ public class ThrusterManager : MonoBehaviour
     private ThrustAtRotation
         GetThrustAtRotation(TileRotationEnum orientation) =>
         _directedThrust[(int)orientation];
+
     #endregion
 }

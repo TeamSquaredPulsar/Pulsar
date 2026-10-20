@@ -27,6 +27,8 @@ public class Projectile : MonoBehaviour
     [SerializeField]
     private GameObject hitEffectPrefab;
 
+    private const int ContactPointIndex = 0;
+
     /// <summary>
     /// Start method.
     /// </summary>
@@ -50,15 +52,110 @@ public class Projectile : MonoBehaviour
 
         if (hitEffectPrefab != null)
         {
-            // Hit Effect
             Debug.Log("Hit Effect");
         }
 
-        //? [AL] TODO: Will need to deal damage here?
+
+        Health hp = GetColliderHealthComponent(collision);
+
+        if (hp != null)
+        {
+            DealDamage(hp);
+            Debug.Log(
+                $"Projectile hit {collision.collider.name} (body: {collision.rigidbody?.name})");
+        }
 
         Destroy(gameObject);
     }
 
+    /// <summary>
+    /// Deal Damage to what it hit
+    /// </summary>
+    /// <param name="health"></param>
+    private void DealDamage(Health health)
+    {
+        health.TakeDamage(Damage);
+    }
+
+    /// <summary>
+    /// Gets the health component of what the projectile hit
+    /// </summary>
+    /// <param name="collision"></param>
+    /// <returns></returns>
+    private Health GetColliderHealthComponent(Collision2D collision)
+    {
+        Health colliderHealth = null;
+        Vector2 hitPoint = collision.GetContact(ContactPointIndex).point;
+
+        if (collision.gameObject.TryGetComponent(out ShipManager shipManager)
+            && TryGetClosestTile(shipManager, hitPoint, out Tile closestTile)
+           )
+        {
+            colliderHealth = closestTile.GetComponent<Health>();
+        }
+        else if (collision.gameObject.TryGetComponent(out Health health))
+        {
+            colliderHealth = health;
+        }
+
+        return colliderHealth;
+    }
+
+    /// <summary>
+    /// Gets the closest tile to the projectiles hit point on the ship
+    /// </summary>
+    /// <param name="shipManager"></param>
+    /// <param name="hitPoint"></param>
+    /// <returns></returns>
+    private static Tile GetClosestTile(
+        ShipManager shipManager,
+        Vector2 hitPoint)
+    {
+        Tile closestTile = null;
+        float bestDistanceSquared = float.PositiveInfinity;
+        float bestCenterDistanceSquared = float.PositiveInfinity;
+
+        foreach (Tile tile in shipManager.Tiles)
+        {
+            Collider2D tileCollider = tile.GetComponent<Collider2D>();
+
+            Vector2 closestPoint = tileCollider.ClosestPoint(hitPoint);
+            float distanceSquared = (closestPoint - hitPoint).sqrMagnitude;
+            float centerDistanceSquared =
+                ((Vector2)tile.transform.position - hitPoint).sqrMagnitude;
+
+            // Prefer the closest collider,
+            // and if two tiles tie at a shared edge then
+            // prefer the tile whose center is closest to the hit point
+            if (distanceSquared < bestDistanceSquared
+                || (Mathf.Approximately(distanceSquared, bestDistanceSquared)
+                    && centerDistanceSquared < bestCenterDistanceSquared)
+               )
+            {
+                closestTile = tile;
+                bestDistanceSquared = distanceSquared;
+                bestCenterDistanceSquared = centerDistanceSquared;
+            }
+        }
+
+        return closestTile;
+    }
+
+    private static bool TryGetClosestTile(
+        ShipManager shipManager,
+        Vector2 hitPoint,
+        out Tile closestTile)
+    {
+        closestTile = GetClosestTile(shipManager, hitPoint);
+        return closestTile != null;
+    }
+
+    /// <summary>
+    /// Spawns the projectile
+    /// </summary>
+    /// <param name="spawnTransform"></param>
+    /// <param name="parentCollider"></param>
+    /// <returns></returns>
     public GameObject SpawnProjectile(
         Transform spawnTransform,
         Collider2D parentCollider)

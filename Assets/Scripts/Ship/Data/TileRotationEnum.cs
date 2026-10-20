@@ -1,4 +1,3 @@
-﻿
 public enum TileRotationEnum : int
 {
     Up = 0,

@@ -14,6 +14,7 @@ GameObject:
   - component: {fileID: 6394848136817018224}
   - component: {fileID: 3439183271994269019}
   - component: {fileID: 5928138776274610662}
+  - component: {fileID: -5485010578142242551}
   m_Layer: 0
   m_Name: p_BasicGun
   m_TagString: Untagged
@@ -210,6 +211,19 @@ Rigidbody2D:
   m_SleepingMode: 1
   m_CollisionDetection: 0
   m_Constraints: 0
+--- !u!114 &-5485010578142242551
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2402461002857692903}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d1236c1e551165b48b0864561b6c2156, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Pulsar.Ship::Health
+  <HealthAmount>k__BackingField: 10
 --- !u!1 &4329379618448448082
 GameObject:
   m_ObjectHideFlags: 0
