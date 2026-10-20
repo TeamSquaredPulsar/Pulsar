@@ -92,25 +92,4 @@ public class PlayerCursor : MonoBehaviour
         
         _hoveredTile = null;
     }
-
-    // // Fire a ray from cam through ScreenPosition, then get the intersection with _plane
-    // private void UpdatePosition()
-    // {
-    //     if (!_controllerActive && input)
-    //     {
-    //         // ScreenPosition = input.MouseScreenPosition;
-    //     }
-    //
-    //     Rect viewport = _gameplayCamera.pixelRect;
-    //     ScreenPosition = new Vector2(Mathf.Clamp(ScreenPosition.x, viewport.xMin, viewport.xMax),
-    //         Mathf.Clamp(ScreenPosition.y, viewport.yMin, viewport.yMax));
-    //     Ray ray = _gameplayCamera.ScreenPointToRay(ScreenPosition);
-    //     if (!_plane.Raycast(ray, out float distance))
-    //     {
-    //         return;
-    //     }
-    //
-    //     Vector3 world = ray.GetPoint(distance); 
-    //     transform.position = world;
-    // }
 }
