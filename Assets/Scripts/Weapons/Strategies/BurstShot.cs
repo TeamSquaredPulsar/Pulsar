@@ -31,7 +31,7 @@ public class BurstShot : WeaponStrategy
         WeaponTile weapon,
         Func<Transform, GameObject> spawnProjectile)
     {
-        verifyFirePoints(firePoints, k_max_firePoints);
+        VerifyFirePoints(firePoints, k_max_firePoints);
 
         weapon.StartCoroutine(Burst(firePoints, spawnProjectile));
     }
@@ -39,7 +39,7 @@ public class BurstShot : WeaponStrategy
     /// <summary>
     /// Burst method, IEnumerator for delaying time
     /// </summary>
-    /// <param name="firePoint"></param>
+    /// <param name="firePoints"></param>
     /// <param name="spawnProjectile"></param>
     /// <returns></returns>
     private IEnumerator Burst(

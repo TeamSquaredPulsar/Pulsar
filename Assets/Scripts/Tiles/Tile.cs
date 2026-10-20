@@ -23,21 +23,21 @@ public abstract class Tile : MonoBehaviour
     private BoxCollider2D tileCollider;
 
     [GetComponent][SerializeField]
-    private Health _health;
+    private Health health;
 
     public event Action<Tile> DestroyEvent;
 
     public void Start()
     {
-        _health.DestroyEvent += OnDead;
+        health.DestroyEvent += OnDead;
     }
 
     public void OnDestroy()
     {
-        _health.DestroyEvent -= OnDead;
+        health.DestroyEvent -= OnDead;
     }
 
-    private void OnDead(Health health)
+    private void OnDead(Health _)
     {
         DestroyEvent?.Invoke(this);
     }
@@ -78,7 +78,7 @@ public abstract class Tile : MonoBehaviour
         transform.localRotation = ShipUtilities.RotateQuarterOnZAxis(rot);
     }
 
-    public void TakeDamage(float damage) => _health.TakeDamage(damage);
+    public void TakeDamage(float damage) => health.TakeDamage(damage);
 
     // protected void InitFloating(
     //     TileInfoSO tileInfoSo,

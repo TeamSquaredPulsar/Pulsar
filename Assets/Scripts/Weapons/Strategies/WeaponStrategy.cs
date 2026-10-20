@@ -27,7 +27,7 @@ public abstract class WeaponStrategy : ScriptableObject
             WeaponTile weapon,
             Func<Transform, GameObject> spawnProjectile);
 
-    protected void verifyFirePoints(
+    protected void VerifyFirePoints(
         Transform[] firePoints,
         int maxFirePoints)
     {

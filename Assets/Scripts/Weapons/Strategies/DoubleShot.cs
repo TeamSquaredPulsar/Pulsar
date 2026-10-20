@@ -18,7 +18,7 @@ public class DoubleShot : WeaponStrategy
         WeaponTile weapon,
         Func<Transform, GameObject> spawnProjectile)
     {
-        verifyFirePoints(firePoints, k_max_firePoints);
+        VerifyFirePoints(firePoints, k_max_firePoints);
 
         spawnProjectile(firePoints[k_leftFirePoint]);
         spawnProjectile(firePoints[k_rightFirePoint]);

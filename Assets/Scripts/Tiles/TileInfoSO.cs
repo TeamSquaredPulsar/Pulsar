@@ -1,4 +1,3 @@
-using System;
 using Pulsar.Ship;
 using UnityEngine;
 
@@ -12,7 +11,7 @@ public class TileInfoSO : ScriptableObject
     public Sprite sprite;
     public float hp = 10f;
 
-    public bool[] connectableEdges = { true, true, true, true };
+    public bool[] connectableEdges = { true, true, true, true, };
 }
 
 namespace Pulsar.Ship
@@ -22,6 +21,6 @@ public enum TileType
         Core,
         Chassis,
         Thruster,
-        Weapon
+        Weapon,
     }
 }

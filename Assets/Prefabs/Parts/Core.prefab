@@ -52,7 +52,7 @@ MonoBehaviour:
   <TileInfo>k__BackingField: {fileID: 11400000, guid: 2fc0edad448d5f34e831dd954138aabd, type: 2}
   spriteRenderer: {fileID: 497275641067805184}
   tileCollider: {fileID: 2260344807008050488}
-  _health: {fileID: 2303072813145309213}
+  health: {fileID: 2303072813145309213}
   baseColor: {r: 1, g: 1, b: 1, a: 1}
 --- !u!212 &497275641067805184
 SpriteRenderer:
@@ -175,7 +175,7 @@ FixedJoint2D:
   m_BreakAction: 3
   m_AutoConfigureConnectedAnchor: 1
   m_Anchor: {x: 0, y: 0}
-  m_ConnectedAnchor: {x: 0.45938, y: 0.60778}
+  m_ConnectedAnchor: {x: 0, y: 0}
   m_DampingRatio: 0
   m_Frequency: 0
 --- !u!50 &7347581372079830787
