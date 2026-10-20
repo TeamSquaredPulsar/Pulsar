@@ -6,7 +6,9 @@ public class Health : MonoBehaviour
     [field: SerializeField]
     public float HealthAmount { get; private set; }
 
-    private float NoHealth = 0;
+    private const float NoHealth = 0;
+
+    public event Action<Health> DestroyEvent;
 
     public void TakeDamage(float damage)
     {
@@ -23,6 +25,4 @@ public class Health : MonoBehaviour
     {
         HealthAmount += health;
     }
-
-    public event Action<Health> DestroyEvent;
 }
