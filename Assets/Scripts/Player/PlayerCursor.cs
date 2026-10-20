@@ -25,6 +25,7 @@ public class PlayerCursor : MonoBehaviour
     private void Start()
     {
         Cursor.visible = false;
+        Cursor.lockState = CursorLockMode.Confined;
         
         //Correct mouse position if the cursor isn't detected 
         Vector2 initPos = Mouse.current != null 
