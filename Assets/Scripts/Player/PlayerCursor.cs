@@ -1,5 +1,6 @@
 using Nrjwolf.Tools.AttachAttributes;
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 [RequireComponent(typeof(SpriteRenderer))]
 public class PlayerCursor : MonoBehaviour
@@ -19,13 +20,19 @@ public class PlayerCursor : MonoBehaviour
         input.MoveCursorEvent += OnCursorMove;
         _mainCamera = Camera.main;
         // [CB] TODO: We need to setup callbacks for when the camera changes
-        // zoom so we can re-run this function to ensure the logic still works
-        SetWorldUnitsPerPixel();
     }
 
     private void Start()
     {
         Cursor.visible = false;
+        Cursor.lockState = CursorLockMode.Confined;
+        
+        //Correct mouse position if the cursor isn't detected 
+        Vector2 initPos = Mouse.current != null 
+            ? Mouse.current.position.ReadValue() 
+            : Vector2.zero;
+        
+        OnCursorMove(initPos);
     }
 
     private void OnDestroy()
@@ -35,17 +42,11 @@ public class PlayerCursor : MonoBehaviour
 
     private void OnCursorMove(Vector2 obj)
     {
-        transform.position = obj * _worldUnitsPerPixel;
-    }
-
-    private void SetWorldUnitsPerPixel()
-    {
-        //OrthographicSize is 1/2 camera height
-        float worldHeight = 2f * _mainCamera.orthographicSize;
-
-        // [CB] This worked when the game is in full screen.
-        // _worldUnitsPerPixel = worldHeight / Screen.height;
-        _worldUnitsPerPixel = worldHeight / _mainCamera.pixelHeight;
+        Vector3 worldPos = _mainCamera.ScreenToWorldPoint(obj);
+        
+        worldPos.z = 0f;
+        
+        transform.position = worldPos;
     }
 
 
