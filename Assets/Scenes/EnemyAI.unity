@@ -151,6 +151,7 @@ MonoBehaviour:
   wave: {fileID: 11400000, guid: b651fda037224d7a9af633b431b5a105, type: 2}
   spawnRadiusMin: 10
   spawnRadiusMax: 14
+  minSpawnDistance: 3
 --- !u!4 &21643854
 Transform:
   m_ObjectHideFlags: 0

@@ -14,15 +14,12 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::WaveDefinitionSO
   waveName: Wave 1
   entries:
-  - enemyPrefab: {fileID: 8188435154698411991, guid: 9dc0c2dda0134b64e8cb399608f4b80b, type: 3}
+  - enemyPrefab: {fileID: 7200000001, guid: 8c274582b3d847f0aa28676bee7ba62a, type: 3}
     count: 1
     spawnInterval: 1.5
   - enemyPrefab: {fileID: 7300000001, guid: 066a27f89cca417bbf862bb54ef7b612, type: 3}
     count: 1
     spawnInterval: 1.5
   - enemyPrefab: {fileID: 7100000001, guid: 6107522afb8c499f90bf713e550ecb43, type: 3}
-    count: 1
-    spawnInterval: 1.5
-  - enemyPrefab: {fileID: 7200000001, guid: 8c274582b3d847f0aa28676bee7ba62a, type: 3}
     count: 1
     spawnInterval: 1.5
