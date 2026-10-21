@@ -17,7 +17,12 @@ public class Parallax : MonoBehaviour
     [OnValueChanged("SetupTiling")]
     [SerializeField]
     private Sprite sprite;
-
+    
+    [OnValueChanged("SetupTiling")]
+    [SortingLayer]
+    [SerializeField]
+    private int sortingLayerID;
+    
     [SerializeField]
     [Range(0f, 1f)]
     [Tooltip("Lower values move more closely to main camera." +
@@ -49,6 +54,7 @@ public class Parallax : MonoBehaviour
         RemoveChildren();
         
         spriteRenderer.sprite = sprite;
+        spriteRenderer.sortingLayerID = sortingLayerID;
         _size = spriteRenderer.bounds.size;
         
         int[] values = {-1, 0, 1,};
