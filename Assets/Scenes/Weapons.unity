@@ -311,7 +311,7 @@ Rigidbody2D:
   m_Simulated: 1
   m_UseFullKinematicContacts: 0
   m_UseAutoMass: 0
-  m_Mass: 2
+  m_Mass: 1
   m_LinearDamping: 0
   m_AngularDamping: 0.05
   m_GravityScale: 0
@@ -347,7 +347,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 4131287922259776958, guid: 23b839cb7fca3b247ba1200fcaa33286, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 3.0095
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4131287922259776958, guid: 23b839cb7fca3b247ba1200fcaa33286, type: 3}
       propertyPath: m_LocalPosition.y
@@ -355,7 +355,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4131287922259776958, guid: 23b839cb7fca3b247ba1200fcaa33286, type: 3}
       propertyPath: m_LocalPosition.z
-      value: -10.00814
+      value: -10
       objectReference: {fileID: 0}
     - target: {fileID: 4131287922259776958, guid: 23b839cb7fca3b247ba1200fcaa33286, type: 3}
       propertyPath: m_LocalRotation.w
@@ -390,28 +390,16 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 2007421404}
     - target: {fileID: 7067975659105368029, guid: 23b839cb7fca3b247ba1200fcaa33286, type: 3}
-      propertyPath: m_LocalPosition.x
-      value: -3.0095
-      objectReference: {fileID: 0}
-    - target: {fileID: 7067975659105368029, guid: 23b839cb7fca3b247ba1200fcaa33286, type: 3}
       propertyPath: m_LocalPosition.z
-      value: 10.008132
-      objectReference: {fileID: 0}
-    - target: {fileID: 7710444508102941617, guid: 23b839cb7fca3b247ba1200fcaa33286, type: 3}
-      propertyPath: m_LocalPosition.x
-      value: -3.0095
+      value: 9.999993
       objectReference: {fileID: 0}
     - target: {fileID: 7710444508102941617, guid: 23b839cb7fca3b247ba1200fcaa33286, type: 3}
       propertyPath: m_LocalPosition.z
-      value: 2.0080996
-      objectReference: {fileID: 0}
-    - target: {fileID: 7781254101354357636, guid: 23b839cb7fca3b247ba1200fcaa33286, type: 3}
-      propertyPath: m_LocalPosition.x
-      value: -3.0095
+      value: 1.9999704
       objectReference: {fileID: 0}
     - target: {fileID: 7781254101354357636, guid: 23b839cb7fca3b247ba1200fcaa33286, type: 3}
       propertyPath: m_LocalPosition.z
-      value: 2.0080996
+      value: 1.9999704
       objectReference: {fileID: 0}
     - target: {fileID: 8255171805618094538, guid: 23b839cb7fca3b247ba1200fcaa33286, type: 3}
       propertyPath: m_Name
@@ -620,6 +608,10 @@ PrefabInstance:
       value: -1
       objectReference: {fileID: 0}
     - target: {fileID: 3439183271994269019, guid: 1ef1e4ec71f58694687c1a4d1dcfb63c, type: 3}
+      propertyPath: m_ConnectedAnchor.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3439183271994269019, guid: 1ef1e4ec71f58694687c1a4d1dcfb63c, type: 3}
       propertyPath: m_ConnectedRigidBody
       value: 
       objectReference: {fileID: 2007421400}
@@ -674,7 +666,7 @@ Rigidbody2D:
   m_Simulated: 1
   m_UseFullKinematicContacts: 0
   m_UseAutoMass: 0
-  m_Mass: 0.0001
+  m_Mass: 1
   m_LinearDamping: 0
   m_AngularDamping: 0.05
   m_GravityScale: 0
@@ -732,6 +724,63 @@ Rigidbody2D:
   m_SleepingMode: 1
   m_CollisionDetection: 0
   m_Constraints: 0
+--- !u!1001 &1851020448
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: 2160330187198369245, guid: ee943f43f9dd5434aab7831772e3150a, type: 3}
+      propertyPath: m_Name
+      value: BGLayers
+      objectReference: {fileID: 0}
+    - target: {fileID: 5220745339151573005, guid: ee943f43f9dd5434aab7831772e3150a, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: -12.34911
+      objectReference: {fileID: 0}
+    - target: {fileID: 5220745339151573005, guid: ee943f43f9dd5434aab7831772e3150a, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5220745339151573005, guid: ee943f43f9dd5434aab7831772e3150a, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: -42.48021
+      objectReference: {fileID: 0}
+    - target: {fileID: 5220745339151573005, guid: ee943f43f9dd5434aab7831772e3150a, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5220745339151573005, guid: ee943f43f9dd5434aab7831772e3150a, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5220745339151573005, guid: ee943f43f9dd5434aab7831772e3150a, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5220745339151573005, guid: ee943f43f9dd5434aab7831772e3150a, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5220745339151573005, guid: ee943f43f9dd5434aab7831772e3150a, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5220745339151573005, guid: ee943f43f9dd5434aab7831772e3150a, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5220745339151573005, guid: ee943f43f9dd5434aab7831772e3150a, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: ee943f43f9dd5434aab7831772e3150a, type: 3}
 --- !u!1001 &1934363098
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -789,6 +838,10 @@ PrefabInstance:
       value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 3439183271994269019, guid: 1ef1e4ec71f58694687c1a4d1dcfb63c, type: 3}
+      propertyPath: m_ConnectedAnchor.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3439183271994269019, guid: 1ef1e4ec71f58694687c1a4d1dcfb63c, type: 3}
       propertyPath: m_ConnectedRigidBody
       value: 
       objectReference: {fileID: 2007421400}
@@ -828,3 +881,4 @@ SceneRoots:
   m_Roots:
   - {fileID: 163037274}
   - {fileID: 1486711490}
+  - {fileID: 1851020448}
