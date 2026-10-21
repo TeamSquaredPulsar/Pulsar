@@ -14,6 +14,11 @@ public class EnemySpawner : MonoBehaviour
     [SerializeField]
     private float spawnRadiusMax = 14f;
 
+    [SerializeField]
+    private float minSpawnDistance = 3f;
+
+    private const int MaxSpawnAttempts = 30;
+
     private Transform _player;
 
     private void Start()
@@ -48,9 +53,33 @@ public class EnemySpawner : MonoBehaviour
 
     private void SpawnEnemy(GameObject enemyPrefab)
     {
+        Vector3 spawnPosition = _player.position + RandomOffset();
+
+        for (int attempt = 0; attempt < MaxSpawnAttempts && IsTooCloseToAnEnemy(spawnPosition); attempt++)
+        {
+            spawnPosition = _player.position + RandomOffset();
+        }
+
+        Instantiate(enemyPrefab, spawnPosition, Quaternion.identity);
+    }
+
+    private Vector3 RandomOffset()
+    {
         float angle = Random.Range(0f, Mathf.PI * 2f);
         float radius = Random.Range(spawnRadiusMin, spawnRadiusMax);
-        Vector3 offset = new Vector3(Mathf.Cos(angle), Mathf.Sin(angle), 0f) * radius;
-        Instantiate(enemyPrefab, _player.position + offset, Quaternion.identity);
+        return new Vector3(Mathf.Cos(angle), Mathf.Sin(angle), 0f) * radius;
+    }
+
+    private bool IsTooCloseToAnEnemy(Vector3 position)
+    {
+        foreach (EnemyController enemy in EnemyController.ActiveEnemies)
+        {
+            if (Vector3.Distance(position, enemy.transform.position) < minSpawnDistance)
+            {
+                return true;
+            }
+        }
+
+        return false;
     }
 }

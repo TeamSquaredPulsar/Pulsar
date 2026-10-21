@@ -16,4 +16,8 @@ public class EnemyInfoSO : ScriptableObject
     public float startTimeBtwShots = 1.5f;
     public float shootingRange = 8f;
     public float aimTolerance = 15f;
+
+    [Header("Separation")]
+    public float separationRadius = 3f; // Start pushing apart once another enemy is this close
+    public float separationStrength = 6f;
 }

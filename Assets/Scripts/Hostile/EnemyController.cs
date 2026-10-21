@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using UnityEngine;
 using Random = UnityEngine.Random;
 
@@ -9,6 +10,10 @@ public class EnemyController : MonoBehaviour
     private const float MinDistance = 0.001f;
     private const float MinSpeedSquared = 0.05f;
     private const float MinEnemyFacingDir = 0.0001f;
+
+    private static readonly HashSet<EnemyController> _activeEnemies = new();
+
+    public static IReadOnlyCollection<EnemyController> ActiveEnemies => _activeEnemies;
 
     [SerializeField]
     private EnemyInfoSO enemyInfo;
@@ -22,6 +27,16 @@ public class EnemyController : MonoBehaviour
     private float _timeBtwShots;
     private Vector3 _velocity;
     private float _weaveOffset;
+
+    private void OnEnable()
+    {
+        _activeEnemies.Add(this);
+    }
+
+    private void OnDisable()
+    {
+        _activeEnemies.Remove(this);
+    }
 
     private void Start()
     {
@@ -90,10 +105,38 @@ public class EnemyController : MonoBehaviour
                 = Vector3.ClampMagnitude(desiredVelocity, enemyInfo.speed);
         }
 
+        desiredVelocity += CalculateSeparation() * enemyInfo.separationStrength;
+        desiredVelocity = Vector3.ClampMagnitude(desiredVelocity, enemyInfo.speed);
+
         _velocity = Vector3.MoveTowards(_velocity, desiredVelocity,
             enemyInfo.acceleration * Time.deltaTime);
 
         transform.position += _velocity * Time.deltaTime;
+    }
+
+    private Vector3 CalculateSeparation()
+    {
+        Vector3 push = Vector3.zero;
+
+        foreach (EnemyController other in ActiveEnemies)
+        {
+            if (other == this)
+            {
+                continue;
+            }
+
+            Vector3 offset = transform.position - other.transform.position;
+            float distance = offset.magnitude;
+
+            if (distance < MinDistance || distance >= enemyInfo.separationRadius)
+            {
+                continue;
+            }
+
+            push += offset.normalized * (1f - distance / enemyInfo.separationRadius);
+        }
+
+        return push;
     }
 
     private void HandleRotation(Vector3 dirToPlayer, float distance)
