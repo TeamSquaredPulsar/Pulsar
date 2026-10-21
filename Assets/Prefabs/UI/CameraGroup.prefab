@@ -26,7 +26,7 @@ Transform:
   m_GameObject: {fileID: 2549686187472598095}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0.00002527237}
+  m_LocalPosition: {x: 0, y: 0, z: -739.6348}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -64,7 +64,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 4131287922259776958}
-  - component: {fileID: 3925948123579543238}
   m_Layer: 0
   m_Name: CameraGroup
   m_TagString: Untagged
@@ -90,21 +89,6 @@ Transform:
   - {fileID: 7067975659105368029}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &3925948123579543238
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8255171805618094538}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 991e18bdf13084d40a04af4c657091d2, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::BackgroundScroll
-  backgroundPieces:
-  - {fileID: 2819061615876151554, guid: 45865711fb7f1084d816fd57ac7b4f7f, type: 3}
-  bufferSize: 1
 --- !u!1 &8558096481514896224
 GameObject:
   m_ObjectHideFlags: 0
@@ -133,7 +117,7 @@ Transform:
   m_GameObject: {fileID: 8558096481514896224}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: -7.9999747}
+  m_LocalPosition: {x: 0, y: 0, z: -741.0894}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -256,7 +240,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1535299576213119972, guid: 353cdbf40f1135e49926004f779abd67, type: 3}
       propertyPath: m_LocalPosition.z
-      value: -7.9999747
+      value: -754.1803
       objectReference: {fileID: 0}
     - target: {fileID: 1535299576213119972, guid: 353cdbf40f1135e49926004f779abd67, type: 3}
       propertyPath: m_LocalRotation.w
