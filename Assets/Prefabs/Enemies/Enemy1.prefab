@@ -34,7 +34,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
-  - {fileID: 7100000021}
+  - {fileID: 1923082861682549751}
   - {fileID: 7100000009}
   - {fileID: 7100000011}
   m_Father: {fileID: 0}
@@ -49,7 +49,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 5ba67c83c42d025438ce9548f5b4effb, type: 3}
-  m_Name:
+  m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::EnemyController
   enemyInfo: {fileID: 11400000, guid: 567ab1c44c86435cabffc519f68844b0, type: 2}
   shipManager: {fileID: 7100000004}
@@ -63,11 +63,10 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: a034e607a278aa44885ca99f4aa1be33, type: 3}
-  m_Name:
+  m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ShipManager
-  coreInfoSo: {fileID: 0}
   compositeCollider: {fileID: 7100000007}
-  <Rb>k__BackingField: {fileID: 7100000006}
+  rb: {fileID: 7100000006}
   thrusterManager: {fileID: 7100000005}
   weapons: []
   thrusters: []
@@ -83,11 +82,11 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 4a065edf6c6f717428c6f24af01794d8, type: 3}
-  m_Name:
+  m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ThrusterManager
   thrusters:
-  - {fileID: 7100000016}
-  - {fileID: 7100000019}
+  - {fileID: 31458140387784186}
+  - {fileID: 31458140387784165}
   rb: {fileID: 7100000006}
   coreThrust: 2
   rotationalThrust: 2
@@ -192,7 +191,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
-  - {fileID: 7100000013}
+  - {fileID: 1283674779685727887}
   m_Father: {fileID: 7100000002}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &7100000010
@@ -224,8 +223,8 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
-  - {fileID: 7100000015}
-  - {fileID: 7100000018}
+  - {fileID: 1486952509668011091}
+  - {fileID: 1486952509668011084}
   m_Father: {fileID: 7100000002}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &7100000012
@@ -282,18 +281,18 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3439183271994269019, guid: aa5c391c67940fe428fad2e4cebfb98c, type: 3}
       propertyPath: m_ConnectedRigidBody
-      value:
+      value: 
       objectReference: {fileID: 7100000006}
     - target: {fileID: 9156844168472924138, guid: aa5c391c67940fe428fad2e4cebfb98c, type: 3}
       propertyPath: parentCollider
-      value:
+      value: 
       objectReference: {fileID: 7100000007}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: aa5c391c67940fe428fad2e4cebfb98c, type: 3}
---- !u!4 &7100000013 stripped
+--- !u!4 &1283674779685727887 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 1283674777054792067, guid: aa5c391c67940fe428fad2e4cebfb98c, type: 3}
   m_PrefabInstance: {fileID: 7100000012}
@@ -346,25 +345,24 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 7961569873050750638, guid: d41f92095f77c0c419e9feb661d7963f, type: 3}
+      propertyPath: m_ConnectedAnchor.x
+      value: -1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7961569873050750638, guid: d41f92095f77c0c419e9feb661d7963f, type: 3}
+      propertyPath: m_ConnectedRigidBody
+      value: 
+      objectReference: {fileID: 7100000006}
     - target: {fileID: 9113379072927920375, guid: d41f92095f77c0c419e9feb661d7963f, type: 3}
       propertyPath: m_Name
       value: p_Thruster_L
       objectReference: {fileID: 0}
-    - target: {fileID: 7961569873050750638, guid: d41f92095f77c0c419e9feb661d7963f, type: 3}
-      propertyPath: m_ConnectedRigidBody
-      value:
-      objectReference: {fileID: 7100000006}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: d41f92095f77c0c419e9feb661d7963f, type: 3}
---- !u!4 &7100000015 stripped
-Transform:
-  m_CorrespondingSourceObject: {fileID: 1486952502805023581, guid: d41f92095f77c0c419e9feb661d7963f, type: 3}
-  m_PrefabInstance: {fileID: 7100000014}
-  m_PrefabAsset: {fileID: 0}
---- !u!114 &7100000016 stripped
+--- !u!114 &31458140387784186 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 31458138794939124, guid: d41f92095f77c0c419e9feb661d7963f, type: 3}
   m_PrefabInstance: {fileID: 7100000014}
@@ -373,8 +371,13 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: c73fc15b171ddc347ab826efbd8c2757, type: 3}
-  m_Name:
+  m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ThrusterTile
+--- !u!4 &1486952509668011091 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 1486952502805023581, guid: d41f92095f77c0c419e9feb661d7963f, type: 3}
+  m_PrefabInstance: {fileID: 7100000014}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &7100000017
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -423,25 +426,24 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 7961569873050750638, guid: d41f92095f77c0c419e9feb661d7963f, type: 3}
+      propertyPath: m_ConnectedAnchor.x
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7961569873050750638, guid: d41f92095f77c0c419e9feb661d7963f, type: 3}
+      propertyPath: m_ConnectedRigidBody
+      value: 
+      objectReference: {fileID: 7100000006}
     - target: {fileID: 9113379072927920375, guid: d41f92095f77c0c419e9feb661d7963f, type: 3}
       propertyPath: m_Name
       value: p_Thruster_R
       objectReference: {fileID: 0}
-    - target: {fileID: 7961569873050750638, guid: d41f92095f77c0c419e9feb661d7963f, type: 3}
-      propertyPath: m_ConnectedRigidBody
-      value:
-      objectReference: {fileID: 7100000006}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: d41f92095f77c0c419e9feb661d7963f, type: 3}
---- !u!4 &7100000018 stripped
-Transform:
-  m_CorrespondingSourceObject: {fileID: 1486952502805023581, guid: d41f92095f77c0c419e9feb661d7963f, type: 3}
-  m_PrefabInstance: {fileID: 7100000017}
-  m_PrefabAsset: {fileID: 0}
---- !u!114 &7100000019 stripped
+--- !u!114 &31458140387784165 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 31458138794939124, guid: d41f92095f77c0c419e9feb661d7963f, type: 3}
   m_PrefabInstance: {fileID: 7100000017}
@@ -450,8 +452,13 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: c73fc15b171ddc347ab826efbd8c2757, type: 3}
-  m_Name:
+  m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ThrusterTile
+--- !u!4 &1486952509668011084 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 1486952502805023581, guid: d41f92095f77c0c419e9feb661d7963f, type: 3}
+  m_PrefabInstance: {fileID: 7100000017}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &7100000020
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -506,14 +513,14 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5645610968371623086, guid: 9d9b88b2fc3b2374c83c9e59dadfb864, type: 3}
       propertyPath: m_ConnectedRigidBody
-      value:
+      value: 
       objectReference: {fileID: 7100000006}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 9d9b88b2fc3b2374c83c9e59dadfb864, type: 3}
---- !u!4 &7100000021 stripped
+--- !u!4 &1923082861682549751 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 1923082867568248035, guid: 9d9b88b2fc3b2374c83c9e59dadfb864, type: 3}
   m_PrefabInstance: {fileID: 7100000020}
