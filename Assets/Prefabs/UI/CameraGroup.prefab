@@ -26,7 +26,7 @@ Transform:
   m_GameObject: {fileID: 2549686187472598095}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: -746.1803}
+  m_LocalPosition: {x: 0, y: 0, z: -426.18262}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -46,7 +46,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Unity.Cinemachine::Unity.Cinemachine.CinemachineTargetGroup
   PositionMode: 1
   RotationMode: 0
-  UpdateMethod: 2
+  UpdateMethod: 1
   Targets:
   - Object: {fileID: 7710444508102941617}
     Weight: 4.5
@@ -117,7 +117,7 @@ Transform:
   m_GameObject: {fileID: 8558096481514896224}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: -754.1803}
+  m_LocalPosition: {x: 0, y: 0, z: -434.18262}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -240,7 +240,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1535299576213119972, guid: 353cdbf40f1135e49926004f779abd67, type: 3}
       propertyPath: m_LocalPosition.z
-      value: -755.1803
+      value: -435.18262
       objectReference: {fileID: 0}
     - target: {fileID: 1535299576213119972, guid: 353cdbf40f1135e49926004f779abd67, type: 3}
       propertyPath: m_LocalRotation.w
