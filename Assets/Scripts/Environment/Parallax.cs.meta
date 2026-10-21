@@ -1,0 +1,14 @@
+fileFormatVersion: 2
+guid: 991e18bdf13084d40a04af4c657091d2
+MonoImporter:
+  externalObjects: {}
+  serializedVersion: 2
+  defaultReferences:
+  - spriteRenderer: {instanceID: 0}
+  - cam: {fileID: 11400000, guid: 3422a4889e5877b4fafae9f0099db266, type: 2}
+  - sprite: {instanceID: 0}
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
