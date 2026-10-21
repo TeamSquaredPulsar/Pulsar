@@ -10,10 +10,10 @@ public class EnemyController : MonoBehaviour
     private const float MinDistance = 0.001f;
     private const float MinSpeedSquared = 0.05f;
     private const float MinEnemyFacingDir = 0.0001f;
+    private const float TileHalfDiagonal = 0.7071f;
+    private const float SlowDownRange = 2f;
 
     private static readonly HashSet<EnemyController> _activeEnemies = new();
-
-    public static IReadOnlyCollection<EnemyController> ActiveEnemies => _activeEnemies;
 
     [SerializeField]
     private EnemyInfoSO enemyInfo;
@@ -22,20 +22,29 @@ public class EnemyController : MonoBehaviour
     private ShipManager shipManager;
 
     private Transform _player;
+    private Rigidbody2D _rb;
 
     // TODO: make this a boolean value with a coroutine to handle if you can fire or not
     private float _timeBtwShots;
     private Vector3 _velocity;
     private float _weaveOffset;
 
-    private void OnEnable()
-    {
-        _activeEnemies.Add(this);
-    }
+    public float Radius { get; private set; }
 
-    private void OnDisable()
+    public static IReadOnlyCollection<EnemyController> ActiveEnemies =>
+        _activeEnemies;
+
+    private void Awake()
     {
-        _activeEnemies.Remove(this);
+        Radius = CalculateRadius(transform);
+        _rb = GetComponent<Rigidbody2D>();
+
+        // Smooth the ship and its tiles between physics steps so they
+        // don't stutter on frames where physics doesn't run.
+        foreach (Rigidbody2D body in GetComponentsInChildren<Rigidbody2D>())
+        {
+            body.interpolation = RigidbodyInterpolation2D.Interpolate;
+        }
     }
 
     private void Start()
@@ -62,6 +71,36 @@ public class EnemyController : MonoBehaviour
             return;
         }
 
+        GetPlayerDirection(out Vector3 dirToPlayer, out float distance);
+        HandleShooting(dirToPlayer, distance);
+    }
+
+    // Movement runs on the physics clock so the tiles, which are joined
+    // to the ship by physics, move in step with it instead of lagging behind.
+    private void FixedUpdate()
+    {
+        if (_player is null)
+        {
+            return;
+        }
+
+        GetPlayerDirection(out Vector3 dirToPlayer, out float distance);
+        HandleMovement(dirToPlayer, distance);
+        HandleRotation(dirToPlayer, distance);
+    }
+
+    private void OnEnable()
+    {
+        _activeEnemies.Add(this);
+    }
+
+    private void OnDisable()
+    {
+        _activeEnemies.Remove(this);
+    }
+
+    private void GetPlayerDirection(out Vector3 dirToPlayer, out float distance)
+    {
         Vector3 toPlayer = _player.position - transform.position;
         /*
          * It resets Z axis differences between player and enemy to zero
@@ -70,14 +109,25 @@ public class EnemyController : MonoBehaviour
          * direction to player is recalculated every frame.
          */
         toPlayer.z = 0;
-        float distance = toPlayer.magnitude;
-        Vector3 dirToPlayer = distance > MinDistance
+        distance = toPlayer.magnitude;
+        dirToPlayer = distance > MinDistance
             ? toPlayer / distance
             : transform.up;
+    }
 
-        HandleMovement(dirToPlayer, distance);
-        HandleRotation(dirToPlayer, distance);
-        HandleShooting(dirToPlayer, distance);
+    // How far the ship's furthest tile corner reaches from the ship's center.
+    public static float CalculateRadius(Transform ship)
+    {
+        float radius = 0f;
+        foreach (Tile tile in ship.GetComponentsInChildren<Tile>())
+        {
+            Vector3 offset
+                = ship.InverseTransformPoint(tile.transform.position);
+            offset.z = 0;
+            radius = Mathf.Max(radius, offset.magnitude + TileHalfDiagonal);
+        }
+
+        return radius;
     }
 
     private void HandleMovement(Vector3 dirToPlayer, float distance)
@@ -86,7 +136,11 @@ public class EnemyController : MonoBehaviour
 
         if (distance > enemyInfo.stoppingDistance)
         {
-            desiredVelocity = dirToPlayer * enemyInfo.speed; // approach
+            // Ease off over the last stretch instead of braking all at once.
+            float slowDown = Mathf.Clamp01(
+                (distance - enemyInfo.stoppingDistance) / SlowDownRange);
+            desiredVelocity
+                = dirToPlayer * (enemyInfo.speed * slowDown); // approach
         }
         else if (distance < enemyInfo.retreatDistance)
         {
@@ -106,12 +160,13 @@ public class EnemyController : MonoBehaviour
         }
 
         desiredVelocity += CalculateSeparation() * enemyInfo.separationStrength;
-        desiredVelocity = Vector3.ClampMagnitude(desiredVelocity, enemyInfo.speed);
+        desiredVelocity
+            = Vector3.ClampMagnitude(desiredVelocity, enemyInfo.speed);
 
         _velocity = Vector3.MoveTowards(_velocity, desiredVelocity,
             enemyInfo.acceleration * Time.deltaTime);
 
-        transform.position += _velocity * Time.deltaTime;
+        _rb.MovePosition(_rb.position + (Vector2)(_velocity * Time.deltaTime));
     }
 
     private Vector3 CalculateSeparation()
@@ -127,13 +182,16 @@ public class EnemyController : MonoBehaviour
 
             Vector3 offset = transform.position - other.transform.position;
             float distance = offset.magnitude;
+            float range = Radius + other.Radius + enemyInfo.separationPadding;
 
-            if (distance < MinDistance || distance >= enemyInfo.separationRadius)
+            if (distance < MinDistance ||
+                distance >= range)
             {
                 continue;
             }
 
-            push += offset.normalized * (1f - distance / enemyInfo.separationRadius);
+            push += offset.normalized *
+                    (1f - distance / range);
         }
 
         return push;
@@ -142,7 +200,7 @@ public class EnemyController : MonoBehaviour
     private void HandleRotation(Vector3 dirToPlayer, float distance)
     {
         Vector3 lookDir;
-        if (distance <= enemyInfo.stoppingDistance ||
+        if (distance <= enemyInfo.shootingRange ||
             _velocity.sqrMagnitude < MinSpeedSquared)
         {
             lookDir = dirToPlayer;
@@ -159,13 +217,11 @@ public class EnemyController : MonoBehaviour
 
         // Turn around Z so the ship's local up direction faces the target.
         float angle = Mathf.Atan2(lookDir.y, lookDir.x) * Mathf.Rad2Deg - 90f;
-        Quaternion targetRotation = Quaternion.Euler(0f, 0f, angle);
 
         // [CB] TODO: Make this call shipManager.Rotate
         float turnAmount
             = 1f - Mathf.Exp(-enemyInfo.turnSpeed * Time.deltaTime);
-        transform.rotation
-            = Quaternion.Slerp(transform.rotation, targetRotation, turnAmount);
+        _rb.MoveRotation(Mathf.LerpAngle(_rb.rotation, angle, turnAmount));
     }
 
     private void HandleShooting(Vector3 dirToPlayer, float distance)

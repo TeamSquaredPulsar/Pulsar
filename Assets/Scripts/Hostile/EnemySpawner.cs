@@ -5,6 +5,8 @@ using Random = UnityEngine.Random;
 
 public class EnemySpawner : MonoBehaviour
 {
+    private const int MaxSpawnAttempts = 30;
+
     [SerializeField]
     private WaveDefinitionSO wave;
 
@@ -15,9 +17,7 @@ public class EnemySpawner : MonoBehaviour
     private float spawnRadiusMax = 14f;
 
     [SerializeField]
-    private float minSpawnDistance = 3f;
-
-    private const int MaxSpawnAttempts = 30;
+    private float spawnPadding = 1f;
 
     private Transform _player;
 
@@ -53,9 +53,14 @@ public class EnemySpawner : MonoBehaviour
 
     private void SpawnEnemy(GameObject enemyPrefab)
     {
+        float newRadius
+            = EnemyController.CalculateRadius(enemyPrefab.transform);
         Vector3 spawnPosition = _player.position + RandomOffset();
 
-        for (int attempt = 0; attempt < MaxSpawnAttempts && IsTooCloseToAnEnemy(spawnPosition); attempt++)
+        for (int attempt = 0;
+             attempt < MaxSpawnAttempts &&
+             IsTooCloseToAnEnemy(spawnPosition, newRadius);
+             attempt++)
         {
             spawnPosition = _player.position + RandomOffset();
         }
@@ -70,11 +75,12 @@ public class EnemySpawner : MonoBehaviour
         return new Vector3(Mathf.Cos(angle), Mathf.Sin(angle), 0f) * radius;
     }
 
-    private bool IsTooCloseToAnEnemy(Vector3 position)
+    private bool IsTooCloseToAnEnemy(Vector3 position, float radius)
     {
         foreach (EnemyController enemy in EnemyController.ActiveEnemies)
         {
-            if (Vector3.Distance(position, enemy.transform.position) < minSpawnDistance)
+            if (Vector3.Distance(position, enemy.transform.position) <
+                radius + enemy.Radius + spawnPadding)
             {
                 return true;
             }
