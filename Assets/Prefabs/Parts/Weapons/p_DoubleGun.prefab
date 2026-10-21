@@ -54,6 +54,7 @@ MonoBehaviour:
   <TileInfo>k__BackingField: {fileID: 11400000, guid: 71fb61585e3013a43b3726d73a977655, type: 2}
   spriteRenderer: {fileID: 4676953174740963180}
   tileCollider: {fileID: 6394848136817018224}
+  health: {fileID: -8815025657336327204}
   baseColor: {r: 1, g: 1, b: 1, a: 1}
   projectilePrefab: {fileID: 1682859016921356063, guid: a133161848d51234b97f8554a243a1ab, type: 3}
   parentCollider: {fileID: 0}
@@ -107,8 +108,8 @@ SpriteRenderer:
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
   m_GlobalIlluminationMeshLod: 0
-  m_SortingLayerID: 0
-  m_SortingLayer: 0
+  m_SortingLayerID: -1599613283
+  m_SortingLayer: 4
   m_SortingOrder: 0
   m_MaskInteraction: 0
   m_Sprite: {fileID: 21300000, guid: f0c9665b08f98254b96cef99a1b222a7, type: 3}
@@ -210,7 +211,7 @@ FixedJoint2D:
   m_BreakAction: 3
   m_AutoConfigureConnectedAnchor: 1
   m_Anchor: {x: 0, y: 0}
-  m_ConnectedAnchor: {x: 0, y: 0}
+  m_ConnectedAnchor: {x: 0, y: 1}
   m_DampingRatio: 0
   m_Frequency: 0
 --- !u!114 &-8815025657336327204
@@ -225,7 +226,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d1236c1e551165b48b0864561b6c2156, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Pulsar.Ship::Health
-  <HealthAmount>k__BackingField: 10
+  <MaxHealth>k__BackingField: 0
 --- !u!1 &4329379618448448082
 GameObject:
   m_ObjectHideFlags: 0

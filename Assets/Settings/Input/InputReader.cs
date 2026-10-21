@@ -110,9 +110,9 @@ public class InputReader : ScriptableObject, IPlayerActions, IInputReader
     {
         //Inputs are measured from bottom-left, so subtract half a screen from
         // the input to make it measure from the centre.
-        Vector2 halfScreen = camData.ScreenSize / 2;
-        Vector2 input = context.ReadValue<Vector2>() - halfScreen;
-        MoveCursorEvent?.Invoke(input);
+        //Vector2 halfScreen = camData.ScreenSize / 2;
+        //Vector2 input = context.ReadValue<Vector2>() - halfScreen;
+        MoveCursorEvent?.Invoke(context.ReadValue<Vector2>());
     }
 
     public void OnSelectFloatingTile(InputAction.CallbackContext context)

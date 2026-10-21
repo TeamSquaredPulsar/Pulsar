@@ -2,8 +2,9 @@
 %TAG !u! tag:unity3d.com,2011:
 --- !u!78 &1
 TagManager:
-  serializedVersion: 2
-  tags: []
+  serializedVersion: 3
+  tags:
+  - Enemy
   layers:
   - Default
   - TransparentFX
@@ -40,6 +41,24 @@ TagManager:
   m_SortingLayers:
   - name: Default
     uniqueID: 0
+    locked: 0
+  - name: 1FarBackground
+    uniqueID: 1866241929
+    locked: 0
+  - name: 2MedBackground
+    uniqueID: 212514763
+    locked: 0
+  - name: 3NearBackground
+    uniqueID: 2651884553
+    locked: 0
+  - name: CoreGame
+    uniqueID: 2695354013
+    locked: 0
+  - name: 4Foreground
+    uniqueID: 3021938687
+    locked: 0
+  - name: UI
+    uniqueID: 638896329
     locked: 0
   m_RenderingLayers:
   - Default

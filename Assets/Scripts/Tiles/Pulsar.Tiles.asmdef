@@ -1,0 +1,18 @@
+{
+    "name": "Tiles",
+    "rootNamespace": "Pulsar.Tiles",
+    "references": [
+        "GUID:aa86c6edaf847b544b44790230e36643",
+        "GUID:4b4794e38edc74eb8986ad993a5ad5c8",
+        "GUID:924fea6d752fd37439f517bf5013eca3"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

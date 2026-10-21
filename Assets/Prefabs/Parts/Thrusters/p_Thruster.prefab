@@ -52,6 +52,7 @@ MonoBehaviour:
   <TileInfo>k__BackingField: {fileID: 11400000, guid: efe30156b410eb149aa1cabe593e8f6d, type: 2}
   spriteRenderer: {fileID: 8688311974718774552}
   tileCollider: {fileID: 6303449030629206126}
+  health: {fileID: 8159396282816949206}
   baseColor: {r: 1, g: 1, b: 1, a: 1}
   thrust: 5
 --- !u!212 &8688311974718774552
@@ -99,14 +100,14 @@ SpriteRenderer:
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
   m_GlobalIlluminationMeshLod: 0
-  m_SortingLayerID: 0
-  m_SortingLayer: 0
+  m_SortingLayerID: -1599613283
+  m_SortingLayer: 4
   m_SortingOrder: 0
   m_MaskInteraction: 0
-  m_Sprite: {fileID: 21300000, guid: 84f96fcc2752e9c4ead8ff0fda090d31, type: 3}
-  m_Color: {r: 1, g: 0.19551288, b: 0, a: 1}
+  m_Sprite: {fileID: 21300000, guid: 6b8d1d3a6ff32604a8795b0b012d615a, type: 3}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
-  m_FlipY: 0
+  m_FlipY: 1
   m_DrawMode: 0
   m_Size: {x: 1, y: 1}
   m_AdaptiveModeThreshold: 0.5
@@ -175,7 +176,7 @@ FixedJoint2D:
   m_BreakAction: 3
   m_AutoConfigureConnectedAnchor: 1
   m_Anchor: {x: 0, y: 0}
-  m_ConnectedAnchor: {x: 0.45938, y: -0.39222002}
+  m_ConnectedAnchor: {x: 0, y: -1}
   m_DampingRatio: 0
   m_Frequency: 0
 --- !u!50 &8993274152522921009
@@ -217,4 +218,4 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d1236c1e551165b48b0864561b6c2156, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Pulsar.Ship::Health
-  <HealthAmount>k__BackingField: 10
+  <MaxHealth>k__BackingField: 0
