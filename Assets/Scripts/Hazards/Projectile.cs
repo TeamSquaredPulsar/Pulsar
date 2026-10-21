@@ -1,3 +1,4 @@
+using Nrjwolf.Tools.AttachAttributes;
 using UnityEngine;
 /// <summary>
 /// Represents a Projectile
@@ -25,6 +26,8 @@ public class Projectile : MonoBehaviour
 
     [SerializeField]
     private GameObject hitEffectPrefab;
+    
+    
 
     /// <summary>
     /// Start method.
