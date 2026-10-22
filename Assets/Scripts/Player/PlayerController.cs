@@ -1,3 +1,4 @@
+using System.Collections;
 using UnityEngine;
 
 [RequireComponent(typeof(ShipManager))]
@@ -8,6 +9,9 @@ public class PlayerController : MonoBehaviour
 
     [SerializeField]
     private ShipManager shipManager;
+
+    private bool _isShooting = false;
+    private Coroutine _shootingCoroutine = null;
     
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     private void Start()
@@ -15,25 +19,32 @@ public class PlayerController : MonoBehaviour
         RegisterInputCallbacks();
     }
 
-    private void Update()
-    {
-        if (input.IsShooting)
-        {
-            shipManager.Fire();
-        }
-    }
-
     private void OnDestroy()
     {
         input.MoveEvent -= HandleMove;
         input.RotateEvent -= HandleRotate;
+        input.ShootEvent -= HandleShoot;
     }
 
     private void RegisterInputCallbacks()
     {
         input.MoveEvent += HandleMove;
         input.RotateEvent += HandleRotate;
+        input.ShootEvent += HandleShoot;
         input.EnablePlayerActions();
+    }
+
+    private void HandleShoot(bool isShooting)
+    {
+        _isShooting = isShooting;
+        if (_isShooting)
+        {
+            _shootingCoroutine = StartCoroutine(StartShooting());
+        }
+        else
+        {
+            StopCoroutine(_shootingCoroutine);
+        }
     }
 
     private void HandleRotate(float obj)
@@ -41,19 +52,19 @@ public class PlayerController : MonoBehaviour
         shipManager.Rotate(obj);
     }
 
-    //// TODO: Can make an event where the player
-    ////  can listen for it and manage the player weapon list themselves.
-    ////  For performance reasons
-    //private void HandleShoot()
-    //{
-    //    if (input.IsShooting)
-    //    {
-    //        shipManager.Fire();
-    //    }
-    //}
-
     private void HandleMove(Vector2 direction)
     {
         shipManager.Move(direction);
+    }
+
+    private IEnumerator StartShooting()
+    {
+        while (_isShooting)
+        {
+            shipManager.Fire();
+            yield return null;
+        }
+
+        _shootingCoroutine = null;
     }
 }
