@@ -1,50 +1,48 @@
 ﻿using System;
+using System.Collections.Generic;
 using UnityEngine;
 using Random = UnityEngine.Random;
-
-[Serializable]
-public class AIMovementStats
-{
-    public const float MaxWeaveOffset = 10f;
-    public const float MinDistance = 0.001f;
-    public const float MinSpeedSquared = 0.05f;
-    public const float MinEnemyFacingDir = 0.0001f;
-    public float speed = 4f;
-    public float acceleration = 6f;
-    public float stoppingDistance = 6f; // Stop approaching once this close
-    public float retreatDistance = 3f; // Back away if closer than this
-    public float turnSpeed = 4f; // How quickly the ship rotates
-    public float driftAmount = 0.3f;
-    public float weaveFrequency = 1.5f;
-}
-
-[Serializable]
-public class AICombatStats
-{
-    //? [CB] Should the enemy just shoot any time they're able to?
-    public float startTimeBtwShots = 1.5f;
-    public float shootingRange = 8f;
-    public float aimTolerance = 15f;
-}
 
 [RequireComponent(typeof(ShipManager))]
 public class EnemyController : MonoBehaviour
 {
-    [SerializeField]
-    private AIMovementStats movementStats;
+    private const float MaxWeaveOffset = 10f;
+    private const float MinDistance = 0.001f;
+    private const float TileHalfDiagonal = 0.7071f;
+    private const float TurnGain = 4f;
+    private const float SpinResponse = 30f;
+
+    private static readonly HashSet<EnemyController> _activeEnemies = new();
 
     [SerializeField]
-    private AICombatStats combatStats;
+    private EnemyInfoSO enemyInfo;
 
     [SerializeField]
     private ShipManager shipManager;
 
     private Transform _player;
+    private Rigidbody2D _rb;
 
     // TODO: make this a boolean value with a coroutine to handle if you can fire or not
     private float _timeBtwShots;
-    private Vector3 _velocity;
     private float _weaveOffset;
+
+    public float Radius { get; private set; }
+
+    public static IReadOnlyCollection<EnemyController> ActiveEnemies =>
+        _activeEnemies;
+
+    private void Awake()
+    {
+        _rb = GetComponent<Rigidbody2D>();
+        Radius = CalculateRadius(transform);
+        // Smooth the ship and its tiles between physics steps so they
+        // don't stutter on frames where physics doesn't run.
+        foreach (Rigidbody2D body in GetComponentsInChildren<Rigidbody2D>())
+        {
+            body.interpolation = RigidbodyInterpolation2D.Interpolate;
+        }
+    }
 
     private void Start()
     {
@@ -58,8 +56,8 @@ public class EnemyController : MonoBehaviour
 
         _player = playerObj.transform;
 
-        _timeBtwShots = combatStats.startTimeBtwShots;
-        _weaveOffset = Random.value * AIMovementStats.MaxWeaveOffset;
+        _timeBtwShots = enemyInfo.startTimeBtwShots;
+        _weaveOffset = Random.value * MaxWeaveOffset;
     }
 
     private void Update()
@@ -70,6 +68,36 @@ public class EnemyController : MonoBehaviour
             return;
         }
 
+        GetPlayerDirection(out Vector3 dirToPlayer, out float distance);
+        HandleShooting(dirToPlayer, distance);
+    }
+
+    // Movement runs on the physics clock so the tiles, which are joined
+    // to the ship by physics, move in step with it instead of lagging behind.
+    private void FixedUpdate()
+    {
+        if (_player is null)
+        {
+            return;
+        }
+
+        GetPlayerDirection(out Vector3 dirToPlayer, out float distance);
+        HandleMovement(dirToPlayer, distance);
+        HandleRotation(dirToPlayer);
+    }
+
+    private void OnEnable()
+    {
+        _activeEnemies.Add(this);
+    }
+
+    private void OnDisable()
+    {
+        _activeEnemies.Remove(this);
+    }
+
+    private void GetPlayerDirection(out Vector3 dirToPlayer, out float distance)
+    {
         Vector3 toPlayer = _player.position - transform.position;
         /*
          * It resets Z axis differences between player and enemy to zero
@@ -78,74 +106,113 @@ public class EnemyController : MonoBehaviour
          * direction to player is recalculated every frame.
          */
         toPlayer.z = 0;
-        float distance = toPlayer.magnitude;
-        Vector3 dirToPlayer = distance > AIMovementStats.MinDistance
+        distance = toPlayer.magnitude;
+        dirToPlayer = distance > MinDistance
             ? toPlayer / distance
             : transform.up;
+    }
 
-        HandleMovement(dirToPlayer, distance);
-        HandleRotation(dirToPlayer, distance);
-        HandleShooting(dirToPlayer, distance);
+    // How far the ship's furthest tile corner reaches from the ship's center.
+    public static float CalculateRadius(Transform ship)
+    {
+        float radius = 0f;
+        foreach (Tile tile in ship.GetComponentsInChildren<Tile>())
+        {
+            Vector3 offset
+                = ship.InverseTransformPoint(tile.transform.position);
+            offset.z = 0;
+            radius = Mathf.Max(radius, offset.magnitude + TileHalfDiagonal);
+        }
+
+        return radius;
     }
 
     private void HandleMovement(Vector3 dirToPlayer, float distance)
     {
-        Vector3 desiredVelocity = Vector3.zero;
+        Vector3 desiredDir = Vector3.zero;
 
-        if (distance > movementStats.stoppingDistance)
+        if (distance > enemyInfo.stoppingDistance)
         {
-            desiredVelocity = dirToPlayer * movementStats.speed; // approach
+            desiredDir = dirToPlayer;
         }
-        else if (distance < movementStats.retreatDistance)
+        else if (distance < enemyInfo.retreatDistance)
         {
-            desiredVelocity = -dirToPlayer * movementStats.speed; // back away
+            desiredDir = -dirToPlayer;
         }
 
-        if (desiredVelocity != Vector3.zero && movementStats.driftAmount > 0f)
+        if (desiredDir != Vector3.zero && enemyInfo.driftAmount > 0f)
         {
             Vector3 sideways = Vector3.Cross(Vector3.forward, dirToPlayer);
-            float weave
-                = Mathf.Sin(Time.time * movementStats.weaveFrequency +
-                            _weaveOffset) *
-                  movementStats.driftAmount;
-            desiredVelocity += sideways * (weave * movementStats.speed);
-            desiredVelocity
-                = Vector3.ClampMagnitude(desiredVelocity, movementStats.speed);
+            float weave = Mathf.Sin(Time.time * enemyInfo.weaveFrequency +
+                                    _weaveOffset) * enemyInfo.driftAmount;
+            desiredDir += sideways * weave;
         }
 
-        _velocity = Vector3.MoveTowards(_velocity, desiredVelocity,
-            movementStats.acceleration * Time.deltaTime);
+        desiredDir += CalculateSeparation() * enemyInfo.separationStrength;
 
-        transform.position += _velocity * Time.deltaTime;
+        desiredDir = Vector3.ClampMagnitude(desiredDir, 1f) *
+                     Mathf.Clamp01(enemyInfo.speed);
+
+        Vector2 localDir = transform.InverseTransformDirection(desiredDir);
+        shipManager.Move(localDir);
     }
 
-    private void HandleRotation(Vector3 dirToPlayer, float distance)
+    private Vector3 CalculateSeparation()
     {
-        Vector3 lookDir;
-        if (distance <= movementStats.stoppingDistance ||
-            _velocity.sqrMagnitude < AIMovementStats.MinSpeedSquared)
+        Vector3 push = Vector3.zero;
+
+        foreach (EnemyController other in ActiveEnemies)
         {
-            lookDir = dirToPlayer;
-        }
-        else
-        {
-            lookDir = _velocity.normalized;
+            if (other == this)
+            {
+                continue;
+            }
+
+
+            Vector3 offset = transform.position - other.transform.position;
+            float range = Radius + other.Radius + enemyInfo.separationPadding;
+            float sqrDistance = offset.sqrMagnitude;
+
+            if (sqrDistance < MinDistance * MinDistance ||
+                sqrDistance >= range * range)
+            {
+                continue;
+            }
+
+            float distance = Mathf.Sqrt(sqrDistance);
+            push += offset * ((1f - distance / range) / distance);
         }
 
-        if (lookDir.sqrMagnitude < AIMovementStats.MinEnemyFacingDir)
-        {
-            return;
-        }
+        return push;
+    }
 
-        // Turn around Z so the ship's local up direction faces the target.
-        float angle = Mathf.Atan2(lookDir.y, lookDir.x) * Mathf.Rad2Deg - 90f;
-        Quaternion targetRotation = Quaternion.Euler(0f, 0f, angle);
-
-        // [CB] TODO: Make this call shipManager.Rotate
-        float turnAmount
-            = 1f - Mathf.Exp(-movementStats.turnSpeed * Time.deltaTime);
-        transform.rotation
-            = Quaternion.Slerp(transform.rotation, targetRotation, turnAmount);
+    private void HandleRotation(Vector3 dirToPlayer)
+    {
+        // float targetAngle
+        //     = Mathf.Atan2(dirToPlayer.y, dirToPlayer.x) * Mathf.Rad2Deg - 90f;
+        
+        // float angleDiff = Mathf.DeltaAngle(_rb.rotation, targetAngle);
+        //
+        // float targetSpin = Mathf.Clamp(angleDiff * TurnGain,
+        //     -enemyInfo.turnSpeed, enemyInfo.turnSpeed);
+        //
+        // float rotInput = Mathf.Clamp(
+        //     (targetSpin - _rb.angularVelocity) / SpinResponse, -1f, 1f);
+        //
+        // shipManager.Rotate(-rotInput);
+        
+        
+        //TODO Make this use a PID controller with above code
+        //-90f corrects rotation ONLY for this specific bandaid
+        float targetAngle = Mathf.Atan2(
+            dirToPlayer.y, dirToPlayer.x) * Mathf.Rad2Deg -90f; 
+        
+        float angleDiff = Mathf.DeltaAngle(_rb.rotation, targetAngle);
+    
+        float desiredVelocity = angleDiff * TurnGain;
+    
+        _rb.angularVelocity = Mathf.Clamp(desiredVelocity, 
+            -enemyInfo.turnSpeed, enemyInfo.turnSpeed);
     }
 
     private void HandleShooting(Vector3 dirToPlayer, float distance)
@@ -156,17 +223,18 @@ public class EnemyController : MonoBehaviour
             return;
         }
 
-        if (distance > combatStats.shootingRange)
+        if (distance > enemyInfo.shootingRange)
         {
             return;
         }
 
         float angleToPlayer = Vector3.Angle(transform.up, dirToPlayer);
-        if (angleToPlayer > combatStats.aimTolerance)
+        if (angleToPlayer > enemyInfo.aimTolerance)
         {
             return;
         }
 
         shipManager.Fire();
+        _timeBtwShots = enemyInfo.startTimeBtwShots;
     }
 }
