@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using Nrjwolf.Tools.AttachAttributes;
+using Pulsar.Ship.Ship.Extensions;
 using UnityEngine;
 
 [RequireComponent(typeof(CompositeCollider2D), typeof(Rigidbody2D))]
@@ -37,7 +38,9 @@ public class ShipManager : MonoBehaviour
     [SerializeField]
     private Vector2 detachRadiateAngularVelocity = new(-180f, 180f);
 
-    public ShipGridData GridData { get; } = new();
+    private ShipGridData GridData { get; } = new();
+    
+    public CoreTile Core => GridData.Core;
 
     public IReadOnlyDictionary<Vector2Int, Tile> Cells => GridData.Cells;
     public bool OwnsTile(Tile tile) => Cells.Values.Contains(tile);
@@ -47,11 +50,6 @@ public class ShipManager : MonoBehaviour
         rb ??= GetComponent<Rigidbody2D>();
 
         // ShipUtilities.FloatingTileRbConstrain(Rb);
-
-        // if (coreInfoSo != null)
-        // {
-        //     SpawnCore();
-        // }
     }
 
     private void Start()
@@ -68,11 +66,13 @@ public class ShipManager : MonoBehaviour
                     weapons.Add(weapon);
                     weapon.SetParentCollider(compositeCollider);
                     break;
+                case CoreTile core:
+                    GridData.SetCore(core);
+                    break;
             }
 
             GridData.SetTile(
-                new Vector2Int((int)tile.transform.position.x,
-                    (int)tile.transform.position.y), tile);
+                tile.transform.position.ToVector2Int(), tile);
             tile.DestroyEvent += HandleTileDestroyed;
         }
     }

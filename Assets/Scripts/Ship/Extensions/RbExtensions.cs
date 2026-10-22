@@ -1,0 +1,33 @@
+﻿using UnityEngine;
+
+namespace Pulsar.Ship.Ship.Extensions
+{
+public static class RbExtensions
+{
+    public static Rigidbody2D SetBuildRb(
+        this Rigidbody2D original
+    )
+    {
+        original.linearVelocity = Vector2.zero;
+        original.angularVelocity = 0f;
+        original.bodyType = RigidbodyType2D.Kinematic;
+        return original;
+    }
+
+    public static Rigidbody2D SetFloatRb(
+        this Rigidbody2D original,
+        Vector2 velocity,
+        float angularVelocity
+    )
+    {
+        original.bodyType = RigidbodyType2D.Dynamic;
+        original.constraints = RigidbodyConstraints2D.None;
+        original.gravityScale = 0f;
+        original.linearDamping = 0.05f;
+        original.angularDamping = 0.1f;
+        original.linearVelocity = velocity;
+        original.angularVelocity = angularVelocity;
+        return original;
+    }
+}
+}

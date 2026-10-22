@@ -18,10 +18,10 @@ public abstract class Tile : MonoBehaviour
     private Color baseColor = Color.white;
 
     public Vector2Int Cell { get; private set; }
-
-    // 0 1 2 3 = 0 90 180 270 (counterclockwise)
+    
     public float CurrentHp { get; protected set; }
-
+    
+    // 0 1 2 3 = 0 90 180 270 (counterclockwise)
     public int Rotation { get; private set; }
 
     public bool IsAttached { get; private set; }
@@ -161,14 +161,15 @@ public abstract class Tile : MonoBehaviour
         IsAttached = isAttached;
     }
 
-    // public void Highlight(Color tint)
-    //     spriteRenderer.color = tint;
-    // }
-    //
-    // public void Unhighlight()
-    // {
-    //     spriteRenderer.color = baseColor;
-    // }
+    public void Highlight(Color tint)
+    {
+        spriteRenderer.color = tint;
+    }
+    
+    public void Unhighlight()
+    {
+        spriteRenderer.color = baseColor;
+    }
 
     #region FACTORY
 
