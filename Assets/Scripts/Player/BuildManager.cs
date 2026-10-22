@@ -67,7 +67,7 @@ public class BuildManager : MonoBehaviour
     {
         // ClearSelection();
         // ClearDestroyHighlight();
-        _radialMenu?.Hide();
+        _radialMenu.Hide();
     }
 
     private void ToggleRadialMenu(bool isOn)
@@ -79,7 +79,7 @@ public class BuildManager : MonoBehaviour
         }
         else
         {
-            _radialMenu?.Hide();
+            _radialMenu.Hide();
         }
     }
 

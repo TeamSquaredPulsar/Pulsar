@@ -1,4 +1,3 @@
-using Nrjwolf.Tools.AttachAttributes;
 using Pulsar.Utilities;
 using UnityEngine;
 
@@ -8,11 +7,9 @@ public class PlayerController : MonoBehaviour
     [SerializeField]
     private InputReader input;
 
-    [GetComponent]
     [SerializeField]
     private ShipManager shipManager;
 
-    [GetComponent]
     [SerializeField]
     private BuildManager buildManager;
 
