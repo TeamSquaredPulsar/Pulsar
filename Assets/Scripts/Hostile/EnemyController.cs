@@ -36,7 +36,6 @@ public class EnemyController : MonoBehaviour
     {
         _rb = GetComponent<Rigidbody2D>();
         Radius = CalculateRadius(transform);
-        _rb.centerOfMass = CalculateShipCenterOfMass();
         // Smooth the ship and its tiles between physics steps so they
         // don't stutter on frames where physics doesn't run.
         foreach (Rigidbody2D body in GetComponentsInChildren<Rigidbody2D>())
@@ -128,21 +127,6 @@ public class EnemyController : MonoBehaviour
         return radius;
     }
 
-    private Vector2 CalculateShipCenterOfMass()
-    {
-        Vector2 weightedSum = Vector2.zero;
-        float totalMass = 0f;
-        foreach (Rigidbody2D body in GetComponentsInChildren<Rigidbody2D>())
-        {
-            Vector2 localPos
-                = transform.InverseTransformPoint(body.transform.position);
-            weightedSum += localPos * body.mass;
-            totalMass += body.mass;
-        }
-
-        return weightedSum / totalMass;
-    }
-
     private void HandleMovement(Vector3 dirToPlayer, float distance)
     {
         Vector3 desiredDir = Vector3.zero;
@@ -204,17 +188,31 @@ public class EnemyController : MonoBehaviour
 
     private void HandleRotation(Vector3 dirToPlayer)
     {
-        float targetAngle
-            = Mathf.Atan2(dirToPlayer.y, dirToPlayer.x) * Mathf.Rad2Deg - 90f;
+        // float targetAngle
+        //     = Mathf.Atan2(dirToPlayer.y, dirToPlayer.x) * Mathf.Rad2Deg - 90f;
+        
+        // float angleDiff = Mathf.DeltaAngle(_rb.rotation, targetAngle);
+        //
+        // float targetSpin = Mathf.Clamp(angleDiff * TurnGain,
+        //     -enemyInfo.turnSpeed, enemyInfo.turnSpeed);
+        //
+        // float rotInput = Mathf.Clamp(
+        //     (targetSpin - _rb.angularVelocity) / SpinResponse, -1f, 1f);
+        //
+        // shipManager.Rotate(-rotInput);
+        
+        
+        //TODO Make this use a PID controller with above code
+        //-90f corrects rotation ONLY for this specific bandaid
+        float targetAngle = Mathf.Atan2(
+            dirToPlayer.y, dirToPlayer.x) * Mathf.Rad2Deg -90f; 
+        
         float angleDiff = Mathf.DeltaAngle(_rb.rotation, targetAngle);
-
-        float targetSpin = Mathf.Clamp(angleDiff * TurnGain,
+    
+        float desiredVelocity = angleDiff * TurnGain;
+    
+        _rb.angularVelocity = Mathf.Clamp(desiredVelocity, 
             -enemyInfo.turnSpeed, enemyInfo.turnSpeed);
-
-        float rotInput = Mathf.Clamp(
-            (targetSpin - _rb.angularVelocity) / SpinResponse, -1f, 1f);
-
-        shipManager.Rotate(-rotInput);
     }
 
     private void HandleShooting(Vector3 dirToPlayer, float distance)
