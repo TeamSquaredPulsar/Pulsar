@@ -1,8 +1,10 @@
+using System;
 using Nrjwolf.Tools.AttachAttributes;
+using Pulsar.Utilities.Utilities;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
-[RequireComponent(typeof(SpriteRenderer))]
+[RequireComponent(typeof(SpriteRenderer), typeof(CircleCollider2D))]
 public class PlayerCursor : MonoBehaviour
 {
     [SerializeField]
@@ -10,6 +12,10 @@ public class PlayerCursor : MonoBehaviour
 
     [GetComponent][SerializeField]
     private SpriteRenderer visual;
+
+    [GetComponent]
+    [SerializeField]
+    private Collider2D circleCollider;
     
     private Tile _hoveredTile;
     private Camera _mainCamera;
