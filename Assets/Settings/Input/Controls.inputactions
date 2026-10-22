@@ -177,17 +177,6 @@
                 },
                 {
                     "name": "",
-                    "id": "ad8cf4b0-e3e4-4713-a30a-9dbe0039188e",
-                    "path": "<Mouse>/leftButton",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": "",
-                    "action": "Shoot",
-                    "isComposite": false,
-                    "isPartOfComposite": false
-                },
-                {
-                    "name": "",
                     "id": "9c093a69-a002-4526-befb-2c27336d41ad",
                     "path": "<Gamepad>/leftTrigger",
                     "interactions": "",

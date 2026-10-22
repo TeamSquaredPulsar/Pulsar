@@ -25,13 +25,16 @@ public class InputReader : ScriptableObject, IPlayerActions, IInputReader
     private CameraData camData;
     private Controls _controls;
 
+    public bool IsShooting { get; private set; }
+
     private void Awake()
     {
         if (_controls is not null)
         {
             return;
         }
-
+        
+        IsShooting  = false;
         CreateNewControls();
     }
 
@@ -41,7 +44,8 @@ public class InputReader : ScriptableObject, IPlayerActions, IInputReader
         {
             CreateNewControls();
         }
-
+        
+        IsShooting  = false;
         _controls?.Player.Enable();
     }
 
@@ -70,7 +74,15 @@ public class InputReader : ScriptableObject, IPlayerActions, IInputReader
 
     public void OnShoot(InputAction.CallbackContext context)
     {
-        ShootEvent?.Invoke();
+        if (context.started)
+        {
+            IsShooting = true;
+            ShootEvent?.Invoke();
+        }
+        else if (context.canceled)
+        {
+            IsShooting = false;
+        }
     }
 
     public void OnRotate(InputAction.CallbackContext context)
