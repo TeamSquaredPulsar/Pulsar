@@ -1,4 +1,5 @@
-﻿namespace Pulsar.Utilities.Utilities
+﻿
+namespace Pulsar.Utilities
 {
 public readonly struct Result<T>
 {
@@ -13,6 +14,5 @@ public readonly struct Result<T>
 
     public static Result<T> Pass(T value) => new(true, value);
     public static Result<T> Fail() => new(false, default(T));
-
 }
 }

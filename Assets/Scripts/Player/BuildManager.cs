@@ -1,5 +1,6 @@
+using System.Collections;
 using Nrjwolf.Tools.AttachAttributes;
-using Pulsar.Utilities.Utilities;
+using Pulsar.Utilities;
 using UnityEngine;
 
 public class BuildManager : MonoBehaviour
@@ -37,8 +38,7 @@ public class BuildManager : MonoBehaviour
 
     private GhostPreview _ghostPreview;
     private RadialMenu _radialMenu;
-
-    private bool _scanActive;
+    
     private Tile _selectedTile;
     private bool _atOutline;
     private float _orbitAngle;
@@ -46,7 +46,9 @@ public class BuildManager : MonoBehaviour
     private int _attachRotation;
     private Tile _highlightedTile;
 
-    private void Start()
+    private Coroutine _updateRadialRoutine;
+
+    private void Awake()
     {
         GameObject ghostPreview = Instantiate(pGhostPreview);
         _ghostPreview = ghostPreview.GetComponent<GhostPreview>();
@@ -68,11 +70,10 @@ public class BuildManager : MonoBehaviour
     {
         // ClearSelection();
         // ClearDestroyHighlight();
-        _scanActive = false;
         _radialMenu?.Hide();
     }
 
-    public void ToggleRadialMenu(bool isOn)
+    private void ToggleRadialMenu(bool isOn)
     {
         Debug.Log($"Setting radial menu to {isOn}");
         if (isOn)
@@ -83,7 +84,16 @@ public class BuildManager : MonoBehaviour
         else
         {
             _radialMenu?.Hide();
-            ClearSelection();
+        }
+    }
+    
+    private IEnumerator UpdateRadialMenu()
+    {
+        while (_selectedTile)
+        {
+                UpdateScanZoneShape();
+                UpdateSelectedTile();
+                yield return null;
         }
     }
 
@@ -105,12 +115,16 @@ public class BuildManager : MonoBehaviour
         ToggleRadialMenu(result.IsSuccess);
         if (result.IsSuccess)
         {
-            UpdateSelectedTile(result.Value);
-            
+            _selectedTile = result.Value;
+            _selectedTile.Select(selectedTint);
+            _updateRadialRoutine = StartCoroutine(UpdateRadialMenu());
+            UpdateSelectedTile();
         }
         else
         {
             DeselectTile();
+            StopCoroutine(_updateRadialRoutine);
+            _updateRadialRoutine = null;
         }
 
         // Enable the radial menu
@@ -125,16 +139,17 @@ public class BuildManager : MonoBehaviour
 
     public void DeselectTile()
     {
-        _selectedTile?.Deselect();
+        if(_selectedTile)
+        {
+            _selectedTile?.Deselect();
+        }
         _selectedTile = null;
         ToggleRadialMenu(false);
+        _ghostPreview?.Hide();
     }
 
-    private void UpdateSelectedTile(Tile tile)
+    private void UpdateSelectedTile()
     {
-        _selectedTile = tile;
-        tile.Select(selectedTint);
-
         Vector3 target = _radialMenu.PointOnOutline(_orbitAngle);
         // Pull the tile to the outline before allowing orbit and showing a preview
         if (!_atOutline)
@@ -145,22 +160,21 @@ public class BuildManager : MonoBehaviour
                 return;
             }
         }
-
-        if (_selectedTile)
-        {
-            // Move around the oval; keep the angle between 0 and 2 PI
-            _orbitAngle = Mathf.Repeat(
-                _orbitAngle - Mathf.Max(0.1f, orbitDegreesPerSecond)
-                * Mathf.Deg2Rad * Time.deltaTime,
-                Mathf.PI * 2f);
-        }
+        
+        // Move around the oval; keep the angle between 0 and 2 PI
+        _orbitAngle = Mathf.Repeat(
+            _orbitAngle - Mathf.Max(0.1f, orbitDegreesPerSecond)
+            * Mathf.Deg2Rad * Time.deltaTime,
+            Mathf.PI * 2f);
+        
 
         // Keep the tile on the outline as the ship moves and rotates
         _selectedTile.transform.position = _radialMenu.PointOnOutline(_orbitAngle);
         UpdatePreview();
         _orbitAngle = _radialMenu.GetOutlineAngleFromTileToCore(
             manager.Core.transform.position,
-            tile.transform.position);
+            _selectedTile.transform.position
+        );
     }
 
     private void MoveTowardsOutline(Vector3 target)
@@ -171,15 +185,6 @@ public class BuildManager : MonoBehaviour
             Mathf.Max(0.1f, pullSpeed) * Time.deltaTime);
         _atOutline = (_selectedTile.transform.position - target).sqrMagnitude <
                      minimumMagnitude;
-    }
-
-    //! [CB] TODO: Try functions should always return bool and have an In parameter
-    public void TryAttachTile()
-    {
-        // if (_manager.Attach(_attachCell, _selectedTile, _attachRotation))
-        // {
-        //     ClearSelection();
-        // }
     }
 
     private void UpdatePreview()
@@ -202,26 +207,6 @@ public class BuildManager : MonoBehaviour
                                   _attachRotation);
         _ghostPreview.Show(_selectedTile.TileInfo.sprite,
             manager.CellToWorld(_attachCell), rotation);
-    }
-
-    private void ClearSelection()
-    {
-        if (_selectedTile)
-        {
-            if (!_selectedTile.IsAttached)
-            {
-                _selectedTile.DisableBuildControl(Vector2.zero, 0f);
-            }
-
-            _selectedTile.Deselect();
-        }
-
-        _selectedTile = null;
-        _atOutline = false;
-        if (_ghostPreview)
-        {
-            _ghostPreview.Hide();
-        }
     }
 
     // private void UpdateDestroyMode()

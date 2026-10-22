@@ -168,6 +168,14 @@ PrefabInstance:
       propertyPath: 'thrusters.Array.data[2]'
       value: 
       objectReference: {fileID: 1703999465}
+    - target: {fileID: 753220315483151980, guid: b8226397bde29ab4abb516fe64e2ab6f, type: 3}
+      propertyPath: m_ConnectedAnchor.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 753220315483151980, guid: b8226397bde29ab4abb516fe64e2ab6f, type: 3}
+      propertyPath: m_ConnectedAnchor.y
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 1843940356141040302, guid: b8226397bde29ab4abb516fe64e2ab6f, type: 3}
       propertyPath: m_Name
       value: Player
@@ -188,6 +196,14 @@ PrefabInstance:
       propertyPath: rigidBody
       value: 
       objectReference: {fileID: 1232194916}
+    - target: {fileID: 5651161430065494015, guid: b8226397bde29ab4abb516fe64e2ab6f, type: 3}
+      propertyPath: m_ConnectedAnchor.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5651161430065494015, guid: b8226397bde29ab4abb516fe64e2ab6f, type: 3}
+      propertyPath: m_ConnectedAnchor.y
+      value: -1
+      objectReference: {fileID: 0}
     - target: {fileID: 6546600351476976861, guid: b8226397bde29ab4abb516fe64e2ab6f, type: 3}
       propertyPath: joint
       value: 
@@ -270,6 +286,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: -4920047954809644643, guid: e218f197edbb137478393036d044a214, type: 3}
+      propertyPath: joint
+      value: 
+      objectReference: {fileID: 1967506579}
     - target: {fileID: -4920047954809644643, guid: e218f197edbb137478393036d044a214, type: 3}
       propertyPath: rigidBody
       value: 
@@ -473,6 +493,11 @@ FixedJoint2D:
 --- !u!50 &1967506578 stripped
 Rigidbody2D:
   m_CorrespondingSourceObject: {fileID: 7347581372079830787, guid: e218f197edbb137478393036d044a214, type: 3}
+  m_PrefabInstance: {fileID: 1043494910}
+  m_PrefabAsset: {fileID: 0}
+--- !u!255 &1967506579 stripped
+FixedJoint2D:
+  m_CorrespondingSourceObject: {fileID: 5645610968371623086, guid: e218f197edbb137478393036d044a214, type: 3}
   m_PrefabInstance: {fileID: 1043494910}
   m_PrefabAsset: {fileID: 0}
 --- !u!1660057539 &9223372036854775807

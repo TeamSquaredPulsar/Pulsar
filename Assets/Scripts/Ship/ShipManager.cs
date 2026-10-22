@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Nrjwolf.Tools.AttachAttributes;
 using Pulsar.Ship.Extensions;
-using Pulsar.Utilities.Utilities;
+using Pulsar.Utilities;
 using UnityEngine;
 
 [RequireComponent(typeof(CompositeCollider2D), typeof(Rigidbody2D))]
@@ -269,7 +269,6 @@ public class ShipManager : MonoBehaviour
             for (int d = 0; d < directions; d++)
             {
                 candidates.Add(occupied + d.ToRotationEnum().ToVector2Int());
-                // candidates.Add(occupied + Dirs[d]);
             }
         }
 

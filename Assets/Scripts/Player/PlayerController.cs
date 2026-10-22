@@ -1,5 +1,5 @@
 using Nrjwolf.Tools.AttachAttributes;
-using Pulsar.Utilities.Utilities;
+using Pulsar.Utilities;
 using UnityEngine;
 
 [RequireComponent(typeof(ShipManager), typeof(BuildManager))]

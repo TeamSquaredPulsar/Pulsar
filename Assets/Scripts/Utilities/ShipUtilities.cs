@@ -1,5 +1,7 @@
 using UnityEngine;
 
+namespace Pulsar.Utilities
+{
 public static class ShipUtilities
 {
 
@@ -8,4 +10,5 @@ public static class ShipUtilities
 
     public static Quaternion RotateQuarterOnZAxis(int rotation) =>
         Quaternion.Euler(0f, 0f, 90f * rotation);
+}
 }

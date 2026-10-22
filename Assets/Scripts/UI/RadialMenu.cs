@@ -47,7 +47,7 @@ public class RadialMenu : MonoBehaviour
         transform.SetPositionAndRotation(worldCenter, rotation);
 
         scanZoneSr.transform.localScale = new Vector3(_radius.x, _radius.y, 1f);
-
+        
         // each segment angle
         for (int i = 0; i < Segments; i++)
         {
@@ -108,6 +108,6 @@ public class RadialMenu : MonoBehaviour
         return numerator / denominator;
     }
 
-    public void Show() => gameObject.SetActive(true);
-    public void Hide() => gameObject.SetActive(false);
+    public void Show() => gameObject?.SetActive(true);
+    public void Hide() => gameObject?.SetActive(false);
 }

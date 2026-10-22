@@ -213,8 +213,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ae52ac38b092d65468cc2ffd8bd18bf7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Tiles::ChassisTile
+  baseColor: {r: 1, g: 1, b: 1, a: 1}
+  <IsAttached>k__BackingField: 0
   <TileInfo>k__BackingField: {fileID: 11400000, guid: 9c0e50de41345d743a48948f1809c761, type: 2}
+  joint: {fileID: 5645610968371623086}
   spriteRenderer: {fileID: 497275641067805184}
   tileCollider: {fileID: 2260344807008050488}
+  rigidBody: {fileID: 7347581372079830787}
   health: {fileID: 2303072813145309213}
-  baseColor: {r: 1, g: 1, b: 1, a: 1}

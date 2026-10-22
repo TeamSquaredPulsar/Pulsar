@@ -1,6 +1,6 @@
 using System;
 using Nrjwolf.Tools.AttachAttributes;
-using Pulsar.Utilities.Utilities;
+using Pulsar.Utilities;
 using UnityEngine;
 using UnityEngine.InputSystem;
 

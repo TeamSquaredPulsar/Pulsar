@@ -1,6 +1,6 @@
 using System.Collections.Generic;
 using System.Linq;
-using Pulsar.Ship.Ship.Extensions;
+using Pulsar.Utilities;
 using UnityEngine;
 
 public class ShipGridData

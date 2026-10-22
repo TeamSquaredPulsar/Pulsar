@@ -1,6 +1,7 @@
 using System;
 using Nrjwolf.Tools.AttachAttributes;
 using Pulsar.Ship.Extensions;
+using Pulsar.Utilities;
 using UnityEngine;
 
 [RequireComponent(typeof(BoxCollider2D),
@@ -165,6 +166,7 @@ public abstract class Tile : MonoBehaviour
     public void Deselect()
     {
         Unhighlight();
+        EnableFloatingPhysics(Vector2.zero, 0f);
     }
 
     public void Attach(bool isAttached, Rigidbody2D rb)
