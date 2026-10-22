@@ -1,0 +1,16 @@
+{
+    "name": "Pulsar.UI",
+    "rootNamespace": "",
+    "references": [
+        "GUID:4b4794e38edc74eb8986ad993a5ad5c8"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}
