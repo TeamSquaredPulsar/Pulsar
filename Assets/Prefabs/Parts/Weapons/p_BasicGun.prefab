@@ -59,7 +59,7 @@ MonoBehaviour:
   parentCollider: {fileID: 0}
   firePoints:
   - {fileID: 1113316170954926131}
-  <FireRatePerSecond>k__BackingField: 0.5
+  <FireRatePerSecond>k__BackingField: 1.5
   weaponStrategy: {fileID: 11400000, guid: 67d68c3e0a11e41479e9131cdc4b126a, type: 2}
 --- !u!212 &4676953174740963180
 SpriteRenderer:
