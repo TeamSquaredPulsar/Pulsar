@@ -1,3 +1,5 @@
+using Nrjwolf.Tools.AttachAttributes;
+using Pulsar.Utilities.Utilities;
 using UnityEngine;
 
 [RequireComponent(typeof(ShipManager))]
@@ -6,13 +8,38 @@ public class PlayerController : MonoBehaviour
     [SerializeField]
     private InputReader input;
 
+    [GetComponent]
     [SerializeField]
     private ShipManager shipManager;
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     private void Start()
     {
+        PlayerCursor.SelectTileEvent += OnSelectTile;
         RegisterInputCallbacks();
+    }
+
+    private void OnSelectTile(Result<Tile> obj)
+    {
+        if (!obj.IsSuccess)
+        {
+            //TODO Logic for deselecting
+            return;
+        }
+        Tile tile = obj.Value;
+        
+        //TODO: Logic for selecting
+        //If tile is part of this ship
+        if (shipManager.OwnsTile(tile))
+        {
+            //Start a coroutine; if the coroutine expires, destroy the tile
+            
+        }
+        
+        //else if the tile isn't attached
+            // Enable the radial menu
+            // Snap it to radial menu
+            // Start ghost preview
     }
 
     private void OnDestroy()

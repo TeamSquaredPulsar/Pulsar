@@ -7,6 +7,9 @@ using UnityEngine.InputSystem;
 [RequireComponent(typeof(SpriteRenderer), typeof(CircleCollider2D))]
 public class PlayerCursor : MonoBehaviour
 {
+
+    public static event Action<Result<Tile>> SelectTileEvent;
+    
     [SerializeField]
     private InputReader input;
 
@@ -18,12 +21,15 @@ public class PlayerCursor : MonoBehaviour
     private Collider2D circleCollider;
     
     private Tile _hoveredTile;
+    private Tile _selectedTile;
+    
     private Camera _mainCamera;
     private float _worldUnitsPerPixel;
 
     private void Awake()
     {
         input.MoveCursorEvent += OnCursorMove;
+        input.SelectTileEvent += OnTileSelect;
         _mainCamera = Camera.main;
         // [CB] TODO: We need to setup callbacks for when the camera changes
     }
@@ -43,7 +49,32 @@ public class PlayerCursor : MonoBehaviour
 
     private void OnDestroy()
     {
+        input.SelectTileEvent -= OnTileSelect;
         input.MoveCursorEvent -= OnCursorMove;
+    }
+    
+    private void OnTileSelect(bool isSelecting)
+    {
+        //Am I actually hovering over a tile?
+        if (!_hoveredTile)
+        {
+            return;
+        }
+
+        //Am I deselecting?
+        if (!isSelecting)
+        {
+            _selectedTile = null;
+        }
+
+        //Don't raise more events than we need to
+        if (_hoveredTile.Equals(_selectedTile))
+        {
+            return;
+        }
+        
+        _selectedTile = _hoveredTile;
+        SelectTileEvent?.Invoke(new Result<Tile>(isSelecting, _selectedTile));
     }
 
     private void OnCursorMove(Vector2 obj)
