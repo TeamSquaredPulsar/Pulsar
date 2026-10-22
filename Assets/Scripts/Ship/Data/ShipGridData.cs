@@ -20,9 +20,19 @@ public class ShipGridData
         Core = tile;
     }
 
-    public void SetTile(Vector2Int cell, Tile tile) => _cells[cell] = tile;
+    public void SetTile(Vector2Int cell, Tile tile)
+    {
+        _cells[cell] = tile;
+        tile.SetAttached(true);
+    }
 
-    public bool RemoveTile(Vector2Int cell) => _cells.Remove(cell);
+    public bool RemoveTile(Vector2Int cell){
+        if (TryGetTile(cell, out Tile tile))
+        {
+            tile.SetAttached(true);
+        }
+        return _cells.Remove(cell);
+    }
     
     /// <summary>
     /// Gets the closest tile to the projectiles hit point on the ship

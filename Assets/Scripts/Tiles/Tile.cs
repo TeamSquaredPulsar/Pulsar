@@ -3,7 +3,8 @@ using Nrjwolf.Tools.AttachAttributes;
 using UnityEngine;
 
 [RequireComponent(typeof(BoxCollider2D),
-    typeof(SpriteRenderer), typeof(FixedJoint2D))]
+    typeof(SpriteRenderer),
+    typeof(FixedJoint2D))]
 [RequireComponent(typeof(Health))]
 public abstract class Tile : MonoBehaviour
 {
@@ -160,28 +161,10 @@ public abstract class Tile : MonoBehaviour
         return TileInfo.connectableEdges[localDir];
     }
 
-    // public virtual void SetAttached(ShipManager manager)
-    // {
-    //     IsAttached = true;
-    // }
-    //
-    // public virtual void SetDetached(ShipManager manager)
-    // {
-    //     IsAttached = false;
-    // }
-    //
-    // public virtual void TakeDamage(float amount)
-    // {
-    //     CurrentHp -= amount;
-    //     if (CurrentHp <= 0f)
-    //     {
-    //         ShipManager manager = GetComponentInParent<ShipManager>();
-    //         if (manager != null)
-    //         {
-    //             manager.DestroyTileAt(Cell);
-    //         }
-    //     }
-    // }
+    public void SetAttached(bool isAttached)
+    {
+        IsAttached = isAttached;
+    }
 
     // public void Highlight(Color tint)
     //     spriteRenderer.color = tint;

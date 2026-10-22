@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Linq;
 using Nrjwolf.Tools.AttachAttributes;
 using UnityEngine;
 
@@ -39,14 +40,8 @@ public class ShipManager : MonoBehaviour
     public ShipGridData GridData { get; } = new();
 
     public IReadOnlyDictionary<Vector2Int, Tile> Cells => GridData.Cells;
-
-    // [CB] Commenting out so Unity doesn't show warnings. We can uncomment as we need them.
-    // public event Action OnTileAdded;
-    // public event Action<int> OnTilesRemoved;
-    // public event Action OnShipDestroyed;
-    // public event Action<Weapon> onNewWeaponAdded;
-    // public event Action<Thruster> onNewThrusterAdded;
-
+    public bool OwnsTile(Tile tile) => Cells.Values.Contains(tile);
+    
     private void Awake()
     {
         rb ??= GetComponent<Rigidbody2D>();
@@ -80,9 +75,6 @@ public class ShipManager : MonoBehaviour
                     (int)tile.transform.position.y), tile);
             tile.DestroyEvent += HandleTileDestroyed;
         }
-        // weapons = Cells.Values.OfType<WeaponTile>().ToList();
-        // thrusters = Cells.Values.OfType<ThrusterTile>().ToList();
-        // UpdateWeaponColliders();
     }
 
     public void Fire()
