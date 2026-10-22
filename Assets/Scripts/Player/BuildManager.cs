@@ -108,8 +108,10 @@ public class BuildManager : MonoBehaviour
 
     public void OnSelectTile(Result<Tile> result)
     {
+        Debug.Log("We sure did click a tile");
         if (result.IsSuccess)
         {
+            Debug.Log("Successfully, even!");
             _selectedTile = result.Value;
             _selectedTile.Select(selectedTint);
 
@@ -118,18 +120,6 @@ public class BuildManager : MonoBehaviour
         }
         else
         {
-            // It's in a spot we can build it from
-            if (_atOutline && _ghostPreview.enabled)
-            {
-                _selectedTile.transform.position
-                    = _ghostPreview.transform.position;
-                _selectedTile.transform.rotation
-                    = _ghostPreview.transform.rotation;
-                manager.AttachTile(
-                    _selectedTile.transform.position.ToVector2Int(),
-                    _selectedTile);
-            }
-
             DeselectTile();
             StopCoroutine(_updateRadialRoutine);
             _updateRadialRoutine = null;
@@ -139,9 +129,21 @@ public class BuildManager : MonoBehaviour
 
     public void DeselectTile()
     {
+        // It's in a spot we can build it from
+        if (_selectedTile && _atOutline && _ghostPreview.enabled)
+        {
+            _selectedTile.transform.position
+                = _ghostPreview.transform.position;
+            _selectedTile.transform.rotation
+                = _ghostPreview.transform.rotation;
+            manager.AttachTile(
+                _selectedTile.transform.position.ToVector2Int(),
+                _selectedTile);
+        }
+
         if (_selectedTile)
         {
-            _selectedTile?.Deselect();
+            _selectedTile.Deselect();
         }
 
         _selectedTile = null;
