@@ -13,7 +13,7 @@ public interface IInputReader
 public class InputReader : ScriptableObject, IPlayerActions, IInputReader
 {
     public event Action<Vector2> MoveEvent;
-    public event Action ShootEvent;
+    public event Action<bool> ShootEvent;
     public event Action<float> RotateEvent;
     public event Action<bool> DetachTileEvent;
     public event Action<bool> SelectFloatingTileEvent;
@@ -31,7 +31,7 @@ public class InputReader : ScriptableObject, IPlayerActions, IInputReader
         {
             return;
         }
-
+        
         CreateNewControls();
     }
 
@@ -41,7 +41,7 @@ public class InputReader : ScriptableObject, IPlayerActions, IInputReader
         {
             CreateNewControls();
         }
-
+        
         _controls?.Player.Enable();
     }
 
@@ -63,6 +63,13 @@ public class InputReader : ScriptableObject, IPlayerActions, IInputReader
         _controls.Player.Enable();
     }
 
+    private void CreateNewControls()
+    {
+        _controls = new Controls();
+        _controls.Player.SetCallbacks(this);
+    }
+    
+    
     public void OnMove(InputAction.CallbackContext context)
     {
         MoveEvent?.Invoke(context.ReadValue<Vector2>());
@@ -70,18 +77,13 @@ public class InputReader : ScriptableObject, IPlayerActions, IInputReader
 
     public void OnShoot(InputAction.CallbackContext context)
     {
-        ShootEvent?.Invoke();
+        //True on start or performed, false on cancelled.
+        ShootEvent?.Invoke(!context.canceled);
     }
 
     public void OnRotate(InputAction.CallbackContext context)
     {
         RotateEvent?.Invoke(context.ReadValue<float>());
-    }
-
-    private void CreateNewControls()
-    {
-        _controls = new Controls();
-        _controls.Player.SetCallbacks(this);
     }
 
     public void OnToggleRadialMenu(InputAction.CallbackContext context)

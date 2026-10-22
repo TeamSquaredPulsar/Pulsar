@@ -263,8 +263,8 @@ public partial class @Controls: IInputActionCollection2, IDisposable
                 },
                 {
                     ""name"": """",
-                    ""id"": ""ad8cf4b0-e3e4-4713-a30a-9dbe0039188e"",
-                    ""path"": ""<Mouse>/leftButton"",
+                    ""id"": ""9c093a69-a002-4526-befb-2c27336d41ad"",
+                    ""path"": ""<Gamepad>/leftTrigger"",
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": """",
@@ -274,8 +274,8 @@ public partial class @Controls: IInputActionCollection2, IDisposable
                 },
                 {
                     ""name"": """",
-                    ""id"": ""9c093a69-a002-4526-befb-2c27336d41ad"",
-                    ""path"": ""<Gamepad>/leftTrigger"",
+                    ""id"": ""de94275c-d03b-4c68-8a8b-c3fdfbe96e2f"",
+                    ""path"": ""<Mouse>/rightButton"",
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": """",
@@ -357,39 +357,6 @@ public partial class @Controls: IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""groups"": "";Keyboard & Mouse"",
                     ""action"": ""ToggleRadialMenu"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": false
-                },
-                {
-                    ""name"": """",
-                    ""id"": ""8b4e0df5-1c6d-41b2-ae92-df3e36bb60e7"",
-                    ""path"": ""<Keyboard>/c"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": "";Keyboard & Mouse"",
-                    ""action"": ""BuildTile"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": false
-                },
-                {
-                    ""name"": """",
-                    ""id"": ""3d050224-e2bf-4814-ae28-d47b640fb3d0"",
-                    ""path"": ""<Keyboard>/x"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": "";Keyboard & Mouse"",
-                    ""action"": ""DetachTile"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": false
-                },
-                {
-                    ""name"": """",
-                    ""id"": ""d5121413-3f48-4b0e-a5d6-0c3c208bb667"",
-                    ""path"": ""<Mouse>/leftButton"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": "";Keyboard & Mouse"",
-                    ""action"": ""SelectFloatingTile"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 },
