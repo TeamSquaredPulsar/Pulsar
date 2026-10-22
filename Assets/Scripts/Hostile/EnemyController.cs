@@ -53,6 +53,10 @@ public class EnemyController : MonoBehaviour
         {
             throw new InvalidOperationException("Player not found");
         }
+        foreach (Tile tile in shipManager.Cells.Values)
+        {
+            tile.gameObject.layer = LayerMask.NameToLayer("EnemyTiles");
+        }
 
         _player = playerObj.transform;
 

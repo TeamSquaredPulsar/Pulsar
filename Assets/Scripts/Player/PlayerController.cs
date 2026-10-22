@@ -17,6 +17,10 @@ public class PlayerController : MonoBehaviour
     private void Start()
     {
         RegisterInputCallbacks();
+        foreach (Tile tile in shipManager.Cells.Values)
+        {
+            tile.gameObject.layer = LayerMask.NameToLayer("PlayerTiles");
+        }
     }
 
     private void OnDestroy()

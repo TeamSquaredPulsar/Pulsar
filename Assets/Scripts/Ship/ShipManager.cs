@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using Nrjwolf.Tools.AttachAttributes;
+using UnityEditor.Experimental.GraphView;
 using UnityEngine;
 
 [RequireComponent(typeof(CompositeCollider2D), typeof(Rigidbody2D))]
@@ -79,6 +80,7 @@ public class ShipManager : MonoBehaviour
                 new Vector2Int((int)tile.transform.position.x,
                     (int)tile.transform.position.y), tile);
             tile.DestroyEvent += HandleTileDestroyed;
+            
         }
         // weapons = Cells.Values.OfType<WeaponTile>().ToList();
         // thrusters = Cells.Values.OfType<ThrusterTile>().ToList();
