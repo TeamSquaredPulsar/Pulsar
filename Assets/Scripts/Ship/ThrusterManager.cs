@@ -116,7 +116,7 @@ public class ThrusterManager : MonoBehaviour
         foreach (ThrusterTile thruster in thrusters)
         {
             _directedThrust[(int)thruster.Orientation].Thrust
-                += thruster.GetThrust();
+                += thruster.Thrust;
         }
     }
 

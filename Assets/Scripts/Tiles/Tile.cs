@@ -1,5 +1,6 @@
 using System;
 using Nrjwolf.Tools.AttachAttributes;
+using Pulsar.Ship.Extensions;
 using UnityEngine;
 
 [RequireComponent(typeof(BoxCollider2D),
@@ -9,10 +10,21 @@ using UnityEngine;
 public abstract class Tile : MonoBehaviour
 {
     public static TileRotationEnum GetRotationInt(int rot) =>
-        (TileRotationEnum)(rot % Enum.GetNames(typeof(TileRotationEnum))
-            .Length);
+        rot.ToRotationEnum();
 
     private const int FloatingSortingOrder = 10;
+    
+    [SerializeField]
+    private Color baseColor = Color.white;
+
+    public Vector2Int Cell { get; private set; }
+
+    // 0 1 2 3 = 0 90 180 270 (counterclockwise)
+    public float CurrentHp { get; protected set; }
+
+    public int Rotation { get; private set; }
+
+    public bool IsAttached { get; private set; }
 
     [field: SerializeField]
     public TileInfoSO TileInfo { get; private set; }
@@ -43,21 +55,6 @@ public abstract class Tile : MonoBehaviour
         DestroyEvent?.Invoke(this);
     }
 
-    // [SerializeField]
-    // private Rigidbody2D floatRb;
-
-    [SerializeField]
-    private Color baseColor = Color.white;
-
-    public Vector2Int Cell { get; private set; }
-
-    // 0 1 2 3 = 0 90 180 270 (counterclockwise)
-    public float CurrentHp { get; protected set; }
-
-    public int Rotation { get; private set; }
-
-    public bool IsAttached { get; private set; }
-
     protected void Init(TileInfoSO tileInfoSo, Vector2Int gridCell, int rot = 0)
     {
         TileInfo = tileInfoSo;
@@ -68,9 +65,7 @@ public abstract class Tile : MonoBehaviour
         // spriteRenderer = CreateVisual(transform);
 
         spriteRenderer.sprite = tileInfoSo.sprite;
-
-        // floatRb = GetComponent<Rigidbody2D>();
-        tileCollider = GetComponent<BoxCollider2D>();
+        
         tileCollider.size
             = Vector2.one;
         tileCollider.compositeOperation = Collider2D.CompositeOperation.Merge;
