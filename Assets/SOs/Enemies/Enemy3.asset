@@ -12,13 +12,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f8b96f386928408dbc8934c43a670864, type: 3}
   m_Name: Enemy3
   m_EditorClassIdentifier: Assembly-CSharp::EnemyInfoSO
-  speed: 5
+  speed: 0.9
   acceleration: 7
   stoppingDistance: 3
   retreatDistance: 1
-  turnSpeed: 5
+  turnSpeed: 200
   driftAmount: 0.4
   weaveFrequency: 2
   startTimeBtwShots: 1.2
   shootingRange: 5
   aimTolerance: 18
+  separationPadding: 1
+  separationStrength: 6

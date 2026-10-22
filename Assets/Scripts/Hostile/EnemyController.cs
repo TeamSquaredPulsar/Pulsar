@@ -8,10 +8,9 @@ public class EnemyController : MonoBehaviour
 {
     private const float MaxWeaveOffset = 10f;
     private const float MinDistance = 0.001f;
-    private const float MinSpeedSquared = 0.05f;
-    private const float MinEnemyFacingDir = 0.0001f;
     private const float TileHalfDiagonal = 0.7071f;
-    private const float SlowDownRange = 2f;
+    private const float TurnGain = 4f;
+    private const float SpinResponse = 30f;
 
     private static readonly HashSet<EnemyController> _activeEnemies = new();
 
@@ -26,7 +25,6 @@ public class EnemyController : MonoBehaviour
 
     // TODO: make this a boolean value with a coroutine to handle if you can fire or not
     private float _timeBtwShots;
-    private Vector3 _velocity;
     private float _weaveOffset;
 
     public float Radius { get; private set; }
@@ -36,9 +34,9 @@ public class EnemyController : MonoBehaviour
 
     private void Awake()
     {
-        Radius = CalculateRadius(transform);
         _rb = GetComponent<Rigidbody2D>();
-
+        Radius = CalculateRadius(transform);
+        _rb.centerOfMass = CalculateShipCenterOfMass();
         // Smooth the ship and its tiles between physics steps so they
         // don't stutter on frames where physics doesn't run.
         foreach (Rigidbody2D body in GetComponentsInChildren<Rigidbody2D>())
@@ -86,7 +84,7 @@ public class EnemyController : MonoBehaviour
 
         GetPlayerDirection(out Vector3 dirToPlayer, out float distance);
         HandleMovement(dirToPlayer, distance);
-        HandleRotation(dirToPlayer, distance);
+        HandleRotation(dirToPlayer);
     }
 
     private void OnEnable()
@@ -130,43 +128,49 @@ public class EnemyController : MonoBehaviour
         return radius;
     }
 
+    private Vector2 CalculateShipCenterOfMass()
+    {
+        Vector2 weightedSum = Vector2.zero;
+        float totalMass = 0f;
+        foreach (Rigidbody2D body in GetComponentsInChildren<Rigidbody2D>())
+        {
+            Vector2 localPos
+                = transform.InverseTransformPoint(body.transform.position);
+            weightedSum += localPos * body.mass;
+            totalMass += body.mass;
+        }
+
+        return weightedSum / totalMass;
+    }
+
     private void HandleMovement(Vector3 dirToPlayer, float distance)
     {
-        Vector3 desiredVelocity = Vector3.zero;
+        Vector3 desiredDir = Vector3.zero;
 
         if (distance > enemyInfo.stoppingDistance)
         {
-            // Ease off over the last stretch instead of braking all at once.
-            float slowDown = Mathf.Clamp01(
-                (distance - enemyInfo.stoppingDistance) / SlowDownRange);
-            desiredVelocity
-                = dirToPlayer * (enemyInfo.speed * slowDown); // approach
+            desiredDir = dirToPlayer;
         }
         else if (distance < enemyInfo.retreatDistance)
         {
-            desiredVelocity = -dirToPlayer * enemyInfo.speed; // back away
+            desiredDir = -dirToPlayer;
         }
 
-        if (desiredVelocity != Vector3.zero && enemyInfo.driftAmount > 0f)
+        if (desiredDir != Vector3.zero && enemyInfo.driftAmount > 0f)
         {
             Vector3 sideways = Vector3.Cross(Vector3.forward, dirToPlayer);
-            float weave
-                = Mathf.Sin(Time.time * enemyInfo.weaveFrequency +
-                            _weaveOffset) *
-                  enemyInfo.driftAmount;
-            desiredVelocity += sideways * (weave * enemyInfo.speed);
-            desiredVelocity
-                = Vector3.ClampMagnitude(desiredVelocity, enemyInfo.speed);
+            float weave = Mathf.Sin(Time.time * enemyInfo.weaveFrequency +
+                                    _weaveOffset) * enemyInfo.driftAmount;
+            desiredDir += sideways * weave;
         }
 
-        desiredVelocity += CalculateSeparation() * enemyInfo.separationStrength;
-        desiredVelocity
-            = Vector3.ClampMagnitude(desiredVelocity, enemyInfo.speed);
+        desiredDir += CalculateSeparation() * enemyInfo.separationStrength;
 
-        _velocity = Vector3.MoveTowards(_velocity, desiredVelocity,
-            enemyInfo.acceleration * Time.deltaTime);
+        desiredDir = Vector3.ClampMagnitude(desiredDir, 1f) *
+                     Mathf.Clamp01(enemyInfo.speed);
 
-        _rb.MovePosition(_rb.position + (Vector2)(_velocity * Time.deltaTime));
+        Vector2 localDir = transform.InverseTransformDirection(desiredDir);
+        shipManager.Move(localDir);
     }
 
     private Vector3 CalculateSeparation()
@@ -180,48 +184,37 @@ public class EnemyController : MonoBehaviour
                 continue;
             }
 
-            Vector3 offset = transform.position - other.transform.position;
-            float distance = offset.magnitude;
-            float range = Radius + other.Radius + enemyInfo.separationPadding;
 
-            if (distance < MinDistance ||
-                distance >= range)
+            Vector3 offset = transform.position - other.transform.position;
+            float range = Radius + other.Radius + enemyInfo.separationPadding;
+            float sqrDistance = offset.sqrMagnitude;
+
+            if (sqrDistance < MinDistance * MinDistance ||
+                sqrDistance >= range * range)
             {
                 continue;
             }
 
-            push += offset.normalized *
-                    (1f - distance / range);
+            float distance = Mathf.Sqrt(sqrDistance);
+            push += offset * ((1f - distance / range) / distance);
         }
 
         return push;
     }
 
-    private void HandleRotation(Vector3 dirToPlayer, float distance)
+    private void HandleRotation(Vector3 dirToPlayer)
     {
-        Vector3 lookDir;
-        if (distance <= enemyInfo.shootingRange ||
-            _velocity.sqrMagnitude < MinSpeedSquared)
-        {
-            lookDir = dirToPlayer;
-        }
-        else
-        {
-            lookDir = _velocity.normalized;
-        }
+        float targetAngle
+            = Mathf.Atan2(dirToPlayer.y, dirToPlayer.x) * Mathf.Rad2Deg - 90f;
+        float angleDiff = Mathf.DeltaAngle(_rb.rotation, targetAngle);
 
-        if (lookDir.sqrMagnitude < MinEnemyFacingDir)
-        {
-            return;
-        }
+        float targetSpin = Mathf.Clamp(angleDiff * TurnGain,
+            -enemyInfo.turnSpeed, enemyInfo.turnSpeed);
 
-        // Turn around Z so the ship's local up direction faces the target.
-        float angle = Mathf.Atan2(lookDir.y, lookDir.x) * Mathf.Rad2Deg - 90f;
+        float rotInput = Mathf.Clamp(
+            (targetSpin - _rb.angularVelocity) / SpinResponse, -1f, 1f);
 
-        // [CB] TODO: Make this call shipManager.Rotate
-        float turnAmount
-            = 1f - Mathf.Exp(-enemyInfo.turnSpeed * Time.deltaTime);
-        _rb.MoveRotation(Mathf.LerpAngle(_rb.rotation, angle, turnAmount));
+        shipManager.Rotate(-rotInput);
     }
 
     private void HandleShooting(Vector3 dirToPlayer, float distance)

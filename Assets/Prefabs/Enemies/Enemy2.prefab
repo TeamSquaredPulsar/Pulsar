@@ -100,13 +100,13 @@ Rigidbody2D:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 7200000001}
-  m_BodyType: 1
+  m_BodyType: 0
   m_Simulated: 1
   m_UseFullKinematicContacts: 0
   m_UseAutoMass: 0
   m_Mass: 1
-  m_LinearDamping: 0
-  m_AngularDamping: 0.05
+  m_LinearDamping: 0.75
+  m_AngularDamping: 1
   m_GravityScale: 0
   m_Material: {fileID: 0}
   m_IncludeLayers:
@@ -118,7 +118,7 @@ Rigidbody2D:
   m_Interpolate: 0
   m_SleepingMode: 1
   m_CollisionDetection: 0
-  m_Constraints: 4
+  m_Constraints: 0
 --- !u!66 &7200000007
 CompositeCollider2D:
   m_ObjectHideFlags: 0
@@ -315,10 +315,6 @@ PrefabInstance:
       propertyPath: m_ConnectedRigidBody
       value: 
       objectReference: {fileID: 7200000006}
-    - target: {fileID: 8993274152522921009, guid: d41f92095f77c0c419e9feb661d7963f, type: 3}
-      propertyPath: m_Constraints
-      value: 7
-      objectReference: {fileID: 0}
     - target: {fileID: 9113379072927920375, guid: d41f92095f77c0c419e9feb661d7963f, type: 3}
       propertyPath: m_Name
       value: p_Thruster_Bottom
@@ -404,10 +400,6 @@ PrefabInstance:
       propertyPath: m_ConnectedRigidBody
       value: 
       objectReference: {fileID: 7200000006}
-    - target: {fileID: 8993274152522921009, guid: d41f92095f77c0c419e9feb661d7963f, type: 3}
-      propertyPath: m_Constraints
-      value: 7
-      objectReference: {fileID: 0}
     - target: {fileID: 9113379072927920375, guid: d41f92095f77c0c419e9feb661d7963f, type: 3}
       propertyPath: m_Name
       value: p_Thruster_Left
@@ -489,10 +481,6 @@ PrefabInstance:
       propertyPath: m_ConnectedRigidBody
       value: 
       objectReference: {fileID: 7200000006}
-    - target: {fileID: 7347581372079830787, guid: 9d9b88b2fc3b2374c83c9e59dadfb864, type: 3}
-      propertyPath: m_Constraints
-      value: 7
-      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -563,10 +551,6 @@ PrefabInstance:
       propertyPath: m_ConnectedRigidBody
       value: 
       objectReference: {fileID: 7200000006}
-    - target: {fileID: 8993274152522921009, guid: d41f92095f77c0c419e9feb661d7963f, type: 3}
-      propertyPath: m_Constraints
-      value: 7
-      objectReference: {fileID: 0}
     - target: {fileID: 9113379072927920375, guid: d41f92095f77c0c419e9feb661d7963f, type: 3}
       propertyPath: m_Name
       value: p_Thruster_Right
@@ -648,10 +632,6 @@ PrefabInstance:
       propertyPath: m_ConnectedAnchor.x
       value: -1
       objectReference: {fileID: 0}
-    - target: {fileID: 7347581372079830787, guid: e218f197edbb137478393036d044a214, type: 3}
-      propertyPath: m_Constraints
-      value: 7
-      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -722,10 +702,6 @@ PrefabInstance:
       propertyPath: m_BodyType
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 7347581372079830787, guid: e218f197edbb137478393036d044a214, type: 3}
-      propertyPath: m_Constraints
-      value: 7
-      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -787,10 +763,6 @@ PrefabInstance:
     - target: {fileID: 2402461002857692903, guid: 299d41e283e4cf3489719224f243ca9e, type: 3}
       propertyPath: m_Name
       value: p_TripleGun
-      objectReference: {fileID: 0}
-    - target: {fileID: 2522681453652910296, guid: 299d41e283e4cf3489719224f243ca9e, type: 3}
-      propertyPath: m_Constraints
-      value: 7
       objectReference: {fileID: 0}
     - target: {fileID: 3439183271994269019, guid: 299d41e283e4cf3489719224f243ca9e, type: 3}
       propertyPath: m_ConnectedAnchor.y
