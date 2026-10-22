@@ -50,6 +50,8 @@ public abstract class Tile : MonoBehaviour
 
     public event Action<Tile> DestroyEvent;
 
+    public Sprite Sprite => spriteRenderer.sprite;
+    
     public void Start()
     {
         health.DestroyEvent += OnDead;
@@ -85,31 +87,8 @@ public abstract class Tile : MonoBehaviour
     }
 
     public void TakeDamage(float damage) => health.TakeDamage(damage);
-
-    // protected void InitFloating(
-    //     TileInfoSO tileInfoSo,
-    //     Vector3 position,
-    //     Vector2 velocity)
-    // {
-    //     TileInfo = tileInfoSo;
-    //     CurrentHp = tileInfoSo.hp;
-    //     Rotation = 0;
-    //
-    //     spriteRenderer = CreateVisual(transform);
-    //
-    //     spriteRenderer.sprite = tileInfoSo.sprite;
-    //
-    //     // floatRb = GetComponent<Rigidbody2D>();
-    //     tileCollider = GetComponent<BoxCollider2D>();
-    //     tileCollider.isTrigger = true;
-    //     tileCollider.size
-    //         = Vector2.one;
-    //
-    //     transform.position = position;
-    //     ReleaseToFloating(velocity,
-    //         Random.Range(-45f, 45f));
-    // }
-    //
+    
+    
     // public void AttachTo(ShipManager manager, Vector2Int gridCell, int rot)
     // {
     //     // floatRb.bodyType = RigidbodyType2D.Static;

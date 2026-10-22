@@ -117,6 +117,7 @@ public class BuildManager : MonoBehaviour
         {
             _selectedTile = result.Value;
             _selectedTile.Select(selectedTint);
+            
             _updateRadialRoutine = StartCoroutine(UpdateRadialMenu());
             UpdateSelectedTile();
         }
@@ -205,7 +206,7 @@ public class BuildManager : MonoBehaviour
         // apply _attachRotation to selectedTile to display the preview in world space
         Quaternion rotation = manager.transform.rotation * ShipUtilities.RotateQuarterOnZAxis(
                                   _attachRotation);
-        _ghostPreview.Show(_selectedTile.TileInfo.sprite,
+        _ghostPreview.Show(_selectedTile.Sprite,
             manager.CellToWorld(_attachCell), rotation);
     }
 
