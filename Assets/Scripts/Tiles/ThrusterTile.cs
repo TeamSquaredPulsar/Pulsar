@@ -1,4 +1,3 @@
-using Pulsar.Ship.Extensions;
 using UnityEngine;
 
 public class ThrusterTile : Tile
@@ -6,9 +5,6 @@ public class ThrusterTile : Tile
     
     [field: SerializeField]
     public float Thrust { get; private set; } = 0.1f;
-
-
-    public TileRotationEnum Orientation => Rotation.ToRotationEnum();
         
     public void Move(float amount, Rigidbody2D rb)
     {

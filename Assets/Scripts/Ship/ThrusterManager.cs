@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using Pulsar.Ship.Extensions;
 using UnityEngine;
 
 public struct ThrustAtRotation
@@ -115,7 +116,7 @@ public class ThrusterManager : MonoBehaviour
         
         foreach (ThrusterTile thruster in thrusters)
         {
-            _directedThrust[(int)thruster.Orientation].Thrust
+            _directedThrust[thruster.Rotation.ToInt()].Thrust
                 += thruster.Thrust;
         }
     }

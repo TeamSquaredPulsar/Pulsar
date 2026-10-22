@@ -14,6 +14,7 @@ GameObject:
   - component: {fileID: 8893891361912782109}
   - component: {fileID: 8716755017154123671}
   - component: {fileID: 70888490315140228}
+  - component: {fileID: 8460810046222660286}
   m_Layer: 0
   m_Name: Player
   m_TagString: Player
@@ -53,6 +54,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::PlayerController
   input: {fileID: 11400000, guid: c5eb4fca90495374ca60a24df65307ec, type: 2}
   shipManager: {fileID: 35744134826503047}
+  buildManager: {fileID: 8460810046222660286}
 --- !u!114 &35744134826503047
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -161,6 +163,26 @@ CompositeCollider2D:
   m_OffsetDistance: 0.00005
   m_UseDelaunayMesh: 0
   m_CompositeGameObject: {fileID: 1843940356141040302}
+--- !u!114 &8460810046222660286
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1843940356141040302}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5d6900ccf0fa38440855020412688b02, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::BuildManager
+  manager: {fileID: 35744134826503047}
+  pRadialMenu: {fileID: 2490686879028518305, guid: b31b6d3a619a3cc44884476f1dae46be, type: 3}
+  pGhostPreview: {fileID: 3382425969508598405, guid: 5bd9b6b1610f16d458e9be865d35f0e4, type: 3}
+  scanPadding: 2.5
+  selectedTint: {r: 0.3, g: 1, b: 0.8, a: 1}
+  detachTint: {r: 1, g: 0, b: 0, a: 1}
+  pullSpeed: 8
+  orbitDegreesPerSecond: 90
 --- !u!1001 &2200979466231590027
 PrefabInstance:
   m_ObjectHideFlags: 0

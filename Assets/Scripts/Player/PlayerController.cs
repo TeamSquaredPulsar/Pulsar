@@ -2,7 +2,7 @@ using Nrjwolf.Tools.AttachAttributes;
 using Pulsar.Utilities.Utilities;
 using UnityEngine;
 
-[RequireComponent(typeof(ShipManager))]
+[RequireComponent(typeof(ShipManager), typeof(BuildManager))]
 public class PlayerController : MonoBehaviour
 {
     [SerializeField]
@@ -12,6 +12,10 @@ public class PlayerController : MonoBehaviour
     [SerializeField]
     private ShipManager shipManager;
 
+    [GetComponent]
+    [SerializeField]
+    private BuildManager buildManager;
+
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     private void Start()
     {
@@ -19,27 +23,28 @@ public class PlayerController : MonoBehaviour
         RegisterInputCallbacks();
     }
 
-    private void OnSelectTile(Result<Tile> obj)
+    private void OnSelectTile(Result<Tile> result)
     {
-        if (!obj.IsSuccess)
+        if (!result.IsSuccess)
         {
             //TODO Logic for deselecting
+            buildManager.DeselectTile();
             return;
         }
-        Tile tile = obj.Value;
-        
+
+        Tile tile = result.Value;
+
         //TODO: Logic for selecting
         //If tile is part of this ship
         if (shipManager.OwnsTile(tile))
         {
             //Start a coroutine; if the coroutine expires, destroy the tile
-            
         }
-        
-        //else if the tile isn't attached
-            // Enable the radial menu
-            // Snap it to radial menu
-            // Start ghost preview
+        else if (!tile.IsAttached)
+        {
+            //Tell the build manager we've selected a new tile.
+            buildManager.OnSelectTile(result);
+        }
     }
 
     private void OnDestroy()
@@ -62,9 +67,6 @@ public class PlayerController : MonoBehaviour
         shipManager.Rotate(obj);
     }
 
-    // TODO: Can make an event where the player
-    //  can listen for it and manage the player weapon list themselves.
-    //  For performance reasons
     private void HandleShoot()
     {
         shipManager.Fire();

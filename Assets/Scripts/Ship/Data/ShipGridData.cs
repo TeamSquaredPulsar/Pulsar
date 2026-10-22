@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Linq;
 using Pulsar.Ship.Ship.Extensions;
 using UnityEngine;
 
@@ -7,6 +8,7 @@ public class ShipGridData
     private readonly Dictionary<Vector2Int, Tile> _cells = new();
 
     public IReadOnlyDictionary<Vector2Int, Tile> Cells => _cells;
+    public IReadOnlyList<Tile> Tiles => _cells.Values.ToList();
 
     public CoreTile Core { get; private set; }
 
@@ -26,7 +28,7 @@ public class ShipGridData
         _cells[index] = tile;
     }
 
-    public void SetTile(Vector2Int cell, Tile tile)
+    public void SetTile(Vector2Int cell, Tile tile, Rigidbody2D rb)
     {
         if (!_cells.TryAdd(cell, tile))
         {
@@ -35,14 +37,14 @@ public class ShipGridData
             return;
         }
 
-        tile.SetAttached(true);
+        tile.Attach(true, rb);
     }
 
-    public bool RemoveTile(Vector2Int cell)
+    public bool RemoveTile(Vector2Int cell, Rigidbody2D rb)
     {
         if (TryGetTile(cell, out Tile tile))
         {
-            tile.SetAttached(true);
+            tile.Attach(true, rb);
         }
 
         return _cells.Remove(cell);

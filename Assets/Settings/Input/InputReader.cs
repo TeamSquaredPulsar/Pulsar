@@ -16,13 +16,7 @@ public class InputReader : ScriptableObject, IPlayerActions, IInputReader
     public event Action ShootEvent;
     public event Action<float> RotateEvent;
     public event Action<Vector2> MoveCursorEvent;
-
     public event Action<bool> SelectTileEvent;
-    
-    // public event Action<bool> DetachTileEvent;
-    // public event Action<bool> SelectFloatingTileEvent;
-    // public event Action<bool> ToggleRadialMenuEvent;
-    // public event Action<InputAction.CallbackContext> BuildTileEvent;
 
     [SerializeField]
     private CameraData camData;

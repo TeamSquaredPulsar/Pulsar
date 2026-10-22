@@ -55,16 +55,12 @@ public class PlayerCursor : MonoBehaviour
     
     private void OnTileSelect(bool isSelecting)
     {
-        //Am I actually hovering over a tile?
-        if (!_hoveredTile)
-        {
-            return;
-        }
-
-        //Am I deselecting?
-        if (!isSelecting)
+        if (!isSelecting || !_hoveredTile)
         {
             _selectedTile = null;
+            SelectTileEvent?.Invoke(
+                new Result<Tile>(false, null));
+            return;
         }
 
         //Don't raise more events than we need to
@@ -74,7 +70,7 @@ public class PlayerCursor : MonoBehaviour
         }
         
         _selectedTile = _hoveredTile;
-        SelectTileEvent?.Invoke(new Result<Tile>(isSelecting, _selectedTile));
+        SelectTileEvent?.Invoke(new Result<Tile>(true, _selectedTile));
     }
 
     private void OnCursorMove(Vector2 obj)
@@ -86,7 +82,6 @@ public class PlayerCursor : MonoBehaviour
         transform.position = worldPos;
     }
 
-
     private void OnTriggerEnter2D(Collider2D other)
     {
         if (!TryProcessColliderTrigger(other, out Tile collidedTile))
@@ -95,6 +90,7 @@ public class PlayerCursor : MonoBehaviour
         }
         _hoveredTile = collidedTile;
     }
+    
 
     private bool TryProcessColliderTrigger(
         Collider2D other,

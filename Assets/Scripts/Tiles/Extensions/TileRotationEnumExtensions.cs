@@ -26,18 +26,23 @@ public static class TileRotationEnumExtensions
         };
     }
 
-    public static TileRotationEnum FromInt(this TileRotationEnum rot, int val)
+    public static TileRotationEnum Add(this TileRotationEnum rot, int value) =>
+        (rot.ToInt() + value).ToRotationEnum();
+
+    public static TileRotationEnum Add(
+        this TileRotationEnum self,
+        TileRotationEnum value) => self.Add(value.ToInt());
+
+    public static TileRotationEnum Opposite(this TileRotationEnum rot)
     {
-        int rotationPoints = Enum.GetNames(typeof(TileRotationEnum))
-            .Length;
-        int direction = val % rotationPoints;
-        return (TileRotationEnum)direction;
+        int half = Enum.GetNames(typeof(TileRotationEnum)).Length / 2;
+        return (rot.ToInt() + half).ToRotationEnum();
     }
 
     public static int ToInt(this TileRotationEnum rot) => (int)rot;
 
     public static TileRotationEnum PlusInt(
         this TileRotationEnum current,
-        int rot) => current.FromInt(current.ToInt() + rot);
+        int rot) => (current.ToInt() + rot).ToRotationEnum();
 }
 }

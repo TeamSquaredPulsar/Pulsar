@@ -1,28 +1,25 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using Nrjwolf.Tools.AttachAttributes;
-using Pulsar.Ship.Ship.Extensions;
+using Pulsar.Ship.Extensions;
+using Pulsar.Utilities.Utilities;
 using UnityEngine;
 
 [RequireComponent(typeof(CompositeCollider2D), typeof(Rigidbody2D))]
 public class ShipManager : MonoBehaviour
 {
-    public static readonly Vector2Int[] Dirs =
-    {
-        Vector2Int.up,
-        Vector2Int.right,
-        Vector2Int.down,
-        Vector2Int.left,
-    };
-
     [Header("Refs")]
-    [GetComponent][SerializeField]
+    [GetComponent]
+    [SerializeField]
     private CompositeCollider2D compositeCollider;
 
-    [GetComponent][SerializeField]
+    [GetComponent]
+    [SerializeField]
     private Rigidbody2D rb;
 
-    [GetComponent][SerializeField]
+    [GetComponent]
+    [SerializeField]
     private ThrusterManager thrusterManager;
 
     [SerializeField]
@@ -38,25 +35,26 @@ public class ShipManager : MonoBehaviour
     [SerializeField]
     private Vector2 detachRadiateAngularVelocity = new(-180f, 180f);
 
-    private ShipGridData GridData { get; } = new();
-    
-    public CoreTile Core => GridData.Core;
+    private ShipGridData _gridData = new();
 
-    public IReadOnlyDictionary<Vector2Int, Tile> Cells => GridData.Cells;
+    [field: SerializeField]
+    public CoreTile Core { get; private set; }
+
+    public IReadOnlyDictionary<Vector2Int, Tile> Cells => _gridData.Cells;
     public bool OwnsTile(Tile tile) => Cells.Values.Contains(tile);
-    
-    private void Awake()
-    {
-        rb ??= GetComponent<Rigidbody2D>();
-
-        // ShipUtilities.FloatingTileRbConstrain(Rb);
-    }
 
     private void Start()
     {
+        RefreshTiles();
+    }
+
+    private void RefreshTiles()
+    {
+        _gridData = new ShipGridData();
+        weapons = new List<WeaponTile>();
+        thrusters = new List<ThrusterTile>();
         foreach (Tile tile in GetComponentsInChildren<Tile>())
         {
-            tile.GetComponent<FixedJoint2D>().connectedBody = rb;
             switch (tile)
             {
                 case ThrusterTile thruster:
@@ -67,12 +65,15 @@ public class ShipManager : MonoBehaviour
                     weapon.SetParentCollider(compositeCollider);
                     break;
                 case CoreTile core:
-                    GridData.SetCore(core);
+                    _gridData.SetCore(core);
+                    Core = core;
                     break;
             }
 
-            GridData.SetTile(
-                tile.transform.position.ToVector2Int(), tile);
+            _gridData.SetTile(
+                tile.transform.position.ToVector2Int(),
+                tile,
+                rb);
             tile.DestroyEvent += HandleTileDestroyed;
         }
     }
@@ -88,7 +89,7 @@ public class ShipManager : MonoBehaviour
     private void OnCollisionEnter2D(Collision2D other)
     {
         const int contactPointIndex = 0;
-        if (!GridData.TryGetClosestTile(
+        if (!_gridData.TryGetClosestTile(
                 other.GetContact(contactPointIndex).point,
                 out Tile tile))
         {
@@ -115,25 +116,7 @@ public class ShipManager : MonoBehaviour
     {
         //TODO implement tile destruction logic here
     }
-
-    // private void UpdateWeaponColliders()
-    // {
-    //     foreach (WeaponTile weapon in weapons)
-    //     {
-    //         weapon.SetParentCollider(compositeCollider);
-    //     }
-    // }
-
-    private static int Opposite(int d) => (d + 2) % 4;
-
-    // private void SpawnCore()
-    // {
-    //     Tile tile = Tile.CreateTile<CoreTile>(coreInfoSo, Vector2Int.zero);
-    //     tile.gameObject.name = "Core";
-    //     tile.AttachTo(this, Vector2Int.zero, 0);
-    //     GridData.SetCore(Vector2Int.zero, tile);
-    //     tile.SetAttached(this);
-    // }
+    
 
     // returns a rectangle enclosing all ship tiles in the ship’s local space
     public Bounds GetLocalBounds()
@@ -153,46 +136,37 @@ public class ShipManager : MonoBehaviour
         }
 
         Vector2 size = max - min + Vector2.one;
-        return new Bounds(ShipUtilities.GridToLocal((min + max) * 0.5f),
+        return new Bounds(
+            ShipUtilities.GridToLocal((min + max) * 0.5f),
             new Vector3(size.x, size.y, 0f));
     }
 
     public Vector3 CellToWorld(Vector2Int cell) =>
         transform.TransformPoint(ShipUtilities.GridToLocal(cell));
 
-    public Tile GetTileAtWorldPos(Vector3 worldPos)
-    {
-        Vector2 local
-            = ShipUtilities.LocalToGrid(
-                transform.InverseTransformPoint(worldPos));
-        Vector2Int cell = Vector2Int.RoundToInt(local);
-        GridData.TryGetTile(cell, out Tile tile);
-        return tile;
-    }
-
     #region ATTACH-DETACH
 
     public bool CanAttach(Vector2Int pos, TileInfoSO infoSo, int rotation)
     {
         // Cannot attach to an occupied cell
-        if (GridData.ContainsCell(pos))
+        if (_gridData.ContainsCell(pos))
         {
             return false;
         }
-
-        for (int d = 0; d < 4; d++)
+        
+        foreach(TileRotationEnum direction in Enum.GetValues(typeof(TileRotationEnum)))
         {
             // Get the tile edge facing this direction after rotation
-            int localDir = (d + rotation) % 4;
+            int localDir = direction.Add(rotation).ToInt();
             if (!infoSo.connectableEdges[localDir])
             {
                 continue;
             }
 
             // Check the neighbour's opposite edge; both touching edges must connect
-            Vector2Int neighborPos = pos + Dirs[d];
-            if (GridData.TryGetTile(neighborPos, out Tile neighbor)
-                && neighbor.EdgeConnectable(Opposite(d)))
+            Vector2Int neighborPos = pos + direction.ToVector2Int();
+            if (_gridData.TryGetTile(neighborPos, out Tile neighbor)
+                && neighbor.EdgeConnectable(direction.Opposite()))
             {
                 return true;
             }
@@ -201,28 +175,27 @@ public class ShipManager : MonoBehaviour
         return false;
     }
 
-    public int CountConnections(Vector2Int pos, TileInfoSO infoSo, int rotation)
+    private int CountConnections(Vector2Int pos, TileInfoSO infoSo, int rotation)
     {
         // Count all neighbours that can connect at this position and rotation
         int count = 0;
-        for (int d = 0; d < 4; d++)
+        foreach(TileRotationEnum direction in Enum.GetValues(typeof(TileRotationEnum)))
         {
             // Get the tile edge after rotation
-            int localDir = (d + rotation) % 4;
+            int localDir = direction.Add(rotation).ToInt();
             if (!infoSo.connectableEdges[localDir])
             {
                 continue;
             }
-
+    
             // Count only when both touching edges can connect
-            Vector2Int neighborPos = pos + Dirs[d];
-            if (GridData.TryGetTile(neighborPos, out Tile neighbor)
-                && neighbor.EdgeConnectable(Opposite(d)))
+            Vector2Int neighborPos = pos + direction.ToVector2Int();
+            if (_gridData.TryGetTile(neighborPos, out Tile neighbor)
+                && neighbor.EdgeConnectable(direction.Opposite()))
             {
                 count++;
             }
         }
-
         return count;
     }
 
@@ -270,82 +243,86 @@ public class ShipManager : MonoBehaviour
     //     OnShipDestroyed?.Invoke();
     // }
 
-    // public (Vector2Int cell, int rotation)? FindBestAttachment(
-    //     TileInfoSO infoSo,
-    //     Vector3 worldPos)
+    public Result<(Vector2Int cell, int rotation)> FindBestAttachment(
+        TileInfoSO infoSo,
+        Vector3 worldPos)
+    {
+        // Convert world position to ship grid position
+        Vector2 localPos = ShipUtilities.LocalToGrid(
+                transform.InverseTransformPoint(worldPos));
+
+        float bestDist = float.MaxValue;
+        int bestRot = -1;
+        int bestConnectionCount = 0;
+        Vector2Int bestCell = default;
+    // public static readonly Vector2Int[] Dirs =
     // {
-    //     // Convert world position to ship grid position
-    //     Vector2 localPos
-    //         = ShipUtilities.LocalToGrid(
-    //             transform.InverseTransformPoint(worldPos));
-    //
-    //     float bestDist = float.MaxValue;
-    //     int bestRot = -1; 
-    //     int bestConnectionCount = 0;
-    //     Vector2Int bestCell = default;
-    //
-    //     HashSet<Vector2Int> candidates = new();
-    //     foreach (Vector2Int occupied in Cells.Keys)
-    //     {
-    //         for (int d = 0; d < 4; d++)
-    //         {
-    //             candidates.Add(occupied + Dirs[d]);
-    //         }
-    //     }
-    //
-    //     float nearestDistance = float.MaxValue;
-    //
-    //         foreach (Vector2Int candidate in candidates)
-    //         {
-    //             if (!GridData.ContainsCell(candidate))
-    //                 nearestDistance = Mathf.Min(nearestDistance, Vector2.Distance(localPos, candidate));
-    //         }
-    //
-    //     foreach (Vector2Int candidate in candidates)
-    //     {
-    //         // Skip occupied cells
-    //         if (GridData.ContainsCell(candidate))
-    //         {
-    //             continue;
-    //         }
-    //
-    //         float dist = Vector2.Distance(localPos, candidate);
-    //         if (dist > nearestDistance + 0.01f) continue;
-    //
-    //         // Try all 4 rotations
-    //         for (int rot = 0; rot < 4; rot++)
-    //         {
-    //             if (!CanAttach(candidate, infoSo, rot))
-    //             {
-    //                 continue;
-    //             }
-    //
-    //             
-    //             // prefer more connections
-    //             int connectionCount = CountConnections(candidate, infoSo, rot);
-    //
-    //             if (bestRot == -1
-    //                 || dist < bestDist - 0.01f
-    //                 || (Mathf.Abs(dist - bestDist) < 0.01f &&
-    //                     connectionCount > bestConnectionCount))
-    //             {
-    //                 bestDist = dist;
-    //                 bestCell = candidate;
-    //                 bestRot = rot;
-    //                 bestConnectionCount = connectionCount;
-    //             }
-    //         }
-    //     }
-    //
-    //     if (bestRot == -1)
-    //     {
-    //         // No cell and rotation could connect
-    //         return null;
-    //     }
-    //
-    //     return (bestCell, bestRot);
-    // }
-    //
+    //     Vector2Int.up,
+    //     Vector2Int.right,
+    //     Vector2Int.down,
+    //     Vector2Int.left,
+    // };
+        HashSet<Vector2Int> candidates = new();
+        int directions = Enum.GetNames(typeof(TileRotationEnum)).Length;
+        foreach (Vector2Int occupied in Cells.Keys)
+        {
+            for (int d = 0; d < directions; d++)
+            {
+                candidates.Add(occupied + d.ToRotationEnum().ToVector2Int());
+                // candidates.Add(occupied + Dirs[d]);
+            }
+        }
+
+        float nearestDistance = candidates
+            .Where(candidate => !_gridData.ContainsCell(candidate))
+            .Aggregate(float.MaxValue,
+                (current, candidate) => Mathf.Min(
+                    current, Vector2.Distance(localPos, candidate)
+                ));
+
+        foreach (Vector2Int candidate in candidates)
+        {
+            // Skip occupied cells
+            if (_gridData.ContainsCell(candidate))
+            {
+                continue;
+            }
+
+            float dist = Vector2.Distance(localPos, candidate);
+            if (dist > nearestDistance + 0.01f)
+            {
+                continue;
+            }
+
+            // Try all 4 rotations
+            for (int rot = 0; rot < directions; rot++)
+            {
+                if (!CanAttach(candidate, infoSo, rot))
+                {
+                    continue;
+                }
+                
+                // prefer more connections
+                int connectionCount = CountConnections(candidate, infoSo, rot);
+
+                if (bestRot == -1
+                    || dist < bestDist - 0.01f
+                    || (Mathf.Abs(dist - bestDist) < 0.01f &&
+                        connectionCount > bestConnectionCount))
+                {
+                    bestDist = dist;
+                    bestCell = candidate;
+                    bestRot = rot;
+                    bestConnectionCount = connectionCount;
+                }
+            }
+        }
+
+        return new Result<(Vector2Int cell, int rotation)>(
+            bestRot != -1,
+            (bestCell, bestRot));
+    }
+
     // private int DetachOrphans()
     // {
     //     // Get all tiles still connect to Core
@@ -419,38 +396,38 @@ public class ShipManager : MonoBehaviour
     // }
 
     // BFS
-    private HashSet<Vector2Int> Flood(Vector2Int start)
-    {
-        Queue<Vector2Int> open = new();
-        HashSet<Vector2Int> closed = new() { start, };
-        open.Enqueue(start);
-
-        while (open.Count > 0)
-        {
-            Vector2Int c = open.Dequeue();
-            Tile tile = Cells[c];
-            for (int direction = 0; direction < 4; direction++)
-            {
-                Vector2Int n = c + Dirs[direction];
-                if (closed.Contains(n) ||
-                    !GridData.TryGetTile(n, out Tile cell))
-                {
-                    continue;
-                }
-
-                if (!tile.EdgeConnectable(direction) ||
-                    !cell.EdgeConnectable(Opposite(direction)))
-                {
-                    continue;
-                }
-
-                closed.Add(n);
-                open.Enqueue(n);
-            }
-        }
-
-        return closed;
-    }
+    // private HashSet<Vector2Int> Flood(Vector2Int start)
+    // {
+    //     Queue<Vector2Int> open = new();
+    //     HashSet<Vector2Int> closed = new() { start, };
+    //     open.Enqueue(start);
+    //
+    //     while (open.Count > 0)
+    //     {
+    //         Vector2Int c = open.Dequeue();
+    //         Tile tile = Cells[c];
+    //         for (int direction = 0; direction < 4; direction++)
+    //         {
+    //             Vector2Int n = c + Dirs[direction];
+    //             if (closed.Contains(n) ||
+    //                 !GridData.TryGetTile(n, out Tile cell))
+    //             {
+    //                 continue;
+    //             }
+    //
+    //             if (!tile.EdgeConnectable(direction) ||
+    //                 !cell.EdgeConnectable(Opposite(direction)))
+    //             {
+    //                 continue;
+    //             }
+    //
+    //             closed.Add(n);
+    //             open.Enqueue(n);
+    //         }
+    //     }
+    //
+    //     return closed;
+    // }
 
     #endregion
 

@@ -1,7 +1,5 @@
 ﻿using UnityEngine;
 
-namespace Pulsar.Ship.Ship.Extensions
-{
 public static class RbExtensions
 {
     public static Rigidbody2D SetBuildRb(
@@ -29,5 +27,4 @@ public static class RbExtensions
         original.angularVelocity = angularVelocity;
         return original;
     }
-}
 }

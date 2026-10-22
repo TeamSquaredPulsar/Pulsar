@@ -49,11 +49,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a67b0512fd43dd54694d67707c2d8809, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::CoreTile
+  baseColor: {r: 1, g: 1, b: 1, a: 1}
   <TileInfo>k__BackingField: {fileID: 11400000, guid: 2fc0edad448d5f34e831dd954138aabd, type: 2}
+  joint: {fileID: 5645610968371623086}
   spriteRenderer: {fileID: 497275641067805184}
   tileCollider: {fileID: 2260344807008050488}
+  rigidBody: {fileID: 7347581372079830787}
   health: {fileID: 2303072813145309213}
-  baseColor: {r: 1, g: 1, b: 1, a: 1}
 --- !u!212 &497275641067805184
 SpriteRenderer:
   serializedVersion: 2
