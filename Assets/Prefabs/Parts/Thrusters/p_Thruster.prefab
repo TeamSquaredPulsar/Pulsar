@@ -54,7 +54,7 @@ MonoBehaviour:
   tileCollider: {fileID: 6303449030629206126}
   health: {fileID: 8159396282816949206}
   baseColor: {r: 1, g: 1, b: 1, a: 1}
-  thrust: 5
+  thrust: 3
 --- !u!212 &8688311974718774552
 SpriteRenderer:
   serializedVersion: 2
