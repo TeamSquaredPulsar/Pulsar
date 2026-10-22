@@ -1,10 +1,13 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
-using Pulsar.Utilities;
+using Pulsar.Ship.Extensions;
 using UnityEngine;
 
 public class ShipGridData
 {
+    public event Action<Tile> TileOrphanedEvent;
+    
     private readonly Dictionary<Vector2Int, Tile> _cells = new();
 
     public IReadOnlyDictionary<Vector2Int, Tile> Cells => _cells;
@@ -21,12 +24,7 @@ public class ShipGridData
     {
         Core = tile;
     }
-
-    public void SetTile(Tile tile)
-    {
-        Vector2Int index = tile.transform.position.ToVector2Int();
-        _cells[index] = tile;
-    }
+    
 
     public void SetTile(Vector2Int cell, Tile tile, Rigidbody2D rb)
     {
@@ -38,16 +36,20 @@ public class ShipGridData
         }
 
         tile.Attach(true, rb);
+        tile.Cell = cell;
     }
 
     public bool RemoveTile(Vector2Int cell, Rigidbody2D rb)
     {
         if (TryGetTile(cell, out Tile tile))
         {
-            tile.Attach(true, rb);
+            tile.Attach(false, rb);
         }
 
-        return _cells.Remove(cell);
+        bool result = _cells.Remove(cell);
+        DetachOrphans();
+
+        return result;
     }
 
     /// <summary>
@@ -55,7 +57,7 @@ public class ShipGridData
     /// </summary>
     /// <param name="hitPoint"></param>
     /// <returns></returns>
-    public Tile GetClosestTile(
+    private Tile GetClosestTile(
         Vector2 hitPoint)
     {
         Tile closestTile = null;
@@ -97,5 +99,55 @@ public class ShipGridData
     {
         closestTile = GetClosestTile(hitPoint);
         return closestTile != null;
+    }
+
+    private void DetachOrphans()
+    {
+        // Get all tiles still connect to Core
+        HashSet<Vector2Int> reachable = Flood(Core.Cell);
+
+        // Remove all tiles still in Cells which not connect to Core
+        Cells.Keys.Where(c => !reachable.Contains(c)).ToList().ForEach(c =>
+        {
+            if (TryGetTile(c, out Tile tile))
+            {
+                TileOrphanedEvent?.Invoke(tile);
+            }
+        });
+    }
+    
+    //BFS
+    private HashSet<Vector2Int> Flood(Vector2Int start)
+    {
+        Queue<Vector2Int> open = new();
+        HashSet<Vector2Int> closed = new() { start, };
+        open.Enqueue(start);
+    
+        while (open.Count > 0)
+        {
+            Vector2Int cellIndex = open.Dequeue();
+            Tile tile = Cells[cellIndex];
+            
+            foreach(TileRotationEnum direction in Enum.GetValues(typeof(TileRotationEnum)))
+            {
+                Vector2Int nextIndex = cellIndex + direction.ToVector2Int();
+                if (closed.Contains(nextIndex) ||
+                    TryGetTile(nextIndex, out Tile cell))
+                {
+                    continue;
+                }
+    
+                if (!tile.EdgeConnectable(direction) ||
+                    !cell.EdgeConnectable(direction.Opposite()))
+                {
+                    continue;
+                }
+    
+                closed.Add(nextIndex);
+                open.Enqueue(nextIndex);
+            }
+        }
+    
+        return closed;
     }
 }

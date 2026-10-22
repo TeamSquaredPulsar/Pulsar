@@ -5,6 +5,7 @@ using Nrjwolf.Tools.AttachAttributes;
 using Pulsar.Ship.Extensions;
 using Pulsar.Utilities;
 using UnityEngine;
+using Random = UnityEngine.Random;
 
 [RequireComponent(typeof(CompositeCollider2D), typeof(Rigidbody2D))]
 public class ShipManager : MonoBehaviour
@@ -46,7 +47,24 @@ public class ShipManager : MonoBehaviour
     private void Start()
     {
         RefreshTiles();
+        _gridData.TileOrphanedEvent += HandleOrphanTiles;
     }
+    
+    private void OnDestroy()
+    {
+        _gridData.TileOrphanedEvent -= HandleOrphanTiles;
+        foreach (Tile tile in _gridData.Tiles)
+        {
+            tile.DestroyEvent -= HandleTileDestroyed;
+        }
+    }
+    
+    public void AttachTile(Vector2Int cell, Tile tile)
+    {
+        ProcessTile(tile);
+        _gridData.SetTile(cell, tile, rb);
+    }
+
 
     private void RefreshTiles()
     {
@@ -55,27 +73,32 @@ public class ShipManager : MonoBehaviour
         thrusters = new List<ThrusterTile>();
         foreach (Tile tile in GetComponentsInChildren<Tile>())
         {
-            switch (tile)
-            {
-                case ThrusterTile thruster:
-                    thrusters.Add(thruster);
-                    break;
-                case WeaponTile weapon:
-                    weapons.Add(weapon);
-                    weapon.SetParentCollider(compositeCollider);
-                    break;
-                case CoreTile core:
-                    _gridData.SetCore(core);
-                    Core = core;
-                    break;
-            }
-
-            _gridData.SetTile(
-                tile.transform.position.ToVector2Int(),
-                tile,
-                rb);
-            tile.DestroyEvent += HandleTileDestroyed;
+            ProcessTile(tile);
         }
+    }
+
+    private void ProcessTile(Tile tile)
+    {
+        switch (tile)
+        {
+            case ThrusterTile thruster:
+                thrusters.Add(thruster);
+                break;
+            case WeaponTile weapon:
+                weapons.Add(weapon);
+                weapon.SetParentCollider(compositeCollider);
+                break;
+            case CoreTile core:
+                _gridData.SetCore(core);
+                Core = core;
+                break;
+        }
+
+        _gridData.SetTile(
+            tile.transform.position.ToVector2Int(),
+            tile,
+            rb);
+        tile.DestroyEvent += HandleTileDestroyed;
     }
 
     public void Fire()
@@ -116,7 +139,6 @@ public class ShipManager : MonoBehaviour
     {
         //TODO implement tile destruction logic here
     }
-    
 
     // returns a rectangle enclosing all ship tiles in the ship’s local space
     public Bounds GetLocalBounds()
@@ -146,15 +168,16 @@ public class ShipManager : MonoBehaviour
 
     #region ATTACH-DETACH
 
-    public bool CanAttach(Vector2Int pos, TileInfoSO infoSo, int rotation)
+    private bool CanAttach(Vector2Int pos, TileInfoSO infoSo, int rotation)
     {
         // Cannot attach to an occupied cell
         if (_gridData.ContainsCell(pos))
         {
             return false;
         }
-        
-        foreach(TileRotationEnum direction in Enum.GetValues(typeof(TileRotationEnum)))
+
+        foreach (TileRotationEnum direction in Enum.GetValues(
+                     typeof(TileRotationEnum)))
         {
             // Get the tile edge facing this direction after rotation
             int localDir = direction.Add(rotation).ToInt();
@@ -175,11 +198,15 @@ public class ShipManager : MonoBehaviour
         return false;
     }
 
-    private int CountConnections(Vector2Int pos, TileInfoSO infoSo, int rotation)
+    private int CountConnections(
+        Vector2Int pos,
+        TileInfoSO infoSo,
+        int rotation)
     {
         // Count all neighbours that can connect at this position and rotation
         int count = 0;
-        foreach(TileRotationEnum direction in Enum.GetValues(typeof(TileRotationEnum)))
+        foreach (TileRotationEnum direction in Enum.GetValues(
+                     typeof(TileRotationEnum)))
         {
             // Get the tile edge after rotation
             int localDir = direction.Add(rotation).ToInt();
@@ -187,7 +214,7 @@ public class ShipManager : MonoBehaviour
             {
                 continue;
             }
-    
+
             // Count only when both touching edges can connect
             Vector2Int neighborPos = pos + direction.ToVector2Int();
             if (_gridData.TryGetTile(neighborPos, out Tile neighbor)
@@ -196,27 +223,9 @@ public class ShipManager : MonoBehaviour
                 count++;
             }
         }
+
         return count;
     }
-
-    // public bool Attach(Vector2Int pos, Tile tile, int rotation)
-    // {
-    //     if (tile == null || tile.IsAttached || tile.TileInfo == null)
-    //     {
-    //         return false;
-    //     }
-    //
-    //     if (!CanAttach(pos, tile.TileInfo, rotation))
-    //     {
-    //         return false;
-    //     }
-    //
-    //     tile.AttachTo(this, pos, rotation);
-    //     GridData.SetTile(pos, tile);
-    //     tile.SetAttached(this);
-    //     OnTileAdded?.Invoke();
-    //     return true;
-    // }
 
     // public void DestroyTileAt(Vector2Int pos)
     // {
@@ -249,26 +258,26 @@ public class ShipManager : MonoBehaviour
     {
         // Convert world position to ship grid position
         Vector2 localPos = ShipUtilities.LocalToGrid(
-                transform.InverseTransformPoint(worldPos));
+            transform.InverseTransformPoint(worldPos));
 
         float bestDist = float.MaxValue;
         int bestRot = -1;
         int bestConnectionCount = 0;
         Vector2Int bestCell = default;
-    // public static readonly Vector2Int[] Dirs =
-    // {
-    //     Vector2Int.up,
-    //     Vector2Int.right,
-    //     Vector2Int.down,
-    //     Vector2Int.left,
-    // };
+        // public static readonly Vector2Int[] Dirs =
+        // {
+        //     Vector2Int.up,
+        //     Vector2Int.right,
+        //     Vector2Int.down,
+        //     Vector2Int.left,
+        // };
         HashSet<Vector2Int> candidates = new();
-        int directions = Enum.GetNames(typeof(TileRotationEnum)).Length;
         foreach (Vector2Int occupied in Cells.Keys)
         {
-            for (int d = 0; d < directions; d++)
+            foreach (TileRotationEnum direction in Enum.GetValues(
+                         typeof(TileRotationEnum)))
             {
-                candidates.Add(occupied + d.ToRotationEnum().ToVector2Int());
+                candidates.Add(occupied + direction.ToVector2Int());
             }
         }
 
@@ -294,15 +303,18 @@ public class ShipManager : MonoBehaviour
             }
 
             // Try all 4 rotations
-            for (int rot = 0; rot < directions; rot++)
+            foreach (TileRotationEnum direction in Enum.GetValues(
+                         typeof(TileRotationEnum)))
             {
-                if (!CanAttach(candidate, infoSo, rot))
+                // TODO: [CB] See if we can make these functions take a TileRotation in.
+                if (!CanAttach(candidate, infoSo, direction.ToInt()))
                 {
                     continue;
                 }
-                
+
                 // prefer more connections
-                int connectionCount = CountConnections(candidate, infoSo, rot);
+                int connectionCount
+                    = CountConnections(candidate, infoSo, direction.ToInt());
 
                 if (bestRot == -1
                     || dist < bestDist - 0.01f
@@ -311,7 +323,7 @@ public class ShipManager : MonoBehaviour
                 {
                     bestDist = dist;
                     bestCell = candidate;
-                    bestRot = rot;
+                    bestRot = direction.ToInt();
                     bestConnectionCount = connectionCount;
                 }
             }
@@ -322,111 +334,49 @@ public class ShipManager : MonoBehaviour
             (bestCell, bestRot));
     }
 
-    // private int DetachOrphans()
-    // {
-    //     // Get all tiles still connect to Core
-    //     HashSet<Vector2Int> reachable = Flood(Core.Cell);
-    //     
-    //     // Remove all tiles still in Cells which not connect to Core
-    //     List<Vector2Int> orphanKeys
-    //         = Cells.Keys.Where(c => !reachable.Contains(c)).ToList();
-    //     if (orphanKeys.Count == 0)
-    //     {
-    //         return 0;
-    //     }
-    //
-    //     // Save the ship's motion so released tiles inherit it.
-    //     Vector2 centerOfMass = Rb.worldCenterOfMass;
-    //     Vector2 linearVelocity = Rb.linearVelocity;
-    //     float angularVelocity = Rb.angularVelocity;
-    //     Vector2 explosionCenter = Core.transform.position;
-    //
-    //     float minSpeed = Mathf.Max(0f,
-    //         Mathf.Min(detachRadiateLinearVelocity.x,
-    //             detachRadiateLinearVelocity.y));
-    //     float maxSpeed = Mathf.Max(0f,
-    //         Mathf.Max(detachRadiateLinearVelocity.x,
-    //             detachRadiateLinearVelocity.y));
-    //     float minSpin = Mathf.Min(detachRadiateAngularVelocity.x,
-    //         detachRadiateAngularVelocity.y);
-    //     float maxSpin = Mathf.Max(detachRadiateAngularVelocity.x,
-    //         detachRadiateAngularVelocity.y);
-    //
-    //     // Release each orphan as a free-floating tile
-    //     int orphanTiles = 0;
-    //     foreach (Vector2Int c in orphanKeys)
-    //     {
-    //         if (!GridData.TryGetTile(c, out Tile tile))
-    //         {
-    //             continue;
-    //         }
-    //
-    //         Vector2 worldPos = tile.transform.position;
-    //
-    //         // Inherit movement 
-    //         Vector2 offset = worldPos - centerOfMass;
-    //         Vector2 velocity = linearVelocity +
-    //                            new Vector2(-offset.y, offset.x) *
-    //                            (angularVelocity * Mathf.Deg2Rad);
-    //         
-    //         // Push away from Core
-    //         Vector2 outward = worldPos - explosionCenter;
-    //         if (outward.sqrMagnitude < 0.0001f)
-    //         {
-    //             float angle = Random.Range(0f, 2f * Mathf.PI);
-    //             outward = new Vector2(Mathf.Cos(angle), Mathf.Sin(angle));
-    //         }
-    //
-    //         // Add an outward push and random spin to the inherited ship motion.
-    //         float speed = Random.Range(minSpeed, maxSpeed);
-    //         velocity += outward.normalized * speed;
-    //         float spin = Random.Range(minSpin, maxSpin);
-    //
-    //         tile.SetDetached(this);
-    //         GridData.RemoveTile(c);
-    //         
-    //         tile.ReleaseToFloating(velocity,
-    //             angularVelocity + spin);
-    //
-    //         orphanTiles++;
-    //     }
-    //     
-    //     return orphanTiles;
-    // }
+    private void HandleOrphanTiles(Tile tile)
+    {
+        // Save the ship's motion so released tiles inherit it.
+        Vector2 centerOfMass = rb.worldCenterOfMass;
+        Vector2 linearVelocity = rb.linearVelocity;
+        float angularVelocity = rb.angularVelocity;
+        Vector2 explosionCenter = Core.transform.position;
 
-    // BFS
-    // private HashSet<Vector2Int> Flood(Vector2Int start)
-    // {
-    //     Queue<Vector2Int> open = new();
-    //     HashSet<Vector2Int> closed = new() { start, };
-    //     open.Enqueue(start);
-    //
-    //     while (open.Count > 0)
-    //     {
-    //         Vector2Int c = open.Dequeue();
-    //         Tile tile = Cells[c];
-    //         for (int direction = 0; direction < 4; direction++)
-    //         {
-    //             Vector2Int n = c + Dirs[direction];
-    //             if (closed.Contains(n) ||
-    //                 !GridData.TryGetTile(n, out Tile cell))
-    //             {
-    //                 continue;
-    //             }
-    //
-    //             if (!tile.EdgeConnectable(direction) ||
-    //                 !cell.EdgeConnectable(Opposite(direction)))
-    //             {
-    //                 continue;
-    //             }
-    //
-    //             closed.Add(n);
-    //             open.Enqueue(n);
-    //         }
-    //     }
-    //
-    //     return closed;
-    // }
+        float minSpeed = Mathf.Max(0f,
+            Mathf.Min(detachRadiateLinearVelocity.x,
+                detachRadiateLinearVelocity.y));
+        float maxSpeed = Mathf.Max(0f,
+            Mathf.Max(detachRadiateLinearVelocity.x,
+                detachRadiateLinearVelocity.y));
+        float minSpin = Mathf.Min(detachRadiateAngularVelocity.x,
+            detachRadiateAngularVelocity.y);
+        float maxSpin = Mathf.Max(detachRadiateAngularVelocity.x,
+            detachRadiateAngularVelocity.y);
+
+        Vector2 worldPos = tile.transform.position;
+
+        // Inherit movement 
+        Vector2 offset = worldPos - centerOfMass;
+        Vector2 velocity = linearVelocity +
+                           new Vector2(-offset.y, offset.x) *
+                           (angularVelocity * Mathf.Deg2Rad);
+
+        // Push away from Core
+        Vector2 outward = worldPos - explosionCenter;
+        if (outward.sqrMagnitude < 0.0001f)
+        {
+            float angle = Random.Range(0f, 2f * Mathf.PI);
+            outward = new Vector2(Mathf.Cos(angle), Mathf.Sin(angle));
+        }
+
+        // Add an outward push and random spin to the inherited ship motion.
+        float speed = Random.Range(minSpeed, maxSpeed);
+        velocity += outward.normalized * speed;
+        float spin = Random.Range(minSpin, maxSpin);
+        _gridData.RemoveTile(tile.Cell, rb);
+        tile.EnableFloatingPhysics(velocity,
+            angularVelocity + spin);
+    }
 
     #endregion
 

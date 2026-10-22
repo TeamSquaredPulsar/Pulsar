@@ -15,7 +15,7 @@ public abstract class Tile : MonoBehaviour
     [SerializeField]
     private Color baseColor = Color.white;
 
-    public Vector2Int Cell { get; private set; }
+    public Vector2Int Cell { get; set; }
 
     public float CurrentHp { get; protected set; }
 
@@ -116,7 +116,7 @@ public abstract class Tile : MonoBehaviour
 
     public void BeginBuildControl() => rigidBody.SetBuildRb();
 
-    private void EnableFloatingPhysics(
+    public void EnableFloatingPhysics(
         Vector2 velocity,
         float angularVelocity)
     { 
@@ -155,6 +155,11 @@ public abstract class Tile : MonoBehaviour
         if (isAttached)
         {
             joint.connectedBody = rb;
+            transform.SetParent(rb.transform);
+        }
+        else
+        {
+            transform.SetParent(null);
         }
     }
 

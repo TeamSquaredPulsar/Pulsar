@@ -26,9 +26,6 @@ public class BuildManager : MonoBehaviour
     private Color selectedTint = new(0.3f, 1f, 0.8f, 1f);
 
     [SerializeField]
-    private Color detachTint = Color.red;
-
-    [SerializeField]
     [Min(0.1f)]
     private float pullSpeed = 8f;
 
@@ -38,7 +35,7 @@ public class BuildManager : MonoBehaviour
 
     private GhostPreview _ghostPreview;
     private RadialMenu _radialMenu;
-    
+
     private Tile _selectedTile;
     private bool _atOutline;
     private float _orbitAngle;
@@ -75,7 +72,6 @@ public class BuildManager : MonoBehaviour
 
     private void ToggleRadialMenu(bool isOn)
     {
-        Debug.Log($"Setting radial menu to {isOn}");
         if (isOn)
         {
             _radialMenu.Show();
@@ -86,14 +82,14 @@ public class BuildManager : MonoBehaviour
             _radialMenu?.Hide();
         }
     }
-    
+
     private IEnumerator UpdateRadialMenu()
     {
         while (_selectedTile)
         {
-                UpdateScanZoneShape();
-                UpdateSelectedTile();
-                yield return null;
+            UpdateScanZoneShape();
+            UpdateSelectedTile();
+            yield return null;
         }
     }
 
@@ -112,38 +108,42 @@ public class BuildManager : MonoBehaviour
 
     public void OnSelectTile(Result<Tile> result)
     {
-        ToggleRadialMenu(result.IsSuccess);
         if (result.IsSuccess)
         {
             _selectedTile = result.Value;
             _selectedTile.Select(selectedTint);
-            
+
             _updateRadialRoutine = StartCoroutine(UpdateRadialMenu());
             UpdateSelectedTile();
         }
         else
         {
+            // It's in a spot we can build it from
+            if (_atOutline && _ghostPreview.enabled)
+            {
+                _selectedTile.transform.position
+                    = _ghostPreview.transform.position;
+                _selectedTile.transform.rotation
+                    = _ghostPreview.transform.rotation;
+                manager.AttachTile(
+                    _selectedTile.transform.position.ToVector2Int(),
+                    _selectedTile);
+            }
+
             DeselectTile();
             StopCoroutine(_updateRadialRoutine);
             _updateRadialRoutine = null;
         }
-
-        // Enable the radial menu
-        // Snap it to radial menu
-        // Start ghost preview
-
-        // ClearSelection();
-        // ClearDestroyHighlight();
-        // _selectedTile = tile;
-        // _selectedTile.BeginBuildControl();
+        ToggleRadialMenu(result.IsSuccess);
     }
 
     public void DeselectTile()
     {
-        if(_selectedTile)
+        if (_selectedTile)
         {
             _selectedTile?.Deselect();
         }
+
         _selectedTile = null;
         ToggleRadialMenu(false);
         _ghostPreview?.Hide();
@@ -161,16 +161,17 @@ public class BuildManager : MonoBehaviour
                 return;
             }
         }
-        
+
         // Move around the oval; keep the angle between 0 and 2 PI
         _orbitAngle = Mathf.Repeat(
             _orbitAngle - Mathf.Max(0.1f, orbitDegreesPerSecond)
             * Mathf.Deg2Rad * Time.deltaTime,
             Mathf.PI * 2f);
-        
+
 
         // Keep the tile on the outline as the ship moves and rotates
-        _selectedTile.transform.position = _radialMenu.PointOnOutline(_orbitAngle);
+        _selectedTile.transform.position
+            = _radialMenu.PointOnOutline(_orbitAngle);
         UpdatePreview();
         _orbitAngle = _radialMenu.GetOutlineAngleFromTileToCore(
             manager.Core.transform.position,
@@ -191,75 +192,24 @@ public class BuildManager : MonoBehaviour
     private void UpdatePreview()
     {
         // Find a valid rotation at the nearest empty cells around the ship
-        Result<(Vector2Int cell, int rotation)> result = manager.FindBestAttachment(
-            _selectedTile.TileInfo, _selectedTile.transform.position);
+        Result<(Vector2Int cell, int rotation)> result
+            = manager.FindBestAttachment(
+                _selectedTile.TileInfo, _selectedTile.transform.position);
         if (!result.IsSuccess)
         {
             // Hide the preview when no attachment is possible there
             _ghostPreview.Hide();
             return;
         }
-        
+
         _attachCell = result.Value.cell;
         _attachRotation = result.Value.rotation;
-        
+
         // apply _attachRotation to selectedTile to display the preview in world space
-        Quaternion rotation = manager.transform.rotation * ShipUtilities.RotateQuarterOnZAxis(
+        Quaternion rotation = manager.transform.rotation
+                              * ShipUtilities.RotateQuarterOnZAxis(
                                   _attachRotation);
         _ghostPreview.Show(_selectedTile.Sprite,
             manager.CellToWorld(_attachCell), rotation);
     }
-
-    // private void UpdateDestroyMode()
-    // {
-    //     Tile tile = gameObject.AddComponent<CoreTile>();
-    //     // Tile tile = cursor ? cursor.RefreshHoveredTile() : null;
-    //     //? [CB] My god this is a lot of checks; can we simplify?
-    //     if (tile && (
-    //             !tile.IsAttached 
-    //             // || tile == manager.Core 
-    //             || !manager.Cells.TryGetValue(tile.Cell, out Tile ownedTile) 
-    //             || ownedTile != tile
-    //         ))
-    //     {
-    //         tile = null;
-    //     }
-    //
-    //     if (_highlightedTile && _highlightedTile != tile)
-    //     {
-    //         ClearDestroyHighlight();
-    //     }
-    //
-    //     if ( !tile 
-    //         // || tile == manager.Core 
-    //         || _highlightedTile == tile)
-    //     {
-    //         return;
-    //     }
-    //
-    //     _highlightedTile = tile;
-    //     tile.Highlight(detachTint);
-    // }
-    //
-    // public void DetachHoveringTile()
-    // {
-    //     if (!_highlightedTile)
-    //     {
-    //         return;
-    //     }
-    //
-    //     Vector2Int cell = _highlightedTile.Cell;
-    //     _highlightedTile = null;
-    //     // DestroyTileEvent?.Invoke(cell);
-    // }
-    //
-    // private void ClearDestroyHighlight()
-    // {
-    //     if (_highlightedTile)
-    //     {
-    //         _highlightedTile.Unhighlight();
-    //     }
-    //
-    //     _highlightedTile = null;
-    // }
 }
