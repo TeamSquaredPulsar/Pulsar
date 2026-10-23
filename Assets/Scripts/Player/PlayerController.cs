@@ -25,7 +25,7 @@ public class PlayerController : MonoBehaviour
         if (!result.IsSuccess)
         {
             //TODO Logic for deselecting
-            buildManager.DeselectTile();
+            buildManager.OnSelectTile(result);
             return;
         }
 

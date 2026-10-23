@@ -108,6 +108,6 @@ public class RadialMenu : MonoBehaviour
         return numerator / denominator;
     }
 
-    public void Show() => gameObject?.SetActive(true);
-    public void Hide() => gameObject?.SetActive(false);
+    public void Show() => gameObject.SetActive(true);
+    public void Hide() => gameObject.SetActive(false);
 }

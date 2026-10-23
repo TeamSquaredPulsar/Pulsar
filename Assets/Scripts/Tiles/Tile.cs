@@ -1,13 +1,12 @@
 using System;
 using Nrjwolf.Tools.AttachAttributes;
-using Pulsar.Ship.Extensions;
 using Pulsar.Utilities;
 using UnityEngine;
 
 [RequireComponent(typeof(BoxCollider2D),
     typeof(SpriteRenderer),
-    typeof(FixedJoint2D))]
-[RequireComponent(typeof(Health))]
+    typeof(Health))]
+[RequireComponent(typeof(Rigidbody2D))]
 public abstract class Tile : MonoBehaviour
 {
     private const int FloatingSortingOrder = 10;
@@ -22,15 +21,11 @@ public abstract class Tile : MonoBehaviour
     // 0 1 2 3 = 0 90 180 270 (counterclockwise)
     public TileRotationEnum Rotation { get; private set; }
 
-    [field:SerializeField]
+    [field: SerializeField]
     public bool IsAttached { get; private set; }
 
     [field: SerializeField]
     public TileInfoSO TileInfo { get; private set; }
-
-    [GetComponent]
-    [SerializeField]
-    private FixedJoint2D joint;
 
     [GetComponent]
     [SerializeField]
@@ -44,6 +39,8 @@ public abstract class Tile : MonoBehaviour
     [SerializeField]
     private Rigidbody2D rigidBody;
 
+    public float Mass => rigidBody.mass;
+    
     [GetComponent]
     [SerializeField]
     private Health health;
@@ -51,7 +48,7 @@ public abstract class Tile : MonoBehaviour
     public event Action<Tile> DestroyEvent;
 
     public Sprite Sprite => spriteRenderer.sprite;
-    
+
     public void Start()
     {
         health.DestroyEvent += OnDead;
@@ -87,22 +84,7 @@ public abstract class Tile : MonoBehaviour
     }
 
     public void TakeDamage(float damage) => health.TakeDamage(damage);
-    
-    
-    // public void AttachTo(ShipManager manager, Vector2Int gridCell, int rot)
-    // {
-    //     // floatRb.bodyType = RigidbodyType2D.Static;
-    //
-    //     Cell = gridCell;
-    //     Rotation = rot;
-    //     transform.SetParent(manager.transform, false);
-    //     transform.localPosition = ShipUtilities.GridToLocal(gridCell);
-    //     transform.localRotation = ShipUtilities.RotateQuarterOnZAxis(rot);
-    //     tileCollider.isTrigger = false;
-    //     spriteRenderer.sortingOrder = 0;
-    //     Unhighlight();
-    // }
-    //
+
     public void DisableBuildControl(Vector2 velocity, float angularVelocity)
     {
         transform.SetParent(null,
@@ -119,9 +101,8 @@ public abstract class Tile : MonoBehaviour
     public void EnableFloatingPhysics(
         Vector2 velocity,
         float angularVelocity)
-    { 
+    {
         rigidBody.SetFloatRb(velocity, angularVelocity);
-        joint.enableCollision = true;
     }
 
     //To ask whether the rotated tile can connect from dir
@@ -151,10 +132,9 @@ public abstract class Tile : MonoBehaviour
     public void Attach(bool isAttached, Rigidbody2D rb)
     {
         IsAttached = isAttached;
-        joint.enableCollision = !isAttached;
         if (isAttached)
         {
-            joint.connectedBody = rb;
+            rb.SetBuildRb();
             transform.SetParent(rb.transform);
         }
         else

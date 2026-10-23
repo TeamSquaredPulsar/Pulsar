@@ -47,12 +47,12 @@ public class ShipManager : MonoBehaviour
     private void Start()
     {
         RefreshTiles();
-        _gridData.TileOrphanedEvent += HandleOrphanTiles;
+        _gridData.TileOrphanedEvent += DetatchTile;
     }
     
     private void OnDestroy()
     {
-        _gridData.TileOrphanedEvent -= HandleOrphanTiles;
+        _gridData.TileOrphanedEvent -= DetatchTile;
         foreach (Tile tile in _gridData.Tiles)
         {
             tile.DestroyEvent -= HandleTileDestroyed;
@@ -63,6 +63,7 @@ public class ShipManager : MonoBehaviour
     {
         ProcessTile(tile);
         _gridData.SetTile(cell, tile, rb);
+        tile.DestroyEvent += HandleTileDestroyed;
     }
 
 
@@ -73,7 +74,7 @@ public class ShipManager : MonoBehaviour
         thrusters = new List<ThrusterTile>();
         foreach (Tile tile in GetComponentsInChildren<Tile>())
         {
-            ProcessTile(tile);
+            AttachTile(tile.transform.position.ToVector2Int(), tile);
         }
     }
 
@@ -93,12 +94,9 @@ public class ShipManager : MonoBehaviour
                 Core = core;
                 break;
         }
-
-        _gridData.SetTile(
-            tile.transform.position.ToVector2Int(),
-            tile,
-            rb);
-        tile.DestroyEvent += HandleTileDestroyed;
+        
+        rb.mass += tile.Mass;
+        
     }
 
     public void Fire()
@@ -137,6 +135,7 @@ public class ShipManager : MonoBehaviour
 
     private void HandleTileDestroyed(Tile tile)
     {
+        rb.mass -= tile.Mass;
         //TODO implement tile destruction logic here
     }
 
@@ -227,31 +226,6 @@ public class ShipManager : MonoBehaviour
         return count;
     }
 
-    // public void DestroyTileAt(Vector2Int pos)
-    // {
-    //     if (!GridData.TryGetTile(pos, out Tile tile))
-    //     {
-    //         return;
-    //     }
-    //
-    //     if (tile == Core)
-    //     {
-    //         OnCoreDestroyed();
-    //         return;
-    //     }
-    //
-    //     GridData.RemoveTile(pos);
-    //     tile.SetDetached(this);
-    //     Destroy(tile.gameObject);
-    //     int orphanTilesNum = DetachOrphans();
-    //     OnTilesRemoved?.Invoke(orphanTilesNum + 1);
-    // }
-
-    // private void OnCoreDestroyed()
-    // {
-    //     OnShipDestroyed?.Invoke();
-    // }
-
     public Result<(Vector2Int cell, int rotation)> FindBestAttachment(
         TileInfoSO infoSo,
         Vector3 worldPos)
@@ -334,7 +308,7 @@ public class ShipManager : MonoBehaviour
             (bestCell, bestRot));
     }
 
-    private void HandleOrphanTiles(Tile tile)
+    private void DetatchTile(Tile tile)
     {
         // Save the ship's motion so released tiles inherit it.
         Vector2 centerOfMass = rb.worldCenterOfMass;
@@ -376,6 +350,7 @@ public class ShipManager : MonoBehaviour
         _gridData.RemoveTile(tile.Cell, rb);
         tile.EnableFloatingPhysics(velocity,
             angularVelocity + spin);
+        rb.mass -= tile.Mass;
     }
 
     #endregion

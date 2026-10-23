@@ -108,10 +108,8 @@ public class BuildManager : MonoBehaviour
 
     public void OnSelectTile(Result<Tile> result)
     {
-        Debug.Log("We sure did click a tile");
         if (result.IsSuccess)
         {
-            Debug.Log("Successfully, even!");
             _selectedTile = result.Value;
             _selectedTile.Select(selectedTint);
 
@@ -127,7 +125,7 @@ public class BuildManager : MonoBehaviour
         ToggleRadialMenu(result.IsSuccess);
     }
 
-    public void DeselectTile()
+    private void DeselectTile()
     {
         // It's in a spot we can build it from
         if (_selectedTile && _atOutline && _ghostPreview.enabled)
@@ -147,7 +145,6 @@ public class BuildManager : MonoBehaviour
         }
 
         _selectedTile = null;
-        ToggleRadialMenu(false);
         _ghostPreview?.Hide();
     }
 

@@ -183,7 +183,7 @@ PrefabInstance:
     - target: {fileID: 2341339632320359333, guid: b8226397bde29ab4abb516fe64e2ab6f, type: 3}
       propertyPath: joint
       value: 
-      objectReference: {fileID: 1703999470}
+      objectReference: {fileID: 0}
     - target: {fileID: 2341339632320359333, guid: b8226397bde29ab4abb516fe64e2ab6f, type: 3}
       propertyPath: rigidBody
       value: 
@@ -191,7 +191,7 @@ PrefabInstance:
     - target: {fileID: 2844642442884661899, guid: b8226397bde29ab4abb516fe64e2ab6f, type: 3}
       propertyPath: joint
       value: 
-      objectReference: {fileID: 1232194917}
+      objectReference: {fileID: 0}
     - target: {fileID: 2844642442884661899, guid: b8226397bde29ab4abb516fe64e2ab6f, type: 3}
       propertyPath: rigidBody
       value: 
@@ -207,7 +207,7 @@ PrefabInstance:
     - target: {fileID: 6546600351476976861, guid: b8226397bde29ab4abb516fe64e2ab6f, type: 3}
       propertyPath: joint
       value: 
-      objectReference: {fileID: 488619772}
+      objectReference: {fileID: 0}
     - target: {fileID: 6546600351476976861, guid: b8226397bde29ab4abb516fe64e2ab6f, type: 3}
       propertyPath: rigidBody
       value: 
@@ -252,7 +252,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 5823803486919153701, guid: b8226397bde29ab4abb516fe64e2ab6f, type: 3}
+    - {fileID: 5651161430065494015, guid: b8226397bde29ab4abb516fe64e2ab6f, type: 3}
+    - {fileID: 753220315483151980, guid: b8226397bde29ab4abb516fe64e2ab6f, type: 3}
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
     m_AddedComponents: []
@@ -260,11 +263,6 @@ PrefabInstance:
 --- !u!50 &488619771 stripped
 Rigidbody2D:
   m_CorrespondingSourceObject: {fileID: 8614662449364544209, guid: b8226397bde29ab4abb516fe64e2ab6f, type: 3}
-  m_PrefabInstance: {fileID: 352680114}
-  m_PrefabAsset: {fileID: 0}
---- !u!255 &488619772 stripped
-FixedJoint2D:
-  m_CorrespondingSourceObject: {fileID: 753220315483151980, guid: b8226397bde29ab4abb516fe64e2ab6f, type: 3}
   m_PrefabInstance: {fileID: 352680114}
   m_PrefabAsset: {fileID: 0}
 --- !u!114 &488619775 stripped
@@ -289,7 +287,7 @@ PrefabInstance:
     - target: {fileID: -4920047954809644643, guid: e218f197edbb137478393036d044a214, type: 3}
       propertyPath: joint
       value: 
-      objectReference: {fileID: 1967506579}
+      objectReference: {fileID: 0}
     - target: {fileID: -4920047954809644643, guid: e218f197edbb137478393036d044a214, type: 3}
       propertyPath: rigidBody
       value: 
@@ -370,7 +368,8 @@ PrefabInstance:
       propertyPath: m_ConnectedRigidBody
       value: 
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 5645610968371623086, guid: e218f197edbb137478393036d044a214, type: 3}
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
     m_AddedComponents: []
@@ -453,11 +452,6 @@ Rigidbody2D:
   m_CorrespondingSourceObject: {fileID: 8898173321933347720, guid: b8226397bde29ab4abb516fe64e2ab6f, type: 3}
   m_PrefabInstance: {fileID: 352680114}
   m_PrefabAsset: {fileID: 0}
---- !u!255 &1232194917 stripped
-FixedJoint2D:
-  m_CorrespondingSourceObject: {fileID: 5823803486919153701, guid: b8226397bde29ab4abb516fe64e2ab6f, type: 3}
-  m_PrefabInstance: {fileID: 352680114}
-  m_PrefabAsset: {fileID: 0}
 --- !u!114 &1232194920 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 2844642442884661899, guid: b8226397bde29ab4abb516fe64e2ab6f, type: 3}
@@ -485,19 +479,9 @@ Rigidbody2D:
   m_CorrespondingSourceObject: {fileID: 6692172911039597920, guid: b8226397bde29ab4abb516fe64e2ab6f, type: 3}
   m_PrefabInstance: {fileID: 352680114}
   m_PrefabAsset: {fileID: 0}
---- !u!255 &1703999470 stripped
-FixedJoint2D:
-  m_CorrespondingSourceObject: {fileID: 5651161430065494015, guid: b8226397bde29ab4abb516fe64e2ab6f, type: 3}
-  m_PrefabInstance: {fileID: 352680114}
-  m_PrefabAsset: {fileID: 0}
 --- !u!50 &1967506578 stripped
 Rigidbody2D:
   m_CorrespondingSourceObject: {fileID: 7347581372079830787, guid: e218f197edbb137478393036d044a214, type: 3}
-  m_PrefabInstance: {fileID: 1043494910}
-  m_PrefabAsset: {fileID: 0}
---- !u!255 &1967506579 stripped
-FixedJoint2D:
-  m_CorrespondingSourceObject: {fileID: 5645610968371623086, guid: e218f197edbb137478393036d044a214, type: 3}
   m_PrefabInstance: {fileID: 1043494910}
   m_PrefabAsset: {fileID: 0}
 --- !u!1660057539 &9223372036854775807
