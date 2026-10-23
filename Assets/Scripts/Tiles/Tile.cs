@@ -1,5 +1,6 @@
 using System;
 using Nrjwolf.Tools.AttachAttributes;
+using Pulsar.Ship.Extensions;
 using Pulsar.Utilities;
 using UnityEngine;
 
@@ -19,7 +20,7 @@ public abstract class Tile : MonoBehaviour
     public float CurrentHp { get; protected set; }
 
     // 0 1 2 3 = 0 90 180 270 (counterclockwise)
-    public TileRotationEnum Rotation { get; private set; }
+    public TileRotation Rotation { get; private set; }
 
     [field: SerializeField]
     public bool IsAttached { get; private set; }
@@ -112,9 +113,9 @@ public abstract class Tile : MonoBehaviour
      * pass EdgeConnectable(3) -> (3+1)%4==0 -> true
      * => can connect
      */
-    public bool EdgeConnectable(TileRotationEnum dir)
+    public bool EdgeConnectable(TileRotation dir)
     {
-        TileRotationEnum localDir = dir.Add(Rotation);
+        TileRotation localDir = dir.Add(Rotation);
         return TileInfo.connectableEdges[localDir.ToInt()];
     }
 

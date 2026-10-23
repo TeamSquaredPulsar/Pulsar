@@ -1,5 +1,5 @@
 
-public enum TileRotationEnum : int
+public enum TileRotation : int
 {
     Up = 0,
     Right = 1,

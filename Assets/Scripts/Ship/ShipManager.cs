@@ -175,8 +175,8 @@ public class ShipManager : MonoBehaviour
             return false;
         }
 
-        foreach (TileRotationEnum direction in Enum.GetValues(
-                     typeof(TileRotationEnum)))
+        foreach (TileRotation direction in Enum.GetValues(
+                     typeof(TileRotation)))
         {
             // Get the tile edge facing this direction after rotation
             int localDir = direction.Add(rotation).ToInt();
@@ -204,8 +204,8 @@ public class ShipManager : MonoBehaviour
     {
         // Count all neighbours that can connect at this position and rotation
         int count = 0;
-        foreach (TileRotationEnum direction in Enum.GetValues(
-                     typeof(TileRotationEnum)))
+        foreach (TileRotation direction in Enum.GetValues(
+                     typeof(TileRotation)))
         {
             // Get the tile edge after rotation
             int localDir = direction.Add(rotation).ToInt();
@@ -248,8 +248,8 @@ public class ShipManager : MonoBehaviour
         HashSet<Vector2Int> candidates = new();
         foreach (Vector2Int occupied in Cells.Keys)
         {
-            foreach (TileRotationEnum direction in Enum.GetValues(
-                         typeof(TileRotationEnum)))
+            foreach (TileRotation direction in Enum.GetValues(
+                         typeof(TileRotation)))
             {
                 candidates.Add(occupied + direction.ToVector2Int());
             }
@@ -277,8 +277,8 @@ public class ShipManager : MonoBehaviour
             }
 
             // Try all 4 rotations
-            foreach (TileRotationEnum direction in Enum.GetValues(
-                         typeof(TileRotationEnum)))
+            foreach (TileRotation direction in Enum.GetValues(
+                         typeof(TileRotation)))
             {
                 // TODO: [CB] See if we can make these functions take a TileRotation in.
                 if (!CanAttach(candidate, infoSo, direction.ToInt()))

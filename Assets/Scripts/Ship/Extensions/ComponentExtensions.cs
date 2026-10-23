@@ -2,7 +2,7 @@
 using System.Reflection;
 using UnityEngine;
 
-namespace Pulsar.Ship.Ship.Extensions
+namespace Pulsar.Ship.Extensions
 {
 public static class ComponentExtensions
 {

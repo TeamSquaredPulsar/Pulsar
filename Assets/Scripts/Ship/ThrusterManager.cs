@@ -5,7 +5,7 @@ using UnityEngine;
 
 public struct ThrustAtRotation
 {
-    public TileRotationEnum Orientation;
+    public TileRotation Orientation;
     public float Thrust;
 }
 
@@ -70,8 +70,8 @@ public class ThrusterManager : MonoBehaviour
             ThrustAtRotation thrustY = GetThrustAtRotation(
                 _moveInput.y switch
                 {
-                    > 0 => TileRotationEnum.Up,
-                    < 0 => TileRotationEnum.Down,
+                    > 0 => TileRotation.Up,
+                    < 0 => TileRotation.Down,
                     _ => throw new ArgumentOutOfRangeException(
                         nameof(_moveInput) + ".y",
                         "Already checked Y could not be 0!"),
@@ -84,8 +84,8 @@ public class ThrusterManager : MonoBehaviour
             ThrustAtRotation thrustX = GetThrustAtRotation(
                 _moveInput.x switch
                 {
-                    > 0 => TileRotationEnum.Right,
-                    < 0 => TileRotationEnum.Left,
+                    > 0 => TileRotation.Right,
+                    < 0 => TileRotation.Left,
                     _ => throw new ArgumentOutOfRangeException(
                         nameof(_moveInput) + ".X",
                         "Already checked X could not be 0!"),
@@ -102,14 +102,14 @@ public class ThrusterManager : MonoBehaviour
 
     private void CalculateThrusters()
     {
-        int directions = Enum.GetNames(typeof(TileRotationEnum)).Length;
+        int directions = Enum.GetNames(typeof(TileRotation)).Length;
         _directedThrust = new ThrustAtRotation[directions];
 
         for (int i = 0; i < directions; i++)
         {
             _directedThrust[i] = new ThrustAtRotation
             {
-                Orientation = (TileRotationEnum)i,
+                Orientation = (TileRotation)i,
                 Thrust = 0f,
             };
         }
@@ -122,7 +122,7 @@ public class ThrusterManager : MonoBehaviour
     }
 
     private ThrustAtRotation
-        GetThrustAtRotation(TileRotationEnum orientation) =>
+        GetThrustAtRotation(TileRotation orientation) =>
         _directedThrust[(int)orientation];
 
     #endregion

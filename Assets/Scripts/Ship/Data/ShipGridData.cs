@@ -128,7 +128,7 @@ public class ShipGridData
             Vector2Int cellIndex = open.Dequeue();
             Tile tile = Cells[cellIndex];
             
-            foreach(TileRotationEnum direction in Enum.GetValues(typeof(TileRotationEnum)))
+            foreach(TileRotation direction in Enum.GetValues(typeof(TileRotation)))
             {
                 Vector2Int nextIndex = cellIndex + direction.ToVector2Int();
                 if (closed.Contains(nextIndex) ||
