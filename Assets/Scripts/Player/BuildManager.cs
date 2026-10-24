@@ -1,4 +1,5 @@
 using System.Collections;
+using NaughtyAttributes;
 using Nrjwolf.Tools.AttachAttributes;
 using Pulsar.Utilities;
 using UnityEngine;
@@ -6,15 +7,18 @@ using UnityEngine;
 public class BuildManager : MonoBehaviour
 {
     [Header("References")]
-    [GetComponent]
+    [Required]
+    [GetComponentInParent]
     [SerializeField]
     private ShipManager manager;
-
+    
+    [GetComponentInChildren]
     [SerializeField]
-    private GameObject pRadialMenu;
+    private RadialMenu radialMenu;
 
+    [GetComponentInChildren]
     [SerializeField]
-    private GameObject pGhostPreview;
+    private GhostPreview ghostPreview;
 
     [Header("Scan Zone")]
     [SerializeField]
@@ -33,9 +37,6 @@ public class BuildManager : MonoBehaviour
     [Min(0.1f)]
     private float orbitDegreesPerSecond = 90f;
 
-    private GhostPreview _ghostPreview;
-    private RadialMenu _radialMenu;
-
     private Tile _selectedTile;
     private bool _atOutline;
     private float _orbitAngle;
@@ -45,36 +46,22 @@ public class BuildManager : MonoBehaviour
 
     private Coroutine _updateRadialRoutine;
 
-    private void Awake()
+    private void Start()
     {
-        GameObject ghostPreview = Instantiate(pGhostPreview);
-        _ghostPreview = ghostPreview.GetComponent<GhostPreview>();
-        GameObject radialMenu = Instantiate(pRadialMenu);
-        _radialMenu = radialMenu.GetComponent<RadialMenu>();
-        SetAsChild(ghostPreview);
-        SetAsChild(radialMenu);
-        _ghostPreview.Hide();
-        _radialMenu.Hide();
-    }
-
-    private void SetAsChild(GameObject child)
-    {
-        child.transform.SetParent(transform);
-        child.transform.localPosition = Vector3.zero;
-        child.transform.localRotation = Quaternion.identity;
-        child.transform.localScale = Vector3.one;
+        ghostPreview.Hide();
+        radialMenu.Hide();
     }
 
     private void ToggleRadialMenu(bool isOn)
     {
         if (isOn)
         {
-            _radialMenu.Show();
+            radialMenu.Show();
             UpdateScanZoneShape();
         }
         else
         {
-            _radialMenu.Hide();
+            radialMenu.Hide();
         }
     }
 
@@ -98,7 +85,7 @@ public class BuildManager : MonoBehaviour
 
         Vector2 radius = Vector2.Max(localBounds.min, coreLocal);
         radius = radius.Add(scanPadding);
-        _radialMenu.UpdateShape(core, radius, manager.transform.rotation);
+        radialMenu.UpdateShape(core, radius, manager.transform.rotation);
     }
 
     public void OnSelectTile(Result<Tile> result)
@@ -133,12 +120,12 @@ public class BuildManager : MonoBehaviour
             return;
         }
         // It's in a spot we can build it from
-        if (_selectedTile && _atOutline && _ghostPreview.enabled)
+        if (_selectedTile && _atOutline && ghostPreview.enabled)
         {
             _selectedTile.transform.position
-                = _ghostPreview.transform.position;
+                = ghostPreview.transform.position;
             _selectedTile.transform.rotation
-                = _ghostPreview.transform.rotation;
+                = ghostPreview.transform.rotation;
             _selectedTile.Deselect();
             manager.AttachTile(
                 _selectedTile.transform.position.ToVector2Int(),
@@ -152,12 +139,12 @@ public class BuildManager : MonoBehaviour
         }
 
         _selectedTile = null;
-        _ghostPreview?.Hide();
+        ghostPreview?.Hide();
     }
 
     private void UpdateSelectedTile()
     {
-        Vector3 target = _radialMenu.PointOnOutline(_orbitAngle);
+        Vector3 target = radialMenu.PointOnOutline(_orbitAngle);
         // Pull the tile to the outline before allowing orbit and showing a preview
         if (!_atOutline)
         {
@@ -175,11 +162,11 @@ public class BuildManager : MonoBehaviour
             Mathf.PI * 2f);
         
         // Keep the tile on the outline as the ship moves and rotates
-        Vector3 newPos = _radialMenu.PointOnOutline(_orbitAngle);
+        Vector3 newPos = radialMenu.PointOnOutline(_orbitAngle);
         _selectedTile.transform.position
             = newPos;
         UpdatePreview();
-        _orbitAngle = _radialMenu.GetOutlineAngleFromTileToCore(
+        _orbitAngle = radialMenu.GetOutlineAngleFromTileToCore(
             manager.Core.transform.position,
             _selectedTile.transform.position
         );
@@ -204,7 +191,7 @@ public class BuildManager : MonoBehaviour
         if (!result.IsSuccess)
         {
             // Hide the preview when no attachment is possible there
-            _ghostPreview.Hide();
+            ghostPreview.Hide();
             return;
         }
 
@@ -215,7 +202,7 @@ public class BuildManager : MonoBehaviour
         Quaternion rotation = manager.transform.rotation
                               * ShipUtilities.RotateQuarterOnZAxis(
                                   _attachRotation);
-        _ghostPreview.Show(_selectedTile.Sprite,
+        ghostPreview.Show(_selectedTile.Sprite,
             manager.CellToWorld(_attachCell), rotation);
     }
 }

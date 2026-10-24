@@ -38,6 +38,7 @@ Transform:
   - {fileID: 3754049891638102708}
   - {fileID: 3797501589586391564}
   - {fileID: 304936923055663208}
+  - {fileID: 3018408231020331324}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &6370343626992969303
@@ -90,8 +91,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::BuildManager
   manager: {fileID: 35744134826503047}
-  pRadialMenu: {fileID: 2490686879028518305, guid: b31b6d3a619a3cc44884476f1dae46be, type: 3}
-  pGhostPreview: {fileID: 3382425969508598405, guid: 5bd9b6b1610f16d458e9be865d35f0e4, type: 3}
+  radialMenu: {fileID: 6203508070887109126}
+  ghostPreview: {fileID: 2644619507663779848}
   scanPadding: 2.5
   selectedTint: {r: 0.3, g: 1, b: 0.8, a: 1}
   pullSpeed: 8
@@ -465,3 +466,91 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fbcf854d2b026ba4bb1127a641953488, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Weapon
+--- !u!1001 &5285795111406495081
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 7376437609368605663}
+    m_Modifications:
+    - target: {fileID: 1747723359148351620, guid: af71d01f1071ca84ea2432868d36496d, type: 3}
+      propertyPath: manager
+      value: 
+      objectReference: {fileID: 35744134826503047}
+    - target: {fileID: 2670722891993690222, guid: af71d01f1071ca84ea2432868d36496d, type: 3}
+      propertyPath: m_Name
+      value: BuildManager
+      objectReference: {fileID: 0}
+    - target: {fileID: 6969708470429049941, guid: af71d01f1071ca84ea2432868d36496d, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6969708470429049941, guid: af71d01f1071ca84ea2432868d36496d, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6969708470429049941, guid: af71d01f1071ca84ea2432868d36496d, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6969708470429049941, guid: af71d01f1071ca84ea2432868d36496d, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6969708470429049941, guid: af71d01f1071ca84ea2432868d36496d, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6969708470429049941, guid: af71d01f1071ca84ea2432868d36496d, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6969708470429049941, guid: af71d01f1071ca84ea2432868d36496d, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6969708470429049941, guid: af71d01f1071ca84ea2432868d36496d, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6969708470429049941, guid: af71d01f1071ca84ea2432868d36496d, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6969708470429049941, guid: af71d01f1071ca84ea2432868d36496d, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: af71d01f1071ca84ea2432868d36496d, type: 3}
+--- !u!114 &2644619507663779848 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 7919995320459550049, guid: af71d01f1071ca84ea2432868d36496d, type: 3}
+  m_PrefabInstance: {fileID: 5285795111406495081}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 28d608a25d683824e8c386d6a7b94a05, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::GhostPreview
+--- !u!4 &3018408231020331324 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 6969708470429049941, guid: af71d01f1071ca84ea2432868d36496d, type: 3}
+  m_PrefabInstance: {fileID: 5285795111406495081}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &6203508070887109126 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 2255638342133602159, guid: af71d01f1071ca84ea2432868d36496d, type: 3}
+  m_PrefabInstance: {fileID: 5285795111406495081}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0e06dd851098b7f4c9e07a68ee263168, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::RadialMenu
