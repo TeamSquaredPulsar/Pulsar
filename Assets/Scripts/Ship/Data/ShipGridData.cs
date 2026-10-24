@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using Pulsar.Ship.Extensions;
+using Pulsar.Utilities;
 using UnityEngine;
 
 public class ShipGridData
@@ -39,17 +40,15 @@ public class ShipGridData
         return true;
     }
 
-    public bool RemoveTile(Vector2Int cell, Rigidbody2D rb)
+    public Result<Tile> RemoveTile(Vector2Int cell, Rigidbody2D rb)
     {
-        if (TryGetTile(cell, out Tile tile))
+        if (!TryGetTile(cell, out Tile tile) || !_cells.Remove(cell))
         {
-            tile.Attach(false, rb);
+            return Result<Tile>.Fail();
         }
-
-        bool result = _cells.Remove(cell);
+        
         DetachOrphans();
-
-        return result;
+        return Result<Tile>.Pass(tile);
     }
 
     /// <summary>

@@ -12,7 +12,7 @@ public struct TileRbInfo
 [RequireComponent(typeof(BoxCollider2D),
     typeof(SpriteRenderer),
     typeof(Health))]
-[RequireComponent(typeof(Rigidbody2D))]
+// [RequireComponent(typeof(Rigidbody2D))]
 public abstract class Tile : MonoBehaviour
 {
     public event Action<Tile> DestroyEvent;
@@ -77,7 +77,7 @@ public abstract class Tile : MonoBehaviour
         Destroy(gameObject);
     }
     
-    public float Mass => rigidBody.mass;
+    public float Mass => rigidBody? rigidBody.mass : 0;
 
     public void TakeDamage(float damage) => health.TakeDamage(damage);
 
@@ -108,20 +108,31 @@ public abstract class Tile : MonoBehaviour
         tileCollider.enabled = true;
     }
 
-    public void Attach(bool isAttached, Rigidbody2D rb, Vector2? velocity = null, float angularVelocity = 0f)
+    public void Attach()
     {
-        IsAttached = isAttached;
-        if (isAttached)
+        IsAttached = true;
+        Debug.Log($"Attached {name}");
+        // [CB] Unfortunately we need to destroy the rigidbodies in order for the
+        // collider to merge with the parents collider properly.
+        if (rigidBody)
         {
-            Debug.Log($"Attached {name}");
-            rigidBody = rigidBody.SetBuildRb();
+            Destroy(rigidBody);
         }
-        else
+        
+
+    }
+
+    public void Detatch(Vector2? velocity = null, float angularVelocity = 0f)
+    {
+        IsAttached = false;
+        transform.SetParent(null);
+        Vector2 selectedVel = velocity ?? new Vector2(0, 0);
+        if (rigidBody)
         {
-            transform.SetParent(null);
-            Vector2 selectedVel = velocity ?? new Vector2(0, 0);
-            rigidBody.SetFloatRb(selectedVel, angularVelocity, _rbInfo);
+            rigidBody = gameObject.AddComponent<Rigidbody2D>();
         }
+        rigidBody.SetFloatRb(selectedVel, angularVelocity, _rbInfo);
+        
     }
 
     private void Highlight(Color tint)

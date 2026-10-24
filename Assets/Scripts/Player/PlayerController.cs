@@ -1,3 +1,4 @@
+using System.Collections;
 using Pulsar.Utilities;
 using UnityEngine;
 
@@ -7,11 +8,17 @@ public class PlayerController : MonoBehaviour
     [SerializeField]
     private InputReader input;
 
-    [SerializeField]
-    private ShipManager shipManager;
+    [field: SerializeField]
+    public ShipManager Ship { get; private set; }
 
     [SerializeField]
     private BuildManager buildManager;
+
+    [SerializeField]
+    [Min(0.1f)]
+    private float tileDestroySeconds;
+    
+    private Coroutine DestroyTileCoroutine;
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     private void Start()
@@ -33,9 +40,10 @@ public class PlayerController : MonoBehaviour
 
         //TODO: Logic for selecting
         //If tile is part of this ship
-        if (shipManager.OwnsTile(tile))
+        if (Ship.OwnsTile(tile))
         {
-            //Start a coroutine; if the coroutine expires, destroy the tile
+            //Start a coroutine
+            DestroyTileCoroutine = StartCoroutine(DestroyTileTimer(tile));
         }
         else if (!tile.IsAttached)
         {
@@ -61,16 +69,22 @@ public class PlayerController : MonoBehaviour
 
     private void HandleRotate(float obj)
     {
-        shipManager.Rotate(obj);
+        Ship.Rotate(obj);
     }
 
     private void HandleShoot()
     {
-        shipManager.Fire();
+        Ship.Fire();
     }
 
     private void HandleMove(Vector2 direction)
     {
-        shipManager.Move(direction);
+        Ship.Move(direction);
+    }
+
+    private IEnumerator DestroyTileTimer(Tile tile)
+    {
+        yield return new WaitForSeconds(tileDestroySeconds);
+        tile.TakeDamage(tile.CurrentHp);
     }
 }

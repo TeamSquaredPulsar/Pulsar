@@ -54,7 +54,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlayerController
   input: {fileID: 11400000, guid: c5eb4fca90495374ca60a24df65307ec, type: 2}
-  shipManager: {fileID: 35744134826503047}
+  <Ship>k__BackingField: {fileID: 35744134826503047}
   buildManager: {fileID: 8460810046222660286}
 --- !u!114 &35744134826503047
 MonoBehaviour:
@@ -77,7 +77,6 @@ MonoBehaviour:
   - {fileID: 2341339632320359333}
   detachRadiateLinearVelocity: {x: 2, y: 5}
   detachRadiateAngularVelocity: {x: -180, y: 180}
-  <Core>k__BackingField: {fileID: 2844642442884661899}
 --- !u!114 &8460810046222660286
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -265,17 +264,6 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 1923082867568248035, guid: 9d9b88b2fc3b2374c83c9e59dadfb864, type: 3}
   m_PrefabInstance: {fileID: 2200979466231590027}
   m_PrefabAsset: {fileID: 0}
---- !u!114 &2844642442884661899 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 4175188780896644608, guid: 9d9b88b2fc3b2374c83c9e59dadfb864, type: 3}
-  m_PrefabInstance: {fileID: 2200979466231590027}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: a67b0512fd43dd54694d67707c2d8809, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::CoreTile
 --- !u!1001 &2310866674331777361
 PrefabInstance:
   m_ObjectHideFlags: 0

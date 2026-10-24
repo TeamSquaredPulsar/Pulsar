@@ -37,9 +37,8 @@ public class ShipManager : MonoBehaviour
     private Vector2 detachRadiateAngularVelocity = new(-180f, 180f);
 
     private ShipGridData _gridData = new();
-
-    [field: SerializeField]
-    public CoreTile Core { get; private set; }
+    
+    public CoreTile Core => _gridData.Core;
 
     public IReadOnlyDictionary<Vector2Int, Tile> Cells => _gridData.Cells;
     public bool OwnsTile(Tile tile) => Cells.Values.Contains(tile);
@@ -78,7 +77,7 @@ public class ShipManager : MonoBehaviour
             return;
         }
         
-        tile.Attach(true, rb);
+        tile.Attach();
         tile.transform.SetParent(transform);
         tile.DestroyEvent += HandleTileDestroyed;
     }
@@ -96,7 +95,6 @@ public class ShipManager : MonoBehaviour
                 break;
             case CoreTile core:
                 _gridData.SetCore(core);
-                Core = core;
                 break;
         }
         
@@ -230,6 +228,7 @@ public class ShipManager : MonoBehaviour
 
         return count;
     }
+    
 
     public Result<(Vector2Int cell, int rotation)> FindBestAttachment(
         TileInfoSO infoSo,
@@ -352,10 +351,14 @@ public class ShipManager : MonoBehaviour
         float speed = Random.Range(minSpeed, maxSpeed);
         velocity += outward.normalized * speed;
         float spin = Random.Range(minSpin, maxSpin);
-        _gridData.RemoveTile(tile.Cell, rb);
         
-        tile.Attach(false, rb, velocity,
-            angularVelocity + spin);
+        Result<Tile> result = _gridData.RemoveTile(tile.Cell, rb);
+        if (result.Value && result.Value != tile)
+        {
+            throw new Exception("Removed the wrong tile!");
+        }
+        
+        tile.Detatch(velocity,angularVelocity + spin);
         rb.mass -= tile.Mass;
     }
 
