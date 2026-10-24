@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using Nrjwolf.Tools.AttachAttributes;
 using Pulsar.Ship.Extensions;
 using Pulsar.Utilities;
 using UnityEngine;
@@ -73,8 +72,9 @@ public class ShipManager : MonoBehaviour
         {
             return;
         }
-        
-        tile.Attach();
+                
+        rb.mass += tile.Mass;
+        tile.Attach(cell);
         tile.transform.SetParent(transform);
         tile.DestroyEvent += HandleTileDestroyed;
     }
@@ -90,13 +90,7 @@ public class ShipManager : MonoBehaviour
                 weapons.Add(weapon);
                 weapon.SetParentCollider(compositeCollider);
                 break;
-            case CoreTile core:
-                _gridData.SetCore(core);
-                break;
         }
-        
-        rb.mass += tile.Mass;
-        
     }
 
     public void Fire()

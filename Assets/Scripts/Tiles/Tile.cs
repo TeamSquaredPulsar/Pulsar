@@ -1,5 +1,4 @@
 using System;
-using Nrjwolf.Tools.AttachAttributes;
 using Pulsar.Ship.Extensions;
 using UnityEngine;
 
@@ -20,7 +19,7 @@ public abstract class Tile : MonoBehaviour
     [SerializeField]
     private Color baseColor = Color.white;
 
-    public Vector2Int Cell { get; set; }
+    public Vector2Int Cell { get; private set; }
 
     public float CurrentHp { get; protected set; }
 
@@ -32,16 +31,16 @@ public abstract class Tile : MonoBehaviour
 
     [field: SerializeField]
     public TileInfoSO TileInfo { get; private set; }
-    
+
     [SerializeField]
     private SpriteRenderer spriteRenderer;
-    
+
     [SerializeField]
     private BoxCollider2D tileCollider;
-    
+
     [SerializeField]
     private Rigidbody2D rigidBody;
-    
+
     [SerializeField]
     private Health health;
 
@@ -72,8 +71,8 @@ public abstract class Tile : MonoBehaviour
         DestroyEvent?.Invoke(this);
         Destroy(gameObject);
     }
-    
-    public float Mass => rigidBody? rigidBody.mass : 0;
+
+    public float Mass => rigidBody ? rigidBody.mass : 0;
 
     public void TakeDamage(float damage) => health.TakeDamage(damage);
 
@@ -104,7 +103,7 @@ public abstract class Tile : MonoBehaviour
         tileCollider.enabled = true;
     }
 
-    public void Attach()
+    public void Attach(Vector2Int cell)
     {
         IsAttached = true;
         Debug.Log($"Attached {name}");
@@ -114,8 +113,8 @@ public abstract class Tile : MonoBehaviour
         {
             Destroy(rigidBody);
         }
-        
 
+        Cell = cell;
     }
 
     public void Detatch(Vector2? velocity = null, float angularVelocity = 0f)
@@ -123,12 +122,12 @@ public abstract class Tile : MonoBehaviour
         IsAttached = false;
         transform.SetParent(null);
         Vector2 selectedVel = velocity ?? new Vector2(0, 0);
-        if (rigidBody)
+        if (!rigidBody)
         {
             rigidBody = gameObject.AddComponent<Rigidbody2D>();
         }
+
         rigidBody.SetFloatRb(selectedVel, angularVelocity, _rbInfo);
-        
     }
 
     private void Highlight(Color tint)

@@ -27,6 +27,15 @@ public class PlayerController : MonoBehaviour
         RegisterInputCallbacks();
     }
 
+    private void OnDestroy()
+    {
+        PlayerCursor.SelectTileEvent -= OnSelectTile;
+
+        input.MoveEvent -= HandleMove;
+        input.ShootEvent -= HandleShoot;
+        input.RotateEvent -= HandleRotate;
+    }
+
     private void OnSelectTile(Result<Tile> result)
     {
         if (!result.IsSuccess)
@@ -54,15 +63,6 @@ public class PlayerController : MonoBehaviour
             //Tell the build manager we've selected a new tile.
             buildManager.OnSelectTile(result);
         }
-    }
-
-    private void OnDestroy()
-    {
-        PlayerCursor.SelectTileEvent += OnSelectTile;
-        
-        input.MoveEvent -= HandleMove;
-        input.ShootEvent -= HandleShoot;
-        input.RotateEvent -= HandleRotate;
     }
 
     private void RegisterInputCallbacks()

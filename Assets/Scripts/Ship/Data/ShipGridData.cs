@@ -1,10 +1,12 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using NaughtyAttributes;
 using Pulsar.Ship.Extensions;
 using Pulsar.Utilities;
 using UnityEngine;
 
+[Serializable]
 public class ShipGridData
 {
     public event Action<Tile> TileOrphanedEvent;
@@ -12,30 +14,23 @@ public class ShipGridData
     private readonly Dictionary<Vector2Int, Tile> _cells = new();
 
     public IReadOnlyDictionary<Vector2Int, Tile> Cells => _cells;
+    
     public IReadOnlyList<Tile> Tiles => _cells.Values.ToList();
 
     public CoreTile Core { get; private set; }
 
     public bool ContainsCell(Vector2Int cell) => _cells.ContainsKey(cell);
 
-    public bool TryGetTile(Vector2Int cell, out Tile tile)
+    public bool TryGetTile(Vector2Int cell, out Tile tile) => _cells.TryGetValue(cell, out tile);
+
+    public bool TrySetTile(Vector2Int cell, Tile tile)
     {
-        if (_cells.TryGetValue(cell, out tile))
+        if (tile is CoreTile coreTile)
         {
-            return true;
+            Core = coreTile;
         }
-
-        return false;
+        return _cells.TryAdd(cell, tile);
     }
-        
-
-    public void SetCore(CoreTile tile)
-    {
-        Core = tile;
-    }
-
-
-    public bool TrySetTile(Vector2Int cell, Tile tile) => _cells.TryAdd(cell, tile);
 
     public Result<Tile> RemoveTile(Vector2Int cell)
     {
