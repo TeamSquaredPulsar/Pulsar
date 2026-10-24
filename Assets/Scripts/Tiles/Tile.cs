@@ -32,20 +32,16 @@ public abstract class Tile : MonoBehaviour
 
     [field: SerializeField]
     public TileInfoSO TileInfo { get; private set; }
-
-    [GetComponent]
+    
     [SerializeField]
     private SpriteRenderer spriteRenderer;
-
-    [GetComponent]
+    
     [SerializeField]
     private BoxCollider2D tileCollider;
-
-    [GetComponent]
+    
     [SerializeField]
     private Rigidbody2D rigidBody;
-
-    [GetComponent]
+    
     [SerializeField]
     private Health health;
 

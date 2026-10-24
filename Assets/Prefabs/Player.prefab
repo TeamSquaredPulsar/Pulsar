@@ -90,7 +90,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5d6900ccf0fa38440855020412688b02, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::BuildManager
-  manager: {fileID: 35744134826503047}
+  controller: {fileID: 6370343626992969303}
   radialMenu: {fileID: 6203508070887109126}
   ghostPreview: {fileID: 2644619507663779848}
   scanPadding: 2.5
@@ -467,6 +467,10 @@ PrefabInstance:
       propertyPath: manager
       value: 
       objectReference: {fileID: 35744134826503047}
+    - target: {fileID: 1747723359148351620, guid: af71d01f1071ca84ea2432868d36496d, type: 3}
+      propertyPath: controller
+      value: 
+      objectReference: {fileID: 6370343626992969303}
     - target: {fileID: 2670722891993690222, guid: af71d01f1071ca84ea2432868d36496d, type: 3}
       propertyPath: m_Name
       value: BuildManager

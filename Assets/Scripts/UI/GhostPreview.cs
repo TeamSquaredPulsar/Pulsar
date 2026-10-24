@@ -4,7 +4,7 @@ using UnityEngine;
 [RequireComponent(typeof(SpriteRenderer))]
 public class GhostPreview : MonoBehaviour
 {
-    [GetComponent][SerializeField]
+    [SerializeField]
     private SpriteRenderer sr;
     
     [SerializeField]

@@ -1,22 +1,17 @@
 using System.Collections;
-using NaughtyAttributes;
-using Nrjwolf.Tools.AttachAttributes;
 using Pulsar.Utilities;
 using UnityEngine;
 
 public class BuildManager : MonoBehaviour
 {
+
     [Header("References")]
-    [Required]
-    [GetComponentInParent]
     [SerializeField]
-    private ShipManager manager;
+    private PlayerController controller;
     
-    [GetComponentInChildren]
     [SerializeField]
     private RadialMenu radialMenu;
-
-    [GetComponentInChildren]
+    
     [SerializeField]
     private GhostPreview ghostPreview;
 
@@ -78,14 +73,14 @@ public class BuildManager : MonoBehaviour
     private void UpdateScanZoneShape()
     {
         // Get the ship bounds in local space
-        Bounds localBounds = manager.GetLocalBounds();
+        Bounds localBounds = controller.Ship.GetLocalBounds();
 
-        Vector3 core = manager.Core.transform.position;
-        Vector3 coreLocal = manager.transform.InverseTransformPoint(core);
+        Vector3 core = controller.Ship.Core.transform.position;
+        Vector3 coreLocal = controller.transform.InverseTransformPoint(core);
 
         Vector2 radius = Vector2.Max(localBounds.min, coreLocal);
         radius = radius.Add(scanPadding);
-        radialMenu.UpdateShape(core, radius, manager.transform.rotation);
+        radialMenu.UpdateShape(core, radius, controller.transform.rotation);
     }
 
     public void OnSelectTile(Result<Tile> result)
@@ -127,7 +122,7 @@ public class BuildManager : MonoBehaviour
             _selectedTile.transform.rotation
                 = ghostPreview.transform.rotation;
             _selectedTile.Deselect();
-            manager.AttachTile(
+            controller.Ship.AttachTile(
                 _selectedTile.transform.position.ToVector2Int(),
                 _selectedTile);
             
@@ -167,7 +162,7 @@ public class BuildManager : MonoBehaviour
             = newPos;
         UpdatePreview();
         _orbitAngle = radialMenu.GetOutlineAngleFromTileToCore(
-            manager.Core.transform.position,
+            controller.Ship.Core.transform.position,
             _selectedTile.transform.position
         );
     }
@@ -186,7 +181,7 @@ public class BuildManager : MonoBehaviour
     {
         // Find a valid rotation at the nearest empty cells around the ship
         Result<(Vector2Int cell, int rotation)> result
-            = manager.FindBestAttachment(
+            = controller.Ship.FindBestAttachment(
                 _selectedTile.TileInfo, _selectedTile.transform.position);
         if (!result.IsSuccess)
         {
@@ -199,10 +194,10 @@ public class BuildManager : MonoBehaviour
         _attachRotation = result.Value.rotation;
 
         // apply _attachRotation to selectedTile to display the preview in world space
-        Quaternion rotation = manager.transform.rotation
+        Quaternion rotation = controller.transform.rotation
                               * ShipUtilities.RotateQuarterOnZAxis(
                                   _attachRotation);
         ghostPreview.Show(_selectedTile.Sprite,
-            manager.CellToWorld(_attachCell), rotation);
+            controller.Ship.CellToWorld(_attachCell), rotation);
     }
 }

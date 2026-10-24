@@ -12,12 +12,10 @@ public class PlayerCursor : MonoBehaviour
 
     [SerializeField]
     private InputReader input;
-
-    [GetComponent]
+    
     [SerializeField]
     private SpriteRenderer visual;
-
-    [GetComponent]
+    
     [SerializeField]
     private Collider2D circleCollider;
 

@@ -1,4 +1,3 @@
-using Nrjwolf.Tools.AttachAttributes;
 using UnityEngine;
 
 [RequireComponent(typeof(LineRenderer), typeof(SpriteRenderer))]

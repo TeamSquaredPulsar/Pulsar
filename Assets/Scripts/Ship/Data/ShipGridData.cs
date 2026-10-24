@@ -18,8 +18,16 @@ public class ShipGridData
 
     public bool ContainsCell(Vector2Int cell) => _cells.ContainsKey(cell);
 
-    public bool TryGetTile(Vector2Int cell, out Tile tile) =>
-        _cells.TryGetValue(cell, out tile);
+    public bool TryGetTile(Vector2Int cell, out Tile tile)
+    {
+        if (_cells.TryGetValue(cell, out tile))
+        {
+            return true;
+        }
+
+        return false;
+    }
+        
 
     public void SetCore(CoreTile tile)
     {
@@ -27,18 +35,7 @@ public class ShipGridData
     }
 
 
-    public bool TrySetTile(Vector2Int cell, Tile tile)
-    {
-        if (!_cells.TryAdd(cell, tile))
-        {
-            Debug.LogWarning(
-                $"Trying to set {cell}, but already contains a tile!");
-            return false;
-        }
-        
-        tile.Cell = cell;
-        return true;
-    }
+    public bool TrySetTile(Vector2Int cell, Tile tile) => _cells.TryAdd(cell, tile);
 
     public Result<Tile> RemoveTile(Vector2Int cell)
     {
@@ -130,12 +127,18 @@ public class ShipGridData
             foreach(TileRotation direction in Enum.GetValues(typeof(TileRotation)))
             {
                 Vector2Int nextIndex = cellIndex + direction.ToVector2Int();
-                if (closed.Contains(nextIndex) ||
-                    TryGetTile(nextIndex, out Tile cell))
+                
+                // If we already have the next index, no need to search
+                if (closed.Contains(nextIndex))
                 {
                     continue;
                 }
-    
+                // If the next index isn't a tile, continue
+                if (!TryGetTile(nextIndex, out Tile cell))
+                {
+                    continue;
+                }
+                
                 if (!tile.EdgeConnectable(direction) ||
                     !cell.EdgeConnectable(direction.Opposite()))
                 {

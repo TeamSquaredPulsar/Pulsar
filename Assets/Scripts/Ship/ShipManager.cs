@@ -11,15 +11,12 @@ using Random = UnityEngine.Random;
 public class ShipManager : MonoBehaviour
 {
     [Header("Refs")]
-    [GetComponent]
     [SerializeField]
     private CompositeCollider2D compositeCollider;
-
-    [GetComponent]
+    
     [SerializeField]
     private Rigidbody2D rb;
-
-    [GetComponent]
+    
     [SerializeField]
     private ThrusterManager thrusterManager;
 
