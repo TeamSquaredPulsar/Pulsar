@@ -14,7 +14,5 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::Pulsar.Ship.TileDef
   tileName: pGun
   type: 3
-  sprite: {fileID: -2221811806759137610, guid: 12e6d06eb1ce26d438b5d1d620179b8b, type: 3}
   hp: 10
-  mass: 1
-  connectableEdges: 00000001
+  connectableEdges: 00000100

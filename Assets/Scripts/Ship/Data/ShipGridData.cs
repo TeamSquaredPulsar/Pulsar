@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using NaughtyAttributes;
 using Pulsar.Ship.Extensions;
 using Pulsar.Utilities;
 using UnityEngine;
@@ -98,13 +97,15 @@ public class ShipGridData
         HashSet<Vector2Int> reachable = Flood(Core.Cell);
 
         // Remove all tiles still in Cells which not connect to Core
-        Cells.Keys.Where(c => !reachable.Contains(c)).ToList().ForEach(c =>
-        {
-            if (TryGetTile(c, out Tile tile))
+        Cells.Keys.Where(cell => !reachable.Contains(cell))
+            .ToList()
+            .ForEach(cell =>
             {
-                TileOrphanedEvent?.Invoke(tile);
-            }
-        });
+                if (TryGetTile(cell, out Tile tile))
+                {
+                    TileOrphanedEvent?.Invoke(tile);
+                }
+            });
     }
     
     //BFS

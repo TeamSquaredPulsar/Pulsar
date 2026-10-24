@@ -6,9 +6,7 @@ public class TileInfoSO : ScriptableObject
 {
     [Header("Common Info")]
     public string tileName;
-
     public TileType type;
-    public Sprite sprite;
     public float hp = 10f;
 
     public bool[] connectableEdges = { true, true, true, true, };

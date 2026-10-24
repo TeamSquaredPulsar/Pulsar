@@ -130,11 +130,22 @@ public class ShipManager : MonoBehaviour
     private void HandleTileDestroyed(Tile tile)
     {
         rb.mass -= tile.Mass;
-        //TODO implement tile destruction logic here
-        if (_gridData.RemoveTile(tile.Cell).IsSuccess)
+        if (!_gridData.RemoveTile(tile.Cell).IsSuccess)
         {
-            tile.DestroyEvent -= HandleTileDestroyed;
+            Debug.Log($"Failed to remove {tile.name}");
+            return;
         }
+
+        switch (tile)
+        {
+            case ThrusterTile thruster:
+                thrusters.Remove(thruster);
+                break;
+            case WeaponTile weapon:
+                weapons.Remove(weapon);
+                break;
+        }
+        tile.DestroyEvent -= HandleTileDestroyed;
     }
 
     // returns a rectangle enclosing all ship tiles in the ship’s local space

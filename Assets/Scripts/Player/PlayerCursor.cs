@@ -1,6 +1,4 @@
 using System;
-using System.ComponentModel.Design.Serialization;
-using Nrjwolf.Tools.AttachAttributes;
 using Pulsar.Utilities;
 using UnityEngine;
 using UnityEngine.InputSystem;
@@ -12,10 +10,10 @@ public class PlayerCursor : MonoBehaviour
 
     [SerializeField]
     private InputReader input;
-    
+
     [SerializeField]
     private SpriteRenderer visual;
-    
+
     [SerializeField]
     private Collider2D circleCollider;
 
@@ -88,7 +86,6 @@ public class PlayerCursor : MonoBehaviour
             return;
         }
 
-        Debug.Log($"Collided with {collidedTile.name}");
         _hoveredTile = collidedTile;
     }
 
@@ -115,13 +112,13 @@ public class PlayerCursor : MonoBehaviour
         else if (other.TryGetComponent(out PlayerController player))
         {
             ShipManager ship = player.Ship;
-            
+
             // [CB] Because the collision point is on the edge of a tile, we need
             // to subtract a small amount.
             // This gets us close enough to the centre of the tile for the
             // rounding to work and get the correct index for the ship tile.
             const float tileOffset = 0.25f;
-            
+
             // Get collision point relative to ship core
             Vector2 collisionPosition
                 = ship.transform.InverseTransformPoint(
@@ -147,9 +144,9 @@ public class PlayerCursor : MonoBehaviour
                     collisionPosition.y -= tileOffset;
                     break;
             }
-            
+
             Vector2Int gridCell = Vector2Int.RoundToInt(collisionPosition);
-            
+
             ship.Cells.TryGetValue(gridCell, out Tile attachedTile);
             collidedTile = attachedTile;
         }
