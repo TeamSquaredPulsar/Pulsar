@@ -133,22 +133,6 @@ PrefabInstance:
     m_TransformParent: {fileID: 0}
     m_Modifications:
     - target: {fileID: 35744134826503047, guid: b8226397bde29ab4abb516fe64e2ab6f, type: 3}
-      propertyPath: weapons.Array.size
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 35744134826503047, guid: b8226397bde29ab4abb516fe64e2ab6f, type: 3}
-      propertyPath: thrusters.Array.size
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 35744134826503047, guid: b8226397bde29ab4abb516fe64e2ab6f, type: 3}
-      propertyPath: <Core>k__BackingField
-      value: 
-      objectReference: {fileID: 1232194920}
-    - target: {fileID: 35744134826503047, guid: b8226397bde29ab4abb516fe64e2ab6f, type: 3}
-      propertyPath: 'weapons.Array.data[0]'
-      value: 
-      objectReference: {fileID: 488619775}
-    - target: {fileID: 35744134826503047, guid: b8226397bde29ab4abb516fe64e2ab6f, type: 3}
       propertyPath: 'weapons.Array.data[1]'
       value: 
       objectReference: {fileID: 488619775}
@@ -156,10 +140,6 @@ PrefabInstance:
       propertyPath: 'weapons.Array.data[2]'
       value: 
       objectReference: {fileID: 488619775}
-    - target: {fileID: 35744134826503047, guid: b8226397bde29ab4abb516fe64e2ab6f, type: 3}
-      propertyPath: 'thrusters.Array.data[0]'
-      value: 
-      objectReference: {fileID: 1703999465}
     - target: {fileID: 35744134826503047, guid: b8226397bde29ab4abb516fe64e2ab6f, type: 3}
       propertyPath: 'thrusters.Array.data[1]'
       value: 
@@ -184,18 +164,10 @@ PrefabInstance:
       propertyPath: joint
       value: 
       objectReference: {fileID: 0}
-    - target: {fileID: 2341339632320359333, guid: b8226397bde29ab4abb516fe64e2ab6f, type: 3}
-      propertyPath: rigidBody
-      value: 
-      objectReference: {fileID: 1703999469}
     - target: {fileID: 2844642442884661899, guid: b8226397bde29ab4abb516fe64e2ab6f, type: 3}
       propertyPath: joint
       value: 
       objectReference: {fileID: 0}
-    - target: {fileID: 2844642442884661899, guid: b8226397bde29ab4abb516fe64e2ab6f, type: 3}
-      propertyPath: rigidBody
-      value: 
-      objectReference: {fileID: 1232194916}
     - target: {fileID: 5651161430065494015, guid: b8226397bde29ab4abb516fe64e2ab6f, type: 3}
       propertyPath: m_ConnectedAnchor.x
       value: 0
@@ -208,10 +180,6 @@ PrefabInstance:
       propertyPath: joint
       value: 
       objectReference: {fileID: 0}
-    - target: {fileID: 6546600351476976861, guid: b8226397bde29ab4abb516fe64e2ab6f, type: 3}
-      propertyPath: rigidBody
-      value: 
-      objectReference: {fileID: 488619771}
     - target: {fileID: 7376437609368605663, guid: b8226397bde29ab4abb516fe64e2ab6f, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0
@@ -260,11 +228,6 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: b8226397bde29ab4abb516fe64e2ab6f, type: 3}
---- !u!50 &488619771 stripped
-Rigidbody2D:
-  m_CorrespondingSourceObject: {fileID: 8614662449364544209, guid: b8226397bde29ab4abb516fe64e2ab6f, type: 3}
-  m_PrefabInstance: {fileID: 352680114}
-  m_PrefabAsset: {fileID: 0}
 --- !u!114 &488619775 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 6546600351476976861, guid: b8226397bde29ab4abb516fe64e2ab6f, type: 3}
@@ -447,22 +410,6 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 23b839cb7fca3b247ba1200fcaa33286, type: 3}
---- !u!50 &1232194916 stripped
-Rigidbody2D:
-  m_CorrespondingSourceObject: {fileID: 8898173321933347720, guid: b8226397bde29ab4abb516fe64e2ab6f, type: 3}
-  m_PrefabInstance: {fileID: 352680114}
-  m_PrefabAsset: {fileID: 0}
---- !u!114 &1232194920 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 2844642442884661899, guid: b8226397bde29ab4abb516fe64e2ab6f, type: 3}
-  m_PrefabInstance: {fileID: 352680114}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: a67b0512fd43dd54694d67707c2d8809, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::CoreTile
 --- !u!114 &1703999465 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 2341339632320359333, guid: b8226397bde29ab4abb516fe64e2ab6f, type: 3}
@@ -474,11 +421,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c73fc15b171ddc347ab826efbd8c2757, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ThrusterTile
---- !u!50 &1703999469 stripped
-Rigidbody2D:
-  m_CorrespondingSourceObject: {fileID: 6692172911039597920, guid: b8226397bde29ab4abb516fe64e2ab6f, type: 3}
-  m_PrefabInstance: {fileID: 352680114}
-  m_PrefabAsset: {fileID: 0}
 --- !u!50 &1967506578 stripped
 Rigidbody2D:
   m_CorrespondingSourceObject: {fileID: 7347581372079830787, guid: e218f197edbb137478393036d044a214, type: 3}

@@ -88,6 +88,7 @@ public class PlayerCursor : MonoBehaviour
         {
             return;
         }
+        Debug.Log($"Collided with {collidedTile.name}");
         _hoveredTile = collidedTile;
     }
     

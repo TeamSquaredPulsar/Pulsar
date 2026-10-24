@@ -11,10 +11,10 @@ GameObject:
   - component: {fileID: 7376437609368605663}
   - component: {fileID: 6370343626992969303}
   - component: {fileID: 35744134826503047}
+  - component: {fileID: 8460810046222660286}
   - component: {fileID: 8893891361912782109}
   - component: {fileID: 8716755017154123671}
   - component: {fileID: 70888490315140228}
-  - component: {fileID: 8460810046222660286}
   m_Layer: 0
   m_Name: Player
   m_TagString: Player
@@ -70,10 +70,32 @@ MonoBehaviour:
   compositeCollider: {fileID: 70888490315140228}
   rb: {fileID: 8716755017154123671}
   thrusterManager: {fileID: 8893891361912782109}
-  weapons: []
-  thrusters: []
+  weapons:
+  - {fileID: 6546600351476976861}
+  thrusters:
+  - {fileID: 2341339632320359333}
   detachRadiateLinearVelocity: {x: 2, y: 5}
   detachRadiateAngularVelocity: {x: -180, y: 180}
+  <Core>k__BackingField: {fileID: 2844642442884661899}
+--- !u!114 &8460810046222660286
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1843940356141040302}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5d6900ccf0fa38440855020412688b02, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::BuildManager
+  manager: {fileID: 35744134826503047}
+  pRadialMenu: {fileID: 2490686879028518305, guid: b31b6d3a619a3cc44884476f1dae46be, type: 3}
+  pGhostPreview: {fileID: 3382425969508598405, guid: 5bd9b6b1610f16d458e9be865d35f0e4, type: 3}
+  scanPadding: 2.5
+  selectedTint: {r: 0.3, g: 1, b: 0.8, a: 1}
+  pullSpeed: 8
+  orbitDegreesPerSecond: 90
 --- !u!114 &8893891361912782109
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -163,26 +185,6 @@ CompositeCollider2D:
   m_OffsetDistance: 0.00005
   m_UseDelaunayMesh: 0
   m_CompositeGameObject: {fileID: 1843940356141040302}
---- !u!114 &8460810046222660286
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1843940356141040302}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 5d6900ccf0fa38440855020412688b02, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::BuildManager
-  manager: {fileID: 35744134826503047}
-  pRadialMenu: {fileID: 2490686879028518305, guid: b31b6d3a619a3cc44884476f1dae46be, type: 3}
-  pGhostPreview: {fileID: 3382425969508598405, guid: 5bd9b6b1610f16d458e9be865d35f0e4, type: 3}
-  scanPadding: 2.5
-  selectedTint: {r: 0.3, g: 1, b: 0.8, a: 1}
-  detachTint: {r: 1, g: 0, b: 0, a: 1}
-  pullSpeed: 8
-  orbitDegreesPerSecond: 90
 --- !u!1001 &2200979466231590027
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -262,6 +264,17 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 1923082867568248035, guid: 9d9b88b2fc3b2374c83c9e59dadfb864, type: 3}
   m_PrefabInstance: {fileID: 2200979466231590027}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &2844642442884661899 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 4175188780896644608, guid: 9d9b88b2fc3b2374c83c9e59dadfb864, type: 3}
+  m_PrefabInstance: {fileID: 2200979466231590027}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a67b0512fd43dd54694d67707c2d8809, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::CoreTile
 --- !u!1001 &2310866674331777361
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -441,3 +454,14 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 1283674777054792067, guid: aa5c391c67940fe428fad2e4cebfb98c, type: 3}
   m_PrefabInstance: {fileID: 2722873561899598647}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &6546600351476976861 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 9156844168472924138, guid: aa5c391c67940fe428fad2e4cebfb98c, type: 3}
+  m_PrefabInstance: {fileID: 2722873561899598647}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fbcf854d2b026ba4bb1127a641953488, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Weapon

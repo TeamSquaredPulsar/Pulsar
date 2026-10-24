@@ -58,14 +58,6 @@ public class ShipManager : MonoBehaviour
             tile.DestroyEvent -= HandleTileDestroyed;
         }
     }
-    
-    public void AttachTile(Vector2Int cell, Tile tile)
-    {
-        ProcessTile(tile);
-        _gridData.SetTile(cell, tile, rb);
-        tile.DestroyEvent += HandleTileDestroyed;
-    }
-
 
     private void RefreshTiles()
     {
@@ -76,6 +68,19 @@ public class ShipManager : MonoBehaviour
         {
             AttachTile(tile.transform.position.ToVector2Int(), tile);
         }
+    }
+    
+    public void AttachTile(Vector2Int cell, Tile tile)
+    {
+        ProcessTile(tile);
+        if(!_gridData.TrySetTile(cell, tile))
+        {
+            return;
+        }
+        
+        tile.Attach(true, rb);
+        tile.transform.SetParent(transform);
+        tile.DestroyEvent += HandleTileDestroyed;
     }
 
     private void ProcessTile(Tile tile)
@@ -348,33 +353,12 @@ public class ShipManager : MonoBehaviour
         velocity += outward.normalized * speed;
         float spin = Random.Range(minSpin, maxSpin);
         _gridData.RemoveTile(tile.Cell, rb);
-        tile.EnableFloatingPhysics(velocity,
+        
+        tile.Attach(false, rb, velocity,
             angularVelocity + spin);
         rb.mass -= tile.Mass;
     }
 
     #endregion
-
-    #region TESTING
-
-#if UNITY_EDITOR
-    // [SerializeField] private List<TileInfoSO> spawnTestTiles;
-    // [ContextMenu("SpawnRandomFloater")]
-    // private void SpawnRandomFloater()
-    // {
-    //     TileInfoSO info = spawnTestTiles[Random.Range(0, spawnTestTiles.Count)];
-    //
-    //     float angle = Random.Range(0f, 360f) * Mathf.Deg2Rad;
-    //     float dist = 6.5f;
-    //     Vector2 shipPos = transform.position;
-    //     Vector2 pos = shipPos + new Vector2(Mathf.Cos(angle), Mathf.Sin(angle)) * dist;
-    //
-    //     Vector2 toShip = (shipPos - pos).normalized;
-    //     Vector2 velocity = toShip + Random.insideUnitCircle * 0.3f;
-    //
-    //     Tile.SpawnFloating<ChassisTile>(info, pos, velocity);
-    // }
-#endif
-
-    #endregion
+    
 }

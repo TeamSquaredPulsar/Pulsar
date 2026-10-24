@@ -12,7 +12,6 @@ GameObject:
   - component: {fileID: 31458138794939124}
   - component: {fileID: 8688311974718774552}
   - component: {fileID: 6303449030629206126}
-  - component: {fileID: 7961569873050750638}
   - component: {fileID: 8993274152522921009}
   - component: {fileID: 8159396282816949206}
   m_Layer: 0
@@ -50,8 +49,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ThrusterTile
   baseColor: {r: 1, g: 1, b: 1, a: 1}
+  <IsAttached>k__BackingField: 0
   <TileInfo>k__BackingField: {fileID: 11400000, guid: efe30156b410eb149aa1cabe593e8f6d, type: 2}
-  joint: {fileID: 7961569873050750638}
   spriteRenderer: {fileID: 8688311974718774552}
   tileCollider: {fileID: 6303449030629206126}
   rigidBody: {fileID: 8993274152522921009}
@@ -162,25 +161,6 @@ BoxCollider2D:
   m_AutoTiling: 0
   m_Size: {x: 1, y: 1}
   m_EdgeRadius: 0
---- !u!255 &7961569873050750638
-FixedJoint2D:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 9113379072927920375}
-  m_Enabled: 1
-  serializedVersion: 4
-  m_EnableCollision: 0
-  m_ConnectedRigidBody: {fileID: 0}
-  m_BreakForce: Infinity
-  m_BreakTorque: Infinity
-  m_BreakAction: 3
-  m_AutoConfigureConnectedAnchor: 1
-  m_Anchor: {x: 0, y: 0}
-  m_ConnectedAnchor: {x: 0, y: -1}
-  m_DampingRatio: 0
-  m_Frequency: 0
 --- !u!50 &8993274152522921009
 Rigidbody2D:
   serializedVersion: 5

@@ -16,7 +16,6 @@ public class GhostPreview : MonoBehaviour
     private void Awake()
     {
         sr.sortingOrder = sortingOrder;
-        gameObject.SetActive(false);
     }
     
     public void Show(Sprite sprite, Vector3 worldPos, Quaternion rotation)
@@ -24,10 +23,10 @@ public class GhostPreview : MonoBehaviour
         sr.sprite = sprite;
         sr.color = ghostColor;
         transform.SetPositionAndRotation(worldPos, rotation);
-        gameObject.SetActive(true);
+        sr.enabled = true;
     }
     public void Hide()
     {
-        gameObject.SetActive(false);
+        sr.sprite = null;
     }
 }

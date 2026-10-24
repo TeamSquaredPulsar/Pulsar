@@ -83,8 +83,16 @@ public class InputReader : ScriptableObject, IPlayerActions, IInputReader
 
     public void OnSelectTile(InputAction.CallbackContext context)
     {
+        // Don't trigger on started because it causes
+        // the event to fire twice on mouse click   
+        if (context.started)
+        {
+            return;
+        }
         //True if the button is down, false if up.
         SelectTileEvent?.Invoke(!context.canceled);
+        
+
     }
 
     // [CB] Annoyingly, Unity will overwrite the controller inputs with mouse
@@ -101,30 +109,12 @@ public class InputReader : ScriptableObject, IPlayerActions, IInputReader
         // Multiply by camera dimensions so we can get full screen size
         input *= camData.ScreenSize;
 
+        
         MoveCursorEvent?.Invoke(input);
     }
 
     public void OnMoveCursorMouse(InputAction.CallbackContext context)
     {
-        //Inputs are measured from bottom-left, so subtract half a screen from
-        // the input to make it measure from the centre.
-        //Vector2 halfScreen = camData.ScreenSize / 2;
-        //Vector2 input = context.ReadValue<Vector2>() - halfScreen;
         MoveCursorEvent?.Invoke(context.ReadValue<Vector2>());
     }
-
-    // public void OnSelectFloatingTile(InputAction.CallbackContext context)
-    // {
-    //     SelectFloatingTileEvent?.Invoke(context.started);
-    // }
-    //
-    // public void OnBuildTile(InputAction.CallbackContext context)
-    // {
-    //     BuildTileEvent?.Invoke(context);
-    // }
-    //
-    // public void OnDetachTile(InputAction.CallbackContext context)
-    // {
-    //     DetachTileEvent?.Invoke(context.started);
-    // }
 }

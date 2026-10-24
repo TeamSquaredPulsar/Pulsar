@@ -24,19 +24,19 @@ public class ShipGridData
     {
         Core = tile;
     }
-    
 
-    public void SetTile(Vector2Int cell, Tile tile, Rigidbody2D rb)
+
+    public bool TrySetTile(Vector2Int cell, Tile tile)
     {
         if (!_cells.TryAdd(cell, tile))
         {
             Debug.LogWarning(
                 $"Trying to set {cell}, but already contains a tile!");
-            return;
+            return false;
         }
-
-        tile.Attach(true, rb);
+        
         tile.Cell = cell;
+        return true;
     }
 
     public bool RemoveTile(Vector2Int cell, Rigidbody2D rb)

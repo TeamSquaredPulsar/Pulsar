@@ -13,11 +13,11 @@ public class RadialMenu : MonoBehaviour
     private Quaternion _rotation;
         
     [Header("Scan zone")]
-    [SerializeField][GetComponent] private SpriteRenderer scanZoneSr;
+    [SerializeField] private SpriteRenderer scanZoneSr;
     [SerializeField] private Color scanZoneColor = new(0f, 1f, 0f, 0.10f);
         
     [Header("Outline")]
-    [SerializeField][GetComponent] private LineRenderer outline;
+    [SerializeField] private LineRenderer outline;
     [SerializeField] private float outlineWidthMultiplier = 0.05f;
     [SerializeField] private Color outlineColor = Color.white;
 
@@ -31,11 +31,6 @@ public class RadialMenu : MonoBehaviour
         outline.endColor = outlineColor;
         outline.sortingOrder = ScanZoneSortingOrder + 1;
         outline.positionCount = Segments;
-    }
-
-    private void Start()
-    {
-        Hide();
     }
 
     public void UpdateShape(Vector3 worldCenter, Vector2 radius, Quaternion rotation)
@@ -108,6 +103,6 @@ public class RadialMenu : MonoBehaviour
         return numerator / denominator;
     }
 
-    public void Show() => gameObject.SetActive(true);
-    public void Hide() => gameObject.SetActive(false);
+    public void Show() => scanZoneSr.enabled = true;
+    public void Hide() => scanZoneSr.enabled = false;
 }

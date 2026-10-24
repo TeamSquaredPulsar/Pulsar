@@ -11,7 +11,6 @@ GameObject:
   - component: {fileID: 1923082867568248035}
   - component: {fileID: 497275641067805184}
   - component: {fileID: 2260344807008050488}
-  - component: {fileID: 5645610968371623086}
   - component: {fileID: 7347581372079830787}
   - component: {fileID: 2303072813145309213}
   - component: {fileID: -4920047954809644643}
@@ -142,25 +141,6 @@ BoxCollider2D:
   m_AutoTiling: 0
   m_Size: {x: 1, y: 1}
   m_EdgeRadius: 0
---- !u!255 &5645610968371623086
-FixedJoint2D:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3485646891177161118}
-  m_Enabled: 1
-  serializedVersion: 4
-  m_EnableCollision: 0
-  m_ConnectedRigidBody: {fileID: 0}
-  m_BreakForce: Infinity
-  m_BreakTorque: Infinity
-  m_BreakAction: 3
-  m_AutoConfigureConnectedAnchor: 1
-  m_Anchor: {x: 0, y: 0}
-  m_ConnectedAnchor: {x: 0, y: 0}
-  m_DampingRatio: 0
-  m_Frequency: 0
 --- !u!50 &7347581372079830787
 Rigidbody2D:
   serializedVersion: 5
@@ -216,7 +196,6 @@ MonoBehaviour:
   baseColor: {r: 1, g: 1, b: 1, a: 1}
   <IsAttached>k__BackingField: 0
   <TileInfo>k__BackingField: {fileID: 11400000, guid: 9c0e50de41345d743a48948f1809c761, type: 2}
-  joint: {fileID: 5645610968371623086}
   spriteRenderer: {fileID: 497275641067805184}
   tileCollider: {fileID: 2260344807008050488}
   rigidBody: {fileID: 7347581372079830787}

@@ -53,6 +53,8 @@ public class BuildManager : MonoBehaviour
         _radialMenu = radialMenu.GetComponent<RadialMenu>();
         SetAsChild(ghostPreview);
         SetAsChild(radialMenu);
+        _ghostPreview.Hide();
+        _radialMenu.Hide();
     }
 
     private void SetAsChild(GameObject child)
@@ -61,13 +63,6 @@ public class BuildManager : MonoBehaviour
         child.transform.localPosition = Vector3.zero;
         child.transform.localRotation = Quaternion.identity;
         child.transform.localScale = Vector3.one;
-    }
-
-    private void OnDisable()
-    {
-        // ClearSelection();
-        // ClearDestroyHighlight();
-        _radialMenu.Hide();
     }
 
     private void ToggleRadialMenu(bool isOn)
@@ -110,6 +105,7 @@ public class BuildManager : MonoBehaviour
     {
         if (result.IsSuccess)
         {
+            Debug.Log($"Selected {result.Value}");
             _selectedTile = result.Value;
             _selectedTile.Select(selectedTint);
 
@@ -119,14 +115,23 @@ public class BuildManager : MonoBehaviour
         else
         {
             DeselectTile();
-            StopCoroutine(_updateRadialRoutine);
-            _updateRadialRoutine = null;
+            if (_updateRadialRoutine != null)
+            {
+                StopCoroutine(_updateRadialRoutine);
+                _updateRadialRoutine = null;
+            }
+            
         }
         ToggleRadialMenu(result.IsSuccess);
     }
 
     private void DeselectTile()
     {
+        //If we don't have a tile for some reason
+        if (!_selectedTile)
+        {
+            return;
+        }
         // It's in a spot we can build it from
         if (_selectedTile && _atOutline && _ghostPreview.enabled)
         {
@@ -134,12 +139,14 @@ public class BuildManager : MonoBehaviour
                 = _ghostPreview.transform.position;
             _selectedTile.transform.rotation
                 = _ghostPreview.transform.rotation;
+            _selectedTile.Deselect();
             manager.AttachTile(
                 _selectedTile.transform.position.ToVector2Int(),
                 _selectedTile);
+            
         }
-
-        if (_selectedTile)
+        // We Release the selected tile.
+        else
         {
             _selectedTile.Deselect();
         }
@@ -166,11 +173,11 @@ public class BuildManager : MonoBehaviour
             _orbitAngle - Mathf.Max(0.1f, orbitDegreesPerSecond)
             * Mathf.Deg2Rad * Time.deltaTime,
             Mathf.PI * 2f);
-
-
+        
         // Keep the tile on the outline as the ship moves and rotates
+        Vector3 newPos = _radialMenu.PointOnOutline(_orbitAngle);
         _selectedTile.transform.position
-            = _radialMenu.PointOnOutline(_orbitAngle);
+            = newPos;
         UpdatePreview();
         _orbitAngle = _radialMenu.GetOutlineAngleFromTileToCore(
             manager.Core.transform.position,
