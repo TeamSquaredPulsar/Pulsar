@@ -140,6 +140,10 @@ public class ShipManager : MonoBehaviour
     {
         rb.mass -= tile.Mass;
         //TODO implement tile destruction logic here
+        if (_gridData.RemoveTile(tile.Cell).IsSuccess)
+        {
+            tile.DestroyEvent -= HandleTileDestroyed;
+        }
     }
 
     // returns a rectangle enclosing all ship tiles in the ship’s local space
@@ -352,7 +356,7 @@ public class ShipManager : MonoBehaviour
         velocity += outward.normalized * speed;
         float spin = Random.Range(minSpin, maxSpin);
         
-        Result<Tile> result = _gridData.RemoveTile(tile.Cell, rb);
+        Result<Tile> result = _gridData.RemoveTile(tile.Cell);
         if (result.Value && result.Value != tile)
         {
             throw new Exception("Removed the wrong tile!");

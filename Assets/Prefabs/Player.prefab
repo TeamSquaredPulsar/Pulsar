@@ -56,6 +56,7 @@ MonoBehaviour:
   input: {fileID: 11400000, guid: c5eb4fca90495374ca60a24df65307ec, type: 2}
   <Ship>k__BackingField: {fileID: 35744134826503047}
   buildManager: {fileID: 8460810046222660286}
+  tileDestroySeconds: 2
 --- !u!114 &35744134826503047
 MonoBehaviour:
   m_ObjectHideFlags: 0

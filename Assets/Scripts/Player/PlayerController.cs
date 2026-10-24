@@ -18,7 +18,7 @@ public class PlayerController : MonoBehaviour
     [Min(0.1f)]
     private float tileDestroySeconds;
     
-    private Coroutine DestroyTileCoroutine;
+    private Coroutine _destroyTileCoroutine;
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     private void Start()
@@ -32,6 +32,10 @@ public class PlayerController : MonoBehaviour
         if (!result.IsSuccess)
         {
             //TODO Logic for deselecting
+            if (_destroyTileCoroutine != null)
+            {
+                StopCoroutine(_destroyTileCoroutine);
+            }
             buildManager.OnSelectTile(result);
             return;
         }
@@ -43,7 +47,7 @@ public class PlayerController : MonoBehaviour
         if (Ship.OwnsTile(tile))
         {
             //Start a coroutine
-            DestroyTileCoroutine = StartCoroutine(DestroyTileTimer(tile));
+            _destroyTileCoroutine = StartCoroutine(DestroyTileTimer(tile));
         }
         else if (!tile.IsAttached)
         {
@@ -54,6 +58,8 @@ public class PlayerController : MonoBehaviour
 
     private void OnDestroy()
     {
+        PlayerCursor.SelectTileEvent += OnSelectTile;
+        
         input.MoveEvent -= HandleMove;
         input.ShootEvent -= HandleShoot;
         input.RotateEvent -= HandleRotate;

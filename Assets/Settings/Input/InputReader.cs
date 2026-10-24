@@ -91,8 +91,6 @@ public class InputReader : ScriptableObject, IPlayerActions, IInputReader
         }
         //True if the button is down, false if up.
         SelectTileEvent?.Invoke(!context.canceled);
-        
-
     }
 
     // [CB] Annoyingly, Unity will overwrite the controller inputs with mouse

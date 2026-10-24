@@ -40,7 +40,7 @@ public class ShipGridData
         return true;
     }
 
-    public Result<Tile> RemoveTile(Vector2Int cell, Rigidbody2D rb)
+    public Result<Tile> RemoveTile(Vector2Int cell)
     {
         if (!TryGetTile(cell, out Tile tile) || !_cells.Remove(cell))
         {
