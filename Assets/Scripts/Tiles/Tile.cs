@@ -76,12 +76,14 @@ public abstract class Tile : MonoBehaviour
 
     public void TakeDamage(float damage) => health.TakeDamage(damage);
 
-    //To ask whether the rotated tile can connect from dir
-    /*
-     * example: tile is true:0 false:1 false:2 false:3 (allow connections from top only)
-     * tile.Rotation = 1 -> tile now allows connections from left
-     * pass EdgeConnectable(3) -> (3+1)%4==0 -> true => can connect
-     */
+    /// <summary>
+    /// To ask whether the rotated tile can connect from dir
+    ///  example: tile is true:0 false:1 false:2 false:3 (allow connections from top only)
+    ///  tile.Rotation = 1 -> tile now allows connections from left
+    ///  pass EdgeConnectable(3) -> (3+1)%4==0 -> true => can connect
+    /// </summary>
+    /// <param name="dir"></param>
+    /// <returns></returns>
     public bool EdgeConnectable(TileRotation dir)
     {
         TileRotation localDir = dir.Add(Rotation);
