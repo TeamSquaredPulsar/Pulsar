@@ -101,6 +101,7 @@ public abstract class Tile : MonoBehaviour
         spriteRenderer.sortingOrder = FloatingSortingOrder;
         rigidBody.SetFloatRb(Vector2.zero, 0f, _rbInfo);
         tileCollider.enabled = true;
+        transform.SetParent(null, true);
     }
 
     public void Attach(Vector2Int cell)
@@ -114,6 +115,7 @@ public abstract class Tile : MonoBehaviour
         }
 
         Cell = cell;
+        Debug.Log($"Attaching on {Rotation.ToString()}");
     }
 
     public void Detatch(Vector2? velocity = null, float angularVelocity = 0f)
@@ -137,5 +139,12 @@ public abstract class Tile : MonoBehaviour
     private void Unhighlight()
     {
         spriteRenderer.color = baseColor;
+    }
+
+    public void Rotate(Quaternion rotation)
+    {
+        transform.SetLocalPositionAndRotation(transform.localPosition, rotation);
+        // transform.SetPositionAndRotation(this.transform.position, rotation);
+        Rotation = transform.localRotation.eulerAngles.z.ToTileRotation();
     }
 }

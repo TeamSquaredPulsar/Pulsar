@@ -104,7 +104,7 @@ public class ThrusterManager : MonoBehaviour
 
     private void CalculateThrusters()
     {
-        int directions = Enum.GetNames(typeof(TileRotation)).Length;
+        int directions = new TileRotation().Length();
         _directedThrust = new ThrustAtRotation[directions];
 
         for (int i = 0; i < directions; i++)

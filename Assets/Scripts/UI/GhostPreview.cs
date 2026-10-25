@@ -1,4 +1,3 @@
-using Nrjwolf.Tools.AttachAttributes;
 using UnityEngine;
 
 [RequireComponent(typeof(SpriteRenderer))]
@@ -13,6 +12,7 @@ public class GhostPreview : MonoBehaviour
     [SerializeField] 
     private Color ghostColor = new(0f, 1f, 0f, 0.4f);
     
+    public bool IsShowing => sr.sprite != null;
     private void Awake()
     {
         sr.sortingOrder = sortingOrder;

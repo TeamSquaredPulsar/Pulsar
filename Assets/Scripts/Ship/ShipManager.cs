@@ -179,7 +179,7 @@ public class ShipManager : MonoBehaviour
 
     #region ATTACH-DETACH
 
-    private bool CanAttach(Vector2Int pos, TileInfoSO infoSo, int rotation)
+    private bool CanAttach(Vector2Int pos, TileInfoSO infoSo, TileRotation rotation)
     {
         // Cannot attach to an occupied cell
         if (_gridData.ContainsCell(pos))
@@ -212,7 +212,7 @@ public class ShipManager : MonoBehaviour
     private int CountConnections(
         Vector2Int pos,
         TileInfoSO infoSo,
-        int rotation)
+        TileRotation rotation)
     {
         // Count all neighbours that can connect at this position and rotation
         int count = 0;
@@ -239,7 +239,7 @@ public class ShipManager : MonoBehaviour
     }
 
 
-    public Result<(Vector2Int cell, int rotation)> FindBestAttachment(
+    public Result<(Vector2Int cell, TileRotation rotation)> FindBestAttachment(
         TileInfoSO infoSo,
         Vector3 worldPos)
     {
@@ -248,7 +248,7 @@ public class ShipManager : MonoBehaviour
             transform.InverseTransformPoint(worldPos));
 
         float bestDist = float.MaxValue;
-        int bestRot = -1;
+        TileRotation? bestRot = null;
         int bestConnectionCount = 0;
         Vector2Int bestCell = default;
         // public static readonly Vector2Int[] Dirs =
@@ -294,31 +294,31 @@ public class ShipManager : MonoBehaviour
                          typeof(TileRotation)))
             {
                 // TODO: [CB] See if we can make these functions take a TileRotation in.
-                if (!CanAttach(candidate, infoSo, direction.ToInt()))
+                if (!CanAttach(candidate, infoSo, direction))
                 {
                     continue;
                 }
 
                 // prefer more connections
                 int connectionCount
-                    = CountConnections(candidate, infoSo, direction.ToInt());
+                    = CountConnections(candidate, infoSo, direction);
 
-                if (bestRot == -1
+                if (bestRot == null
                     || dist < bestDist - 0.01f
                     || (Mathf.Abs(dist - bestDist) < 0.01f &&
                         connectionCount > bestConnectionCount))
                 {
                     bestDist = dist;
                     bestCell = candidate;
-                    bestRot = direction.ToInt();
+                    bestRot = direction;
                     bestConnectionCount = connectionCount;
                 }
             }
         }
 
-        return new Result<(Vector2Int cell, int rotation)>(
-            bestRot != -1,
-            (bestCell, bestRot));
+        return !bestRot.HasValue 
+            ? Result<(Vector2Int cell, TileRotation rotation)>.Fail() 
+            : Result<(Vector2Int cell, TileRotation rotation)>.Pass((bestCell, bestRot.Value));
     }
 
     private void DetatchTile(Tile tile)

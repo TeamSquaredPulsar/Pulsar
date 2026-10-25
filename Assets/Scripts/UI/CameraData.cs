@@ -18,12 +18,4 @@ public class CameraData : ScriptableObject {
             mainCamera = Camera.main;
         }
     }
-
-    private void OnDisable()
-    {
-        if (mainCamera != null)
-        {
-            Debug.Log("Disabling main camera!");
-        }
-    }
 }

@@ -1,4 +1,5 @@
 using System.Collections;
+using Pulsar.Ship.Extensions;
 using Pulsar.Utilities;
 using UnityEngine;
 
@@ -32,7 +33,7 @@ public class BuildManager : MonoBehaviour
     private bool _atOutline;
     private float _orbitAngle;
     private Vector2Int _attachCell;
-    private int _attachRotation;
+    private TileRotation _attachRotation;
     private Tile _highlightedTile;
 
     private Coroutine _updateRadialRoutine;
@@ -112,7 +113,16 @@ public class BuildManager : MonoBehaviour
         }
 
         // It's in a spot we can build it from
-        if (_selectedTile && _atOutline && ghostPreview.enabled)
+        if (_selectedTile 
+            && _atOutline 
+            && ghostPreview.IsShowing
+            // [CB] Currently, tile rotation stored in the selected tile doesn't
+            // match that of the _selected tile, so we cant do the following.
+            // && controller.Ship.CanAttach(
+            //     ghostPreview.transform.position.ToVector2Int(),
+            //     _selectedTile.TileInfo,
+            //     _selectedTile.Rotation)
+            )
         {
             _selectedTile.transform.position
                 = ghostPreview.transform.position;
@@ -129,7 +139,7 @@ public class BuildManager : MonoBehaviour
         {
             _selectedTile.Deselect();
         }
-
+        
         _selectedTile = null;
         _atOutline = false;
         _orbitAngle = 0;
@@ -147,6 +157,7 @@ public class BuildManager : MonoBehaviour
             {
                 return;
             }
+            _selectedTile.transform.SetParent(controller.transform);
         }
 
         // Move around the oval; keep the angle between 0 and 2 PI
@@ -179,7 +190,7 @@ public class BuildManager : MonoBehaviour
     private void UpdatePreview()
     {
         // Find a valid rotation at the nearest empty cells around the ship
-        Result<(Vector2Int cell, int rotation)> result
+        Result<(Vector2Int cell, TileRotation rotation)> result
             = controller.Ship.FindBestAttachment(
                 _selectedTile.TileInfo, _selectedTile.transform.position);
         if (!result.IsSuccess)
@@ -195,9 +206,11 @@ public class BuildManager : MonoBehaviour
         // apply _attachRotation to selectedTile to display the preview in world space
         Quaternion rotation = controller.transform.rotation
                               * ShipUtilities.RotateQuarterOnZAxis(
-                                  _attachRotation);
+                                  _attachRotation.ToInt());
         ghostPreview.Show(_selectedTile.Sprite,
             controller.Ship.CellToWorld(_attachCell), rotation);
+        
+        _selectedTile.Rotate(rotation);
     }
 }
 }

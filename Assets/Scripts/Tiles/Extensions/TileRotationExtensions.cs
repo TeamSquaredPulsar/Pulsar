@@ -5,7 +5,21 @@ namespace Pulsar.Ship.Extensions
 {
 public static class TileRotationExtensions
 {
-    public static TileRotation ToRotationEnum(this int rot)
+    private const int FullCircleDegrees = 360;
+    private static readonly int CircleSteps = FullCircleDegrees / Enum.GetNames(typeof(TileRotation))
+        .Length;
+    public static TileRotation ToTileRotation(this float rotDegrees)
+    {
+        Debug.Log("Steps:" + CircleSteps);
+        Debug.Log($"Received {rotDegrees} degrees");
+        int steps = ((int)rotDegrees) / CircleSteps;
+        Debug.Log("After mod: " + steps);
+        TileRotation direction = steps.ToTileRotation();
+        Debug.Log($"Returning {direction.ToString()}");
+        return direction;
+    }
+
+    public static TileRotation ToTileRotation(this int rot)
     {
         int rotationPoints = Enum.GetNames(typeof(TileRotation))
             .Length;
@@ -26,23 +40,33 @@ public static class TileRotationExtensions
         };
     }
 
-    public static TileRotation Add(this TileRotation rot, int value) =>
-        (rot.ToInt() + value).ToRotationEnum();
+    private static TileRotation Add(this TileRotation rot, int value) =>
+        (rot.ToInt() + value).ToTileRotation();
 
     public static TileRotation Add(
         this TileRotation self,
         TileRotation value) => self.Add(value.ToInt());
 
+    private static TileRotation Subtract(this TileRotation self, int value) =>
+        (self.ToInt() - value).ToTileRotation();
+
+    public static TileRotation Subtract(
+        this TileRotation self,
+        TileRotation value) => self.Subtract(value.ToInt());
+
     public static TileRotation Opposite(this TileRotation rot)
     {
-        int half = Enum.GetNames(typeof(TileRotation)).Length / 2;
-        return (rot.ToInt() + half).ToRotationEnum();
+        int half = rot.Length() / 2;
+        return (rot.ToInt() + half).ToTileRotation();
     }
 
     public static int ToInt(this TileRotation rot) => (int)rot;
 
     public static TileRotation PlusInt(
         this TileRotation current,
-        int rot) => (current.ToInt() + rot).ToRotationEnum();
+        int rot) => (current.ToInt() + rot).ToTileRotation();
+
+    public static int Length<T>(this T enumValue) where T : Enum =>
+        Enum.GetNames(typeof(T)).Length;
 }
 }
