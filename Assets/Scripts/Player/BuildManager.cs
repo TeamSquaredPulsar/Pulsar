@@ -72,12 +72,13 @@ public class BuildManager : MonoBehaviour
         // Get the ship bounds in local space
         Bounds localBounds = controller.Ship.GetLocalBounds();
 
-        Vector3 core = controller.Ship.Core.transform.position;
-        Vector3 coreLocal = controller.transform.InverseTransformPoint(core);
+        Vector3 corePos = controller.Ship.Core.transform.position;
+        
+        Vector2 radius = localBounds.size;
+        radius.Add(scanPadding);
 
-        Vector2 radius = Vector2.Max(localBounds.min, coreLocal);
-        radius = radius.Add(scanPadding);
-        radialMenu.UpdateShape(core, radius, controller.transform.rotation);
+        radialMenu.UpdateShape(corePos, radius, controller.transform.rotation);
+        // radialMenu.UpdateShape(corePos, radius, controller.transform.rotation);
     }
 
     public void OnSelectTile(Result<Tile> result)

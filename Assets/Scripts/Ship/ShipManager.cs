@@ -154,6 +154,7 @@ public class ShipManager : MonoBehaviour
     // returns a rectangle enclosing all ship tiles in the ship’s local space
     public Bounds GetLocalBounds()
     {
+        return compositeCollider.bounds;
         if (Cells.Count == 0)
         {
             return new Bounds(Vector3.zero,
