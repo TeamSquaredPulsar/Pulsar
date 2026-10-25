@@ -131,7 +131,7 @@ public class BuildManager : MonoBehaviour
                 = ghostPreview.transform.rotation;
             _selectedTile.Deselect();
             controller.Ship.AttachTile(
-                _selectedTile.transform.position.ToVector2Int(),
+                _attachCell,
                 _selectedTile);
 
         }
