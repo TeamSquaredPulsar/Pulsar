@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using Pulsar.Ship.Extensions;
 using UnityEngine;
 
+namespace Pulsar.Ship
+{
 public struct ThrustAtRotation
 {
     public TileRotation Orientation;
@@ -126,4 +128,6 @@ public class ThrusterManager : MonoBehaviour
         _directedThrust[(int)orientation];
 
     #endregion
+}
+
 }

@@ -5,22 +5,25 @@ using Pulsar.Ship.Extensions;
 using Pulsar.Utilities;
 using UnityEngine;
 
+namespace Pulsar.Ship.Data
+{
 [Serializable]
 public class ShipGridData
 {
     public event Action<Tile> TileOrphanedEvent;
-    
+
     private readonly Dictionary<Vector2Int, Tile> _cells = new();
 
     public IReadOnlyDictionary<Vector2Int, Tile> Cells => _cells;
-    
+
     public IReadOnlyList<Tile> Tiles => _cells.Values.ToList();
 
     public CoreTile Core { get; private set; }
 
     public bool ContainsCell(Vector2Int cell) => _cells.ContainsKey(cell);
 
-    public bool TryGetTile(Vector2Int cell, out Tile tile) => _cells.TryGetValue(cell, out tile);
+    public bool TryGetTile(Vector2Int cell, out Tile tile) =>
+        _cells.TryGetValue(cell, out tile);
 
     public bool TrySetTile(Vector2Int cell, Tile tile)
     {
@@ -28,6 +31,7 @@ public class ShipGridData
         {
             Core = coreTile;
         }
+
         return _cells.TryAdd(cell, tile);
     }
 
@@ -37,7 +41,7 @@ public class ShipGridData
         {
             return Result<Tile>.Fail();
         }
-        
+
         DetachOrphans();
         return Result<Tile>.Pass(tile);
     }
@@ -107,45 +111,48 @@ public class ShipGridData
                 }
             });
     }
-    
+
     //BFS
     private HashSet<Vector2Int> Flood(Vector2Int start)
     {
         Queue<Vector2Int> open = new();
         HashSet<Vector2Int> closed = new() { start, };
         open.Enqueue(start);
-    
+
         while (open.Count > 0)
         {
             Vector2Int cellIndex = open.Dequeue();
             Tile tile = Cells[cellIndex];
-            
-            foreach(TileRotation direction in Enum.GetValues(typeof(TileRotation)))
+
+            foreach (TileRotation direction in Enum.GetValues(
+                         typeof(TileRotation)))
             {
                 Vector2Int nextIndex = cellIndex + direction.ToVector2Int();
-                
+
                 // If we already have the next index, no need to search
                 if (closed.Contains(nextIndex))
                 {
                     continue;
                 }
+
                 // If the next index isn't a tile, continue
                 if (!TryGetTile(nextIndex, out Tile cell))
                 {
                     continue;
                 }
-                
+
                 if (!tile.EdgeConnectable(direction) ||
                     !cell.EdgeConnectable(direction.Opposite()))
                 {
                     continue;
                 }
-    
+
                 closed.Add(nextIndex);
                 open.Enqueue(nextIndex);
             }
         }
-    
+
         return closed;
     }
+}
 }

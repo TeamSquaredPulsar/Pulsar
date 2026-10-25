@@ -5,7 +5,6 @@ using static Controls;
 
 public interface IInputReader
 {
-    Vector2 MoveDirection { get; }
     void EnablePlayerActions();
 }
 
@@ -13,7 +12,7 @@ public interface IInputReader
 public class InputReader : ScriptableObject, IPlayerActions, IInputReader
 {
     public event Action<Vector2> MoveEvent;
-    public event Action ShootEvent;
+    public event Action<bool> ShootEvent;
     public event Action<float> RotateEvent;
     public event Action<Vector2> MoveCursorEvent;
     public event Action<bool> SelectTileEvent;
@@ -21,8 +20,6 @@ public class InputReader : ScriptableObject, IPlayerActions, IInputReader
     [SerializeField]
     private CameraData camData;
     private Controls _controls;
-    
-    public Vector2 MoveDirection => _controls.Player.Move.ReadValue<Vector2>();
 
     private void Awake()
     {
@@ -30,7 +27,7 @@ public class InputReader : ScriptableObject, IPlayerActions, IInputReader
         {
             return;
         }
-
+        
         CreateNewControls();
     }
 
@@ -40,7 +37,7 @@ public class InputReader : ScriptableObject, IPlayerActions, IInputReader
         {
             CreateNewControls();
         }
-
+        
         _controls?.Player.Enable();
     }
 
@@ -60,6 +57,7 @@ public class InputReader : ScriptableObject, IPlayerActions, IInputReader
         _controls = new Controls();
         _controls.Player.SetCallbacks(this);
     }
+    
 
     public void EnablePlayerActions()
     {
@@ -73,7 +71,8 @@ public class InputReader : ScriptableObject, IPlayerActions, IInputReader
 
     public void OnShoot(InputAction.CallbackContext context)
     {
-        ShootEvent?.Invoke();
+        //True on start or performed, false on cancelled.
+        ShootEvent?.Invoke(!context.canceled);
     }
 
     public void OnRotate(InputAction.CallbackContext context)

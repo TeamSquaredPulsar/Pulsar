@@ -1,2 +1,16 @@
 fileFormatVersion: 2
 guid: ae52ac38b092d65468cc2ffd8bd18bf7
+MonoImporter:
+  externalObjects: {}
+  serializedVersion: 2
+  defaultReferences:
+  - <TileInfo>k__BackingField: {fileID: 11400000, guid: 9c0e50de41345d743a48948f1809c761, type: 2}
+  - spriteRenderer: {instanceID: 0}
+  - tileCollider: {instanceID: 0}
+  - rigidBody: {instanceID: 0}
+  - health: {instanceID: 0}
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

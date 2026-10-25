@@ -1,21 +1,24 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Pulsar.Hazards;
+using Pulsar.Ship.Data;
 using Pulsar.Ship.Extensions;
 using Pulsar.Utilities;
 using UnityEngine;
 using Random = UnityEngine.Random;
 
+namespace Pulsar.Ship
+{
 [RequireComponent(typeof(CompositeCollider2D), typeof(Rigidbody2D))]
 public class ShipManager : MonoBehaviour
 {
-    [Header("Refs")]
-    [SerializeField]
+    [Header("Refs"), SerializeField,]
     private CompositeCollider2D compositeCollider;
-    
+
     [SerializeField]
     private Rigidbody2D rb;
-    
+
     [SerializeField]
     private ThrusterManager thrusterManager;
 
@@ -25,15 +28,14 @@ public class ShipManager : MonoBehaviour
     [SerializeField]
     private List<ThrusterTile> thrusters = new(10);
 
-    [Header("Detach Explosion")]
-    [SerializeField]
+    [Header("Detach Explosion"), SerializeField,]
     private Vector2 detachRadiateLinearVelocity = new(2f, 5f);
 
     [SerializeField]
     private Vector2 detachRadiateAngularVelocity = new(-180f, 180f);
 
     private ShipGridData _gridData = new();
-    
+
     public CoreTile Core => _gridData.Core;
 
     public IReadOnlyDictionary<Vector2Int, Tile> Cells => _gridData.Cells;
@@ -44,7 +46,7 @@ public class ShipManager : MonoBehaviour
         RefreshTiles();
         _gridData.TileOrphanedEvent += DetatchTile;
     }
-    
+
     private void OnDestroy()
     {
         _gridData.TileOrphanedEvent -= DetatchTile;
@@ -64,15 +66,15 @@ public class ShipManager : MonoBehaviour
             AttachTile(tile.transform.position.ToVector2Int(), tile);
         }
     }
-    
+
     public void AttachTile(Vector2Int cell, Tile tile)
     {
         ProcessTile(tile);
-        if(!_gridData.TrySetTile(cell, tile))
+        if (!_gridData.TrySetTile(cell, tile))
         {
             return;
         }
-                
+
         rb.mass += tile.Mass;
         tile.Attach(cell);
         tile.transform.SetParent(transform);
@@ -145,6 +147,7 @@ public class ShipManager : MonoBehaviour
                 weapons.Remove(weapon);
                 break;
         }
+
         tile.DestroyEvent -= HandleTileDestroyed;
     }
 
@@ -234,7 +237,7 @@ public class ShipManager : MonoBehaviour
 
         return count;
     }
-    
+
 
     public Result<(Vector2Int cell, int rotation)> FindBestAttachment(
         TileInfoSO infoSo,
@@ -357,17 +360,18 @@ public class ShipManager : MonoBehaviour
         float speed = Random.Range(minSpeed, maxSpeed);
         velocity += outward.normalized * speed;
         float spin = Random.Range(minSpin, maxSpin);
-        
+
         Result<Tile> result = _gridData.RemoveTile(tile.Cell);
         if (result.Value && result.Value != tile)
         {
             throw new Exception("Removed the wrong tile!");
         }
-        
-        tile.Detatch(velocity,angularVelocity + spin);
+
+        tile.Detatch(velocity, angularVelocity + spin);
         rb.mass -= tile.Mass;
     }
 
     #endregion
-    
+
+}
 }

@@ -1,4 +1,5 @@
 using System;
+using Pulsar.Interactions;
 using Pulsar.Ship.Extensions;
 using UnityEngine;
 
@@ -9,9 +10,8 @@ public struct TileRbInfo
 }
 
 [RequireComponent(typeof(BoxCollider2D),
-    typeof(SpriteRenderer),
-    typeof(Health))]
-// [RequireComponent(typeof(Rigidbody2D))]
+     typeof(SpriteRenderer),
+     typeof(Health)),]
 public abstract class Tile : MonoBehaviour
 {
     public event Action<Tile> DestroyEvent;
@@ -106,7 +106,6 @@ public abstract class Tile : MonoBehaviour
     public void Attach(Vector2Int cell)
     {
         IsAttached = true;
-        Debug.Log($"Attached {name}");
         // [CB] Unfortunately we need to destroy the rigidbodies in order for the
         // collider to merge with the parents collider properly.
         if (rigidBody)

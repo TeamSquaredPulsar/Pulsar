@@ -124,7 +124,7 @@ public class Parallax : MonoBehaviour
         {
             _startPos.x += _size.x;
         }
-        else if (movement.x < -_startPos.x - _size.x)
+        else if (movement.x < _startPos.x - _size.x)
         {
             _startPos.x -= _size.x;
         }
@@ -133,7 +133,7 @@ public class Parallax : MonoBehaviour
         {
             _startPos.y += _size.y;
         }
-        else if (movement.y < -_startPos.y - _size.y)
+        else if (movement.y < _startPos.y - _size.y)
         {
             _startPos.y -= _size.y;
         }

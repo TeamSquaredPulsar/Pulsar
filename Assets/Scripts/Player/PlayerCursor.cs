@@ -1,13 +1,16 @@
 using System;
+using Pulsar.Ship;
 using Pulsar.Utilities;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
+namespace Pulsar.Player
+{
 [RequireComponent(typeof(SpriteRenderer), typeof(CircleCollider2D))]
 public class PlayerCursor : MonoBehaviour
 {
     public static event Action<Result<Tile>> SelectTileEvent;
-
+    
     [SerializeField]
     private InputReader input;
 
@@ -27,12 +30,12 @@ public class PlayerCursor : MonoBehaviour
     {
         input.MoveCursorEvent += OnCursorMove;
         input.SelectTileEvent += OnTileSelect;
-        _mainCamera = Camera.main;
         // [CB] TODO: We need to setup callbacks for when the camera changes
     }
 
     private void Start()
     {
+        _mainCamera = Camera.main;
         Cursor.visible = false;
         Cursor.lockState = CursorLockMode.Confined;
 
@@ -166,4 +169,5 @@ public class PlayerCursor : MonoBehaviour
 
         _hoveredTile = null;
     }
+}
 }

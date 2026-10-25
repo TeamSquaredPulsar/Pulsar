@@ -2,7 +2,8 @@
     "name": "Pulsar.Hazards",
     "rootNamespace": "",
     "references": [
-        "GUID:aa86c6edaf847b544b44790230e36643"
+        "GUID:aa86c6edaf847b544b44790230e36643",
+        "GUID:4b4794e38edc74eb8986ad993a5ad5c8"
     ],
     "includePlatforms": [],
     "excludePlatforms": [],

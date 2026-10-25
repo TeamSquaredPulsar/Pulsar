@@ -46,9 +46,9 @@ public class BurstShot : WeaponStrategy
         Transform[] firePoints,
         Func<Transform, GameObject> spawnProjectile)
     {
-        foreach (Transform firePoint in firePoints[..k_MaxBullets])
+        for (int i = 0; i < k_MaxBullets; i++)
         {
-            spawnProjectile(firePoint);
+            spawnProjectile(firePoints[i % firePoints.Length]);
             yield return new WaitForSeconds(k_bulletGapTime);
         }
     }

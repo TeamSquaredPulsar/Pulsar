@@ -1,4 +1,8 @@
+
 using UnityEngine;
+
+namespace Pulsar.Hazards
+{
 /// <summary>
 /// Represents a Projectile
 ///
@@ -25,6 +29,8 @@ public class Projectile : MonoBehaviour
 
     [SerializeField]
     private GameObject hitEffectPrefab;
+    
+    
 
     /// <summary>
     /// Start method.
@@ -74,9 +80,17 @@ public class Projectile : MonoBehaviour
 
         if (projectile.TryGetComponent(out Rigidbody2D rb))
         {
-            rb.linearVelocity = rb.transform.up * speed;
+            // Inherit the firing ship's motion once, when the bullet is launched.
+            Rigidbody2D firingBody = parentCollider != null
+                ? parentCollider.attachedRigidbody
+                : null;
+            Vector2 inheritedVelocity = firingBody != null
+                ? firingBody.linearVelocity
+                : Vector2.zero;
+            rb.linearVelocity = inheritedVelocity + (Vector2)rb.transform.up * speed;
         }
 
         return projectile;
     }
+}
 }

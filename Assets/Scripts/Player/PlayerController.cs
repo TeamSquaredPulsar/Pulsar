@@ -1,8 +1,11 @@
 using System.Collections;
+using Pulsar.Ship;
 using Pulsar.Utilities;
 using UnityEngine;
 
-[RequireComponent(typeof(ShipManager), typeof(BuildManager))]
+namespace Pulsar.Player
+{
+[RequireComponent(typeof(ShipManager))]
 public class PlayerController : MonoBehaviour
 {
     [SerializeField]
@@ -14,11 +17,13 @@ public class PlayerController : MonoBehaviour
     [SerializeField]
     private BuildManager buildManager;
 
-    [SerializeField]
-    [Min(0.1f)]
+    [SerializeField, Min(0.1f),]
     private float tileDestroySeconds;
-    
+
     private Coroutine _destroyTileCoroutine;
+
+    private bool _isShooting = false;
+    private Coroutine _shootingCoroutine = null;
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     private void Start()
@@ -32,8 +37,8 @@ public class PlayerController : MonoBehaviour
         PlayerCursor.SelectTileEvent -= OnSelectTile;
 
         input.MoveEvent -= HandleMove;
-        input.ShootEvent -= HandleShoot;
         input.RotateEvent -= HandleRotate;
+        input.ShootEvent -= HandleShoot;
     }
 
     private void OnSelectTile(Result<Tile> result)
@@ -45,6 +50,7 @@ public class PlayerController : MonoBehaviour
             {
                 StopCoroutine(_destroyTileCoroutine);
             }
+
             buildManager.OnSelectTile(result);
             return;
         }
@@ -68,19 +74,27 @@ public class PlayerController : MonoBehaviour
     private void RegisterInputCallbacks()
     {
         input.MoveEvent += HandleMove;
-        input.ShootEvent += HandleShoot;
         input.RotateEvent += HandleRotate;
+        input.ShootEvent += HandleShoot;
         input.EnablePlayerActions();
+    }
+
+    private void HandleShoot(bool isShooting)
+    {
+        _isShooting = isShooting;
+        if (_isShooting)
+        {
+            _shootingCoroutine = StartCoroutine(StartShooting());
+        }
+        else
+        {
+            StopCoroutine(_shootingCoroutine);
+        }
     }
 
     private void HandleRotate(float obj)
     {
         Ship.Rotate(obj);
-    }
-
-    private void HandleShoot()
-    {
-        Ship.Fire();
     }
 
     private void HandleMove(Vector2 direction)
@@ -93,4 +107,16 @@ public class PlayerController : MonoBehaviour
         yield return new WaitForSeconds(tileDestroySeconds);
         tile.TakeDamage(tile.CurrentHp);
     }
+
+    private IEnumerator StartShooting()
+    {
+        while (_isShooting)
+        {
+            Ship.Fire();
+            yield return null;
+        }
+
+        _shootingCoroutine = null;
+    }
+}
 }

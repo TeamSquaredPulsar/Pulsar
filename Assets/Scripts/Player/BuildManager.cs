@@ -2,34 +2,30 @@ using System.Collections;
 using Pulsar.Utilities;
 using UnityEngine;
 
+namespace Pulsar.Player
+{
 public class BuildManager : MonoBehaviour
 {
 
-    [Header("References")]
-    [SerializeField]
+    [Header("References"), SerializeField,]
     private PlayerController controller;
-    
+
     [SerializeField]
     private RadialMenu radialMenu;
-    
+
     [SerializeField]
     private GhostPreview ghostPreview;
 
-    [Header("Scan Zone")]
-    [SerializeField]
-    [Min(0.1f)]
+    [Header("Scan Zone"), SerializeField, Min(0.1f),]
     private float scanPadding = 2.5f;
 
-    [Header("Selection")]
-    [SerializeField]
+    [Header("Selection"), SerializeField,]
     private Color selectedTint = new(0.3f, 1f, 0.8f, 1f);
 
-    [SerializeField]
-    [Min(0.1f)]
+    [SerializeField, Min(0.1f),]
     private float pullSpeed = 8f;
 
-    [SerializeField]
-    [Min(0.1f)]
+    [SerializeField, Min(0.1f),]
     private float orbitDegreesPerSecond = 90f;
 
     private Tile _selectedTile;
@@ -87,7 +83,6 @@ public class BuildManager : MonoBehaviour
     {
         if (result.IsSuccess)
         {
-            Debug.Log($"Selected {result.Value}");
             _selectedTile = result.Value;
             _selectedTile.Select(selectedTint);
 
@@ -102,8 +97,9 @@ public class BuildManager : MonoBehaviour
                 StopCoroutine(_updateRadialRoutine);
                 _updateRadialRoutine = null;
             }
-            
+
         }
+
         ToggleRadialMenu(result.IsSuccess);
     }
 
@@ -114,6 +110,7 @@ public class BuildManager : MonoBehaviour
         {
             return;
         }
+
         // It's in a spot we can build it from
         if (_selectedTile && _atOutline && ghostPreview.enabled)
         {
@@ -125,7 +122,7 @@ public class BuildManager : MonoBehaviour
             controller.Ship.AttachTile(
                 _selectedTile.transform.position.ToVector2Int(),
                 _selectedTile);
-            
+
         }
         // We Release the selected tile.
         else
@@ -155,7 +152,7 @@ public class BuildManager : MonoBehaviour
             _orbitAngle - Mathf.Max(0.1f, orbitDegreesPerSecond)
             * Mathf.Deg2Rad * Time.deltaTime,
             Mathf.PI * 2f);
-        
+
         // Keep the tile on the outline as the ship moves and rotates
         Vector3 newPos = radialMenu.PointOnOutline(_orbitAngle);
         _selectedTile.transform.position
@@ -200,4 +197,5 @@ public class BuildManager : MonoBehaviour
         ghostPreview.Show(_selectedTile.Sprite,
             controller.Ship.CellToWorld(_attachCell), rotation);
     }
+}
 }
