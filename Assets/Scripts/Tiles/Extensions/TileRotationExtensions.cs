@@ -10,13 +10,8 @@ public static class TileRotationExtensions
         .Length;
     public static TileRotation ToTileRotation(this float rotDegrees)
     {
-        Debug.Log("Steps:" + CircleSteps);
-        Debug.Log($"Received {rotDegrees} degrees");
         int steps = ((int)rotDegrees) / CircleSteps;
-        Debug.Log("After mod: " + steps);
-        TileRotation direction = steps.ToTileRotation();
-        Debug.Log($"Returning {direction.ToString()}");
-        return direction;
+        return steps.ToTileRotation();
     }
 
     public static TileRotation ToTileRotation(this int rot)

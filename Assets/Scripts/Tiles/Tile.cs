@@ -117,7 +117,6 @@ public abstract class Tile : MonoBehaviour
         }
 
         Cell = cell;
-        Debug.Log($"Attaching on {Rotation.ToString()}");
     }
 
     public void Detatch(Vector2? velocity = null, float angularVelocity = 0f)
