@@ -86,7 +86,7 @@ public abstract class Tile : MonoBehaviour
     /// <returns></returns>
     public bool EdgeConnectable(TileRotation dir)
     {
-        TileRotation localDir = dir.Add(Rotation);
+        TileRotation localDir = dir.Subtract(Rotation);
         return TileInfo.connectableEdges[localDir.ToInt()];
     }
 

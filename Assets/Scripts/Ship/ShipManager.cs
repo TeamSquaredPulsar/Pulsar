@@ -192,7 +192,7 @@ public class ShipManager : MonoBehaviour
                      typeof(TileRotation)))
         {
             // Get the tile edge facing this direction after rotation
-            int localDir = direction.Add(rotation).ToInt();
+            int localDir = direction.Subtract(rotation).ToInt();
             if (!infoSo.connectableEdges[localDir])
             {
                 continue;
@@ -221,7 +221,7 @@ public class ShipManager : MonoBehaviour
                      typeof(TileRotation)))
         {
             // Get the tile edge after rotation
-            int localDir = direction.Add(rotation).ToInt();
+            int localDir = direction.Subtract(rotation).ToInt();
             if (!infoSo.connectableEdges[localDir])
             {
                 continue;

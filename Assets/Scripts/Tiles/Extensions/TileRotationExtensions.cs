@@ -18,7 +18,9 @@ public static class TileRotationExtensions
     {
         int rotationPoints = Enum.GetNames(typeof(TileRotation))
             .Length;
-        int direction = rot % rotationPoints;
+        //Prevent from returning negative values
+        int direction = ((rot % rotationPoints) 
+                         + rotationPoints) % rotationPoints;
         return (TileRotation)direction;
     }
 
