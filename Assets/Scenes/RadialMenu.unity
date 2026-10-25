@@ -297,6 +297,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 8893891361912782109, guid: b8226397bde29ab4abb516fe64e2ab6f, type: 3}
+      propertyPath: thrusters.Array.size
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents:
     - {fileID: 5823803486919153701, guid: b8226397bde29ab4abb516fe64e2ab6f, type: 3}
     - {fileID: 5651161430065494015, guid: b8226397bde29ab4abb516fe64e2ab6f, type: 3}
