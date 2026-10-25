@@ -10,7 +10,7 @@ public static class TileRotationExtensions
         .Length;
     public static TileRotation ToTileRotation(this float rotDegrees)
     {
-        int steps = ((int)rotDegrees) / CircleSteps;
+        int steps = Mathf.RoundToInt(rotDegrees / CircleSteps);
         return steps.ToTileRotation();
     }
 
