@@ -11,12 +11,12 @@ public class RadialMenu : MonoBehaviour
     private Vector2 _radius;
     private Quaternion _rotation;
         
-    [Header("Scan zone")]
-    [SerializeField] private SpriteRenderer scanZoneSr;
+    [Header("Scan zone"),SerializeField,]
+    private SpriteRenderer scanZoneSr;
     [SerializeField] private Color scanZoneColor = new(0f, 1f, 0f, 0.10f);
         
-    [Header("Outline")]
-    [SerializeField] private LineRenderer outline;
+    [Header("Outline"),SerializeField,]
+        private LineRenderer outline;
     [SerializeField] private float outlineWidthMultiplier = 0.05f;
     [SerializeField] private Color outlineColor = Color.white;
 

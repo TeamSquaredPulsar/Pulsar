@@ -131,6 +131,8 @@ public class BuildManager : MonoBehaviour
         }
 
         _selectedTile = null;
+        _atOutline = false;
+        _orbitAngle = 0;
         ghostPreview?.Hide();
     }
 
