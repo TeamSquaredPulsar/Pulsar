@@ -28,6 +28,7 @@ public static class RbExtensions
         original.angularDamping = rbInfo.AngularDamping;
         original.linearVelocity = velocity;
         original.angularVelocity = angularVelocity;
+        original.mass = rbInfo.Mass;
         return original;
     }
 }

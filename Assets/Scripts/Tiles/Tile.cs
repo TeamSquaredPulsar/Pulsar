@@ -7,6 +7,7 @@ public struct TileRbInfo
 {
     public float LinearDamping;
     public float AngularDamping;
+    public float Mass;
 }
 
 [RequireComponent(typeof(BoxCollider2D),
@@ -56,6 +57,7 @@ public abstract class Tile : MonoBehaviour
         {
             AngularDamping = rigidBody.angularDamping,
             LinearDamping = rigidBody.linearDamping,
+            Mass = rigidBody.mass,
         };
 
         health.DestroyEvent += OnDead;
