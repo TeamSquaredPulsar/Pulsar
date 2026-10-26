@@ -74,8 +74,7 @@ public class BuildManager : MonoBehaviour
 
         Vector3 corePos = controller.Ship.Core.transform.position;
         
-        //Extents gets the radius so we can have it match
-        Vector2 radius = localBounds.extents;
+        Vector2 radius = localBounds.size;
         radius.Add(scanPadding);
 
         radialMenu.UpdateShape(corePos, radius, controller.transform.rotation);
@@ -88,15 +87,18 @@ public class BuildManager : MonoBehaviour
         {
             _selectedTile = result.Value;
             _selectedTile.Select(selectedTint);
-
-            _updateRadialRoutine = StartCoroutine(UpdateRadialMenu());
-            UpdateSelectedTile();
+            
+            //Toggles now to update the data before the coroutine
+            ToggleRadialMenu(true);
+            
             
             //Orbit close to where the initial block is
             _orbitAngle = radialMenu.GetOutlineAngleFromTileToCore(
                 controller.Ship.Core.transform.position,
                 _selectedTile.transform.position
             );
+            
+            _updateRadialRoutine = StartCoroutine(UpdateRadialMenu());
         }
         else
         {
@@ -106,10 +108,8 @@ public class BuildManager : MonoBehaviour
                 StopCoroutine(_updateRadialRoutine);
                 _updateRadialRoutine = null;
             }
-
+            ToggleRadialMenu(false);
         }
-
-        ToggleRadialMenu(result.IsSuccess);
     }
 
     private void DeselectTile()
