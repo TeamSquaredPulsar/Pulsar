@@ -189,7 +189,7 @@ public class ShipManager : MonoBehaviour
 
     #region ATTACH-DETACH
 
-    private bool CanAttach(Vector2Int pos, TileInfoSO infoSo, TileRotation rotation)
+    public bool CanAttach(Vector2Int pos, TileInfoSO infoSo, TileRotation rotation)
     {
         // Cannot attach to an occupied cell
         if (_gridData.ContainsCell(pos))

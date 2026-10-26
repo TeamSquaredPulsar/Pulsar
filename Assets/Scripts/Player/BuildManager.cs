@@ -124,13 +124,10 @@ public class BuildManager : MonoBehaviour
         if (_selectedTile 
             && _atOutline 
             && ghostPreview.IsShowing
-            // [CB] Currently, tile rotation stored in the selected tile doesn't
-            // match that of the _selected tile, so we cant do the following.
-            // && controller.Ship.CanAttach(
-            //     ghostPreview.transform.position.ToVector2Int(),
-            //     _selectedTile.TileInfo,
-            //     _selectedTile.Rotation)
-            )
+            && controller.Ship.CanAttach(
+                _attachCell,
+                _selectedTile.TileInfo,
+                _attachRotation))
         {
             _selectedTile.transform.position
                 = ghostPreview.transform.position;
