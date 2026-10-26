@@ -91,6 +91,12 @@ public class BuildManager : MonoBehaviour
 
             _updateRadialRoutine = StartCoroutine(UpdateRadialMenu());
             UpdateSelectedTile();
+            
+            //Orbit close to where the initial block is
+            _orbitAngle = radialMenu.GetOutlineAngleFromTileToCore(
+                controller.Ship.Core.transform.position,
+                _selectedTile.transform.position
+            );
         }
         else
         {
