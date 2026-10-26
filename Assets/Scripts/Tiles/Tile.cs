@@ -108,24 +108,28 @@ public abstract class Tile : MonoBehaviour
         transform.SetParent(null, true);
     }
 
-    public void Attach(Vector2Int cell)
+    public void Attach(Vector2Int cell, TileRotation rotation)
     {
         IsAttached = true;
+        
+        Cell = cell;
+        Rotation = rotation;
+        
         // [CB] Unfortunately we need to destroy the rigidbodies in order for the
         // collider to merge with the parents collider properly.
         if (rigidBody)
         {
             Destroy(rigidBody);
+            rigidBody = null;
         }
-
-        Cell = cell;
     }
 
     public void Detatch(Vector2? velocity = null, float angularVelocity = 0f)
     {
         IsAttached = false;
         transform.SetParent(null);
-        Vector2 selectedVel = velocity ?? new Vector2(0, 0);
+        
+        Vector2 selectedVel = velocity ?? Vector2.zero;
         if (!rigidBody)
         {
             rigidBody = gameObject.AddComponent<Rigidbody2D>();
@@ -146,8 +150,13 @@ public abstract class Tile : MonoBehaviour
 
     public void Rotate(Quaternion rotation)
     {
-        transform.SetLocalPositionAndRotation(transform.localPosition, rotation);
+        /*
+         transform.SetLocalPositionAndRotation(transform.localPosition, rotation);
         // transform.SetPositionAndRotation(this.transform.position, rotation);
+        Rotation = transform.localRotation.eulerAngles.z.ToTileRotation();
+        */
+        
+        transform.rotation = rotation;
         Rotation = transform.localRotation.eulerAngles.z.ToTileRotation();
     }
 }

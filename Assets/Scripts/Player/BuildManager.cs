@@ -74,7 +74,8 @@ public class BuildManager : MonoBehaviour
 
         Vector3 corePos = controller.Ship.Core.transform.position;
         
-        Vector2 radius = localBounds.size;
+        //Extents gets the radius so we can have it match
+        Vector2 radius = localBounds.extents;
         radius.Add(scanPadding);
 
         radialMenu.UpdateShape(corePos, radius, controller.transform.rotation);
@@ -130,9 +131,11 @@ public class BuildManager : MonoBehaviour
             _selectedTile.transform.rotation
                 = ghostPreview.transform.rotation;
             _selectedTile.Deselect();
+            
             controller.Ship.AttachTile(
                 _attachCell,
-                _selectedTile);
+                _selectedTile,
+                _attachRotation);
 
         }
         // We Release the selected tile.

@@ -61,13 +61,19 @@ public class ShipManager : MonoBehaviour
         _gridData = new ShipGridData();
         weapons = new List<WeaponTile>();
         thrusters = new List<ThrusterTile>();
+        
         foreach (Tile tile in GetComponentsInChildren<Tile>())
         {
-            AttachTile(tile.transform.position.ToVector2Int(), tile);
+            Vector2Int localCell = 
+                ShipUtilities.LocalToGrid(
+                    tile.transform.localPosition).ToVector2Int();
+            TileRotation localRot = 
+                tile.transform.localRotation.eulerAngles.z.ToTileRotation();
+            AttachTile(localCell, tile, localRot);
         }
     }
 
-    public void AttachTile(Vector2Int cell, Tile tile)
+    public void AttachTile(Vector2Int cell, Tile tile, TileRotation rotation)
     {
         ProcessTile(tile);
         if (!_gridData.TrySetTile(cell, tile))
@@ -76,8 +82,11 @@ public class ShipManager : MonoBehaviour
         }
 
         rb.mass += tile.Mass;
-        tile.Attach(cell);
+        tile.Attach(cell, rotation);
         tile.transform.SetParent(transform);
+        tile.transform.SetLocalPositionAndRotation(
+            ShipUtilities.GridToLocal(cell),
+            ShipUtilities.RotateQuarterOnZAxis(rotation.ToInt()));
         tile.DestroyEvent += HandleTileDestroyed;
     }
 
@@ -154,7 +163,7 @@ public class ShipManager : MonoBehaviour
     // returns a rectangle enclosing all ship tiles in the ship’s local space
     public Bounds GetLocalBounds()
     {
-        return compositeCollider.bounds;
+        // return compositeCollider.bounds;
         if (Cells.Count == 0)
         {
             return new Bounds(Vector3.zero,
