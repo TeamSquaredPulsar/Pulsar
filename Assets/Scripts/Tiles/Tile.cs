@@ -51,15 +51,19 @@ public abstract class Tile : MonoBehaviour
 
     public Sprite Sprite => spriteRenderer.sprite;
 
-    public void Start()
+    private void Awake()
     {
+        //Initializing in awake to stop the chance of it being destroyed before caches
         _rbInfo = new TileRbInfo
         {
             AngularDamping = rigidBody.angularDamping,
             LinearDamping = rigidBody.linearDamping,
             Mass = rigidBody.mass,
         };
-
+    }
+    
+    public void Start()
+    {
         health.DestroyEvent += OnDead;
     }
 
@@ -74,7 +78,7 @@ public abstract class Tile : MonoBehaviour
         Destroy(gameObject);
     }
 
-    public float Mass => rigidBody ? rigidBody.mass : 0;
+    public float Mass => _rbInfo.Mass; //It can return mass even when destroyed
 
     public void TakeDamage(float damage) => health.TakeDamage(damage);
 
