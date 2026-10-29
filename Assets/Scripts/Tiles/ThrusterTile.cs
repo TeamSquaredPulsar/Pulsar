@@ -3,13 +3,8 @@ using UnityEngine;
 public class ThrusterTile : Tile
 {
     
-    [SerializeField]
-    private float thrust = 0.1f;
-    
-    public TileRotationEnum Orientation => GetRotationInt(Rotation);
-    
-    public float GetThrust() => thrust;
-    
+    [field: SerializeField]
+    public float Thrust { get; private set; } = 0.1f;
         
     public void Move(float amount, Rigidbody2D rb)
     {

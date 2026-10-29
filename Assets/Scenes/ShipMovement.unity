@@ -119,6 +119,17 @@ NavMeshSettings:
     debug:
       m_Flags: 0
   m_NavMeshData: {fileID: 0}
+--- !u!114 &40808023 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 2644619507663779848, guid: b8226397bde29ab4abb516fe64e2ab6f, type: 3}
+  m_PrefabInstance: {fileID: 1198767070}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 28d608a25d683824e8c386d6a7b94a05, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::GhostPreview
 --- !u!4 &43064406 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 7376437609368605663, guid: b8226397bde29ab4abb516fe64e2ab6f, type: 3}
@@ -261,6 +272,17 @@ Light:
   m_LightUnit: 1
   m_LuxAtDistance: 1
   m_EnableSpotReflector: 1
+--- !u!114 &788164501 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 6203508070887109126, guid: b8226397bde29ab4abb516fe64e2ab6f, type: 3}
+  m_PrefabInstance: {fileID: 1198767070}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0e06dd851098b7f4c9e07a68ee263168, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::RadialMenu
 --- !u!1001 &1198767070
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -273,6 +295,14 @@ PrefabInstance:
       propertyPath: rb
       value: 
       objectReference: {fileID: 422732344}
+    - target: {fileID: 70888490315140228, guid: b8226397bde29ab4abb516fe64e2ab6f, type: 3}
+      propertyPath: m_GeometryType
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 70888490315140228, guid: b8226397bde29ab4abb516fe64e2ab6f, type: 3}
+      propertyPath: m_UseDelaunayMesh
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 1843940356141040302, guid: b8226397bde29ab4abb516fe64e2ab6f, type: 3}
       propertyPath: m_Name
       value: Player
@@ -352,6 +382,22 @@ PrefabInstance:
     - target: {fileID: 8178359854485624751, guid: b8226397bde29ab4abb516fe64e2ab6f, type: 3}
       propertyPath: m_ConnectedAnchor.y
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8460810046222660286, guid: b8226397bde29ab4abb516fe64e2ab6f, type: 3}
+      propertyPath: radialMenu
+      value: 
+      objectReference: {fileID: 788164501}
+    - target: {fileID: 8460810046222660286, guid: b8226397bde29ab4abb516fe64e2ab6f, type: 3}
+      propertyPath: ghostPreview
+      value: 
+      objectReference: {fileID: 40808023}
+    - target: {fileID: 9040562198893037127, guid: b8226397bde29ab4abb516fe64e2ab6f, type: 3}
+      propertyPath: m_Enabled
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 9040562198893037127, guid: b8226397bde29ab4abb516fe64e2ab6f, type: 3}
+      propertyPath: m_CompositeOperation
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 9128348799664756163, guid: b8226397bde29ab4abb516fe64e2ab6f, type: 3}
       propertyPath: m_LocalPosition.x
@@ -501,27 +547,27 @@ PrefabInstance:
       objectReference: {fileID: 68028612}
     - target: {fileID: 7067975659105368029, guid: 23b839cb7fca3b247ba1200fcaa33286, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 0
+      value: 0.0000000027093021
       objectReference: {fileID: 0}
     - target: {fileID: 7067975659105368029, guid: 23b839cb7fca3b247ba1200fcaa33286, type: 3}
       propertyPath: m_LocalPosition.z
-      value: -0.000011790882
+      value: -0.000001040372
       objectReference: {fileID: 0}
     - target: {fileID: 7710444508102941617, guid: 23b839cb7fca3b247ba1200fcaa33286, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 0
+      value: 0.0000000027093021
       objectReference: {fileID: 0}
     - target: {fileID: 7710444508102941617, guid: 23b839cb7fca3b247ba1200fcaa33286, type: 3}
       propertyPath: m_LocalPosition.z
-      value: -8.00006
+      value: -8.000001
       objectReference: {fileID: 0}
     - target: {fileID: 7781254101354357636, guid: 23b839cb7fca3b247ba1200fcaa33286, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 0
+      value: 0.000000014901161
       objectReference: {fileID: 0}
     - target: {fileID: 7781254101354357636, guid: 23b839cb7fca3b247ba1200fcaa33286, type: 3}
       propertyPath: m_LocalPosition.z
-      value: -8.00006
+      value: -8.000001
       objectReference: {fileID: 0}
     - target: {fileID: 8255171805618094538, guid: 23b839cb7fca3b247ba1200fcaa33286, type: 3}
       propertyPath: m_Name

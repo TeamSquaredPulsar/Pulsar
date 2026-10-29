@@ -1,5 +1,5 @@
 {
-    "name": "Utilities",
+    "name": "Pulsar.Utilities",
     "rootNamespace": "Pulsar.Utilities",
     "references": [],
     "includePlatforms": [],

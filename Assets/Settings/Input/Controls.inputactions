@@ -37,39 +37,9 @@
                     "priority": 0
                 },
                 {
-                    "name": "ToggleRadialMenu",
-                    "type": "Button",
-                    "id": "fb5450f8-f430-45dc-be3f-f3a348a03728",
-                    "expectedControlType": "",
-                    "processors": "",
-                    "interactions": "",
-                    "initialStateCheck": false,
-                    "priority": 0
-                },
-                {
-                    "name": "SelectFloatingTile",
+                    "name": "SelectTile",
                     "type": "Button",
                     "id": "e0487f61-c830-42db-8b26-6b13d2cc4b39",
-                    "expectedControlType": "",
-                    "processors": "",
-                    "interactions": "",
-                    "initialStateCheck": false,
-                    "priority": 0
-                },
-                {
-                    "name": "BuildTile",
-                    "type": "Button",
-                    "id": "055f7cb4-a94c-454a-b8d7-f6b5c0965bf6",
-                    "expectedControlType": "",
-                    "processors": "",
-                    "interactions": "",
-                    "initialStateCheck": false,
-                    "priority": 0
-                },
-                {
-                    "name": "DetachTile",
-                    "type": "Button",
-                    "id": "1ff18678-0c9d-4d62-9970-ec764b993ce5",
                     "expectedControlType": "",
                     "processors": "",
                     "interactions": "",
@@ -177,8 +147,8 @@
                 },
                 {
                     "name": "",
-                    "id": "9c093a69-a002-4526-befb-2c27336d41ad",
-                    "path": "<Gamepad>/leftTrigger",
+                    "id": "ad8cf4b0-e3e4-4713-a30a-9dbe0039188e",
+                    "path": "<Mouse>/leftButton",
                     "interactions": "",
                     "processors": "",
                     "groups": "",
@@ -188,8 +158,8 @@
                 },
                 {
                     "name": "",
-                    "id": "de94275c-d03b-4c68-8a8b-c3fdfbe96e2f",
-                    "path": "<Mouse>/rightButton",
+                    "id": "9c093a69-a002-4526-befb-2c27336d41ad",
+                    "path": "<Gamepad>/leftTrigger",
                     "interactions": "",
                     "processors": "",
                     "groups": "",
@@ -265,12 +235,23 @@
                 },
                 {
                     "name": "",
-                    "id": "f027ab95-fd2f-4f78-89ea-926948b3f4be",
-                    "path": "<Keyboard>/tab",
+                    "id": "d5121413-3f48-4b0e-a5d6-0c3c208bb667",
+                    "path": "<Mouse>/rightButton",
                     "interactions": "",
                     "processors": "",
                     "groups": ";Keyboard & Mouse",
-                    "action": "ToggleRadialMenu",
+                    "action": "SelectTile",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "4f1fa116-66b3-41ca-8b33-2dbb837a430f",
+                    "path": "<Gamepad>/rightTrigger",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "SelectTile",
                     "isComposite": false,
                     "isPartOfComposite": false
                 },

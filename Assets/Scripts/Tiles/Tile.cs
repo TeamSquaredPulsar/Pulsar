@@ -1,32 +1,67 @@
 using System;
-using Nrjwolf.Tools.AttachAttributes;
+using Pulsar.Interactions;
+using Pulsar.Ship.Extensions;
 using UnityEngine;
 
+public struct TileRbInfo
+{
+    public float LinearDamping;
+    public float AngularDamping;
+    public float Mass;
+}
+
 [RequireComponent(typeof(BoxCollider2D),
-    typeof(SpriteRenderer), typeof(FixedJoint2D))]
-[RequireComponent(typeof(Health))]
+     typeof(SpriteRenderer),
+     typeof(Health)),]
 public abstract class Tile : MonoBehaviour
 {
-    public static TileRotationEnum GetRotationInt(int rot) =>
-        (TileRotationEnum)(rot % Enum.GetNames(typeof(TileRotationEnum))
-            .Length);
+    public event Action<Tile> DestroyEvent;
 
-    private const int FloatingSortingOrder = 10;
+    [SerializeField]
+    private Color baseColor = Color.white;
+
+    public Vector2Int Cell { get; private set; }
+
+    public float CurrentHp { get; protected set; }
+
+    // 0 1 2 3 = 0 90 180 270 (counterclockwise)
+    public TileRotation Rotation { get; private set; }
+
+    [field: SerializeField]
+    public bool IsAttached { get; private set; }
 
     [field: SerializeField]
     public TileInfoSO TileInfo { get; private set; }
 
-    [GetComponent][SerializeField]
+    [SerializeField]
     private SpriteRenderer spriteRenderer;
 
-    [GetComponent][SerializeField]
+    [SerializeField]
     private BoxCollider2D tileCollider;
 
-    [GetComponent][SerializeField]
+    [SerializeField]
+    private Rigidbody2D rigidBody;
+
+    [SerializeField]
     private Health health;
 
-    public event Action<Tile> DestroyEvent;
+    private const int FloatingSortingOrder = 10;
 
+    private TileRbInfo _rbInfo;
+
+    public Sprite Sprite => spriteRenderer.sprite;
+
+    private void Awake()
+    {
+        //Initializing in awake to stop the chance of it being destroyed before caches
+        _rbInfo = new TileRbInfo
+        {
+            AngularDamping = rigidBody.angularDamping,
+            LinearDamping = rigidBody.linearDamping,
+            Mass = rigidBody.mass,
+        };
+    }
+    
     public void Start()
     {
         health.DestroyEvent += OnDead;
@@ -40,195 +75,92 @@ public abstract class Tile : MonoBehaviour
     private void OnDead(Health _)
     {
         DestroyEvent?.Invoke(this);
+        Destroy(gameObject);
     }
 
-    // [SerializeField]
-    // private Rigidbody2D floatRb;
-
-    [SerializeField]
-    private Color baseColor = Color.white;
-
-    public Vector2Int Cell { get; private set; }
-
-    // 0 1 2 3 = 0 90 180 270 (counterclockwise)
-    public float CurrentHp { get; protected set; }
-
-    public int Rotation { get; private set; }
-
-    public bool IsAttached { get; private set; }
-
-    protected void Init(TileInfoSO tileInfoSo, Vector2Int gridCell, int rot = 0)
-    {
-        TileInfo = tileInfoSo;
-        CurrentHp = tileInfoSo.hp;
-        Rotation = rot;
-        Cell = gridCell;
-
-        // spriteRenderer = CreateVisual(transform);
-
-        spriteRenderer.sprite = tileInfoSo.sprite;
-
-        // floatRb = GetComponent<Rigidbody2D>();
-        tileCollider = GetComponent<BoxCollider2D>();
-        tileCollider.size
-            = Vector2.one;
-        tileCollider.compositeOperation = Collider2D.CompositeOperation.Merge;
-
-        transform.localPosition = ShipUtilities.GridToLocal(gridCell);
-        transform.localRotation = ShipUtilities.RotateQuarterOnZAxis(rot);
-    }
+    public float Mass => _rbInfo.Mass; //It can return mass even when destroyed
 
     public void TakeDamage(float damage) => health.TakeDamage(damage);
 
-    // protected void InitFloating(
-    //     TileInfoSO tileInfoSo,
-    //     Vector3 position,
-    //     Vector2 velocity)
-    // {
-    //     TileInfo = tileInfoSo;
-    //     CurrentHp = tileInfoSo.hp;
-    //     Rotation = 0;
-    //
-    //     spriteRenderer = CreateVisual(transform);
-    //
-    //     spriteRenderer.sprite = tileInfoSo.sprite;
-    //
-    //     // floatRb = GetComponent<Rigidbody2D>();
-    //     tileCollider = GetComponent<BoxCollider2D>();
-    //     tileCollider.isTrigger = true;
-    //     tileCollider.size
-    //         = Vector2.one;
-    //
-    //     transform.position = position;
-    //     ReleaseToFloating(velocity,
-    //         Random.Range(-45f, 45f));
-    // }
-    //
-    // public void AttachTo(ShipManager manager, Vector2Int gridCell, int rot)
-    // {
-    //     // floatRb.bodyType = RigidbodyType2D.Static;
-    //
-    //     Cell = gridCell;
-    //     Rotation = rot;
-    //     transform.SetParent(manager.transform, false);
-    //     transform.localPosition = ShipUtilities.GridToLocal(gridCell);
-    //     transform.localRotation = ShipUtilities.RotateQuarterOnZAxis(rot);
-    //     tileCollider.isTrigger = false;
-    //     spriteRenderer.sortingOrder = 0;
-    //     Unhighlight();
-    // }
-    //
-    // public void ReleaseToFloating(Vector2 velocity, float angularVelocity)
-    // {
-    //     transform.SetParent(null,
-    //         true);
-    //     IsAttached = false;
-    //     tileCollider.isTrigger
-    //         = true;
-    //     spriteRenderer.sortingOrder = FloatingSortingOrder;
-    //     Unhighlight();
-    //     // EnableFloatingPhysics(velocity, angularVelocity);
-    // }
-
-    // public void BeginBuildControl()
-    // {
-    //     floatRb.linearVelocity = Vector2.zero;
-    //     floatRb.angularVelocity = 0f;
-    //     floatRb.bodyType = RigidbodyType2D.Kinematic;
-    // }
-    //
-    // private void EnableFloatingPhysics(
-    //     Vector2 velocity,
-    //     float angularVelocity)
-    // {
-    //     ShipUtilities.FloatingTileRbConstrain(floatRb);
-    //     floatRb.bodyType = RigidbodyType2D.Dynamic;
-    //     floatRb.linearVelocity = velocity;
-    //     floatRb.angularVelocity = angularVelocity;
-    // }
-
-    //To ask whether the rotated tile can connect from dir
-    /*
-     * example: tile is true:0 false:1 false:2 false:3 (allow connect from top only)
-     * tile.Rotation = 1 -> tile now allows connect from left
-     * pass EdgeConnectable(3) -> (3+1)%4==0 -> true
-     * => can connect
-     */
-    public bool EdgeConnectable(int dir)
+    /// <summary>
+    /// To ask whether the rotated tile can connect from dir
+    ///  example: tile is true:0 false:1 false:2 false:3 (allow connections from top only)
+    ///  tile.Rotation = 1 -> tile now allows connections from left
+    ///  pass EdgeConnectable(3) -> (3+1)%4==0 -> true => can connect
+    /// </summary>
+    /// <param name="dir"></param>
+    /// <returns></returns>
+    public bool EdgeConnectable(TileRotation dir)
     {
-        int localDir = (dir + Rotation) % 4;
-        return TileInfo.connectableEdges[localDir];
+        TileRotation localDir = dir.Subtract(Rotation);
+        return TileInfo.connectableEdges[localDir.ToInt()];
     }
 
-    // public virtual void SetAttached(ShipManager manager)
-    // {
-    //     IsAttached = true;
-    // }
-    //
-    // public virtual void SetDetached(ShipManager manager)
-    // {
-    //     IsAttached = false;
-    // }
-    //
-    // public virtual void TakeDamage(float amount)
-    // {
-    //     CurrentHp -= amount;
-    //     if (CurrentHp <= 0f)
-    //     {
-    //         ShipManager manager = GetComponentInParent<ShipManager>();
-    //         if (manager != null)
-    //         {
-    //             manager.DestroyTileAt(Cell);
-    //         }
-    //     }
-    // }
-
-    // public void Highlight(Color tint)
-    //     spriteRenderer.color = tint;
-    // }
-    //
-    // public void Unhighlight()
-    // {
-    //     spriteRenderer.color = baseColor;
-    // }
-
-    #region FACTORY
-
-    public static Tile CreateTile<T>(
-        TileInfoSO info,
-        Vector2Int gridCell,
-        int rot = 0
-    ) where T : Tile
+    public void Select(Color highlightColor)
     {
-        GameObject go = new($"Tile_{info.tileName}");
-        Tile tile = go.AddComponent<T>();
-        tile.Init(info, gridCell, rot);
-        return tile;
+        Highlight(highlightColor);
+        rigidBody.SetBuildRb();
+        tileCollider.enabled = false;
     }
 
-    // public static Tile SpawnFloating<T>(
-    //     TileInfoSO info,
-    //     Vector3 position,
-    //     Vector2 velocity
-    // ) where T : Tile
-    // {
-    //     GameObject go = new($"Tile_{info.tileName}_floating");
-    //     Tile tile = go.AddComponent<T>();
-    //     tile.InitFloating(info, position, velocity);
-    //     return tile;
-    // }
+    public void Deselect()
+    {
+        Unhighlight();
+        spriteRenderer.sortingOrder = FloatingSortingOrder;
+        rigidBody.SetFloatRb(Vector2.zero, 0f, _rbInfo);
+        tileCollider.enabled = true;
+        transform.SetParent(null, true);
+    }
 
-    // public static SpriteRenderer CreateVisual(
-    //     Transform parent,
-    //     int sortingOrder = 0)
-    // {
-    //     GameObject visual = new("Visual");
-    //     visual.transform.SetParent(parent, false);
-    //     visual.transform.localRotation = Quaternion.identity;
-    //     SpriteRenderer renderer = visual.AddComponent<SpriteRenderer>();
-    //     renderer.sortingOrder = sortingOrder;
-    //     return renderer;
-    // }
+    public void Attach(Vector2Int cell, TileRotation rotation)
+    {
+        IsAttached = true;
+        
+        Cell = cell;
+        Rotation = rotation;
+        
+        // [CB] Unfortunately we need to destroy the rigidbodies in order for the
+        // collider to merge with the parents collider properly.
+        if (rigidBody)
+        {
+            Destroy(rigidBody);
+            rigidBody = null;
+        }
+    }
 
-    #endregion
+    public void Detatch(Vector2? velocity = null, float angularVelocity = 0f)
+    {
+        IsAttached = false;
+        transform.SetParent(null);
+        
+        Vector2 selectedVel = velocity ?? Vector2.zero;
+        if (!rigidBody)
+        {
+            rigidBody = gameObject.AddComponent<Rigidbody2D>();
+        }
+
+        rigidBody.SetFloatRb(selectedVel, angularVelocity, _rbInfo);
+    }
+
+    private void Highlight(Color tint)
+    {
+        spriteRenderer.color = tint;
+    }
+
+    private void Unhighlight()
+    {
+        spriteRenderer.color = baseColor;
+    }
+
+    public void Rotate(Quaternion rotation)
+    {
+        /*
+         transform.SetLocalPositionAndRotation(transform.localPosition, rotation);
+        // transform.SetPositionAndRotation(this.transform.position, rotation);
+        Rotation = transform.localRotation.eulerAngles.z.ToTileRotation();
+        */
+        
+        transform.rotation = rotation;
+        Rotation = transform.localRotation.eulerAngles.z.ToTileRotation();
+    }
 }

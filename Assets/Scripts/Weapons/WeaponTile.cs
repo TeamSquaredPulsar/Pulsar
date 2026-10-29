@@ -1,4 +1,5 @@
 using System.Collections;
+using Pulsar.Hazards;
 using UnityEngine;
 
 /// <summary>

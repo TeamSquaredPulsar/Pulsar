@@ -153,6 +153,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::CameraRegister
   cameraDataAsset: {fileID: 11400000, guid: 3422a4889e5877b4fafae9f0099db266, type: 2}
+  mainCamera: {fileID: 2474062319082034991}
 --- !u!114 &8118183219558354699
 MonoBehaviour:
   m_ObjectHideFlags: 0

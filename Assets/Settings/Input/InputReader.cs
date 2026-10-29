@@ -5,7 +5,6 @@ using static Controls;
 
 public interface IInputReader
 {
-    Vector2 MoveDirection { get; }
     void EnablePlayerActions();
 }
 
@@ -15,11 +14,8 @@ public class InputReader : ScriptableObject, IPlayerActions, IInputReader
     public event Action<Vector2> MoveEvent;
     public event Action<bool> ShootEvent;
     public event Action<float> RotateEvent;
-    public event Action<bool> DetachTileEvent;
-    public event Action<bool> SelectFloatingTileEvent;
     public event Action<Vector2> MoveCursorEvent;
-    public event Action<bool> ToggleRadialMenuEvent;
-    public event Action<InputAction.CallbackContext> BuildTileEvent;
+    public event Action<bool> SelectTileEvent;
 
     [SerializeField]
     private CameraData camData;
@@ -55,21 +51,19 @@ public class InputReader : ScriptableObject, IPlayerActions, IInputReader
         _controls.Dispose();
         _controls = null;
     }
-
-    public Vector2 MoveDirection => _controls.Player.Move.ReadValue<Vector2>();
-
-    public void EnablePlayerActions()
-    {
-        _controls.Player.Enable();
-    }
-
+    
     private void CreateNewControls()
     {
         _controls = new Controls();
         _controls.Player.SetCallbacks(this);
     }
     
-    
+
+    public void EnablePlayerActions()
+    {
+        _controls.Player.Enable();
+    }
+
     public void OnMove(InputAction.CallbackContext context)
     {
         MoveEvent?.Invoke(context.ReadValue<Vector2>());
@@ -86,9 +80,16 @@ public class InputReader : ScriptableObject, IPlayerActions, IInputReader
         RotateEvent?.Invoke(context.ReadValue<float>());
     }
 
-    public void OnToggleRadialMenu(InputAction.CallbackContext context)
+    public void OnSelectTile(InputAction.CallbackContext context)
     {
-        ToggleRadialMenuEvent?.Invoke(context.started);
+        // Don't trigger on started because it causes
+        // the event to fire twice on mouse click   
+        if (context.started)
+        {
+            return;
+        }
+        //True if the button is down, false if up.
+        SelectTileEvent?.Invoke(!context.canceled);
     }
 
     // [CB] Annoyingly, Unity will overwrite the controller inputs with mouse
@@ -105,30 +106,12 @@ public class InputReader : ScriptableObject, IPlayerActions, IInputReader
         // Multiply by camera dimensions so we can get full screen size
         input *= camData.ScreenSize;
 
+        
         MoveCursorEvent?.Invoke(input);
     }
 
     public void OnMoveCursorMouse(InputAction.CallbackContext context)
     {
-        //Inputs are measured from bottom-left, so subtract half a screen from
-        // the input to make it measure from the centre.
-        //Vector2 halfScreen = camData.ScreenSize / 2;
-        //Vector2 input = context.ReadValue<Vector2>() - halfScreen;
         MoveCursorEvent?.Invoke(context.ReadValue<Vector2>());
-    }
-
-    public void OnSelectFloatingTile(InputAction.CallbackContext context)
-    {
-        SelectFloatingTileEvent?.Invoke(context.started);
-    }
-
-    public void OnBuildTile(InputAction.CallbackContext context)
-    {
-        BuildTileEvent?.Invoke(context);
-    }
-
-    public void OnDetachTile(InputAction.CallbackContext context)
-    {
-        DetachTileEvent?.Invoke(context.started);
     }
 }

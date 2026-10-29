@@ -1,6 +1,6 @@
 {
     "name": "Interactions",
-    "rootNamespace": "Pulsar.Interactions",
+    "rootNamespace": "Pulsar",
     "references": [],
     "includePlatforms": [],
     "excludePlatforms": [],

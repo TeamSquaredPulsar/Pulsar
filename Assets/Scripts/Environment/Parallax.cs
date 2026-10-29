@@ -6,7 +6,7 @@ using UnityEngine;
 public class Parallax : MonoBehaviour
 {
     [Header("References")]
-    [GetComponent]
+    
     [SerializeField]
     private SpriteRenderer spriteRenderer;
     

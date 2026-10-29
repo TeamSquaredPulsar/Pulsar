@@ -10,11 +10,10 @@ GameObject:
   m_Component:
   - component: {fileID: 1283674777054792067}
   - component: {fileID: 9156844168472924138}
+  - component: {fileID: -4585569959407033398}
   - component: {fileID: 4676953174740963180}
   - component: {fileID: 6394848136817018224}
   - component: {fileID: 2522681453652910296}
-  - component: {fileID: 3439183271994269019}
-  - component: {fileID: -4585569959407033398}
   m_Layer: 0
   m_Name: p_TripleGun
   m_TagString: Untagged
@@ -52,11 +51,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fbcf854d2b026ba4bb1127a641953488, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Weapon
+  baseColor: {r: 1, g: 1, b: 1, a: 1}
+  <IsAttached>k__BackingField: 0
   <TileInfo>k__BackingField: {fileID: 11400000, guid: 71fb61585e3013a43b3726d73a977655, type: 2}
   spriteRenderer: {fileID: 4676953174740963180}
   tileCollider: {fileID: 6394848136817018224}
+  rigidBody: {fileID: 2522681453652910296}
   health: {fileID: -4585569959407033398}
-  baseColor: {r: 1, g: 1, b: 1, a: 1}
   projectilePrefab: {fileID: 1682859016921356063, guid: a133161848d51234b97f8554a243a1ab, type: 3}
   parentCollider: {fileID: 0}
   firePoints:
@@ -65,6 +66,19 @@ MonoBehaviour:
   - {fileID: 4021481277316506663}
   <FireRatePerSecond>k__BackingField: 1
   weaponStrategy: {fileID: 11400000, guid: 10c72afaf46727041b29bfd2ec24cc45, type: 2}
+--- !u!114 &-4585569959407033398
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2402461002857692903}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d1236c1e551165b48b0864561b6c2156, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Pulsar.Ship::Health
+  <MaxHealth>k__BackingField: 0
 --- !u!212 &4676953174740963180
 SpriteRenderer:
   serializedVersion: 2
@@ -197,38 +211,6 @@ Rigidbody2D:
   m_SleepingMode: 1
   m_CollisionDetection: 0
   m_Constraints: 0
---- !u!255 &3439183271994269019
-FixedJoint2D:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2402461002857692903}
-  m_Enabled: 1
-  serializedVersion: 4
-  m_EnableCollision: 0
-  m_ConnectedRigidBody: {fileID: 0}
-  m_BreakForce: Infinity
-  m_BreakTorque: Infinity
-  m_BreakAction: 3
-  m_AutoConfigureConnectedAnchor: 1
-  m_Anchor: {x: 0, y: 0}
-  m_ConnectedAnchor: {x: 0, y: 0}
-  m_DampingRatio: 0
-  m_Frequency: 0
---- !u!114 &-4585569959407033398
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2402461002857692903}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d1236c1e551165b48b0864561b6c2156, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Pulsar.Ship::Health
-  <MaxHealth>k__BackingField: 0
 --- !u!1 &3921503724067729608
 GameObject:
   m_ObjectHideFlags: 0

@@ -1,5 +1,8 @@
-using Nrjwolf.Tools.AttachAttributes;
+
 using UnityEngine;
+
+namespace Pulsar.Hazards
+{
 /// <summary>
 /// Represents a Projectile
 ///
@@ -89,4 +92,5 @@ public class Projectile : MonoBehaviour
 
         return projectile;
     }
+}
 }

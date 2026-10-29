@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using Pulsar.Ship;
 using UnityEngine;
 using Random = UnityEngine.Random;
 
@@ -14,6 +15,9 @@ public class EnemyController : MonoBehaviour
 
     private static readonly HashSet<EnemyController> _activeEnemies = new();
 
+    public static IReadOnlyCollection<EnemyController> ActiveEnemies =>
+        _activeEnemies;
+    
     [SerializeField]
     private EnemyInfoSO enemyInfo;
 
@@ -28,9 +32,6 @@ public class EnemyController : MonoBehaviour
     private float _weaveOffset;
 
     public float Radius { get; private set; }
-
-    public static IReadOnlyCollection<EnemyController> ActiveEnemies =>
-        _activeEnemies;
 
     private void Awake()
     {
