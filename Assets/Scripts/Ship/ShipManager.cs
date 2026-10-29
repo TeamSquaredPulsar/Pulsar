@@ -337,8 +337,13 @@ public class ShipManager : MonoBehaviour
         Vector2 centerOfMass = rb.worldCenterOfMass;
         Vector2 linearVelocity = rb.linearVelocity;
         float angularVelocity = rb.angularVelocity;
-        Vector2 explosionCenter = Core.transform.position;
+        // Vector2 explosionCenter = Core.transform.position; OLD, KEEPING FOR LATER
 
+        // If core null, blast from the center of mass instead.
+        Vector2 explosionCenter = Core != null
+            ? Core.transform.position
+            : centerOfMass;
+        
         float minSpeed = Mathf.Max(0f,
             Mathf.Min(detachRadiateLinearVelocity.x,
                 detachRadiateLinearVelocity.y));
