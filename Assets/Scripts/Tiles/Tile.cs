@@ -22,7 +22,7 @@ public abstract class Tile : MonoBehaviour
 
     public Vector2Int Cell { get; private set; }
 
-    public float CurrentHp { get; protected set; }
+    public float CurrentHp => health.CurrentHealth;
 
     // 0 1 2 3 = 0 90 180 270 (counterclockwise)
     public TileRotation Rotation { get; private set; }
