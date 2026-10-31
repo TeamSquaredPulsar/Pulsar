@@ -44,6 +44,7 @@ public class CameraManager : MonoBehaviour
 
     private void Start()
     {
+        gameplayCamera.Prioritize();
         mainMenuCamera.Prioritize();
     }
 
@@ -55,7 +56,6 @@ public class CameraManager : MonoBehaviour
     
     private void OnPlayerLoss(PlayerController obj)
     {
-        // playerCursor.SetActive(false);
         targetGroup.RemoveMember(obj.transform);
         mainMenuCamera.transform.position = gameplayCamera.transform.position;
         mainMenuCamera.Prioritize();
@@ -63,7 +63,6 @@ public class CameraManager : MonoBehaviour
 
     private void OnPlayerSpawned(PlayerController obj)
     {
-        // playerCursor.SetActive(true);
         targetGroup.AddMember(obj.transform, playerWeight, playerRadius);
         gameplayCamera.Prioritize();
     }
