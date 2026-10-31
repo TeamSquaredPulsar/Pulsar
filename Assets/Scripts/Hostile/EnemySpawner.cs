@@ -39,6 +39,11 @@ public class EnemySpawner : MonoBehaviour
         {
             throw new InvalidOperationException("Player not found");
         }
+        
+        foreach (EnemyController enemy in EnemyController.ActiveEnemies)
+        {
+            Destroy(enemy.gameObject);
+        }
 
         _player = playerObj.transform;
     }

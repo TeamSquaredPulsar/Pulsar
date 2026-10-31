@@ -190,7 +190,7 @@ public class ShipManager : MonoBehaviour
         // TODO: possibly gotta disable input here?
         //  + other stuff that triggers on core death
         ShipDestroyedEvent?.Invoke(this);
-        Destroy(this);
+        Destroy(this.gameObject);
     }
 
     // returns a rectangle enclosing all ship tiles in the ship’s local space

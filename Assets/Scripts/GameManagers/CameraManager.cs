@@ -1,4 +1,3 @@
-using System;
 using NaughtyAttributes;
 using Pulsar.Player;
 using Unity.Cinemachine;
@@ -36,46 +35,32 @@ public class CameraManager : MonoBehaviour
     private void Awake()
     {
         cameraDataAsset.MainCamera = mainCamera;
-        UIManager.GameStateChangeEvent += OnGameStateChange;
         PlayerController.PlayerSpawnedEvent += OnPlayerSpawned;
         PlayerController.PlayerLossEvent += OnPlayerLoss;
         mainMenuCamera.Prioritize();
     }
 
+    private void Start()
+    {
+        mainMenuCamera.Prioritize();
+    }
+
+    private void OnDestroy()
+    {
+        PlayerController.PlayerSpawnedEvent -= OnPlayerSpawned;
+        PlayerController.PlayerLossEvent -= OnPlayerLoss;
+    }
+    
     private void OnPlayerLoss(PlayerController obj)
     {
         targetGroup.RemoveMember(obj.transform);
+        mainMenuCamera.Prioritize();
     }
 
     private void OnPlayerSpawned(PlayerController obj)
     {
         targetGroup.AddMember(obj.transform, playerWeight, playerRadius);
-    }
-
-    private void OnDestroy()
-    {
-        UIManager.GameStateChangeEvent -= OnGameStateChange;
-        PlayerController.PlayerSpawnedEvent -= OnPlayerSpawned;
-        PlayerController.PlayerLossEvent -= OnPlayerLoss;
-    }
-
-    private void OnGameStateChange(GameState obj)
-    {
-        switch (obj)
-        {
-            case GameState.MainMenu:
-                mainMenuCamera.Prioritize();
-                break;
-            case GameState.Playing:
-                gameplayCamera.Prioritize();
-                break;
-            case GameState.GameOver:
-                mainMenuCamera.Prioritize();
-                break;
-            default:
-                throw new ArgumentOutOfRangeException(nameof(obj), obj, null);
-        }
-
+        gameplayCamera.Prioritize();
     }
 }
 }

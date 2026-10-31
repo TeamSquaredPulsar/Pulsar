@@ -18,28 +18,29 @@ public class UIManager : MonoBehaviour
     [SerializeField]
     private GameObject gameOverMenu;
     
-    private TMP_Text scoreText;
+    private TMP_Text _scoreText;
 
     private void Start()
     {
         GameManager.OnEnemyKill += UpdateScore;
-        scoreText = gameplayUI.GetComponentInChildren<TMP_Text>();
+        PlayerController.PlayerLossEvent += OnPlayerLoss;
+        _scoreText = gameplayUI.GetComponentInChildren<TMP_Text>();
     }
 
     private void OnDestroy()
     {
         GameManager.OnEnemyKill -= UpdateScore;
+        PlayerController.PlayerLossEvent -= OnPlayerLoss;
     }
 
     private void UpdateScore(int obj)
     {
-        scoreText.text = "Score: " + obj;
+        _scoreText.text = "Score: " + obj;
     }
 
     public void OnStartGameClicked()
     {
         GameStateChangeEvent?.Invoke(GameState.Playing);
-        PlayerController.PlayerLossEvent += OnPlayerLoss;
         mainMenu.SetActive(false);
         gameplayUI.SetActive(true);
         gameOverMenu.SetActive(false);
@@ -57,7 +58,6 @@ public class UIManager : MonoBehaviour
     private void OnPlayerLoss(PlayerController _)
     {
         GameStateChangeEvent?.Invoke(GameState.GameOver);
-        PlayerController.PlayerLossEvent -= OnPlayerLoss;
         mainMenu.SetActive(false);
         gameplayUI.SetActive(false);
         gameOverMenu.SetActive(true);

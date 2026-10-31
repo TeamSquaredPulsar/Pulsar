@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using Nrjwolf.Tools.AttachAttributes;
+using Pulsar.Player;
 using Pulsar.Ship;
 using UnityEngine;
 using Random = UnityEngine.Random;
@@ -25,8 +26,6 @@ public class EnemyController : MonoBehaviour
     private const float TurnGain = 4f;
 
     private static readonly HashSet<EnemyController> _activeEnemies = new();
-
-    private Transform _player;
 
     [GetComponent, SerializeField,]
     private Rigidbody2D rb;
@@ -67,20 +66,12 @@ public class EnemyController : MonoBehaviour
             throw new InvalidOperationException("Player not found");
         }
 
-        _player = playerObj.transform;
-
         _timeBtwShots = enemyInfo.startTimeBtwShots;
         _weaveOffset = Random.value * MaxWeaveOffset;
     }
 
     private void Update()
     {
-        // TODO: Make this a coroutine
-        if (_player is null)
-        {
-            return;
-        }
-
         GetPlayerDirection(out Vector3 dirToPlayer, out float distance);
         HandleShooting(dirToPlayer, distance);
     }
@@ -89,11 +80,6 @@ public class EnemyController : MonoBehaviour
     // to the ship by physics, move in step with it instead of lagging behind.
     private void FixedUpdate()
     {
-        if (_player is null)
-        {
-            return;
-        }
-
         GetPlayerDirection(out Vector3 dirToPlayer, out float distance);
         HandleMovement(dirToPlayer, distance);
         HandleRotation(dirToPlayer);
@@ -122,7 +108,7 @@ public class EnemyController : MonoBehaviour
 
     private void GetPlayerDirection(out Vector3 dirToPlayer, out float distance)
     {
-        Vector3 toPlayer = _player.position - transform.position;
+        Vector3 toPlayer = PlayerController.PlayerPosition - transform.position;
         /*
          * It resets Z axis differences between player and enemy to zero
          * to keep movement and aiming on the XY plane and horizontal.

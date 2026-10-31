@@ -127,6 +127,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 1016545865095614315, guid: 23b839cb7fca3b247ba1200fcaa33286, type: 3}
+      propertyPath: ShowCameraFrustum
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 4131287922259776958, guid: 23b839cb7fca3b247ba1200fcaa33286, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0
@@ -191,6 +195,18 @@ PrefabInstance:
       propertyPath: mainMenuCamera
       value: 
       objectReference: {fileID: 195309143}
+    - target: {fileID: 7067975659105368029, guid: 23b839cb7fca3b247ba1200fcaa33286, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: -1539
+      objectReference: {fileID: 0}
+    - target: {fileID: 7710444508102941617, guid: 23b839cb7fca3b247ba1200fcaa33286, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: -1549
+      objectReference: {fileID: 0}
+    - target: {fileID: 7781254101354357636, guid: 23b839cb7fca3b247ba1200fcaa33286, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: -1549
+      objectReference: {fileID: 0}
     - target: {fileID: 8255171805618094538, guid: 23b839cb7fca3b247ba1200fcaa33286, type: 3}
       propertyPath: m_Name
       value: CameraGroup
