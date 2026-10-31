@@ -26,6 +26,7 @@ public class GameManager : MonoBehaviour
     private EnemySpawner _enemySpawner;
     private int _currentWave;
     private int _score;
+    private Coroutine _awaitingWave;
     
     private void Awake()
     {
@@ -49,6 +50,7 @@ public class GameManager : MonoBehaviour
         switch (obj)
         {
             case GameState.MainMenu:
+                _currentWave = 0;
                 break;
             case GameState.Playing:
                 Instantiate(playerPrefab, Vector3.zero, Quaternion.identity);
@@ -58,7 +60,12 @@ public class GameManager : MonoBehaviour
                 LoadNextWave();
                 break;
             case GameState.GameOver:
+                if (_awaitingWave is not null)
+                {
+                    StopCoroutine(_awaitingWave);
+                }
                 Destroy(_enemySpawner);
+                _currentWave = 0;
                 break;
             default:
                 throw new ArgumentOutOfRangeException(nameof(obj), obj, null);
@@ -79,13 +86,14 @@ public class GameManager : MonoBehaviour
     private void LoadNextWave()
     {
         _enemySpawner.LoadNewWave(waveDefinitions[_currentWave]);
-        StartCoroutine(StartNextWaveAfterDelay());
+        _awaitingWave = StartCoroutine(StartNextWaveAfterDelay());
     }
 
     private IEnumerator StartNextWaveAfterDelay()
     {
         yield return new WaitForSeconds(waveDelaySeconds);
         _enemySpawner.StartWave();
+        _awaitingWave = null;
     }
 }
 }

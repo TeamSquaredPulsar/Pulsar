@@ -127,14 +127,6 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
-    - target: {fileID: 1016545865095614315, guid: 23b839cb7fca3b247ba1200fcaa33286, type: 3}
-      propertyPath: ShowCameraFrustum
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 2851155763604476361, guid: 23b839cb7fca3b247ba1200fcaa33286, type: 3}
-      propertyPath: cameraData
-      value: 
-      objectReference: {fileID: 11400000, guid: 3422a4889e5877b4fafae9f0099db266, type: 2}
     - target: {fileID: 4131287922259776958, guid: 23b839cb7fca3b247ba1200fcaa33286, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0
@@ -175,78 +167,27 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 5609261549864515953, guid: 23b839cb7fca3b247ba1200fcaa33286, type: 3}
-      propertyPath: targetGroup
-      value: 
-      objectReference: {fileID: 608585738}
-    - target: {fileID: 5609261549864515953, guid: 23b839cb7fca3b247ba1200fcaa33286, type: 3}
-      propertyPath: playerRadius
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 5609261549864515953, guid: 23b839cb7fca3b247ba1200fcaa33286, type: 3}
-      propertyPath: playerWeight
-      value: 4.5
-      objectReference: {fileID: 0}
-    - target: {fileID: 5609261549864515953, guid: 23b839cb7fca3b247ba1200fcaa33286, type: 3}
-      propertyPath: pPlayerPrefab
-      value: 
-      objectReference: {fileID: 1843940356141040302, guid: b8226397bde29ab4abb516fe64e2ab6f, type: 3}
-    - target: {fileID: 5609261549864515953, guid: 23b839cb7fca3b247ba1200fcaa33286, type: 3}
-      propertyPath: gameplayCamera
-      value: 
-      objectReference: {fileID: 780438060}
-    - target: {fileID: 5609261549864515953, guid: 23b839cb7fca3b247ba1200fcaa33286, type: 3}
-      propertyPath: mainMenuCamera
-      value: 
-      objectReference: {fileID: 195309143}
-    - target: {fileID: 6720932683000448876, guid: 23b839cb7fca3b247ba1200fcaa33286, type: 3}
-      propertyPath: playerCursor
-      value: 
-      objectReference: {fileID: 1225350454}
     - target: {fileID: 7067975659105368029, guid: 23b839cb7fca3b247ba1200fcaa33286, type: 3}
       propertyPath: m_LocalPosition.z
-      value: -9.000001
+      value: -6012
       objectReference: {fileID: 0}
     - target: {fileID: 7710444508102941617, guid: 23b839cb7fca3b247ba1200fcaa33286, type: 3}
       propertyPath: m_LocalPosition.z
-      value: -19
+      value: -6022
       objectReference: {fileID: 0}
     - target: {fileID: 7781254101354357636, guid: 23b839cb7fca3b247ba1200fcaa33286, type: 3}
       propertyPath: m_LocalPosition.z
-      value: -10.000001
+      value: -6022
       objectReference: {fileID: 0}
     - target: {fileID: 8255171805618094538, guid: 23b839cb7fca3b247ba1200fcaa33286, type: 3}
       propertyPath: m_Name
       value: CameraGroup
       objectReference: {fileID: 0}
-    m_RemovedComponents:
-    - {fileID: 5609261549864515953, guid: 23b839cb7fca3b247ba1200fcaa33286, type: 3}
+    m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 23b839cb7fca3b247ba1200fcaa33286, type: 3}
---- !u!114 &195309143 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 4595812299610003441, guid: 23b839cb7fca3b247ba1200fcaa33286, type: 3}
-  m_PrefabInstance: {fileID: 172652440}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f9dfa5b682dcd46bda6128250e975f58, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Unity.Cinemachine::Unity.Cinemachine.CinemachineCamera
---- !u!114 &608585738 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 4302849032076014864, guid: 23b839cb7fca3b247ba1200fcaa33286, type: 3}
-  m_PrefabInstance: {fileID: 172652440}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e5eb80d8e62d9d145bb50fb783c0f731, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Unity.Cinemachine::Unity.Cinemachine.CinemachineTargetGroup
 --- !u!1 &619394800
 GameObject:
   m_ObjectHideFlags: 0
@@ -374,11 +315,6 @@ Light:
   m_LightUnit: 1
   m_LuxAtDistance: 1
   m_EnableSpotReflector: 1
---- !u!20 &780438060 stripped
-Camera:
-  m_CorrespondingSourceObject: {fileID: 6694399800490252111, guid: 23b839cb7fca3b247ba1200fcaa33286, type: 3}
-  m_PrefabInstance: {fileID: 172652440}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &1115786836
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -436,11 +372,6 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: ee943f43f9dd5434aab7831772e3150a, type: 3}
---- !u!1 &1225350454 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 1380780918072949218, guid: 23b839cb7fca3b247ba1200fcaa33286, type: 3}
-  m_PrefabInstance: {fileID: 172652440}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1389241650
 GameObject:
   m_ObjectHideFlags: 0
@@ -577,22 +508,6 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
-    - target: {fileID: 3325847302067099263, guid: 18460059864b61d48bdd8fec899c6b82, type: 3}
-      propertyPath: waveDelaySeconds
-      value: 5
-      objectReference: {fileID: 0}
-    - target: {fileID: 3325847302067099263, guid: 18460059864b61d48bdd8fec899c6b82, type: 3}
-      propertyPath: enemySpawnerPrefab
-      value: 
-      objectReference: {fileID: 697001318912693541, guid: c870ce8893d39f4409a7d84e3185bf7b, type: 3}
-    - target: {fileID: 3325847302067099263, guid: 18460059864b61d48bdd8fec899c6b82, type: 3}
-      propertyPath: waveDefinitions.Array.size
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 3325847302067099263, guid: 18460059864b61d48bdd8fec899c6b82, type: 3}
-      propertyPath: 'waveDefinitions.Array.data[0]'
-      value: 
-      objectReference: {fileID: 11400000, guid: b651fda037224d7a9af633b431b5a105, type: 2}
     - target: {fileID: 7621465928010011671, guid: 18460059864b61d48bdd8fec899c6b82, type: 3}
       propertyPath: m_Name
       value: GameManager
@@ -650,10 +565,6 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
-    - target: {fileID: 3923920401359964688, guid: d5227e024d2f8b641832ebb8c0c5b82b, type: 3}
-      propertyPath: m_IsActive
-      value: 0
-      objectReference: {fileID: 0}
     - target: {fileID: 7544379148605787905, guid: d5227e024d2f8b641832ebb8c0c5b82b, type: 3}
       propertyPath: m_Pivot.x
       value: 0

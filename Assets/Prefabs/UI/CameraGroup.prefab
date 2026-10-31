@@ -207,6 +207,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 33f6fc25fb6e51d46a08aa3b04d1f8d8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Pulsar.Player::CameraManager
+  playerCursor: {fileID: 1380780918072949218}
   cameraDataAsset: {fileID: 11400000, guid: 3422a4889e5877b4fafae9f0099db266, type: 2}
   mainCamera: {fileID: 6694399800490252111}
   mainMenuCamera: {fileID: 4595812299610003441}
@@ -396,11 +397,20 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 6423185008215282089, guid: 353cdbf40f1135e49926004f779abd67, type: 3}
+      propertyPath: cameraData
+      value: 
+      objectReference: {fileID: 11400000, guid: 3422a4889e5877b4fafae9f0099db266, type: 2}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 353cdbf40f1135e49926004f779abd67, type: 3}
+--- !u!1 &1380780918072949218 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 7898028802718742914, guid: 353cdbf40f1135e49926004f779abd67, type: 3}
+  m_PrefabInstance: {fileID: 9129618554532560992}
+  m_PrefabAsset: {fileID: 0}
 --- !u!4 &4845615677473899299 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 4435481022068409155, guid: 353cdbf40f1135e49926004f779abd67, type: 3}

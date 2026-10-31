@@ -8,8 +8,6 @@ namespace Pulsar
 public class CameraManager : MonoBehaviour
 {
     [SerializeField]
-    private GameObject playerCursor;
-    [SerializeField]
     private CameraData cameraDataAsset;
 
     [SerializeField]

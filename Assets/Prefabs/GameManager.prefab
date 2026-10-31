@@ -45,4 +45,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: '::'
   playerPrefab: {fileID: 1843940356141040302, guid: b8226397bde29ab4abb516fe64e2ab6f, type: 3}
-  enemySpawnerPrefab: {fileID: 0}
+  enemySpawnerPrefab: {fileID: 697001318912693541, guid: c870ce8893d39f4409a7d84e3185bf7b, type: 3}
+  waveDelaySeconds: 5
+  waveDefinitions:
+  - {fileID: 11400000, guid: b651fda037224d7a9af633b431b5a105, type: 2}
