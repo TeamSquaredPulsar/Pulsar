@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using Pulsar.Ship;
 using Pulsar.Utilities;
@@ -8,6 +9,9 @@ namespace Pulsar.Player
 [RequireComponent(typeof(ShipManager))]
 public class PlayerController : MonoBehaviour
 {
+    public static event Action<PlayerController> PlayerSpawnedEvent;
+    public static event Action<PlayerController> PlayerLossEvent;
+    
     [SerializeField]
     private InputReader input;
 
@@ -29,12 +33,22 @@ public class PlayerController : MonoBehaviour
     private void Start()
     {
         PlayerCursor.SelectTileEvent += OnSelectTile;
+        Ship.ShipDestroyedEvent += OnShipDestroyed;
         RegisterInputCallbacks();
+        PlayerSpawnedEvent?.Invoke(this);
+    }
+
+    private void OnShipDestroyed(ShipManager obj)
+    {
+        Debug.Log($"Player has lost!");
+        PlayerLossEvent?.Invoke(this);
+        Destroy(obj.gameObject);
     }
 
     private void OnDestroy()
     {
         PlayerCursor.SelectTileEvent -= OnSelectTile;
+        Ship.ShipDestroyedEvent -= OnShipDestroyed;
 
         input.MoveEvent -= HandleMove;
         input.RotateEvent -= HandleRotate;

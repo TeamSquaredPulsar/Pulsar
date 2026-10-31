@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using NaughtyAttributes;
 using Pulsar.Hazards;
 using Pulsar.Ship.Data;
 using Pulsar.Ship.Extensions;
@@ -13,6 +14,14 @@ namespace Pulsar.Ship
 [RequireComponent(typeof(CompositeCollider2D), typeof(Rigidbody2D))]
 public class ShipManager : MonoBehaviour
 {
+    [Button]
+    private void DebugKillShip()
+    {
+        Core.TakeDamage(Core.CurrentHp);
+    }
+    
+    public event Action<ShipManager> ShipDestroyedEvent;
+    
     [Header("Refs"), SerializeField,]
     private CompositeCollider2D compositeCollider;
 
@@ -167,6 +176,7 @@ public class ShipManager : MonoBehaviour
     
     private void OnCoreDestroyed()
     {
+        Debug.Log($"Core of {gameObject.name} has been destroyed.");
         foreach (Tile tile in _gridData.Tiles)
         {
             if (tile is CoreTile)
@@ -178,7 +188,9 @@ public class ShipManager : MonoBehaviour
         }
         
         // TODO: possibly gotta disable input here?
-            //  + other stuff that triggers on core death
+        //  + other stuff that triggers on core death
+        ShipDestroyedEvent?.Invoke(this);
+        Destroy(this);
     }
 
     // returns a rectangle enclosing all ship tiles in the ship’s local space

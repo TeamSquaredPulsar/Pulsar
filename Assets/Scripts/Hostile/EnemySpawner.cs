@@ -1,14 +1,17 @@
 using System;
 using System.Collections;
+using NaughtyAttributes;
 using UnityEngine;
 using Random = UnityEngine.Random;
 
 public class EnemySpawner : MonoBehaviour
 {
     private const int MaxSpawnAttempts = 30;
+    
+    public event Action WaveCompleteEvent;
 
-    [SerializeField]
-    private WaveDefinitionSO wave;
+    [ShowNonSerializedField]
+    private WaveDefinitionSO _wave;
 
     [SerializeField]
     private float spawnRadiusMin = 10f;
@@ -21,6 +24,14 @@ public class EnemySpawner : MonoBehaviour
 
     private Transform _player;
 
+    private int _spawnedEnemies;
+    private bool _isSpawning = false;
+
+    private void Awake()
+    {
+        EnemyController.EnemyDefeatedEvent += HandleEnemyDefeated;
+    }
+
     private void Start()
     {
         GameObject playerObj = GameObject.FindWithTag("Player");
@@ -30,8 +41,11 @@ public class EnemySpawner : MonoBehaviour
         }
 
         _player = playerObj.transform;
+    }
 
-        StartWave();
+    private void OnDestroy()
+    {
+        EnemyController.EnemyDefeatedEvent -= HandleEnemyDefeated;
     }
 
     public void StartWave()
@@ -41,7 +55,8 @@ public class EnemySpawner : MonoBehaviour
 
     private IEnumerator SpawnWave()
     {
-        foreach (WaveEntry entry in wave.entries)
+        _isSpawning = true;
+        foreach (WaveEntry entry in _wave.entries)
         {
             for (int i = 0; i < entry.count; i++)
             {
@@ -49,6 +64,7 @@ public class EnemySpawner : MonoBehaviour
                 yield return new WaitForSeconds(entry.spawnInterval);
             }
         }
+        _isSpawning = false;
     }
 
     private void SpawnEnemy(GameObject enemyPrefab)
@@ -66,6 +82,21 @@ public class EnemySpawner : MonoBehaviour
         }
 
         Instantiate(enemyPrefab, spawnPosition, Quaternion.identity);
+        _spawnedEnemies++;
+    }
+
+    private void HandleEnemyDefeated(int _)
+    {
+        _spawnedEnemies--;
+        if (!_isSpawning && _spawnedEnemies == 0)
+        {
+            WaveCompleteEvent?.Invoke();
+        }
+    }
+
+    public void LoadNewWave(WaveDefinitionSO newWave)
+    {
+        _wave = newWave;
     }
 
     private Vector3 RandomOffset()
