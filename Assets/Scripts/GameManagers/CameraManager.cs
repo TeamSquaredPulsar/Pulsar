@@ -54,6 +54,7 @@ public class CameraManager : MonoBehaviour
     private void OnPlayerLoss(PlayerController obj)
     {
         targetGroup.RemoveMember(obj.transform);
+        mainMenuCamera.transform.position = gameplayCamera.transform.position;
         mainMenuCamera.Prioritize();
     }
 
