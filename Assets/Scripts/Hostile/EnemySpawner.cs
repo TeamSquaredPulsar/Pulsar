@@ -40,7 +40,6 @@ public class EnemySpawner : MonoBehaviour
         }
         foreach (EnemyController enemy in _spawnedEnemies)
         {
-            Debug.Log($"Destroying {enemy.gameObject.name}");
             Destroy(enemy.gameObject);
         }
         EnemyController.EnemyDefeatedEvent -= HandleEnemyDefeated;

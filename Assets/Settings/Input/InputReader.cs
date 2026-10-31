@@ -105,7 +105,6 @@ public class InputReader : ScriptableObject, IPlayerActions, IInputReader
 
         // Multiply by camera dimensions so we can get full screen size
         input *= camData.ScreenSize;
-
         
         MoveCursorEvent?.Invoke(input);
     }

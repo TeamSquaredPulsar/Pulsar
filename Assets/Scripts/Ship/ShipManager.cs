@@ -157,7 +157,7 @@ public class ShipManager : MonoBehaviour
         rb.mass -= tile.Mass;
         if (!_gridData.RemoveTile(tile.Cell).IsSuccess)
         {
-            Debug.Log($"Failed to remove {tile.name}");
+            Debug.LogError($"Failed to remove {tile.name}");
             return;
         }
 
@@ -175,9 +175,7 @@ public class ShipManager : MonoBehaviour
     }
     
     private void OnCoreDestroyed()
-    {
-        Debug.Log($"Core of {gameObject.name} has been destroyed.");
-        foreach (Tile tile in _gridData.Tiles)
+    { foreach (Tile tile in _gridData.Tiles)
         {
             if (tile is CoreTile)
             {
@@ -187,10 +185,8 @@ public class ShipManager : MonoBehaviour
             DetatchTile(tile);
         }
         
-        // TODO: possibly gotta disable input here?
-        //  + other stuff that triggers on core death
         ShipDestroyedEvent?.Invoke(this);
-        Destroy(this.gameObject);
+        Destroy(gameObject);
     }
 
     // returns a rectangle enclosing all ship tiles in the ship’s local space

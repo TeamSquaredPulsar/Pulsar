@@ -25,27 +25,22 @@ public class PlayerCursor : MonoBehaviour
 
     private Tile _hoveredTile;
     private Tile _selectedTile;
-    
-    private float _worldUnitsPerPixel;
 
     private void Awake()
     {
         input.MoveCursorEvent += OnCursorMove;
         input.SelectTileEvent += OnTileSelect;
-        // [CB] TODO: We need to setup callbacks for when the camera changes
     }
 
     private void Start()
     {
-        // Cursor.visible = false;
-        // Cursor.lockState = CursorLockMode.Confined;
-
-        //Correct mouse position if the cursor isn't detected 
-        Vector2 initPos = Mouse.current != null
-            ? Mouse.current.position.ReadValue()
-            : Vector2.zero;
-        Debug.Log($"Initializing player cursor to {initPos}");
+        Cursor.visible = false;
+        Cursor.lockState = CursorLockMode.Confined;
+        
+        Vector2 initPos = cameraData.ScreenSize / 2;
         OnCursorMove(initPos);
+        
+        input.EnablePlayerActions();
     }
 
     private void OnDestroy()
@@ -76,7 +71,6 @@ public class PlayerCursor : MonoBehaviour
 
     private void OnCursorMove(Vector2 obj)
     {
-        Debug.Log($"Moving cursor to {obj}");
         Vector3 worldPos = cameraData.MainCamera.ScreenToWorldPoint(obj);
 
         worldPos.z = 0f;

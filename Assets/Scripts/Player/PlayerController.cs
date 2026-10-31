@@ -42,7 +42,6 @@ public class PlayerController : MonoBehaviour
 
     private void OnShipDestroyed(ShipManager obj)
     {
-        Debug.Log($"Player has lost!");
         PlayerLossEvent?.Invoke(this);
         Destroy(obj.gameObject);
     }
