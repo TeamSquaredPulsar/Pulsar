@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using NaughtyAttributes;
 using Pulsar.Player;
 using UnityEngine;
@@ -9,7 +10,7 @@ using Random = UnityEngine.Random;
 public class EnemySpawner : MonoBehaviour
 {
     private const int MaxSpawnAttempts = 30;
-    
+
     public event Action WaveCompleteEvent;
 
     [ShowNonSerializedField]
@@ -38,10 +39,13 @@ public class EnemySpawner : MonoBehaviour
         {
             StopCoroutine(_waveCoroutine);
         }
-        foreach (EnemyController enemy in _spawnedEnemies)
+ 
+        foreach (EnemyController enemy in _spawnedEnemies.Where(enemy =>
+                     enemy.gameObject))
         {
             Destroy(enemy.gameObject);
         }
+        
         EnemyController.EnemyDefeatedEvent -= HandleEnemyDefeated;
     }
 
@@ -68,7 +72,8 @@ public class EnemySpawner : MonoBehaviour
     {
         float newRadius
             = EnemyController.CalculateRadius(enemyPrefab.transform);
-        Vector3 spawnPosition = PlayerController.PlayerPosition + RandomOffset();
+        Vector3 spawnPosition
+            = PlayerController.PlayerPosition + RandomOffset();
 
         for (int attempt = 0;
              attempt < MaxSpawnAttempts &&
@@ -85,7 +90,7 @@ public class EnemySpawner : MonoBehaviour
             throw new ArgumentException(
                 "Object in spawner does not have an EnemyController!");
         }
-        
+
         _spawnedEnemies.Add(controller);
     }
 
