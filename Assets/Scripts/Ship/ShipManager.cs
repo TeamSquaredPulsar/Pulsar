@@ -41,6 +41,8 @@ public class ShipManager : MonoBehaviour
     public IReadOnlyDictionary<Vector2Int, Tile> Cells => _gridData.Cells;
     public bool OwnsTile(Tile tile) => Cells.Values.Contains(tile);
 
+    public event Action ShipGridUpdate;
+
     private void Start()
     {
         RefreshTiles();
@@ -88,6 +90,7 @@ public class ShipManager : MonoBehaviour
             ShipUtilities.GridToLocal(cell),
             ShipUtilities.RotateQuarterOnZAxis(rotation.ToInt()));
         tile.DestroyEvent += HandleTileDestroyed;
+        ShipGridUpdate?.Invoke();
     }
 
     private void ProcessTile(Tile tile)
@@ -163,6 +166,7 @@ public class ShipManager : MonoBehaviour
         }
 
         tile.DestroyEvent -= HandleTileDestroyed;
+        ShipGridUpdate?.Invoke();
     }
     
     private void OnCoreDestroyed()
@@ -400,6 +404,8 @@ public class ShipManager : MonoBehaviour
 
         tile.Detatch(velocity, angularVelocity + spin);
         rb.mass -= tile.Mass;
+        
+        ShipGridUpdate?.Invoke();
     }
 
     #endregion
