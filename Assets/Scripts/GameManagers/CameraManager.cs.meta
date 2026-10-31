@@ -1,0 +1,17 @@
+fileFormatVersion: 2
+guid: 33f6fc25fb6e51d46a08aa3b04d1f8d8
+MonoImporter:
+  externalObjects: {}
+  serializedVersion: 2
+  defaultReferences:
+  - cameraDataAsset: {fileID: 11400000, guid: 3422a4889e5877b4fafae9f0099db266, type: 2}
+  - mainCamera: {instanceID: 0}
+  - mainMenuCamera: {instanceID: 0}
+  - gameplayCamera: {instanceID: 0}
+  - pPlayerPrefab: {fileID: 1843940356141040302, guid: b8226397bde29ab4abb516fe64e2ab6f, type: 3}
+  - targetGroup: {instanceID: 0}
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

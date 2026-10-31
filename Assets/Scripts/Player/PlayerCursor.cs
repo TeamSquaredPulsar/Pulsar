@@ -20,10 +20,12 @@ public class PlayerCursor : MonoBehaviour
     [SerializeField]
     private Collider2D circleCollider;
 
+    [SerializeField]
+    private CameraData cameraData;
+
     private Tile _hoveredTile;
     private Tile _selectedTile;
-
-    private Camera _mainCamera;
+    
     private float _worldUnitsPerPixel;
 
     private void Awake()
@@ -35,15 +37,14 @@ public class PlayerCursor : MonoBehaviour
 
     private void Start()
     {
-        _mainCamera = Camera.main;
-        Cursor.visible = false;
-        Cursor.lockState = CursorLockMode.Confined;
+        // Cursor.visible = false;
+        // Cursor.lockState = CursorLockMode.Confined;
 
         //Correct mouse position if the cursor isn't detected 
         Vector2 initPos = Mouse.current != null
             ? Mouse.current.position.ReadValue()
             : Vector2.zero;
-
+        Debug.Log($"Initializing player cursor to {initPos}");
         OnCursorMove(initPos);
     }
 
@@ -75,7 +76,8 @@ public class PlayerCursor : MonoBehaviour
 
     private void OnCursorMove(Vector2 obj)
     {
-        Vector3 worldPos = _mainCamera.ScreenToWorldPoint(obj);
+        Debug.Log($"Moving cursor to {obj}");
+        Vector3 worldPos = cameraData.MainCamera.ScreenToWorldPoint(obj);
 
         worldPos.z = 0f;
 

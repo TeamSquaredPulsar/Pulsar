@@ -107,7 +107,7 @@ public class Parallax : MonoBehaviour
 
     private void FixedUpdate()
     {
-        Vector2 distance = cam.mainCamera.transform.position * parallaxEffect;
+        Vector2 distance = cam.MainCamera.transform.position * parallaxEffect;
         transform.position = _startPos + distance;
         HandleInfiniteScroll();
     }
@@ -116,7 +116,7 @@ public class Parallax : MonoBehaviour
     {
         //Check how much the background has moved
         Vector2 movement
-            = cam.mainCamera.transform.position * (1 - parallaxEffect);
+            = cam.MainCamera.transform.position * (1 - parallaxEffect);
 
         //If the parallax caused the edge of the layer to show,
         //adjust the position so it doesn't

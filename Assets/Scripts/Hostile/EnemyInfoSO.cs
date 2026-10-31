@@ -23,6 +23,8 @@ public class EnemyInfoSO : ScriptableObject
     [Header("Separation")]
     public float
         separationPadding = 1f; // Extra gap kept between the edges of two ships
-
     public float separationStrength = 6f;
+
+    [Header("Scoring"), Min(1),]
+    public int PointsOnKill = 10;
 }
