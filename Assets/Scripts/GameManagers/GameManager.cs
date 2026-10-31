@@ -33,15 +33,10 @@ public class GameManager : MonoBehaviour
         EnemyController.EnemyDefeatedEvent += HandleEnemyKilled;
     }
 
-    private void HandleEnemyKilled(int points)
+    private void HandleEnemyKilled(EnemyController _, int points)
     {
         _score += points;
         OnEnemyKill?.Invoke(_score);
-    }
-
-    private void Start()
-    {
-        StartCoroutine(StartNextWaveAfterDelay());
     }
 
     private void OnDestroy()

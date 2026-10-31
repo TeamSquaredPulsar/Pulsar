@@ -9,7 +9,7 @@ using Random = UnityEngine.Random;
 [RequireComponent(typeof(ShipManager))]
 public class EnemyController : MonoBehaviour
 {
-    public static event Action<int> EnemyDefeatedEvent;
+    public static event Action<EnemyController, int> EnemyDefeatedEvent;
 
     public static IReadOnlyCollection<EnemyController> ActiveEnemies =>
         _activeEnemies;
@@ -103,7 +103,7 @@ public class EnemyController : MonoBehaviour
     private void HandleShipDestroyed(ShipManager obj)
     {
         //Game manager will use this for score
-        EnemyDefeatedEvent?.Invoke(enemyInfo.PointsOnKill);
+        EnemyDefeatedEvent?.Invoke(this, enemyInfo.PointsOnKill);
     }
 
     private void GetPlayerDirection(out Vector3 dirToPlayer, out float distance)
