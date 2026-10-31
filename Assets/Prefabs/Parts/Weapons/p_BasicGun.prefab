@@ -74,7 +74,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d1236c1e551165b48b0864561b6c2156, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Pulsar.Ship::Health
-  <MaxHealth>k__BackingField: 1
+  <MaxHealth>k__BackingField: 10
 --- !u!212 &4676953174740963180
 SpriteRenderer:
   serializedVersion: 2

@@ -42,7 +42,15 @@ public class ShipGridData
             return Result<Tile>.Fail();
         }
 
-        DetachOrphans();
+        if (tile == Core)
+        {
+            Core = null;
+        }
+        else
+        {
+            DetachOrphans();    
+        }
+        
         return Result<Tile>.Pass(tile);
     }
 
@@ -98,8 +106,10 @@ public class ShipGridData
     private void DetachOrphans()
     {
         // Get all tiles still connect to Core
+        // Basically iff there is no core nothing is reachable and
+        // every remaining tile is orphaned
         HashSet<Vector2Int> reachable = Flood(Core.Cell);
-
+        
         // Remove all tiles still in Cells which not connect to Core
         Cells.Keys.Where(cell => !reachable.Contains(cell))
             .ToList()

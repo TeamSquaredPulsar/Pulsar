@@ -140,6 +140,11 @@ public class ShipManager : MonoBehaviour
 
     private void HandleTileDestroyed(Tile tile)
     {
+        if (tile is CoreTile)
+        {
+            OnCoreDestroyed();
+        }
+        
         rb.mass -= tile.Mass;
         if (!_gridData.RemoveTile(tile.Cell).IsSuccess)
         {
@@ -158,6 +163,22 @@ public class ShipManager : MonoBehaviour
         }
 
         tile.DestroyEvent -= HandleTileDestroyed;
+    }
+    
+    private void OnCoreDestroyed()
+    {
+        foreach (Tile tile in _gridData.Tiles)
+        {
+            if (tile is CoreTile)
+            {
+                continue;
+            }
+            
+            DetatchTile(tile);
+        }
+        
+        // TODO: possibly gotta disable input here?
+            //  + other stuff that triggers on core death
     }
 
     // returns a rectangle enclosing all ship tiles in the ship’s local space
@@ -338,7 +359,7 @@ public class ShipManager : MonoBehaviour
         Vector2 linearVelocity = rb.linearVelocity;
         float angularVelocity = rb.angularVelocity;
         Vector2 explosionCenter = Core.transform.position;
-
+        
         float minSpeed = Mathf.Max(0f,
             Mathf.Min(detachRadiateLinearVelocity.x,
                 detachRadiateLinearVelocity.y));
