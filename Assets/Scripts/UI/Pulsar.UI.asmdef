@@ -2,7 +2,9 @@
     "name": "Pulsar.UI",
     "rootNamespace": "",
     "references": [
-        "GUID:4b4794e38edc74eb8986ad993a5ad5c8"
+        "GUID:4b4794e38edc74eb8986ad993a5ad5c8",
+        "GUID:4307f53044263cf4b835bd812fc161a4",
+        "GUID:4ada457e02011104d9008eceaa61154f"
     ],
     "includePlatforms": [],
     "excludePlatforms": [],
