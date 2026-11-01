@@ -1,15 +1,15 @@
 using System;
-using Pulsar.Ship;
+using Pulsar.DataClasses;
+using Pulsar.Player;
 using Pulsar.Utilities;
 using UnityEngine;
-using UnityEngine.InputSystem;
 
-namespace Pulsar.Player
+namespace Pulsar.UI
 {
 [RequireComponent(typeof(SpriteRenderer), typeof(CircleCollider2D))]
 public class PlayerCursor : MonoBehaviour
 {
-    public static event Action<Result<Tile>> SelectTileEvent;
+    public static event Action<Result<Tile>> PlayerSelectTile;
     
     [SerializeField]
     private InputReader input;
@@ -20,31 +20,27 @@ public class PlayerCursor : MonoBehaviour
     [SerializeField]
     private Collider2D circleCollider;
 
+    [SerializeField]
+    private CameraData cameraData;
+
     private Tile _hoveredTile;
     private Tile _selectedTile;
-
-    private Camera _mainCamera;
-    private float _worldUnitsPerPixel;
 
     private void Awake()
     {
         input.MoveCursorEvent += OnCursorMove;
         input.SelectTileEvent += OnTileSelect;
-        // [CB] TODO: We need to setup callbacks for when the camera changes
     }
 
     private void Start()
     {
-        _mainCamera = Camera.main;
         Cursor.visible = false;
         Cursor.lockState = CursorLockMode.Confined;
-
-        //Correct mouse position if the cursor isn't detected 
-        Vector2 initPos = Mouse.current != null
-            ? Mouse.current.position.ReadValue()
-            : Vector2.zero;
-
+        
+        Vector2 initPos = cameraData.ScreenSize / 2;
         OnCursorMove(initPos);
+        
+        input.EnablePlayerActions();
     }
 
     private void OnDestroy()
@@ -58,24 +54,24 @@ public class PlayerCursor : MonoBehaviour
         if (!isSelecting || !_hoveredTile)
         {
             _selectedTile = null;
-            SelectTileEvent?.Invoke(
-                new Result<Tile>(false, null));
+            PlayerSelectTile?.Invoke(Result<Tile>.Fail());
             return;
         }
 
         //Don't raise more events than we need to
-        if (_hoveredTile.Equals(_selectedTile))
+        if (_hoveredTile == _selectedTile)
         {
             return;
         }
 
         _selectedTile = _hoveredTile;
-        SelectTileEvent?.Invoke(new Result<Tile>(true, _selectedTile));
+
+        PlayerSelectTile?.Invoke(Result<Tile>.Pass(_selectedTile));
     }
 
     private void OnCursorMove(Vector2 obj)
     {
-        Vector3 worldPos = _mainCamera.ScreenToWorldPoint(obj);
+        Vector3 worldPos = cameraData.MainCamera.ScreenToWorldPoint(obj);
 
         worldPos.z = 0f;
 
@@ -92,15 +88,15 @@ public class PlayerCursor : MonoBehaviour
         _hoveredTile = collidedTile;
     }
 
-    private void OnTriggerStay2D(Collider2D other)
-    {
-        if (!TryProcessColliderTrigger(other, out Tile collidedTile))
-        {
-            return;
-        }
-
-        _hoveredTile = collidedTile;
-    }
+    // private void OnTriggerStay2D(Collider2D other)
+    // {
+    //     if (!TryProcessColliderTrigger(other, out Tile collidedTile))
+    //     {
+    //         return;
+    //     }
+    //
+    //     _hoveredTile = collidedTile;
+    // }
 
     private bool TryProcessColliderTrigger(
         Collider2D other,
@@ -114,7 +110,6 @@ public class PlayerCursor : MonoBehaviour
         //Ignore EnemyAI ships
         else if (other.TryGetComponent(out PlayerController player))
         {
-            ShipManager ship = player.Ship;
 
             // [CB] Because the collision point is on the edge of a tile, we need
             // to subtract a small amount.
@@ -124,7 +119,7 @@ public class PlayerCursor : MonoBehaviour
 
             // Get collision point relative to ship core
             Vector2 collisionPosition
-                = ship.transform.InverseTransformPoint(
+                = player.transform.InverseTransformPoint(
                     other.ClosestPoint(transform.position));
 
             //Modify collision point to attempt to get tile position
@@ -150,8 +145,7 @@ public class PlayerCursor : MonoBehaviour
 
             Vector2Int gridCell = Vector2Int.RoundToInt(collisionPosition);
 
-            ship.Cells.TryGetValue(gridCell, out Tile attachedTile);
-            collidedTile = attachedTile;
+            player.TryGetTile(gridCell, out collidedTile);
         }
 
         return collidedTile;

@@ -1,24 +1,21 @@
-using System;
-using Pulsar.Ship;
-using Pulsar.Ship.Data;
+using Pulsar.Player;
 using UnityEngine;
 using Unity.Cinemachine;
 
+namespace Pulsar.UI
+{
 public class CameraRig : MonoBehaviour
 {
     [SerializeField] 
     private CinemachineGroupFraming targetGroup;
-    
-    [SerializeField]
-    private ShipManager shipManager;
 
     [SerializeField]
     private float zoomPadding;
     
-    private float minZoom;
-    private float activeZoom;
+    private float _minZoom;
+    private float _activeZoom;
 
-    private float yRange;
+    private float _yRange;
     
     private void Awake()
     {
@@ -27,33 +24,31 @@ public class CameraRig : MonoBehaviour
             targetGroup = GetComponent<CinemachineGroupFraming>();
         }
 
-        minZoom = targetGroup.OrthoSizeRange.x;
-        yRange = targetGroup.OrthoSizeRange.y;
+        PlayerController.ShipGridUpdate += UpdateCameraZoom;
+        PlayerController.PlayerSpawnedEvent += OnPlayerSpawn;
+
+        _minZoom = targetGroup.OrthoSizeRange.x;
+        _yRange = targetGroup.OrthoSizeRange.y;
     }
 
-    private void OnEnable()
+    private void OnDestroy()
     {
-        shipManager.ShipGridUpdate += UpdateCameraZoom;
+        PlayerController.ShipGridUpdate -= UpdateCameraZoom;
+        PlayerController.PlayerSpawnedEvent -= OnPlayerSpawn;
     }
 
-    private void OnDisable()
+    private void OnPlayerSpawn(PlayerController obj)
     {
-        shipManager.ShipGridUpdate -= UpdateCameraZoom;
+        UpdateCameraZoom(obj.GetShipBounds());
     }
 
-    private void Start()
+    private void UpdateCameraZoom(Bounds bounds)
     {
-        UpdateCameraZoom();
-    }
-
-    private void UpdateCameraZoom()
-    {
-        Bounds bounds = shipManager.GetLocalBounds();
-        
         float maxSize = Mathf.Max(bounds.size.x, bounds.size.y);
         
-        activeZoom = Mathf.Max(minZoom, maxSize +  zoomPadding);
+        _activeZoom = Mathf.Max(_minZoom, maxSize +  zoomPadding);
         
-        targetGroup.OrthoSizeRange = new Vector2(activeZoom, yRange);
+        targetGroup.OrthoSizeRange = new Vector2(_activeZoom, _yRange);
     }
+}
 }

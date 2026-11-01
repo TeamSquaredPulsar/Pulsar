@@ -1,48 +1,47 @@
 using NaughtyAttributes;
 using Nrjwolf.Tools.AttachAttributes;
+using Pulsar.DataClasses;
 using UnityEngine;
 
 [RequireComponent(typeof(SpriteRenderer))]
 public class Parallax : MonoBehaviour
 {
-    [Header("References")]
-    
-    [SerializeField]
+    [Header("References"),GetComponent,SerializeField,]
     private SpriteRenderer spriteRenderer;
     
     [SerializeField]
     private CameraData cam;
     
-    [Header("Settings")]
-    [OnValueChanged("SetupTiling")]
-    [SerializeField]
+    [Header("Settings"),OnValueChanged("SetupTiling"),SerializeField,]
     private Sprite sprite;
     
-    [OnValueChanged("SetupTiling")]
-    [SortingLayer]
-    [SerializeField]
+    [OnValueChanged("SetupTiling"),SortingLayer,SerializeField,]
     private int sortingLayerID;
     
-    [SerializeField]
-    [Range(0f, 1f)]
-    [Tooltip("Lower values move more closely to main camera." +
-             "0 = moves constant with camera" +
-             "1 = won't move at all" +
-             "0.5 = moves half the amount the camera does.")]
+    [SerializeField,Range(0f, 1f),
+     Tooltip(@"Lower values move more closely to main camera.
+0 = moves constant with camera.
+1 = won't move at all.
+0.5 = moves half the amount the camera does."),]
     private float parallaxEffect;
 
     
     private Vector2 _startPos;
     private Vector2 _size;
-
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
-
+    
     private void Start()
     {
         _startPos = transform.position;
         _size = spriteRenderer.bounds.size;
     }
-
+    
+    private void FixedUpdate()
+    {
+        Vector2 distance = cam.MainCamera.transform.position * parallaxEffect;
+        transform.position = _startPos + distance;
+        HandleInfiniteScroll();
+    }
+    
     public void ChangeSprite(Sprite newSprite)
     {
         spriteRenderer.sprite = newSprite;
@@ -105,18 +104,11 @@ public class Parallax : MonoBehaviour
         go.transform.parent = transform;
     }
 
-    private void FixedUpdate()
-    {
-        Vector2 distance = cam.mainCamera.transform.position * parallaxEffect;
-        transform.position = _startPos + distance;
-        HandleInfiniteScroll();
-    }
-
     private void HandleInfiniteScroll()
     {
         //Check how much the background has moved
         Vector2 movement
-            = cam.mainCamera.transform.position * (1 - parallaxEffect);
+            = cam.MainCamera.transform.position * (1 - parallaxEffect);
 
         //If the parallax caused the edge of the layer to show,
         //adjust the position so it doesn't

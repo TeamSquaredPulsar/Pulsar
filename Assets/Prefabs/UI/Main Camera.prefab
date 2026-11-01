@@ -12,7 +12,6 @@ GameObject:
   - component: {fileID: 2474062319082034991}
   - component: {fileID: 2116928906485360822}
   - component: {fileID: 1769989626534206656}
-  - component: {fileID: 5799417898506920409}
   - component: {fileID: 8118183219558354699}
   m_Layer: 0
   m_Name: Main Camera
@@ -140,20 +139,6 @@ MonoBehaviour:
     m_VarianceClampScale: 0.9
     m_ContrastAdaptiveSharpening: 0
   m_Version: 2
---- !u!114 &5799417898506920409
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 139000849027535085}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 3263b1d108f04db4ebfe65ef2690f88f, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::CameraRegister
-  cameraDataAsset: {fileID: 11400000, guid: 3422a4889e5877b4fafae9f0099db266, type: 2}
-  mainCamera: {fileID: 2474062319082034991}
 --- !u!114 &8118183219558354699
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -202,6 +187,10 @@ PrefabInstance:
       propertyPath: m_WasSpriteAssigned
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 1831245160530118686, guid: d01fc864fe431cd41a6e9b955c142f7d, type: 3}
+      propertyPath: cameraData
+      value: 
+      objectReference: {fileID: 11400000, guid: 3422a4889e5877b4fafae9f0099db266, type: 2}
     - target: {fileID: 3301472946247098421, guid: d01fc864fe431cd41a6e9b955c142f7d, type: 3}
       propertyPath: m_Name
       value: Cursor
