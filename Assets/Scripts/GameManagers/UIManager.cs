@@ -1,5 +1,6 @@
 using System;
 using Pulsar.Player;
+using Pulsar.UI;
 using TMPro;
 using UnityEngine;
 

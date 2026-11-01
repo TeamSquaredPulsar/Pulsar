@@ -2,6 +2,8 @@ using Pulsar.Player;
 using UnityEngine;
 using Unity.Cinemachine;
 
+namespace Pulsar.UI
+{
 public class CameraRig : MonoBehaviour
 {
     [SerializeField] 
@@ -48,4 +50,5 @@ public class CameraRig : MonoBehaviour
         
         targetGroup.OrthoSizeRange = new Vector2(_activeZoom, _yRange);
     }
+}
 }
