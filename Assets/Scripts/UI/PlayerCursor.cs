@@ -1,14 +1,15 @@
 using System;
 using Pulsar.DataClasses;
+using Pulsar.Player;
 using Pulsar.Utilities;
 using UnityEngine;
 
-namespace Pulsar.Player
+namespace Pulsar.UI
 {
 [RequireComponent(typeof(SpriteRenderer), typeof(CircleCollider2D))]
 public class PlayerCursor : MonoBehaviour
 {
-    public static event Action<Result<Tile>> SelectTileEvent;
+    public static event Action<Result<Tile>> PlayerSelectTile;
     
     [SerializeField]
     private InputReader input;
@@ -53,19 +54,19 @@ public class PlayerCursor : MonoBehaviour
         if (!isSelecting || !_hoveredTile)
         {
             _selectedTile = null;
-            SelectTileEvent?.Invoke(
-                new Result<Tile>(false, null));
+            PlayerSelectTile?.Invoke(Result<Tile>.Fail());
             return;
         }
 
         //Don't raise more events than we need to
-        if (_hoveredTile.Equals(_selectedTile))
+        if (_hoveredTile == _selectedTile)
         {
             return;
         }
 
         _selectedTile = _hoveredTile;
-        SelectTileEvent?.Invoke(new Result<Tile>(true, _selectedTile));
+
+        PlayerSelectTile?.Invoke(Result<Tile>.Pass(_selectedTile));
     }
 
     private void OnCursorMove(Vector2 obj)
@@ -87,15 +88,15 @@ public class PlayerCursor : MonoBehaviour
         _hoveredTile = collidedTile;
     }
 
-    private void OnTriggerStay2D(Collider2D other)
-    {
-        if (!TryProcessColliderTrigger(other, out Tile collidedTile))
-        {
-            return;
-        }
-
-        _hoveredTile = collidedTile;
-    }
+    // private void OnTriggerStay2D(Collider2D other)
+    // {
+    //     if (!TryProcessColliderTrigger(other, out Tile collidedTile))
+    //     {
+    //         return;
+    //     }
+    //
+    //     _hoveredTile = collidedTile;
+    // }
 
     private bool TryProcessColliderTrigger(
         Collider2D other,

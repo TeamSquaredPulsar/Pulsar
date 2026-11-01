@@ -45,7 +45,7 @@ public class BuildManager : MonoBehaviour
     private void Awake()
     {
         PlayerController.PlayerSpawnedEvent += OnPlayerSpawned;
-        PlayerCursor.SelectTileEvent += OnSelectTile;
+        PlayerCursor.PlayerSelectTile += OnPlayerSelectTile;
     }
 
     private void Start()
@@ -57,7 +57,7 @@ public class BuildManager : MonoBehaviour
     private void OnDestroy()
     {
         PlayerController.PlayerSpawnedEvent -= OnPlayerSpawned;
-        PlayerCursor.SelectTileEvent -= OnSelectTile;
+        PlayerCursor.PlayerSelectTile -= OnPlayerSelectTile;
     }
 
     private void OnPlayerSpawned(PlayerController obj)
@@ -108,7 +108,7 @@ public class BuildManager : MonoBehaviour
         // radialMenu.UpdateShape(corePos, radius, controller.transform.rotation);
     }
 
-    public void OnSelectTile(Result<Tile> result)
+    private void OnPlayerSelectTile(Result<Tile> result)
     {
         //Executed when the select input is disabled
         if (!result.IsSuccess)
@@ -133,6 +133,7 @@ public class BuildManager : MonoBehaviour
                 = StartCoroutine(DestroyTileTimer(_selectedTile));
             return;
         }
+        
         if (_selectedTile.IsAttached)
         {
             //Attached to an enemy ship; ignore
@@ -189,13 +190,13 @@ public class BuildManager : MonoBehaviour
         // We Release the selected tile.
         else
         {
-            _selectedTile.Deselect();
+            _selectedTile?.Deselect();
         }
 
         _selectedTile = null;
         _atOutline = false;
         _orbitAngle = 0;
-        ghostPreview?.Hide();
+        ghostPreview.Hide();
     }
 
     private void UpdateSelectedTile()
