@@ -65,11 +65,13 @@ public abstract class Tile : MonoBehaviour
     public void Start()
     {
         health.DestroyEvent += OnDead;
+        health.HealthStateChanged += OnHealthStateChanged;
     }
 
     public void OnDestroy()
     {
         health.DestroyEvent -= OnDead;
+        health.HealthStateChanged -= OnHealthStateChanged;
     }
 
     private void OnDead(Health _)
@@ -77,10 +79,31 @@ public abstract class Tile : MonoBehaviour
         DestroyEvent?.Invoke(this);
         Destroy(gameObject);
     }
+    
+    private void OnHealthStateChanged(HealthState state)
+    {
+        UpdateSprite(state);
+    }
+    
+    private void UpdateSprite(HealthState state)
+    {
+        spriteRenderer.sprite = state switch
+        {
+            HealthState.FullHealth => TileInfo.fullHealthSprite,
+            HealthState.LessOrEqualTo75Percent => TileInfo.seventyFivePercentSprite,
+            HealthState.LessOrEqualTo50Percent => TileInfo.fiftyPercentSprite,
+            HealthState.LessOrEqualTo25Percent => TileInfo.twentyFivePercentSprite,
+            HealthState.LessOrEqualTo10Percent => TileInfo.tenPercentSprite,
+            _ => spriteRenderer.sprite
+        };
+    }
 
     public float Mass => _rbInfo.Mass; //It can return mass even when destroyed
 
-    public void TakeDamage(float damage) => health.TakeDamage(damage);
+    public void TakeDamage(float damage)
+    {
+        health.TakeDamage(damage);
+    }
 
     /// <summary>
     /// To ask whether the rotated tile can connect from dir
