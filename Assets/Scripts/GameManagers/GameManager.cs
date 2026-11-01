@@ -43,6 +43,7 @@ public class GameManager : MonoBehaviour
     private void OnDestroy()
     {
         UIManager.GameStateChangeEvent -= OnGameStateChange;
+        EnemyController.EnemyDefeatedEvent -= HandleEnemyKilled;
     }
 
     private void OnGameStateChange(GameState obj)

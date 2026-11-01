@@ -19,11 +19,6 @@ public class CameraManager : MonoBehaviour
     [SerializeField]
     private CinemachineCamera gameplayCamera;
 
-    [BoxGroup("Target Group"),
-     RequiredType(typeof(PlayerController)),
-     SerializeField,]
-    private GameObject pPlayerPrefab;
-
     [BoxGroup("Target Group"), SerializeField,]
     private CinemachineTargetGroup targetGroup;
 
@@ -33,18 +28,19 @@ public class CameraManager : MonoBehaviour
     [BoxGroup("Target Group"), SerializeField,]
     private float playerWeight;
 
+    private const int HighPriority = 100;
+    private const int LowPriority = 0;
+    
     private void Awake()
     {
         cameraDataAsset.MainCamera = mainCamera;
         PlayerController.PlayerSpawnedEvent += OnPlayerSpawned;
         PlayerController.PlayerLossEvent += OnPlayerLoss;
-        mainMenuCamera.Prioritize();
     }
 
     private void Start()
     {
-        gameplayCamera.Prioritize();
-        mainMenuCamera.Prioritize();
+        PrioritizeMenuCamera();
     }
 
     private void OnDestroy()
@@ -53,17 +49,29 @@ public class CameraManager : MonoBehaviour
         PlayerController.PlayerLossEvent -= OnPlayerLoss;
     }
     
+    private void PrioritizeMenuCamera()
+    {
+        mainMenuCamera.Priority = HighPriority;
+        gameplayCamera.Priority = LowPriority;
+    }
+
+    private void PrioritizeGameplayCamera()
+    {
+        mainMenuCamera.Priority = LowPriority;
+        gameplayCamera.Priority = HighPriority;
+    }
+    
     private void OnPlayerLoss(PlayerController obj)
     {
         targetGroup.RemoveMember(obj.transform);
         mainMenuCamera.transform.position = gameplayCamera.transform.position;
-        mainMenuCamera.Prioritize();
+        PrioritizeMenuCamera();
     }
 
     private void OnPlayerSpawned(PlayerController obj)
     {
         targetGroup.AddMember(obj.transform, playerWeight, playerRadius);
-        gameplayCamera.Prioritize();
+        PrioritizeGameplayCamera();
     }
 }
 }
