@@ -52,7 +52,6 @@ MonoBehaviour:
   scanPadding: 2.5
   selectedTint: {r: 0.3, g: 1, b: 0.8, a: 1}
   pullSpeed: 8
-  orbitDegreesPerSecond: 90
 --- !u!1001 &1452626085283161746
 PrefabInstance:
   m_ObjectHideFlags: 0

@@ -65,6 +65,16 @@
                     "interactions": "",
                     "initialStateCheck": true,
                     "priority": 0
+                },
+                {
+                    "name": "RotateSelectedTile",
+                    "type": "Button",
+                    "id": "aa6f2edd-876e-4d76-a9a6-ee7f31813467",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false,
+                    "priority": 0
                 }
             ],
             "bindings": [
@@ -274,6 +284,17 @@
                     "processors": "",
                     "groups": ";Keyboard & Mouse",
                     "action": "MoveCursorMouse",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "4b19e3a9-dc80-4bf7-8553-515f5e2c6fd0",
+                    "path": "<Keyboard>/tab",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "RotateSelectedTile",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }

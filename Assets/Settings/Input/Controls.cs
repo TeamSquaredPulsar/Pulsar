@@ -151,6 +151,16 @@ public partial class @Controls: IInputActionCollection2, IDisposable
                     ""interactions"": """",
                     ""initialStateCheck"": true,
                     ""priority"": 0
+                },
+                {
+                    ""name"": ""RotateSelectedTile"",
+                    ""type"": ""Button"",
+                    ""id"": ""aa6f2edd-876e-4d76-a9a6-ee7f31813467"",
+                    ""expectedControlType"": """",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false,
+                    ""priority"": 0
                 }
             ],
             ""bindings"": [
@@ -362,6 +372,17 @@ public partial class @Controls: IInputActionCollection2, IDisposable
                     ""action"": ""MoveCursorMouse"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""4b19e3a9-dc80-4bf7-8553-515f5e2c6fd0"",
+                    ""path"": ""<Keyboard>/tab"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""RotateSelectedTile"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         }
@@ -376,6 +397,7 @@ public partial class @Controls: IInputActionCollection2, IDisposable
         m_Player_SelectTile = m_Player.FindAction("SelectTile", throwIfNotFound: true);
         m_Player_MoveCursorGamepad = m_Player.FindAction("MoveCursorGamepad", throwIfNotFound: true);
         m_Player_MoveCursorMouse = m_Player.FindAction("MoveCursorMouse", throwIfNotFound: true);
+        m_Player_RotateSelectedTile = m_Player.FindAction("RotateSelectedTile", throwIfNotFound: true);
     }
 
     ~@Controls()
@@ -462,6 +484,7 @@ public partial class @Controls: IInputActionCollection2, IDisposable
     private readonly InputAction m_Player_SelectTile;
     private readonly InputAction m_Player_MoveCursorGamepad;
     private readonly InputAction m_Player_MoveCursorMouse;
+    private readonly InputAction m_Player_RotateSelectedTile;
     /// <summary>
     /// Provides access to input actions defined in input action map "Player".
     /// </summary>
@@ -497,6 +520,10 @@ public partial class @Controls: IInputActionCollection2, IDisposable
         /// Provides access to the underlying input action "Player/MoveCursorMouse".
         /// </summary>
         public InputAction @MoveCursorMouse => m_Wrapper.m_Player_MoveCursorMouse;
+        /// <summary>
+        /// Provides access to the underlying input action "Player/RotateSelectedTile".
+        /// </summary>
+        public InputAction @RotateSelectedTile => m_Wrapper.m_Player_RotateSelectedTile;
         /// <summary>
         /// Provides access to the underlying input action map instance.
         /// </summary>
@@ -541,6 +568,9 @@ public partial class @Controls: IInputActionCollection2, IDisposable
             @MoveCursorMouse.started += instance.OnMoveCursorMouse;
             @MoveCursorMouse.performed += instance.OnMoveCursorMouse;
             @MoveCursorMouse.canceled += instance.OnMoveCursorMouse;
+            @RotateSelectedTile.started += instance.OnRotateSelectedTile;
+            @RotateSelectedTile.performed += instance.OnRotateSelectedTile;
+            @RotateSelectedTile.canceled += instance.OnRotateSelectedTile;
         }
 
         /// <summary>
@@ -570,6 +600,9 @@ public partial class @Controls: IInputActionCollection2, IDisposable
             @MoveCursorMouse.started -= instance.OnMoveCursorMouse;
             @MoveCursorMouse.performed -= instance.OnMoveCursorMouse;
             @MoveCursorMouse.canceled -= instance.OnMoveCursorMouse;
+            @RotateSelectedTile.started -= instance.OnRotateSelectedTile;
+            @RotateSelectedTile.performed -= instance.OnRotateSelectedTile;
+            @RotateSelectedTile.canceled -= instance.OnRotateSelectedTile;
         }
 
         /// <summary>
@@ -652,5 +685,12 @@ public partial class @Controls: IInputActionCollection2, IDisposable
         /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
         /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
         void OnMoveCursorMouse(InputAction.CallbackContext context);
+        /// <summary>
+        /// Method invoked when associated input action "RotateSelectedTile" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
+        /// </summary>
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
+        void OnRotateSelectedTile(InputAction.CallbackContext context);
     }
 }

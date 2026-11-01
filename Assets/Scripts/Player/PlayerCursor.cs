@@ -24,10 +24,20 @@ public class PlayerCursor : MonoBehaviour
     private Tile _selectedTile;
 
     private Camera _mainCamera;
-    private float _worldUnitsPerPixel;
+    private Vector2 _screenPosition;
+
+    public Vector3 WorldPosition
+    {
+        get
+        {
+            UpdateWorldPosition();
+            return transform.position;
+        }
+    }
 
     private void Awake()
     {
+        _mainCamera = Camera.main;
         input.MoveCursorEvent += OnCursorMove;
         input.SelectTileEvent += OnTileSelect;
         // [CB] TODO: We need to setup callbacks for when the camera changes
@@ -55,7 +65,7 @@ public class PlayerCursor : MonoBehaviour
 
     private void OnTileSelect(bool isSelecting)
     {
-        if (!isSelecting || !_hoveredTile)
+        if (!isSelecting)
         {
             _selectedTile = null;
             SelectTileEvent?.Invoke(
@@ -63,8 +73,9 @@ public class PlayerCursor : MonoBehaviour
             return;
         }
 
-        //Don't raise more events than we need to
-        if (_hoveredTile.Equals(_selectedTile))
+        // The tile's collider is disabled while held. Losing hover or receiving
+        // another performed callback must not release or replace the selection.
+        if (_selectedTile || !_hoveredTile)
         {
             return;
         }
@@ -75,7 +86,33 @@ public class PlayerCursor : MonoBehaviour
 
     private void OnCursorMove(Vector2 obj)
     {
-        Vector3 worldPos = _mainCamera.ScreenToWorldPoint(obj);
+        _screenPosition = obj;
+        UpdateWorldPosition();
+    }
+
+    private void LateUpdate() => UpdateWorldPosition();
+
+    private void UpdateWorldPosition()
+    {
+        if (!_mainCamera)
+        {
+            _mainCamera = Camera.main;
+        }
+
+        if (!_mainCamera)
+        {
+            return;
+        }
+
+        // Reproject even when the mouse is stationary: the camera can move.
+        Ray ray = _mainCamera.ScreenPointToRay(_screenPosition);
+        Plane plane = new(Vector3.forward, Vector3.zero);
+        if (!plane.Raycast(ray, out float distance))
+        {
+            return;
+        }
+
+        Vector3 worldPos = ray.GetPoint(distance);
 
         worldPos.z = 0f;
 

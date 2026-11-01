@@ -1,4 +1,3 @@
-using System.Collections;
 using Pulsar.Ship.Extensions;
 using Pulsar.Utilities;
 using UnityEngine;
@@ -7,7 +6,6 @@ namespace Pulsar.Player
 {
 public class BuildManager : MonoBehaviour
 {
-
     [Header("References"), SerializeField,]
     private PlayerController controller;
 
@@ -16,6 +14,9 @@ public class BuildManager : MonoBehaviour
 
     [SerializeField]
     private GhostPreview ghostPreview;
+
+    [SerializeField]
+    private PlayerCursor cursor;
 
     [Header("Scan Zone"), SerializeField, Min(0.1f),]
     private float scanPadding = 2.5f;
@@ -26,198 +27,194 @@ public class BuildManager : MonoBehaviour
     [SerializeField, Min(0.1f),]
     private float pullSpeed = 8f;
 
-    [SerializeField, Min(0.1f),]
-    private float orbitDegreesPerSecond = 90f;
-
     private Tile _selectedTile;
     private bool _atOutline;
-    private float _orbitAngle;
+    private float _outlineAngle;
     private Vector2Int _attachCell;
-    private TileRotation _attachRotation;
-    private Tile _highlightedTile;
+    private TileRotation _selectedRotation;
 
-    private Coroutine _updateRadialRoutine;
-
-    private void Start()
+    private void Awake()
     {
+        if (!cursor)
+        {
+            cursor = FindFirstObjectByType<PlayerCursor>();
+        }
+
         ghostPreview.Hide();
         radialMenu.Hide();
     }
 
-    private void ToggleRadialMenu(bool isOn)
+    private void LateUpdate()
     {
-        if (isOn)
+        // An idle manager must not hide visuals owned by another selection.
+        // ReferenceEquals still lets us clean up a destroyed Unity tile.
+        if (ReferenceEquals(_selectedTile, null))
         {
-            radialMenu.Show();
-            UpdateScanZoneShape();
+            return;
         }
-        else
+
+        if (!_selectedTile || !controller.Ship.Core || !cursor)
         {
-            radialMenu.Hide();
+            EndSelection(false);
+            return;
         }
+
+        UpdateScanZoneShape();
+        UpdateSelectedTile();
     }
 
-    private IEnumerator UpdateRadialMenu()
-    {
-        while (_selectedTile)
-        {
-            UpdateScanZoneShape();
-            UpdateSelectedTile();
-            yield return null;
-        }
-    }
+    private void OnDisable() => EndSelection(false);
 
     private void UpdateScanZoneShape()
     {
-        // Get the ship bounds in local space
         Bounds localBounds = controller.Ship.GetLocalBounds();
-
         Vector3 corePos = controller.Ship.Core.transform.position;
-        
         Vector2 radius = localBounds.size;
         radius.Add(scanPadding);
 
-        radialMenu.UpdateShape(corePos, radius, controller.transform.rotation);
-        // radialMenu.UpdateShape(corePos, radius, controller.transform.rotation);
+        radialMenu.UpdateShape(corePos, radius,
+            controller.Ship.transform.rotation);
     }
 
     public void OnSelectTile(Result<Tile> result)
     {
-        if (result.IsSuccess)
+        if (!result.IsSuccess)
         {
-            _selectedTile = result.Value;
-            _selectedTile.Select(selectedTint);
-            
-            //Toggles now to update the data before the coroutine
-            ToggleRadialMenu(true);
-            
-            
-            //Orbit close to where the initial block is
-            _orbitAngle = radialMenu.GetOutlineAngleFromTileToCore(
-                controller.Ship.Core.transform.position,
-                _selectedTile.transform.position
-            );
-            
-            _updateRadialRoutine = StartCoroutine(UpdateRadialMenu());
-        }
-        else
-        {
-            DeselectTile();
-            if (_updateRadialRoutine != null)
+            // Input can move and release in the same frame. Refresh the target
+            // before committing so we never attach using a stale preview.
+            if (_selectedTile && _atOutline && controller.Ship.Core && cursor)
             {
-                StopCoroutine(_updateRadialRoutine);
-                _updateRadialRoutine = null;
+                UpdateScanZoneShape();
+                UpdateSelectedTile();
             }
-            ToggleRadialMenu(false);
+
+            EndSelection(true);
+            return;
         }
+
+        if (!isActiveAndEnabled || !result.Value || result.Value.IsAttached
+            || result.Value == _selectedTile || !controller.Ship.Core || !cursor)
+        {
+            return;
+        }
+
+        EndSelection(false);
+        _selectedTile = result.Value;
+        _selectedTile.Select(selectedTint);
+
+        // Preserve the picked orientation, snapped to the ship's quarter-turn
+        // grid. Only RotateSelectedTile changes it during selection.
+        _selectedRotation = (Quaternion.Inverse(controller.Ship.transform.rotation)
+                             * _selectedTile.transform.rotation)
+            .eulerAngles.z.ToTileRotation();
+        _selectedTile.transform.SetParent(controller.Ship.transform, true);
+        ApplySelectedRotation();
+
+        UpdateScanZoneShape();
+        _outlineAngle = radialMenu.GetOutlineAngleFromTileToCore(
+            controller.Ship.Core.transform.position,
+            _selectedTile.transform.position);
+        radialMenu.Show();
     }
 
-    private void DeselectTile()
+    /// <summary>
+    /// Rotates the held tile in 90-degree steps relative to the ship.
+    /// Positive steps turn counterclockwise; negative steps turn clockwise.
+    /// </summary>
+    public void RotateSelectedTile(int quarterTurns)
     {
-        //If we don't have a tile for some reason
         if (!_selectedTile)
         {
             return;
         }
 
-        // It's in a spot we can build it from
-        if (_selectedTile 
-            && _atOutline 
-            && ghostPreview.IsShowing
-            && controller.Ship.CanAttach(
-                _attachCell,
-                _selectedTile.TileInfo,
-                _attachRotation))
+        _selectedRotation = _selectedRotation.PlusInt(quarterTurns % 4);
+        ApplySelectedRotation();
+        if (_atOutline && controller.Ship.Core && cursor)
         {
-            _selectedTile.transform.position
-                = ghostPreview.transform.position;
-            _selectedTile.transform.rotation
-                = ghostPreview.transform.rotation;
-            _selectedTile.Deselect();
-            
-            controller.Ship.AttachTile(
-                _attachCell,
-                _selectedTile,
-                _attachRotation);
+            UpdateScanZoneShape();
+            UpdateSelectedTile();
+        }
+    }
 
-        }
-        // We Release the selected tile.
-        else
+    private void ApplySelectedRotation()
+    {
+        _selectedTile.Rotate(controller.Ship.transform.rotation
+                             * ShipUtilities.RotateQuarterOnZAxis(
+                                 _selectedRotation.ToInt()));
+    }
+
+    private void EndSelection(bool tryAttach)
+    {
+        if (_selectedTile)
         {
+            bool canAttach = tryAttach && _atOutline && controller.Ship.Core
+                             && ghostPreview.IsShowing
+                             && controller.Ship.CanAttach(_attachCell,
+                                 _selectedTile.TileInfo, _selectedRotation);
+
             _selectedTile.Deselect();
+            if (canAttach)
+            {
+                controller.Ship.AttachTile(_attachCell, _selectedTile,
+                    _selectedRotation);
+            }
         }
-        
+
         _selectedTile = null;
         _atOutline = false;
-        _orbitAngle = 0;
+        _outlineAngle = 0f;
         ghostPreview?.Hide();
+        radialMenu?.Hide();
     }
 
     private void UpdateSelectedTile()
     {
-        Vector3 target = radialMenu.PointOnOutline(_orbitAngle);
-        // Pull the tile to the outline before allowing orbit and showing a preview
-        if (!_atOutline)
+        Vector3 corePos = controller.Ship.Core.transform.position;
+        Vector3 cursorPos = cursor.WorldPosition;
+        // The center has no direction: keep the previous outline point there.
+        if (((Vector2)(cursorPos - corePos)).sqrMagnitude > 0.0001f)
         {
-            MoveTowardsOutline(target);
-            if (!_atOutline)
-            {
-                return;
-            }
-            _selectedTile.transform.SetParent(controller.transform);
+            _outlineAngle = radialMenu.GetOutlineAngleFromTileToCore(
+                corePos, cursorPos);
         }
 
-        // Move around the oval; keep the angle between 0 and 2 PI
-        _orbitAngle = Mathf.Repeat(
-            _orbitAngle - Mathf.Max(0.1f, orbitDegreesPerSecond)
-            * Mathf.Deg2Rad * Time.deltaTime,
-            Mathf.PI * 2f);
+        Vector3 target = radialMenu.PointOnOutline(_outlineAngle);
+        if (!_atOutline)
+        {
+            _selectedTile.transform.position = Vector3.MoveTowards(
+                _selectedTile.transform.position, target,
+                Mathf.Max(0.1f, pullSpeed) * Time.deltaTime);
+            _atOutline = (_selectedTile.transform.position - target)
+                .sqrMagnitude < 0.0001f;
+            if (!_atOutline)
+            {
+                ghostPreview.Hide();
+                return;
+            }
+        }
 
-        // Keep the tile on the outline as the ship moves and rotates
-        Vector3 newPos = radialMenu.PointOnOutline(_orbitAngle);
-        _selectedTile.transform.position
-            = newPos;
+        _selectedTile.transform.position = target;
         UpdatePreview();
-        _orbitAngle = radialMenu.GetOutlineAngleFromTileToCore(
-            controller.Ship.Core.transform.position,
-            _selectedTile.transform.position
-        );
-    }
-
-    private void MoveTowardsOutline(Vector3 target)
-    {
-        const float minimumMagnitude = 0.0001f;
-        _selectedTile.transform.position = Vector3.MoveTowards(
-            _selectedTile.transform.position, target,
-            Mathf.Max(0.1f, pullSpeed) * Time.deltaTime);
-        _atOutline = (_selectedTile.transform.position - target).sqrMagnitude <
-                     minimumMagnitude;
     }
 
     private void UpdatePreview()
     {
-        // Find a valid rotation at the nearest empty cells around the ship
-        Result<(Vector2Int cell, TileRotation rotation)> result
-            = controller.Ship.FindBestAttachment(
-                _selectedTile.TileInfo, _selectedTile.transform.position);
+        Result<Vector2Int> result = controller.Ship.FindAttachmentAlongRay(
+            _selectedTile.TileInfo, _selectedTile.transform.position,
+            _selectedRotation);
         if (!result.IsSuccess)
         {
-            // Hide the preview when no attachment is possible there
             ghostPreview.Hide();
             return;
         }
 
-        _attachCell = result.Value.cell;
-        _attachRotation = result.Value.rotation;
-
-        // apply _attachRotation to selectedTile to display the preview in world space
-        Quaternion rotation = controller.transform.rotation
+        _attachCell = result.Value;
+        Quaternion rotation = controller.Ship.transform.rotation
                               * ShipUtilities.RotateQuarterOnZAxis(
-                                  _attachRotation.ToInt());
+                                  _selectedRotation.ToInt());
         ghostPreview.Show(_selectedTile.Sprite,
             controller.Ship.CellToWorld(_attachCell), rotation);
-        
-        _selectedTile.Rotate(rotation);
     }
 }
 }

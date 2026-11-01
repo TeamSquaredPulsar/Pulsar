@@ -219,116 +219,75 @@ public class ShipManager : MonoBehaviour
         return false;
     }
 
-    private int CountConnections(
-        Vector2Int pos,
+    /// <summary>
+    /// Casts toward the core and places the preview immediately outside the
+    /// entry face of the first occupied cell hit. Empty neighboring cells do
+    /// not intercept the ray, and the supplied rotation is never changed.
+    /// </summary>
+    public Result<Vector2Int> FindAttachmentAlongRay(
         TileInfoSO infoSo,
+        Vector3 worldPos,
         TileRotation rotation)
     {
-        // Count all neighbours that can connect at this position and rotation
-        int count = 0;
-        foreach (TileRotation direction in Enum.GetValues(
-                     typeof(TileRotation)))
+        if (!Core || !infoSo)
         {
-            // Get the tile edge after rotation
-            int localDir = direction.Subtract(rotation).ToInt();
-            if (!infoSo.connectableEdges[localDir])
-            {
-                continue;
-            }
-
-            // Count only when both touching edges can connect
-            Vector2Int neighborPos = pos + direction.ToVector2Int();
-            if (_gridData.TryGetTile(neighborPos, out Tile neighbor)
-                && neighbor.EdgeConnectable(direction.Opposite()))
-            {
-                count++;
-            }
+            return Result<Vector2Int>.Fail();
         }
 
-        return count;
-    }
-
-
-    public Result<(Vector2Int cell, TileRotation rotation)> FindBestAttachment(
-        TileInfoSO infoSo,
-        Vector3 worldPos)
-    {
-        // Convert world position to ship grid position
-        Vector2 localPos = ShipUtilities.LocalToGrid(
+        Vector2 origin = ShipUtilities.LocalToGrid(
             transform.InverseTransformPoint(worldPos));
+        Vector2 toCore = (Vector2)Core.Cell - origin;
+        if (toCore.sqrMagnitude < 0.0001f)
+        {
+            return Result<Vector2Int>.Fail();
+        }
 
-        float bestDist = float.MaxValue;
-        TileRotation? bestRot = null;
-        int bestConnectionCount = 0;
-        Vector2Int bestCell = default;
-        // public static readonly Vector2Int[] Dirs =
-        // {
-        //     Vector2Int.up,
-        //     Vector2Int.right,
-        //     Vector2Int.down,
-        //     Vector2Int.left,
-        // };
-        HashSet<Vector2Int> candidates = new();
+        Ray ray = new(ShipUtilities.GridToLocal(origin), toCore.normalized);
+        const float tieTolerance = 0.0001f;
+        float nearestDistance = toCore.magnitude;
+        Vector2Int hitCell = default;
+        bool found = false;
         foreach (Vector2Int occupied in Cells.Keys)
         {
-            foreach (TileRotation direction in Enum.GetValues(
-                         typeof(TileRotation)))
+            Bounds bounds = new(ShipUtilities.GridToLocal(occupied),
+                Vector3.one);
+            if (bounds.Contains(ray.origin))
             {
-                candidates.Add(occupied + direction.ToVector2Int());
+                return Result<Vector2Int>.Fail();
+            }
+
+            if (!bounds.IntersectRay(ray, out float distance)
+                || distance > nearestDistance + tieTolerance)
+            {
+                continue;
+            }
+
+            // Resolve exact corner hits consistently, independent of tile order.
+            bool earlierCell = occupied.x < hitCell.x
+                               || (occupied.x == hitCell.x
+                                   && occupied.y < hitCell.y);
+            if (!found || distance < nearestDistance - tieTolerance || earlierCell)
+            {
+                found = true;
+                nearestDistance = distance;
+                hitCell = occupied;
             }
         }
 
-        float nearestDistance = candidates
-            .Where(candidate => !_gridData.ContainsCell(candidate))
-            .Aggregate(float.MaxValue,
-                (current, candidate) => Mathf.Min(
-                    current, Vector2.Distance(localPos, candidate)
-                ));
-
-        foreach (Vector2Int candidate in candidates)
+        if (!found)
         {
-            // Skip occupied cells
-            if (_gridData.ContainsCell(candidate))
-            {
-                continue;
-            }
-
-            float dist = Vector2.Distance(localPos, candidate);
-            if (dist > nearestDistance + 0.01f)
-            {
-                continue;
-            }
-
-            // Try all 4 rotations
-            foreach (TileRotation direction in Enum.GetValues(
-                         typeof(TileRotation)))
-            {
-                // TODO: [CB] See if we can make these functions take a TileRotation in.
-                if (!CanAttach(candidate, infoSo, direction))
-                {
-                    continue;
-                }
-
-                // prefer more connections
-                int connectionCount
-                    = CountConnections(candidate, infoSo, direction);
-
-                if (bestRot == null
-                    || dist < bestDist - 0.01f
-                    || (Mathf.Abs(dist - bestDist) < 0.01f &&
-                        connectionCount > bestConnectionCount))
-                {
-                    bestDist = dist;
-                    bestCell = candidate;
-                    bestRot = direction;
-                    bestConnectionCount = connectionCount;
-                }
-            }
+            return Result<Vector2Int>.Fail();
         }
 
-        return !bestRot.HasValue 
-            ? Result<(Vector2Int cell, TileRotation rotation)>.Fail() 
-            : Result<(Vector2Int cell, TileRotation rotation)>.Pass((bestCell, bestRot.Value));
+        Vector2 offset = (Vector2)ray.GetPoint(nearestDistance) - (Vector2)hitCell;
+        // At an exact corner prefer the horizontal face (up/down).
+        Vector2Int outward = Mathf.Abs(offset.y) >= Mathf.Abs(offset.x) - tieTolerance
+            ? new Vector2Int(0, offset.y >= 0f ? 1 : -1)
+            : new Vector2Int(offset.x >= 0f ? 1 : -1, 0);
+        Vector2Int candidate = hitCell + outward;
+        return CanAttach(candidate, infoSo, rotation)
+            ? Result<Vector2Int>.Pass(candidate)
+            : Result<Vector2Int>.Fail();
     }
 
     private void DetatchTile(Tile tile)

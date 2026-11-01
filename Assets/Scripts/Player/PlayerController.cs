@@ -39,6 +39,7 @@ public class PlayerController : MonoBehaviour
         input.MoveEvent -= HandleMove;
         input.RotateEvent -= HandleRotate;
         input.ShootEvent -= HandleShoot;
+        input.RotateSelectedTileEvent -= HandleRotateSelectedTile;
     }
 
     private void OnSelectTile(Result<Tile> result)
@@ -76,6 +77,7 @@ public class PlayerController : MonoBehaviour
         input.MoveEvent += HandleMove;
         input.RotateEvent += HandleRotate;
         input.ShootEvent += HandleShoot;
+        input.RotateSelectedTileEvent += HandleRotateSelectedTile;
         input.EnablePlayerActions();
     }
 
@@ -95,6 +97,11 @@ public class PlayerController : MonoBehaviour
     private void HandleRotate(float obj)
     {
         Ship.Rotate(obj);
+    }
+
+    private void HandleRotateSelectedTile()
+    {
+        buildManager.RotateSelectedTile(1);
     }
 
     private void HandleMove(Vector2 direction)

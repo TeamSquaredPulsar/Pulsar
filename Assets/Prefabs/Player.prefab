@@ -96,7 +96,6 @@ MonoBehaviour:
   scanPadding: 2.5
   selectedTint: {r: 0.3, g: 1, b: 0.8, a: 1}
   pullSpeed: 8
-  orbitDegreesPerSecond: 90
 --- !u!114 &8893891361912782109
 MonoBehaviour:
   m_ObjectHideFlags: 0
