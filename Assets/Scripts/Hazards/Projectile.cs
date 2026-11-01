@@ -15,7 +15,7 @@ namespace Pulsar.Hazards
 public class Projectile : MonoBehaviour
 {
     [field: SerializeField]
-    public int Damage { get; protected set; } = 10;
+    public float Damage { get; protected set; } = 10f;
 
     [SerializeField]
     protected float damageRadius = 1f;

@@ -16,3 +16,8 @@ MonoBehaviour:
   type: 2
   hp: 10
   connectableEdges: 01000000
+  fullHealthSprite: {fileID: 21300000, guid: 6b8d1d3a6ff32604a8795b0b012d615a, type: 3}
+  seventyFivePercentSprite: {fileID: 21300000, guid: 6b8d1d3a6ff32604a8795b0b012d615a, type: 3}
+  fiftyPercentSprite: {fileID: 21300000, guid: 6b8d1d3a6ff32604a8795b0b012d615a, type: 3}
+  twentyFivePercentSprite: {fileID: 21300000, guid: 6b8d1d3a6ff32604a8795b0b012d615a, type: 3}
+  tenPercentSprite: {fileID: 21300000, guid: 6b8d1d3a6ff32604a8795b0b012d615a, type: 3}

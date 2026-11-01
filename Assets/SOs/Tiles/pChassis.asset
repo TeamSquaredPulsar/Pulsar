@@ -14,12 +14,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::Pulsar.Ship.TileDef
   tileName: pChassis
   type: 1
-  sprite: {fileID: -5659035193088823316, guid: 12e6d06eb1ce26d438b5d1d620179b8b, type: 3}
   hp: 10
-  mass: 1
   connectableEdges: 01010101
-  thrustForce: 5
-  fireRate: 3
-  damage: 5
-  projectileSpeed: 15
-  projectileLifetime: 2
+  fullHealthSprite: {fileID: 21300000, guid: 9c378474e7c007d4d8d3f11a06405f1f, type: 3}
+  seventyFivePercentSprite: {fileID: 21300000, guid: b94c595cf3768cb4eb88e65dfff290c5, type: 3}
+  fiftyPercentSprite: {fileID: 21300000, guid: fde2aa0c6c4e07347a415a81e80323af, type: 3}
+  twentyFivePercentSprite: {fileID: 21300000, guid: b7013b4950e29924e8480985974726c9, type: 3}
+  tenPercentSprite: {fileID: 21300000, guid: 521ce304b27599948b0bef6d1c91d9ce, type: 3}

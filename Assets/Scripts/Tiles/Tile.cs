@@ -66,6 +66,7 @@ public abstract class Tile : MonoBehaviour
     {
         health.DestroyEvent += OnDead;
         health.HealthStateChanged += OnHealthStateChanged;
+        UpdateSprite(HealthState.FullHealth);
     }
 
     public void OnDestroy()
