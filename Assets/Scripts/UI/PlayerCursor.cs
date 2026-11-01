@@ -1,8 +1,7 @@
 using System;
-using Pulsar.Ship;
+using Pulsar.DataClasses;
 using Pulsar.Utilities;
 using UnityEngine;
-using UnityEngine.InputSystem;
 
 namespace Pulsar.Player
 {
@@ -110,7 +109,6 @@ public class PlayerCursor : MonoBehaviour
         //Ignore EnemyAI ships
         else if (other.TryGetComponent(out PlayerController player))
         {
-            ShipManager ship = player.Ship;
 
             // [CB] Because the collision point is on the edge of a tile, we need
             // to subtract a small amount.
@@ -120,7 +118,7 @@ public class PlayerCursor : MonoBehaviour
 
             // Get collision point relative to ship core
             Vector2 collisionPosition
-                = ship.transform.InverseTransformPoint(
+                = player.transform.InverseTransformPoint(
                     other.ClosestPoint(transform.position));
 
             //Modify collision point to attempt to get tile position
@@ -146,8 +144,7 @@ public class PlayerCursor : MonoBehaviour
 
             Vector2Int gridCell = Vector2Int.RoundToInt(collisionPosition);
 
-            ship.Cells.TryGetValue(gridCell, out Tile attachedTile);
-            collidedTile = attachedTile;
+            player.TryGetTile(gridCell, out collidedTile);
         }
 
         return collidedTile;

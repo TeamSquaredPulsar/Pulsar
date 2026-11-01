@@ -1,9 +1,10 @@
 using NaughtyAttributes;
+using Pulsar.DataClasses;
 using Pulsar.Player;
 using Unity.Cinemachine;
 using UnityEngine;
 
-namespace Pulsar
+namespace Pulsar.UI
 {
 public class CameraManager : MonoBehaviour
 {

@@ -54,9 +54,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlayerController
   input: {fileID: 11400000, guid: c5eb4fca90495374ca60a24df65307ec, type: 2}
-  <Ship>k__BackingField: {fileID: 35744134826503047}
-  buildManager: {fileID: 8460810046222660286}
-  tileDestroySeconds: 2
+  ship: {fileID: 35744134826503047}
 --- !u!114 &35744134826503047
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -90,13 +88,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5d6900ccf0fa38440855020412688b02, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::BuildManager
-  controller: {fileID: 6370343626992969303}
   radialMenu: {fileID: 6203508070887109126}
   ghostPreview: {fileID: 2644619507663779848}
   scanPadding: 2.5
   selectedTint: {r: 0.3, g: 1, b: 0.8, a: 1}
   pullSpeed: 8
   orbitDegreesPerSecond: 90
+  tileDestroySeconds: 0
 --- !u!114 &8893891361912782109
 MonoBehaviour:
   m_ObjectHideFlags: 0

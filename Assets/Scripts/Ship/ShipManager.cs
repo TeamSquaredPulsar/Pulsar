@@ -2,9 +2,10 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using NaughtyAttributes;
+using Pulsar.DataClasses;
+using Pulsar.DataClasses.Extensions;
 using Pulsar.Hazards;
 using Pulsar.Ship.Data;
-using Pulsar.Ship.Extensions;
 using Pulsar.Utilities;
 using UnityEngine;
 using Random = UnityEngine.Random;
@@ -49,6 +50,8 @@ public class ShipManager : MonoBehaviour
 
     public IReadOnlyDictionary<Vector2Int, Tile> Cells => _gridData.Cells;
     public bool OwnsTile(Tile tile) => Cells.Values.Contains(tile);
+
+    public event Action ShipGridUpdate;
 
     private void Start()
     {
@@ -97,6 +100,7 @@ public class ShipManager : MonoBehaviour
             ShipUtilities.GridToLocal(cell),
             ShipUtilities.RotateQuarterOnZAxis(rotation.ToInt()));
         tile.DestroyEvent += HandleTileDestroyed;
+        ShipGridUpdate?.Invoke();
     }
 
     private void ProcessTile(Tile tile)
@@ -172,6 +176,7 @@ public class ShipManager : MonoBehaviour
         }
 
         tile.DestroyEvent -= HandleTileDestroyed;
+        ShipGridUpdate?.Invoke();
     }
     
     private void OnCoreDestroyed()
@@ -212,10 +217,7 @@ public class ShipManager : MonoBehaviour
             ShipUtilities.GridToLocal((min + max) * 0.5f),
             new Vector3(size.x, size.y, 0f));
     }
-
-    public Vector3 CellToWorld(Vector2Int cell) =>
-        transform.TransformPoint(ShipUtilities.GridToLocal(cell));
-
+    
     #region ATTACH-DETACH
 
     public bool CanAttach(Vector2Int pos, TileInfoSO infoSo, TileRotation rotation)
@@ -408,6 +410,8 @@ public class ShipManager : MonoBehaviour
 
         tile.Detatch(velocity, angularVelocity + spin);
         rb.mass -= tile.Mass;
+        
+        ShipGridUpdate?.Invoke();
     }
 
     #endregion

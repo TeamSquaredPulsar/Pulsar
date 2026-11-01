@@ -1,7 +1,7 @@
 ﻿using System;
 using UnityEngine;
 
-namespace Pulsar.Ship.Extensions
+namespace Pulsar.DataClasses.Extensions
 {
 public static class TileRotationExtensions
 {
