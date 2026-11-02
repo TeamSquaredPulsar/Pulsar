@@ -148,10 +148,26 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2aab50b424024e798ba6364cdfba0f92, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::EnemySpawner
-  wave: {fileID: 11400000, guid: b651fda037224d7a9af633b431b5a105, type: 2}
+  waves:
+  - {fileID: 11400000, guid: d95adc1974b84789aa9a3bf00509f350, type: 2}
+  - {fileID: 11400000, guid: cbb5bfedfcae4b0faea80f666280f33b, type: 2}
+  - {fileID: 11400000, guid: 2f73e111c092479abd40c2630b70eaeb, type: 2}
+  - {fileID: 11400000, guid: 0a232521b3ed4937884cc04e3297c28a, type: 2}
+  - {fileID: 11400000, guid: a90f1260bcdf4437bafd5ad836191936, type: 2}
+  - {fileID: 11400000, guid: f4f6d9619a734313bfdb8e924073601a, type: 2}
+  - {fileID: 11400000, guid: b105a19ebc8343f49d1fe20ec37f4d85, type: 2}
+  - {fileID: 11400000, guid: da419b9be66f4ec3b554f7d23fd4d645, type: 2}
+  - {fileID: 11400000, guid: 3f5b098804994908a10b326fda6d3b0b, type: 2}
+  - {fileID: 11400000, guid: 3c98a37892be4035b5f9e790f10f9455, type: 2}
+  loopFromWave: 6
+  timeBetweenWaves: 4
+  startAtWave: 1
   spawnRadiusMin: 10
   spawnRadiusMax: 14
   spawnPadding: 1
+  patternSpread: 40
+  leashDistance: 40
+  maxWaveTime: 120
 --- !u!4 &21643854
 Transform:
   m_ObjectHideFlags: 0
@@ -386,154 +402,11 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 23b839cb7fca3b247ba1200fcaa33286, type: 3}
---- !u!1001 &1119905114914020954
-PrefabInstance:
-  m_ObjectHideFlags: 0
-  serializedVersion: 2
-  m_Modification:
-    serializedVersion: 3
-    m_TransformParent: {fileID: 0}
-    m_Modifications:
-    - target: {fileID: 823842762246684844, guid: 9dc0c2dda0134b64e8cb399608f4b80b, type: 3}
-      propertyPath: m_ConnectedAnchor.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 1663634376490847600, guid: 9dc0c2dda0134b64e8cb399608f4b80b, type: 3}
-      propertyPath: m_ConnectedAnchor.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 1855548596087721747, guid: 9dc0c2dda0134b64e8cb399608f4b80b, type: 3}
-      propertyPath: m_ConnectedAnchor.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 1855548596087721747, guid: 9dc0c2dda0134b64e8cb399608f4b80b, type: 3}
-      propertyPath: m_ConnectedAnchor.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 5534935226238068877, guid: 9dc0c2dda0134b64e8cb399608f4b80b, type: 3}
-      propertyPath: m_LocalPosition.x
-      value: 10
-      objectReference: {fileID: 0}
-    - target: {fileID: 5534935226238068877, guid: 9dc0c2dda0134b64e8cb399608f4b80b, type: 3}
-      propertyPath: m_LocalPosition.y
-      value: 7
-      objectReference: {fileID: 0}
-    - target: {fileID: 5534935226238068877, guid: 9dc0c2dda0134b64e8cb399608f4b80b, type: 3}
-      propertyPath: m_LocalPosition.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 5534935226238068877, guid: 9dc0c2dda0134b64e8cb399608f4b80b, type: 3}
-      propertyPath: m_LocalRotation.w
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 5534935226238068877, guid: 9dc0c2dda0134b64e8cb399608f4b80b, type: 3}
-      propertyPath: m_LocalRotation.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 5534935226238068877, guid: 9dc0c2dda0134b64e8cb399608f4b80b, type: 3}
-      propertyPath: m_LocalRotation.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 5534935226238068877, guid: 9dc0c2dda0134b64e8cb399608f4b80b, type: 3}
-      propertyPath: m_LocalRotation.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 5534935226238068877, guid: 9dc0c2dda0134b64e8cb399608f4b80b, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 5534935226238068877, guid: 9dc0c2dda0134b64e8cb399608f4b80b, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 5534935226238068877, guid: 9dc0c2dda0134b64e8cb399608f4b80b, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 6613301959153488413, guid: 9dc0c2dda0134b64e8cb399608f4b80b, type: 3}
-      propertyPath: _health
-      value: 
-      objectReference: {fileID: 1119905114914020955}
-    - target: {fileID: 7955686589560264125, guid: 9dc0c2dda0134b64e8cb399608f4b80b, type: 3}
-      propertyPath: _health
-      value: 
-      objectReference: {fileID: 1119905114914020959}
-    - target: {fileID: 8188435154698411991, guid: 9dc0c2dda0134b64e8cb399608f4b80b, type: 3}
-      propertyPath: m_Name
-      value: Enemy
-      objectReference: {fileID: 0}
-    - target: {fileID: 8720240163463303466, guid: 9dc0c2dda0134b64e8cb399608f4b80b, type: 3}
-      propertyPath: _health
-      value: 
-      objectReference: {fileID: 1119905114914020956}
-    - target: {fileID: 8839766604302627257, guid: 9dc0c2dda0134b64e8cb399608f4b80b, type: 3}
-      propertyPath: rb
-      value: 
-      objectReference: {fileID: 1119905114914020957}
-    - target: {fileID: 8839766604302627257, guid: 9dc0c2dda0134b64e8cb399608f4b80b, type: 3}
-      propertyPath: thrusterManager
-      value: 
-      objectReference: {fileID: 1119905114914020958}
-    m_RemovedComponents: []
-    m_RemovedGameObjects: []
-    m_AddedGameObjects: []
-    m_AddedComponents: []
-  m_SourcePrefab: {fileID: 100100000, guid: 9dc0c2dda0134b64e8cb399608f4b80b, type: 3}
---- !u!114 &1119905114914020955 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 1672486545468212478, guid: 9dc0c2dda0134b64e8cb399608f4b80b, type: 3}
-  m_PrefabInstance: {fileID: 1119905114914020954}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d1236c1e551165b48b0864561b6c2156, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Pulsar.Ship::Health
---- !u!114 &1119905114914020956 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 599181648949127176, guid: 9dc0c2dda0134b64e8cb399608f4b80b, type: 3}
-  m_PrefabInstance: {fileID: 1119905114914020954}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d1236c1e551165b48b0864561b6c2156, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Pulsar.Ship::Health
---- !u!50 &1119905114914020957 stripped
-Rigidbody2D:
-  m_CorrespondingSourceObject: {fileID: 2776980645195997529, guid: 9dc0c2dda0134b64e8cb399608f4b80b, type: 3}
-  m_PrefabInstance: {fileID: 1119905114914020954}
-  m_PrefabAsset: {fileID: 0}
---- !u!114 &1119905114914020958 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 8617872407729157336, guid: 9dc0c2dda0134b64e8cb399608f4b80b, type: 3}
-  m_PrefabInstance: {fileID: 1119905114914020954}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4a065edf6c6f717428c6f24af01794d8, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::ThrusterManager
---- !u!114 &1119905114914020959 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 5219441461925034912, guid: 9dc0c2dda0134b64e8cb399608f4b80b, type: 3}
-  m_PrefabInstance: {fileID: 1119905114914020954}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d1236c1e551165b48b0864561b6c2156, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Pulsar.Ship::Health
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0
   m_Roots:
   - {fileID: 388805901}
-  - {fileID: 1119905114914020954}
   - {fileID: 2110654114}
   - {fileID: 383133678}
   - {fileID: 21643854}

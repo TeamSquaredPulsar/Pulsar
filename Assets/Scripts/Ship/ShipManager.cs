@@ -42,6 +42,7 @@ public class ShipManager : MonoBehaviour
     public bool OwnsTile(Tile tile) => Cells.Values.Contains(tile);
 
     public event Action ShipGridUpdate;
+    public event Action CoreDestroyed;
 
     private void Start()
     {
@@ -183,6 +184,7 @@ public class ShipManager : MonoBehaviour
         
         // TODO: possibly gotta disable input here?
             //  + other stuff that triggers on core death
+            CoreDestroyed?.Invoke();
     }
 
     // returns a rectangle enclosing all ship tiles in the ship’s local space

@@ -17,7 +17,7 @@ public class EnemyController : MonoBehaviour
 
     public static IReadOnlyCollection<EnemyController> ActiveEnemies =>
         _activeEnemies;
-    
+
     [SerializeField]
     private EnemyInfoSO enemyInfo;
 
@@ -90,11 +90,27 @@ public class EnemyController : MonoBehaviour
     private void OnEnable()
     {
         _activeEnemies.Add(this);
+        shipManager.CoreDestroyed += HandleCoreDestroyed;
     }
 
     private void OnDisable()
     {
         _activeEnemies.Remove(this);
+        shipManager.CoreDestroyed -= HandleCoreDestroyed;
+    }
+
+    private void HandleCoreDestroyed()
+    {
+        Destroy(gameObject);
+    }
+
+    // Puts a stray enemy back near the fight, stopped, as if it just spawned.
+    public void Recall(Vector3 position)
+    {
+        _rb.position = position;
+        _rb.linearVelocity = Vector2.zero;
+        _rb.angularVelocity = 0f;
+        transform.position = position;
     }
 
     private void GetPlayerDirection(out Vector3 dirToPlayer, out float distance)
@@ -191,7 +207,7 @@ public class EnemyController : MonoBehaviour
     {
         // float targetAngle
         //     = Mathf.Atan2(dirToPlayer.y, dirToPlayer.x) * Mathf.Rad2Deg - 90f;
-        
+
         // float angleDiff = Mathf.DeltaAngle(_rb.rotation, targetAngle);
         //
         // float targetSpin = Mathf.Clamp(angleDiff * TurnGain,
@@ -201,18 +217,18 @@ public class EnemyController : MonoBehaviour
         //     (targetSpin - _rb.angularVelocity) / SpinResponse, -1f, 1f);
         //
         // shipManager.Rotate(-rotInput);
-        
-        
+
+
         //TODO Make this use a PID controller with above code
         //-90f corrects rotation ONLY for this specific bandaid
         float targetAngle = Mathf.Atan2(
-            dirToPlayer.y, dirToPlayer.x) * Mathf.Rad2Deg -90f; 
-        
+            dirToPlayer.y, dirToPlayer.x) * Mathf.Rad2Deg - 90f;
+
         float angleDiff = Mathf.DeltaAngle(_rb.rotation, targetAngle);
-    
+
         float desiredVelocity = angleDiff * TurnGain;
-    
-        _rb.angularVelocity = Mathf.Clamp(desiredVelocity, 
+
+        _rb.angularVelocity = Mathf.Clamp(desiredVelocity,
             -enemyInfo.turnSpeed, enemyInfo.turnSpeed);
     }
 
