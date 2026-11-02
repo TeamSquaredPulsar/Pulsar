@@ -72,7 +72,7 @@ public class GameManager : MonoBehaviour
         {
             StopCoroutine(_awaitingWave);
         }
-        Destroy(_enemySpawner);
+        Destroy(_enemySpawner.gameObject);
         _currentWave = 0;
     }
 
