@@ -1,9 +1,11 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using NaughtyAttributes;
+using Pulsar.DataClasses;
+using Pulsar.DataClasses.Extensions;
 using Pulsar.Hazards;
 using Pulsar.Ship.Data;
-using Pulsar.Ship.Extensions;
 using Pulsar.Utilities;
 using UnityEngine;
 using Random = UnityEngine.Random;
@@ -13,6 +15,14 @@ namespace Pulsar.Ship
 [RequireComponent(typeof(CompositeCollider2D), typeof(Rigidbody2D))]
 public class ShipManager : MonoBehaviour
 {
+    [Button]
+    private void DebugKillShip()
+    {
+        Core.TakeDamage(Core.CurrentHp);
+    }
+    
+    public event Action<ShipManager> ShipDestroyedEvent;
+    
     [Header("Refs"), SerializeField,]
     private CompositeCollider2D compositeCollider;
 
@@ -151,7 +161,7 @@ public class ShipManager : MonoBehaviour
         rb.mass -= tile.Mass;
         if (!_gridData.RemoveTile(tile.Cell).IsSuccess)
         {
-            Debug.Log($"Failed to remove {tile.name}");
+            Debug.LogError($"Failed to remove {tile.name}");
             return;
         }
 
@@ -170,8 +180,7 @@ public class ShipManager : MonoBehaviour
     }
     
     private void OnCoreDestroyed()
-    {
-        foreach (Tile tile in _gridData.Tiles)
+    { foreach (Tile tile in _gridData.Tiles)
         {
             if (tile is CoreTile)
             {
@@ -181,8 +190,8 @@ public class ShipManager : MonoBehaviour
             DetatchTile(tile);
         }
         
-        // TODO: possibly gotta disable input here?
-            //  + other stuff that triggers on core death
+        ShipDestroyedEvent?.Invoke(this);
+        Destroy(gameObject);
     }
 
     // returns a rectangle enclosing all ship tiles in the ship’s local space
@@ -208,10 +217,7 @@ public class ShipManager : MonoBehaviour
             ShipUtilities.GridToLocal((min + max) * 0.5f),
             new Vector3(size.x, size.y, 0f));
     }
-
-    public Vector3 CellToWorld(Vector2Int cell) =>
-        transform.TransformPoint(ShipUtilities.GridToLocal(cell));
-
+    
     #region ATTACH-DETACH
 
     public bool CanAttach(Vector2Int pos, TileInfoSO infoSo, TileRotation rotation)

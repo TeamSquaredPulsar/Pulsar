@@ -1,4 +1,7 @@
+using System;
 using System.Collections;
+using Nrjwolf.Tools.AttachAttributes;
+using Pulsar.DataClasses;
 using Pulsar.Ship;
 using Pulsar.Utilities;
 using UnityEngine;
@@ -8,67 +11,75 @@ namespace Pulsar.Player
 [RequireComponent(typeof(ShipManager))]
 public class PlayerController : MonoBehaviour
 {
+    public static event Action<PlayerController> PlayerSpawnedEvent;
+    public static event Action<PlayerController> PlayerLossEvent;
+
+    public static event Action<Bounds> ShipGridUpdate;
+
+    public static Vector3 PlayerPosition = Vector3.zero;
+
     [SerializeField]
     private InputReader input;
 
-    [field: SerializeField]
-    public ShipManager Ship { get; private set; }
+    [GetComponent, SerializeField,]
+    private ShipManager ship;
 
-    [SerializeField]
-    private BuildManager buildManager;
+    public Vector2 CorePosition => ship.Core.transform.position;
 
-    [SerializeField, Min(0.1f),]
-    private float tileDestroySeconds;
-
-    private Coroutine _destroyTileCoroutine;
-
-    private bool _isShooting = false;
-    private Coroutine _shootingCoroutine = null;
+    private bool _isShooting;
+    private Coroutine _shootingCoroutine;
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     private void Start()
     {
-        PlayerCursor.SelectTileEvent += OnSelectTile;
+        ship.ShipGridUpdate += OnShipGridUpdate;
+        ship.ShipDestroyedEvent += OnShipDestroyed;
         RegisterInputCallbacks();
+        PlayerSpawnedEvent?.Invoke(this);
     }
 
     private void OnDestroy()
     {
-        PlayerCursor.SelectTileEvent -= OnSelectTile;
+        ship.ShipGridUpdate -= OnShipGridUpdate;
+        ship.ShipDestroyedEvent -= OnShipDestroyed;
 
         input.MoveEvent -= HandleMove;
         input.RotateEvent -= HandleRotate;
         input.ShootEvent -= HandleShoot;
+        StopAllCoroutines();
     }
 
-    private void OnSelectTile(Result<Tile> result)
+    private void OnShipGridUpdate()
     {
-        if (!result.IsSuccess)
-        {
-            //TODO Logic for deselecting
-            if (_destroyTileCoroutine != null)
-            {
-                StopCoroutine(_destroyTileCoroutine);
-            }
+        ShipGridUpdate?.Invoke(GetShipBounds());
+    }
 
-            buildManager.OnSelectTile(result);
-            return;
-        }
+    public bool TryGetTile(Vector2Int index, out Tile tile) =>
+        ship.Cells.TryGetValue(index, out tile);
+    
+    public Bounds GetShipBounds() => ship.GetLocalBounds();
 
-        Tile tile = result.Value;
+    public bool OwnsTile(Tile tile) => ship.OwnsTile(tile);
 
-        //TODO: Logic for selecting
-        //If tile is part of this ship
-        if (Ship.OwnsTile(tile))
-        {
-            //Start a coroutine
-            _destroyTileCoroutine = StartCoroutine(DestroyTileTimer(tile));
-        }
-        else if (!tile.IsAttached)
-        {
-            //Tell the build manager we've selected a new tile.
-            buildManager.OnSelectTile(result);
-        }
+    public bool CanAttach(
+        Vector2Int location,
+        TileInfoSO tileInfo,
+        TileRotation rotation) => ship.CanAttach(location, tileInfo, rotation);
+
+    public void AttachTile(
+        Vector2Int location,
+        Tile tile,
+        TileRotation rotation) => ship.AttachTile(location, tile, rotation);
+
+    public Result<(Vector2Int, TileRotation)> FindBestAttachment(
+        TileInfoSO tileInfo,
+        Vector3 worldPosition) =>
+        ship.FindBestAttachment(tileInfo, worldPosition);
+    
+    private void OnShipDestroyed(ShipManager obj)
+    {
+        PlayerLossEvent?.Invoke(this);
+        Destroy(obj.gameObject);
     }
 
     private void RegisterInputCallbacks()
@@ -94,25 +105,24 @@ public class PlayerController : MonoBehaviour
 
     private void HandleRotate(float obj)
     {
-        Ship.Rotate(obj);
+        ship.Rotate(obj);
     }
 
     private void HandleMove(Vector2 direction)
     {
-        Ship.Move(direction);
+        ship.Move(direction);
     }
 
-    private IEnumerator DestroyTileTimer(Tile tile)
+    private void FixedUpdate()
     {
-        yield return new WaitForSeconds(tileDestroySeconds);
-        tile.TakeDamage(tile.CurrentHp);
+        PlayerPosition = gameObject.transform.position;
     }
 
     private IEnumerator StartShooting()
     {
         while (_isShooting)
         {
-            Ship.Fire();
+            ship.Fire();
             yield return null;
         }
 

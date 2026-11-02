@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using Nrjwolf.Tools.AttachAttributes;
+using Pulsar.Player;
 using Pulsar.Ship;
 using UnityEngine;
 using Random = UnityEngine.Random;
@@ -7,25 +9,26 @@ using Random = UnityEngine.Random;
 [RequireComponent(typeof(ShipManager))]
 public class EnemyController : MonoBehaviour
 {
-    private const float MaxWeaveOffset = 10f;
-    private const float MinDistance = 0.001f;
-    private const float TileHalfDiagonal = 0.7071f;
-    private const float TurnGain = 4f;
-    private const float SpinResponse = 30f;
-
-    private static readonly HashSet<EnemyController> _activeEnemies = new();
+    public static event Action<EnemyController, int> EnemyDefeatedEvent;
 
     public static IReadOnlyCollection<EnemyController> ActiveEnemies =>
         _activeEnemies;
-    
+
     [SerializeField]
     private EnemyInfoSO enemyInfo;
 
     [SerializeField]
     private ShipManager shipManager;
 
-    private Transform _player;
-    private Rigidbody2D _rb;
+    private const float MaxWeaveOffset = 10f;
+    private const float MinDistance = 0.001f;
+    private const float TileHalfDiagonal = 0.7071f;
+    private const float TurnGain = 4f;
+
+    private static readonly HashSet<EnemyController> _activeEnemies = new();
+
+    [GetComponent, SerializeField,]
+    private Rigidbody2D rb;
 
     // TODO: make this a boolean value with a coroutine to handle if you can fire or not
     private float _timeBtwShots;
@@ -35,7 +38,13 @@ public class EnemyController : MonoBehaviour
 
     private void Awake()
     {
-        _rb = GetComponent<Rigidbody2D>();
+        if (!rb)
+        {
+            Debug.LogError(
+                $"Rigidbody of {gameObject.name} should have been auto-attached!");
+            rb = GetComponent<Rigidbody2D>();
+        }
+
         Radius = CalculateRadius(transform);
         // Smooth the ship and its tiles between physics steps so they
         // don't stutter on frames where physics doesn't run.
@@ -43,6 +52,8 @@ public class EnemyController : MonoBehaviour
         {
             body.interpolation = RigidbodyInterpolation2D.Interpolate;
         }
+
+        shipManager.ShipDestroyedEvent += HandleShipDestroyed;
     }
 
     private void Start()
@@ -55,20 +66,12 @@ public class EnemyController : MonoBehaviour
             throw new InvalidOperationException("Player not found");
         }
 
-        _player = playerObj.transform;
-
         _timeBtwShots = enemyInfo.startTimeBtwShots;
         _weaveOffset = Random.value * MaxWeaveOffset;
     }
 
     private void Update()
     {
-        // TODO: Make this a coroutine
-        if (_player is null)
-        {
-            return;
-        }
-
         GetPlayerDirection(out Vector3 dirToPlayer, out float distance);
         HandleShooting(dirToPlayer, distance);
     }
@@ -77,11 +80,6 @@ public class EnemyController : MonoBehaviour
     // to the ship by physics, move in step with it instead of lagging behind.
     private void FixedUpdate()
     {
-        if (_player is null)
-        {
-            return;
-        }
-
         GetPlayerDirection(out Vector3 dirToPlayer, out float distance);
         HandleMovement(dirToPlayer, distance);
         HandleRotation(dirToPlayer);
@@ -97,9 +95,20 @@ public class EnemyController : MonoBehaviour
         _activeEnemies.Remove(this);
     }
 
+    private void OnDestroy()
+    {
+        shipManager.ShipDestroyedEvent -= HandleShipDestroyed;
+    }
+
+    private void HandleShipDestroyed(ShipManager obj)
+    {
+        //Game manager will use this for score
+        EnemyDefeatedEvent?.Invoke(this, enemyInfo.PointsOnKill);
+    }
+
     private void GetPlayerDirection(out Vector3 dirToPlayer, out float distance)
     {
-        Vector3 toPlayer = _player.position - transform.position;
+        Vector3 toPlayer = PlayerController.PlayerPosition - transform.position;
         /*
          * It resets Z axis differences between player and enemy to zero
          * to keep movement and aiming on the XY plane and horizontal.
@@ -191,7 +200,7 @@ public class EnemyController : MonoBehaviour
     {
         // float targetAngle
         //     = Mathf.Atan2(dirToPlayer.y, dirToPlayer.x) * Mathf.Rad2Deg - 90f;
-        
+
         // float angleDiff = Mathf.DeltaAngle(_rb.rotation, targetAngle);
         //
         // float targetSpin = Mathf.Clamp(angleDiff * TurnGain,
@@ -201,18 +210,18 @@ public class EnemyController : MonoBehaviour
         //     (targetSpin - _rb.angularVelocity) / SpinResponse, -1f, 1f);
         //
         // shipManager.Rotate(-rotInput);
-        
-        
+
+
         //TODO Make this use a PID controller with above code
-        //-90f corrects rotation ONLY for this specific bandaid
+        //-90f corrects rotation ONLY for this specific Band-Aid
         float targetAngle = Mathf.Atan2(
-            dirToPlayer.y, dirToPlayer.x) * Mathf.Rad2Deg -90f; 
-        
-        float angleDiff = Mathf.DeltaAngle(_rb.rotation, targetAngle);
-    
+            dirToPlayer.y, dirToPlayer.x) * Mathf.Rad2Deg - 90f;
+
+        float angleDiff = Mathf.DeltaAngle(rb.rotation, targetAngle);
+
         float desiredVelocity = angleDiff * TurnGain;
-    
-        _rb.angularVelocity = Mathf.Clamp(desiredVelocity, 
+
+        rb.angularVelocity = Mathf.Clamp(desiredVelocity,
             -enemyInfo.turnSpeed, enemyInfo.turnSpeed);
     }
 
