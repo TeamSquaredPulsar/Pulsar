@@ -87,16 +87,7 @@ public class PlayerCursor : MonoBehaviour
 
         _hoveredTile = collidedTile;
     }
-
-    // private void OnTriggerStay2D(Collider2D other)
-    // {
-    //     if (!TryProcessColliderTrigger(other, out Tile collidedTile))
-    //     {
-    //         return;
-    //     }
-    //
-    //     _hoveredTile = collidedTile;
-    // }
+    
 
     private bool TryProcessColliderTrigger(
         Collider2D other,
