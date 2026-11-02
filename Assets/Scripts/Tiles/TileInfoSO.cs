@@ -1,5 +1,7 @@
 using Pulsar.Ship;
+using Pulsar.Tiles;
 using UnityEngine;
+using UnityEngine.Serialization;
 
 [CreateAssetMenu(fileName = "NewTileInfo", menuName = "Pulsar/Tile Info")]
 public class TileInfoSO : ScriptableObject
@@ -11,12 +13,8 @@ public class TileInfoSO : ScriptableObject
 
     public bool[] connectableEdges = { true, true, true, true, };
     
-    [Header("Health Sprites")]
-    public Sprite fullHealthSprite;
-    public Sprite seventyFivePercentSprite;
-    public Sprite fiftyPercentSprite;
-    public Sprite twentyFivePercentSprite;
-    public Sprite tenPercentSprite;
+    [Header("Health Sprites (default)")]
+    public TileSpritesSO sprites;
 }
 
 namespace Pulsar.Ship

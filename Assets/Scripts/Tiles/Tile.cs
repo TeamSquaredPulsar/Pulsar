@@ -1,7 +1,9 @@
 using System;
 using Pulsar.Interactions;
 using Pulsar.Ship.Extensions;
+using Pulsar.Tiles;
 using UnityEngine;
+using UnityEngine.Serialization;
 
 public struct TileRbInfo
 {
@@ -32,7 +34,10 @@ public abstract class Tile : MonoBehaviour
 
     [field: SerializeField]
     public TileInfoSO TileInfo { get; private set; }
-
+    
+    [SerializeField]
+    private TileSpritesSO spritesOverride;
+    
     [SerializeField]
     private SpriteRenderer spriteRenderer;
 
@@ -48,6 +53,9 @@ public abstract class Tile : MonoBehaviour
     private const int FloatingSortingOrder = 10;
 
     private TileRbInfo _rbInfo;
+
+    private TileSpritesSO sprites =>
+        spritesOverride ? spritesOverride : TileInfo.sprites;
 
     public Sprite Sprite => spriteRenderer.sprite;
 
@@ -88,15 +96,12 @@ public abstract class Tile : MonoBehaviour
     
     private void UpdateSprite(HealthState state)
     {
-        spriteRenderer.sprite = state switch
+        Sprite next = sprites ? sprites.Get(state) : null;
+        
+        if (next)
         {
-            HealthState.FullHealth => TileInfo.fullHealthSprite,
-            HealthState.LessOrEqualTo75Percent => TileInfo.seventyFivePercentSprite,
-            HealthState.LessOrEqualTo50Percent => TileInfo.fiftyPercentSprite,
-            HealthState.LessOrEqualTo25Percent => TileInfo.twentyFivePercentSprite,
-            HealthState.LessOrEqualTo10Percent => TileInfo.tenPercentSprite,
-            _ => spriteRenderer.sprite
-        };
+            spriteRenderer.sprite = next;
+        }
     }
 
     public float Mass => _rbInfo.Mass; //It can return mass even when destroyed
