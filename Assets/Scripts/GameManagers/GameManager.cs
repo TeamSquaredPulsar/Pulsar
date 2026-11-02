@@ -5,6 +5,7 @@ using NaughtyAttributes;
 using Pulsar.Player;
 using Pulsar.UI;
 using UnityEngine;
+using Object = System.Object;
 
 namespace Pulsar
 {
@@ -55,28 +56,42 @@ public class GameManager : MonoBehaviour
                 _currentWave = 0;
                 break;
             case GameState.Playing:
-                Instantiate(playerPrefab, Vector3.zero, Quaternion.identity);
-                _enemySpawner = Instantiate(enemySpawnerPrefab, Vector3.zero,
-                    Quaternion.identity).GetComponent<EnemySpawner>();
-                _enemySpawner.WaveCompleteEvent += HandleWaveComplete;
-                LoadNextWave();
+                HandleGameStart();
                 break;
             case GameState.GameOver:
-                if (_awaitingWave is not null)
-                {
-                    StopCoroutine(_awaitingWave);
-                }
-                Destroy(_enemySpawner);
-                _currentWave = 0;
+                HandleGameOver();
                 break;
             default:
                 throw new ArgumentOutOfRangeException(nameof(obj), obj, null);
         }
     }
 
-    private void HandleWaveComplete()
+    private void HandleGameOver()
     {
-        _currentWave++;
+        if (_awaitingWave is not null)
+        {
+            StopCoroutine(_awaitingWave);
+        }
+        Destroy(_enemySpawner);
+        _currentWave = 0;
+    }
+
+    private void HandleGameStart()
+    {
+        Tile[] tiles = FindObjectsByType<Tile>(FindObjectsSortMode.None);
+        foreach (Tile tile in tiles)
+        {
+            Destroy(tile.gameObject);
+        }
+        Instantiate(playerPrefab, Vector3.zero, Quaternion.identity);
+        _enemySpawner = Instantiate(enemySpawnerPrefab, Vector3.zero,
+            Quaternion.identity).GetComponent<EnemySpawner>();
+        _enemySpawner.WaveCompleteEvent += HandleWaveComplete;
+        LoadNextWave();
+    }
+
+    private void HandleWaveComplete()
+    { _currentWave++;
         if (_currentWave >= waveDefinitions.Count)
         {
             //TODO: Victory screen.

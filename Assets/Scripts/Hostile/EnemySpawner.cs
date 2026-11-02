@@ -39,9 +39,14 @@ public class EnemySpawner : MonoBehaviour
         {
             StopCoroutine(_waveCoroutine);
         }
-        _spawnedEnemies.Where(enemy => enemy.gameObject)
-            .ToList()
-            .ForEach(enemy => Destroy(enemy.gameObject));
+        _spawnedEnemies
+            .ForEach(enemy =>
+            {
+                if(enemy.gameObject)
+                {
+                    Destroy(enemy.gameObject);
+                }
+            });
         
         EnemyController.EnemyDefeatedEvent -= HandleEnemyDefeated;
     }
