@@ -53,6 +53,7 @@ MonoBehaviour:
   baseColor: {r: 1, g: 1, b: 1, a: 1}
   <IsAttached>k__BackingField: 0
   <TileInfo>k__BackingField: {fileID: 11400000, guid: 71fb61585e3013a43b3726d73a977655, type: 2}
+  spritesOverride: {fileID: 11400000, guid: e141b47d1c5ccb84a920ed5a7f8d03b7, type: 2}
   spriteRenderer: {fileID: 4676953174740963180}
   tileCollider: {fileID: 6394848136817018224}
   rigidBody: {fileID: 2522681453652910296}

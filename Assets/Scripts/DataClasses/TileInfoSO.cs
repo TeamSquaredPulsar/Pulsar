@@ -10,5 +10,8 @@ public class TileInfoSO : ScriptableObject
     public float hp = 10f;
 
     public bool[] connectableEdges = { true, true, true, true, };
+    
+    [Header("Health Sprites (default)")]
+    public TileSpritesSO sprites;
 }
 }

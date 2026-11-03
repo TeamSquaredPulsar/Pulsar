@@ -33,7 +33,10 @@ public abstract class Tile : MonoBehaviour
 
     [field: SerializeField]
     public TileInfoSO TileInfo { get; private set; }
-
+    
+    [SerializeField]
+    private TileSpritesSO spritesOverride;
+    
     [SerializeField]
     private SpriteRenderer spriteRenderer;
 
@@ -49,6 +52,9 @@ public abstract class Tile : MonoBehaviour
     private const int FloatingSortingOrder = 10;
 
     private TileRbInfo _rbInfo;
+
+    private TileSpritesSO sprites =>
+        spritesOverride ? spritesOverride : TileInfo.sprites;
 
     public Sprite Sprite => spriteRenderer.sprite;
 
@@ -66,17 +72,35 @@ public abstract class Tile : MonoBehaviour
     public void Start()
     {
         health.DestroyEvent += OnDead;
+        health.HealthStateChanged += OnHealthStateChanged;
+        UpdateSprite(HealthState.FullHealth);
     }
 
     public void OnDestroy()
     {
         health.DestroyEvent -= OnDead;
+        health.HealthStateChanged -= OnHealthStateChanged;
     }
 
     private void OnDead(Health _)
     {
         DestroyEvent?.Invoke(this);
         Destroy(gameObject);
+    }
+    
+    private void OnHealthStateChanged(HealthState state)
+    {
+        UpdateSprite(state);
+    }
+    
+    private void UpdateSprite(HealthState state)
+    {
+        Sprite next = sprites ? sprites.Get(state) : null;
+        
+        if (next)
+        {
+            spriteRenderer.sprite = next;
+        }
     }
 
     public float Mass => _rbInfo.Mass; //It can return mass even when destroyed
@@ -155,12 +179,6 @@ public abstract class Tile : MonoBehaviour
 
     public void Rotate(Quaternion rotation)
     {
-        /*
-         transform.SetLocalPositionAndRotation(transform.localPosition, rotation);
-        // transform.SetPositionAndRotation(this.transform.position, rotation);
-        Rotation = transform.localRotation.eulerAngles.z.ToTileRotation();
-        */
-        
         transform.rotation = rotation;
         Rotation = transform.localRotation.eulerAngles.z.ToTileRotation();
     }
