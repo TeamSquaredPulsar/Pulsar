@@ -15,10 +15,7 @@ public struct ThrustAtRotation
 public class ThrusterManager : MonoBehaviour
 {
     [SerializeField]
-    private List<ThrusterTile> thrusters;
-    
-    [SerializeField]
-    private Rigidbody2D rb;
+    private ShipManager shipManager;
 
     //Temp field until the core has its own thruster values
     [SerializeField]
@@ -26,20 +23,28 @@ public class ThrusterManager : MonoBehaviour
 
     [SerializeField]
     private float rotationalThrust = 2;
-
+    
     private ThrustAtRotation[] _directedThrust;
 
+    private Rigidbody2D _rb;
+    private List<ThrusterTile> _thrusters;
+
+    
     private Vector2 _moveInput;
     private float _rotInput;
 
     private void Awake()
     {
-        if (rb == null)
+        _rb = shipManager.GetComponent<Rigidbody2D>();
+        
+        if (_rb == null)
         {
-            rb = GetComponent<Rigidbody2D>();
+            _rb = GetComponent<Rigidbody2D>();
         }
 
-        CalculateThrusters();
+        _thrusters = shipManager.thrusters;
+
+        UpdateThrusters();
     }
 
     private void FixedUpdate()
@@ -62,7 +67,7 @@ public class ThrusterManager : MonoBehaviour
 
     private void ApplyRotation()
     {
-        rb.AddTorque(_rotInput * rotationalThrust, ForceMode2D.Force);
+        _rb.AddTorque(_rotInput * rotationalThrust, ForceMode2D.Force);
     }
 
     private void ApplyThrust()
@@ -96,14 +101,14 @@ public class ThrusterManager : MonoBehaviour
             localForce.x = _moveInput.x * (thrustX.Thrust + coreThrust);
         }
 
-        rb.AddRelativeForce(localForce, ForceMode2D.Force);
+        _rb.AddRelativeForce(localForce, ForceMode2D.Force);
     }
 
     #endregion
 
     #region Thrust Calculations
 
-    private void CalculateThrusters()
+    private void UpdateThrusters()
     {
         int directions = new TileRotation().Length();
         _directedThrust = new ThrustAtRotation[directions];
@@ -117,7 +122,7 @@ public class ThrusterManager : MonoBehaviour
             };
         }
         
-        foreach (ThrusterTile thruster in thrusters)
+        foreach (ThrusterTile thruster in _thrusters)
         {
             _directedThrust[thruster.Rotation.ToInt()].Thrust
                 += thruster.Thrust;

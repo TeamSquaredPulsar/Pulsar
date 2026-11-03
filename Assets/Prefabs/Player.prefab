@@ -108,9 +108,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4a065edf6c6f717428c6f24af01794d8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ThrusterManager
-  thrusters:
-  - {fileID: 2341339632320359333}
-  rb: {fileID: 8716755017154123671}
+  shipManager: {fileID: 35744134826503047}
   coreThrust: 2
   rotationalThrust: 2
 --- !u!50 &8716755017154123671

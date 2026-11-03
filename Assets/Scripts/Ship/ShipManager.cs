@@ -36,7 +36,7 @@ public class ShipManager : MonoBehaviour
     private List<WeaponTile> weapons = new(10);
 
     [SerializeField]
-    private List<ThrusterTile> thrusters = new(10);
+    public List<ThrusterTile> thrusters = new(10);
 
     [Header("Detach Explosion"), SerializeField,]
     private Vector2 detachRadiateLinearVelocity = new(2f, 5f);
