@@ -48,4 +48,13 @@ MonoBehaviour:
   enemySpawnerPrefab: {fileID: 697001318912693541, guid: c870ce8893d39f4409a7d84e3185bf7b, type: 3}
   waveDelaySeconds: 5
   waveDefinitions:
-  - {fileID: 11400000, guid: b651fda037224d7a9af633b431b5a105, type: 2}
+  - {fileID: 11400000, guid: d95adc1974b84789aa9a3bf00509f350, type: 2}
+  - {fileID: 11400000, guid: cbb5bfedfcae4b0faea80f666280f33b, type: 2}
+  - {fileID: 11400000, guid: 2f73e111c092479abd40c2630b70eaeb, type: 2}
+  - {fileID: 11400000, guid: 0a232521b3ed4937884cc04e3297c28a, type: 2}
+  - {fileID: 11400000, guid: a90f1260bcdf4437bafd5ad836191936, type: 2}
+  - {fileID: 11400000, guid: f4f6d9619a734313bfdb8e924073601a, type: 2}
+  - {fileID: 11400000, guid: b105a19ebc8343f49d1fe20ec37f4d85, type: 2}
+  - {fileID: 11400000, guid: da419b9be66f4ec3b554f7d23fd4d645, type: 2}
+  - {fileID: 11400000, guid: 3f5b098804994908a10b326fda6d3b0b, type: 2}
+  - {fileID: 11400000, guid: 3c98a37892be4035b5f9e790f10f9455, type: 2}
