@@ -1,9 +1,8 @@
 using System;
+using Pulsar.DataClasses;
+using Pulsar.DataClasses.Extensions;
 using Pulsar.Interactions;
-using Pulsar.Ship.Extensions;
-using Pulsar.Tiles;
 using UnityEngine;
-using UnityEngine.Serialization;
 
 public struct TileRbInfo
 {
@@ -106,10 +105,7 @@ public abstract class Tile : MonoBehaviour
 
     public float Mass => _rbInfo.Mass; //It can return mass even when destroyed
 
-    public void TakeDamage(float damage)
-    {
-        health.TakeDamage(damage);
-    }
+    public void TakeDamage(float damage) => health.TakeDamage(damage);
 
     /// <summary>
     /// To ask whether the rotated tile can connect from dir
@@ -183,12 +179,6 @@ public abstract class Tile : MonoBehaviour
 
     public void Rotate(Quaternion rotation)
     {
-        /*
-         transform.SetLocalPositionAndRotation(transform.localPosition, rotation);
-        // transform.SetPositionAndRotation(this.transform.position, rotation);
-        Rotation = transform.localRotation.eulerAngles.z.ToTileRotation();
-        */
-        
         transform.rotation = rotation;
         Rotation = transform.localRotation.eulerAngles.z.ToTileRotation();
     }

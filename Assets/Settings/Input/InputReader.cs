@@ -1,4 +1,5 @@
 using System;
+using Pulsar.DataClasses;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using static Controls;
@@ -105,7 +106,6 @@ public class InputReader : ScriptableObject, IPlayerActions, IInputReader
 
         // Multiply by camera dimensions so we can get full screen size
         input *= camData.ScreenSize;
-
         
         MoveCursorEvent?.Invoke(input);
     }

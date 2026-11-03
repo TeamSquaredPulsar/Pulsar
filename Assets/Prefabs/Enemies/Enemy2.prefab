@@ -54,6 +54,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::EnemyController
   enemyInfo: {fileID: 11400000, guid: b1850a4012224911a68b5d55e4faec08, type: 2}
   shipManager: {fileID: 7200000004}
+  rb: {fileID: 7200000006}
 --- !u!114 &7200000004
 MonoBehaviour:
   m_ObjectHideFlags: 0
