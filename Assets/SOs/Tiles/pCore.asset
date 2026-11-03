@@ -14,12 +14,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::Pulsar.Ship.TileDef
   tileName: pCore
   type: 0
-  sprite: {fileID: -638504700, guid: 12e6d06eb1ce26d438b5d1d620179b8b, type: 3}
   hp: 10
-  mass: 1
   connectableEdges: 01010101
-  thrustForce: 5
-  fireRate: 3
-  damage: 5
-  projectileSpeed: 15
-  projectileLifetime: 2
+  sprites: {fileID: 11400000, guid: 085efe85fed4e2b44a3b05eb11c1f7d6, type: 2}
