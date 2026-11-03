@@ -22,10 +22,6 @@ public class ThrusterManager : MonoBehaviour
     [SerializeField]
     private ShipManager shipManager;
 
-    //Temp field until the core has its own thruster values
-    [SerializeField]
-    private float coreThrust = 2;
-
     [SerializeField]
     private float rotationalThrust = 2;
     
@@ -57,6 +53,7 @@ public class ThrusterManager : MonoBehaviour
     private void FixedUpdate()
     {
         ApplyRotation();
+        shipManager.Core.ApplyThrust(_rb, _moveInput);
         ApplyThrust();
     }
 
@@ -136,38 +133,8 @@ public class ThrusterManager : MonoBehaviour
             }
         }
         
-}
-
+    }
     #endregion
-
-    // #region Thrust Calculations
-    //
-    // private void UpdateThrusters()
-    // {
-    //     int directions = new TileRotation().Length();
-    //     _directedThrust = new ThrustAtRotation[directions];
-    //
-    //     for (int i = 0; i < directions; i++)
-    //     {
-    //         _directedThrust[i] = new ThrustAtRotation
-    //         {
-    //             Orientation = (TileRotation)i,
-    //             Thrust = 0f,
-    //         };
-    //     }
-    //     
-    //     foreach (ThrusterTile thruster in _thrusters)
-    //     {
-    //         _directedThrust[thruster.Rotation.ToInt()].Thrust
-    //             += thruster.Thrust;
-    //     }
-    // }
-    //
-    // private ThrustAtRotation
-    //     GetThrustAtRotation(TileRotation orientation) =>
-    //     _directedThrust[(int)orientation];
-    //
-    // #endregion
 }
 
 }
