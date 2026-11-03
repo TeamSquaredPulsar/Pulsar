@@ -14,6 +14,8 @@ public class PlayerCursor : MonoBehaviour
     [SerializeField]
     private InputReader input;
 
+    public InputReader Input => input;
+
     [SerializeField]
     private SpriteRenderer visual;
 
