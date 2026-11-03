@@ -3,7 +3,7 @@ using UnityEngine;
 
 namespace Pulsar.DataClasses
 {
-[CreateAssetMenu(fileName = "NewHealthSprites", menuName = "Pulsar/Tile Health Sprites")]
+[CreateAssetMenu(fileName = "NewSprites", menuName = "Pulsar/Tile Sprites")]
 public class TileSpritesSO : ScriptableObject
 {
     public Sprite fullHealth;
