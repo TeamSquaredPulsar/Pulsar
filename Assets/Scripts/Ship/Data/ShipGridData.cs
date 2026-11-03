@@ -1,7 +1,8 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using Pulsar.Ship.Extensions;
+using Pulsar.DataClasses;
+using Pulsar.DataClasses.Extensions;
 using Pulsar.Utilities;
 using UnityEngine;
 

@@ -1,5 +1,7 @@
 using UnityEngine;
 
+namespace Pulsar.UI
+{
 [RequireComponent(typeof(LineRenderer), typeof(SpriteRenderer))]
 public class RadialMenu : MonoBehaviour
 {
@@ -10,21 +12,27 @@ public class RadialMenu : MonoBehaviour
     private Vector3 _center;
     private Vector2 _radius;
     private Quaternion _rotation;
-        
-    [Header("Scan zone"),SerializeField,]
+
+    [Header("Scan zone"), SerializeField,]
     private SpriteRenderer scanZoneSr;
-    [SerializeField] private Color scanZoneColor = new(0f, 1f, 0f, 0.10f);
-        
-    [Header("Outline"),SerializeField,]
-        private LineRenderer outline;
-    [SerializeField] private float outlineWidthMultiplier = 0.05f;
-    [SerializeField] private Color outlineColor = Color.white;
+
+    [SerializeField]
+    private Color scanZoneColor = new(0f, 1f, 0f, 0.10f);
+
+    [Header("Outline"), SerializeField,]
+    private LineRenderer outline;
+
+    [SerializeField]
+    private float outlineWidthMultiplier = 0.05f;
+
+    [SerializeField]
+    private Color outlineColor = Color.white;
 
     private void Awake()
     {
         scanZoneSr.color = scanZoneColor;
         scanZoneSr.sortingOrder = ScanZoneSortingOrder;
-            
+
         outline.widthMultiplier = outlineWidthMultiplier;
         outline.startColor = outlineColor;
         outline.endColor = outlineColor;
@@ -32,7 +40,10 @@ public class RadialMenu : MonoBehaviour
         outline.positionCount = Segments;
     }
 
-    public void UpdateShape(Vector3 worldCenter, Vector2 radius, Quaternion rotation)
+    public void UpdateShape(
+        Vector3 worldCenter,
+        Vector2 radius,
+        Quaternion rotation)
     {
         _center = worldCenter;
         _radius = radius;
@@ -41,7 +52,7 @@ public class RadialMenu : MonoBehaviour
         transform.SetPositionAndRotation(worldCenter, rotation);
 
         scanZoneSr.transform.localScale = new Vector3(_radius.x, _radius.y, 1f);
-        
+
         // each segment angle
         for (int i = 0; i < Segments; i++)
         {
@@ -65,7 +76,7 @@ public class RadialMenu : MonoBehaviour
         //Ray: P(t) = origin + t * direction
         Vector2 origin = Quaternion.Inverse(_rotation) * (core - _center);
         Vector2 direction = Quaternion.Inverse(_rotation) * (tile - core);
-        
+
         if (direction.sqrMagnitude < minMagnitude)
         {
             direction = Vector3.right;
@@ -79,7 +90,7 @@ public class RadialMenu : MonoBehaviour
         Vector2 directionSquared = direction * direction;
         Vector2 radiusSquared = _radius * _radius;
         Vector2 originSquared = origin * origin;
-        
+
         float a = directionSquared.x / radiusSquared.x
                   + directionSquared.y / radiusSquared.y;
         float b = 2f * (
@@ -88,7 +99,8 @@ public class RadialMenu : MonoBehaviour
         );
         float c = originSquared.x / radiusSquared.x
             + originSquared.y / radiusSquared.y - 1f;
-        float distance = PositiveQuadraticFormula(a, b, c); // get the positive only
+        float distance
+            = PositiveQuadraticFormula(a, b, c); // get the positive only
         Vector2 point = origin + direction * distance;
         return Mathf.Atan2(point.y / _radius.y, point.x / _radius.x);
     }
@@ -104,4 +116,5 @@ public class RadialMenu : MonoBehaviour
 
     public void Show() => scanZoneSr.enabled = true;
     public void Hide() => scanZoneSr.enabled = false;
+}
 }

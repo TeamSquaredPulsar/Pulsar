@@ -10,5 +10,8 @@ public static class ShipUtilities
 
     public static Quaternion RotateQuarterOnZAxis(int rotation) =>
         Quaternion.Euler(0f, 0f, 90f * rotation);
+
+    public static Vector3 CellToWorld(this Vector2Int cell, Transform parent) =>
+        parent.TransformPoint(ShipUtilities.GridToLocal(cell));
 }
 }

@@ -1,33 +1,24 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using NaughtyAttributes;
+using Pulsar.Player;
 using UnityEngine;
 using Random = UnityEngine.Random;
 
+// Spawns one wave at a time for the GameManager. GameManager decides which
+// wave comes next; the spawner decides where and how its enemies appear,
+// and says when the wave is cleared.
 public class EnemySpawner : MonoBehaviour
 {
     private const int MaxSpawnAttempts = 30;
     private const float FullCircle = Mathf.PI * 2f;
     private const float LeashCheckInterval = 1f;
 
-    [Header("Waves")]
-    [SerializeField]
-    private List<WaveDefinitionSO> waves = new();
+    public event Action WaveCompleteEvent;
 
-    [Tooltip("After the last wave, play again from this wave (1 = first).")]
-    [SerializeField]
-    [Min(1)]
-    private int loopFromWave = 1;
-
-    [Tooltip("Breather between clearing a wave and the next one starting.")]
-    [SerializeField]
-    [Min(0f)]
-    private float timeBetweenWaves = 4f;
-
-    [Tooltip("For testing: start at this wave instead of the first (1 = first).")]
-    [SerializeField]
-    [Min(1)]
-    private int startAtWave = 1;
+    [ShowNonSerializedField]
+    private WaveDefinitionSO _wave;
 
     [Header("Spawning")]
     [Tooltip("Distance from the player to the enemy's edge, not its center.")]
@@ -40,11 +31,6 @@ public class EnemySpawner : MonoBehaviour
     [SerializeField]
     private float spawnPadding = 1f;
 
-    [Tooltip("How wide (in degrees) the OneSide and Pincer patterns spread.")]
-    [SerializeField]
-    [Range(0f, 180f)]
-    private float patternSpread = 40f;
-
     [Header("Strays")]
     [Tooltip("Enemies further than this from the player are brought back " +
              "to a spawn point. 0 = off.")]
@@ -52,79 +38,65 @@ public class EnemySpawner : MonoBehaviour
     [Min(0f)]
     private float leashDistance = 40f;
 
-    [Tooltip("Safety net: seconds after a wave finishes spawning before the " +
-             "next wave starts even if enemies are left. 0 = off.")]
-    [SerializeField]
-    [Min(0f)]
-    private float maxWaveTime = 120f;
-
-    private Transform _player;
-    private SpawnPattern _pattern;
+    private readonly List<EnemyController> _spawnedEnemies = new();
+    private Coroutine _waveCoroutine;
     private float _patternAngle;
     private int _spawnCount;
 
-    // 1-based number of the wave being played, 0 before the first one.
-    public int CurrentWaveNumber { get; private set; }
+    private void Awake()
+    {
+        EnemyController.EnemyDefeatedEvent += HandleEnemyDefeated;
+    }
 
     private void Start()
     {
-        GameObject playerObj = GameObject.FindWithTag("Player");
-        if (playerObj == null)
-        {
-            throw new InvalidOperationException("Player not found");
-        }
-
-        _player = playerObj.transform;
-
-        if (waves.Count > 0)
-        {
-            StartCoroutine(RunWaves());
-            StartCoroutine(LeashStrays());
-        }
+        StartCoroutine(LeashStrays());
     }
 
-    // Plays the waves in order. The next wave only starts once every enemy
-    // from the current one is gone, plus a short breather, so waves never
-    // pile up on the player. After the last wave it loops back.
-    private IEnumerator RunWaves()
+    private void OnDestroy()
     {
-        int index = Mathf.Clamp(startAtWave - 1, 0, waves.Count - 1);
-        int loopIndex = Mathf.Clamp(loopFromWave - 1, 0, waves.Count - 1);
-
-        while (true)
+        if (_waveCoroutine is not null)
         {
-            CurrentWaveNumber = index + 1;
-            WaveDefinitionSO wave = waves[index];
-            Debug.Log($"Wave {CurrentWaveNumber}: {wave.waveName}");
+            StopCoroutine(_waveCoroutine);
+        }
 
-            yield return SpawnWave(wave);
-
-            float timeoutAt = Time.time + maxWaveTime;
-            yield return new WaitUntil(
-                () => EnemyController.ActiveEnemies.Count == 0 ||
-                      (maxWaveTime > 0f && Time.time >= timeoutAt));
-
-            if (EnemyController.ActiveEnemies.Count > 0)
+        foreach (EnemyController enemy in _spawnedEnemies)
+        {
+            if (enemy)
             {
-                Debug.LogWarning(
-                    $"Wave {CurrentWaveNumber} timed out with " +
-                    $"{EnemyController.ActiveEnemies.Count} enemies left; " +
-                    "starting the next wave anyway.");
-            }
-
-            yield return new WaitForSeconds(timeBetweenWaves);
-
-            index++;
-            if (index >= waves.Count)
-            {
-                index = loopIndex;
+                Destroy(enemy.gameObject);
             }
         }
+
+        EnemyController.EnemyDefeatedEvent -= HandleEnemyDefeated;
     }
 
-    private IEnumerator SpawnWave(WaveDefinitionSO wave)
+    public void LoadNewWave(WaveDefinitionSO newWave)
     {
-        _pattern = wave.pattern;
+        _wave = newWave;
+    }
+
+    public void StartWave()
+    {
+        if (!_wave)
+        {
+            Debug.LogError("StartWave called before LoadNewWave.");
+            return;
+        }
+
+        if (_waveCoroutine is not null)
+        {
+            StopCoroutine(_waveCoroutine);
+        }
+
+        _waveCoroutine = StartCoroutine(RunWave(_wave));
+    }
+
+    // Spawns the whole wave, then waits until every enemy from it is gone
+    // (or the wave's safety timer runs out) and reports the wave complete
+    // exactly once.
+    private IEnumerator RunWave(WaveDefinitionSO wave)
+    {
         _patternAngle = Random.Range(0f, FullCircle);
         _spawnCount = 0;
 
@@ -136,6 +108,31 @@ public class EnemySpawner : MonoBehaviour
                 yield return new WaitForSeconds(entry.spawnInterval);
             }
         }
+
+        float timeoutAt = Time.time + wave.maxWaveTime;
+        yield return new WaitUntil(() =>
+        {
+            // Drop enemies destroyed some other way, so they can't hold
+            // the wave open forever.
+            _spawnedEnemies.RemoveAll(enemy => !enemy);
+            return _spawnedEnemies.Count == 0 ||
+                   (wave.maxWaveTime > 0f && Time.time >= timeoutAt);
+        });
+
+        if (_spawnedEnemies.Count > 0)
+        {
+            Debug.LogWarning(
+                $"Wave {wave.waveName} timed out with " +
+                $"{_spawnedEnemies.Count} enemies left; moving on anyway.");
+        }
+
+        _waveCoroutine = null;
+        WaveCompleteEvent?.Invoke();
+    }
+
+    private void HandleEnemyDefeated(EnemyController killed, int _)
+    {
+        _spawnedEnemies.Remove(killed);
     }
 
     // Once a second, any enemy that has wandered too far from the player
@@ -144,10 +141,10 @@ public class EnemySpawner : MonoBehaviour
     private IEnumerator LeashStrays()
     {
         WaitForSeconds wait = new(LeashCheckInterval);
-        while (_player != null)
+        while (true)
         {
             yield return wait;
-            if (leashDistance <= 0f || _player == null)
+            if (leashDistance <= 0f)
             {
                 continue;
             }
@@ -155,7 +152,8 @@ public class EnemySpawner : MonoBehaviour
             float sqrLeash = leashDistance * leashDistance;
             foreach (EnemyController enemy in EnemyController.ActiveEnemies)
             {
-                Vector3 offset = enemy.transform.position - _player.position;
+                Vector3 offset = enemy.transform.position -
+                                 PlayerController.PlayerPosition;
                 offset.z = 0f;
                 if (offset.sqrMagnitude > sqrLeash)
                 {
@@ -169,22 +167,30 @@ public class EnemySpawner : MonoBehaviour
     {
         float newRadius
             = EnemyController.CalculateRadius(enemyPrefab.transform);
-        Instantiate(enemyPrefab, FindSpawnPosition(newRadius),
+        GameObject go = Instantiate(enemyPrefab, FindSpawnPosition(newRadius),
             Quaternion.identity);
         _spawnCount++;
+
+        if (!go.TryGetComponent(out EnemyController controller))
+        {
+            throw new ArgumentException(
+                "Object in spawner does not have an EnemyController!");
+        }
+
+        _spawnedEnemies.Add(controller);
     }
 
     // A spot around the player that follows the wave's pattern and isn't
     // on top of another enemy (gives up after MaxSpawnAttempts tries).
     private Vector3 FindSpawnPosition(float radius)
     {
-        Vector3 position = _player.position + SpawnOffset(radius);
+        Vector3 position = PlayerController.PlayerPosition + SpawnOffset(radius);
         for (int attempt = 0;
              attempt < MaxSpawnAttempts &&
              IsTooCloseToAnEnemy(position, radius);
              attempt++)
         {
-            position = _player.position + SpawnOffset(radius);
+            position = PlayerController.PlayerPosition + SpawnOffset(radius);
         }
 
         return position;
@@ -192,8 +198,10 @@ public class EnemySpawner : MonoBehaviour
 
     private Vector3 SpawnOffset(float enemyRadius)
     {
-        float halfSpread = patternSpread * 0.5f * Mathf.Deg2Rad;
-        float angle = _pattern switch
+        SpawnPattern pattern = _wave ? _wave.pattern : SpawnPattern.Surround;
+        float spread = _wave ? _wave.patternSpread : 0f;
+        float halfSpread = spread * 0.5f * Mathf.Deg2Rad;
+        float angle = pattern switch
         {
             SpawnPattern.OneSide => _patternAngle +
                                     Random.Range(-halfSpread, halfSpread),
