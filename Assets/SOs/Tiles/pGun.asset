@@ -16,3 +16,4 @@ MonoBehaviour:
   type: 3
   hp: 10
   connectableEdges: 00000100
+  sprites: {fileID: 11400000, guid: f700a91b95d1957499ceceb6357b0a6c, type: 2}
