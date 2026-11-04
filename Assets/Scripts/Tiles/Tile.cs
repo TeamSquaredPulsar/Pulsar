@@ -41,7 +41,7 @@ public abstract class Tile : MonoBehaviour
     private SpriteRenderer spriteRenderer;
 
     [SerializeField]
-    private BoxCollider2D tileCollider;
+    protected BoxCollider2D tileCollider;
 
     [SerializeField]
     private Rigidbody2D rigidBody;

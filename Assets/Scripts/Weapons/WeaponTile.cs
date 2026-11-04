@@ -1,6 +1,10 @@
 using System.Collections;
+using NaughtyAttributes;
+using Nrjwolf.Tools.AttachAttributes;
 using Pulsar.Hazards;
+using Pulsar.Weapons;
 using UnityEngine;
+using UnityEngine.Serialization;
 
 /// <summary>
 /// Represents a weapon
@@ -10,59 +14,52 @@ using UnityEngine;
 /// @author Alfredo Luzardo
 /// @version 1.1
 /// </summary>
-public class WeaponTile : Tile
+public class WeaponTile : Tile, IProjectileSpawner, IWeapon
 {
+    public Collider2D Coll2D => tileCollider;
+    
     [Header("References")]
-    [SerializeField]
-    protected GameObject projectilePrefab;
+    [field: SerializeField]
+    public GameObject ProjectilePrefab { get; private set; }
 
-    [SerializeField]
-    protected Collider2D parentCollider;
+    [field: SerializeField, GetComponentInParent,]
+    public Collider2D ParentCollider { get; private set; }
 
-    [SerializeField]
-    protected Transform[] firePoints;
+    [field: SerializeField, ReorderableList,]
+    public Transform[] FirePoints { get; private set; }
 
     [field: SerializeField]
     public float FireRatePerSecond { get; protected set; } = 0.5f;
 
-    [SerializeField]
-    protected WeaponStrategy weaponStrategy;
+    [field: SerializeField, FormerlySerializedAs("weaponStrategy"),]
+    public WeaponStrategy Strategy { get; private set; }
 
     private Coroutine _fireTimerRoutine;
-
     private Projectile _projectile;
+    Collider2D IProjectileSpawner.ParentCollider => ParentCollider;
 
-    private bool CanFire => _fireTimerRoutine == null;
+    public bool CanFire => _fireTimerRoutine == null;
 
     private new void Start()
     {
         base.Start();
-        _projectile = projectilePrefab.gameObject.GetComponent<Projectile>();
+        _projectile = ProjectilePrefab.gameObject.GetComponent<Projectile>();
     }
 
-    /// <summary>
-    /// Setter for weapon strategy
-    /// </summary>
-    /// <param name="strat"></param>
-    private void SetWeaponStrategy(WeaponStrategy strat)
+    public GameObject SpawnProjectile(Transform spawnPoint)
     {
-        weaponStrategy = strat;
-    }
-
-    private GameObject _spawnProjectile(Transform spawnPoint)
-    {
-        GameObject projectile = _projectile.SpawnProjectile(spawnPoint, parentCollider);
+        GameObject projectile = _projectile.SpawnProjectile(spawnPoint, ParentCollider);
         Physics2D.IgnoreCollision(projectile.GetComponent<Collider2D>(),
-            this.GetComponent<Collider2D>());
+            Coll2D);
         return projectile;
     }
-    public virtual void Fire()
+    public void Fire()
     {
         if (!CanFire)
         {
             return;
         }
-        weaponStrategy.Fire(firePoints, this, _spawnProjectile);
+        Strategy.Fire(FirePoints, this, SpawnProjectile);
         StartFireTimer();
     }
 
@@ -79,6 +76,6 @@ public class WeaponTile : Tile
 
     public void SetParentCollider(Collider2D newCollider)
     {
-        parentCollider = newCollider;
+        ParentCollider = newCollider;
     }
 }

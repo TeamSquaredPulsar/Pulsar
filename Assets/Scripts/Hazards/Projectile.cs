@@ -1,4 +1,5 @@
 
+using Nrjwolf.Tools.AttachAttributes;
 using UnityEngine;
 
 namespace Pulsar.Hazards
@@ -29,9 +30,12 @@ public class Projectile : MonoBehaviour
 
     [SerializeField]
     private GameObject hitEffectPrefab;
-    
-    
 
+    [GetComponent, SerializeField,]
+    private Collider2D coll2D;
+    [GetComponent, SerializeField,]
+    private Rigidbody2D rb;
+    
     /// <summary>
     /// Start method.
     /// </summary>
@@ -61,6 +65,18 @@ public class Projectile : MonoBehaviour
         Destroy(gameObject);
     }
 
+    private void Initialize(Collider2D parentCollider)
+    {
+        Physics2D.IgnoreCollision(coll2D, parentCollider);
+        Rigidbody2D firingBody = parentCollider != null
+            ? parentCollider.attachedRigidbody
+            : null;
+        Vector2 inheritedVelocity = firingBody != null
+            ? firingBody.linearVelocity
+            : Vector2.zero;
+        rb.linearVelocity = inheritedVelocity + (Vector2)rb.transform.up * speed;
+    }
+
     /// <summary>
     /// Spawns the projectile
     /// </summary>
@@ -75,20 +91,22 @@ public class Projectile : MonoBehaviour
             spawnTransform.position, Quaternion.identity);
         projectile.transform.up = spawnTransform.up;
 
+        projectile.GetComponent<Projectile>().Initialize(parentCollider);
+        
         Physics2D.IgnoreCollision(projectile.GetComponent<Collider2D>(),
             parentCollider);
-
-        if (projectile.TryGetComponent(out Rigidbody2D rb))
-        {
-            // Inherit the firing ship's motion once, when the bullet is launched.
-            Rigidbody2D firingBody = parentCollider != null
-                ? parentCollider.attachedRigidbody
-                : null;
-            Vector2 inheritedVelocity = firingBody != null
-                ? firingBody.linearVelocity
-                : Vector2.zero;
-            rb.linearVelocity = inheritedVelocity + (Vector2)rb.transform.up * speed;
-        }
+        
+        // if (projectile.TryGetComponent(out Rigidbody2D rb))
+        // {
+        //     // Inherit the firing ship's motion once, when the bullet is launched.
+        //     Rigidbody2D firingBody = parentCollider != null
+        //         ? parentCollider.attachedRigidbody
+        //         : null;
+        //     Vector2 inheritedVelocity = firingBody != null
+        //         ? firingBody.linearVelocity
+        //         : Vector2.zero;
+        //     rb.linearVelocity = inheritedVelocity + (Vector2)rb.transform.up * speed;
+        // }
 
         return projectile;
     }

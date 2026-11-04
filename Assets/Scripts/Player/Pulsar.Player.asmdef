@@ -1,6 +1,6 @@
 {
-    "name": "Pulsar.Player",
-    "rootNamespace": "",
+    "name": "Player",
+    "rootNamespace": "Pulsar",
     "references": [
         "GUID:4f24247d9fd2c52498444a0b8c211a00",
         "GUID:4ada457e02011104d9008eceaa61154f",

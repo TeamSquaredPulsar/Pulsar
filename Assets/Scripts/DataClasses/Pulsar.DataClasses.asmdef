@@ -1,6 +1,6 @@
 {
-    "name": "Pulsar.DataClasses",
-    "rootNamespace": "Pulsar.DataClasses",
+    "name": "DataClasses",
+    "rootNamespace": "Pulsar",
     "references": ["GUID:aa86c6edaf847b544b44790230e36643"],
     "includePlatforms": [],
     "excludePlatforms": [],
