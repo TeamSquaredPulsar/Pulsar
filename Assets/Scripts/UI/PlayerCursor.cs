@@ -25,11 +25,13 @@ public class PlayerCursor : MonoBehaviour
     [SerializeField]
     private CameraData cameraData;
 
-    private Tile _hoveredTile;
+    private PlayerController _player;
+    private Tile _hoveredLooseTile;
     private Tile _selectedTile;
 
     private void Awake()
     {
+        PlayerController.PlayerSpawnedEvent += OnPlayerSpawned;
         input.MoveCursorEvent += OnCursorMove;
         input.SelectTileEvent += OnTileSelect;
     }
@@ -47,13 +49,15 @@ public class PlayerCursor : MonoBehaviour
 
     private void OnDestroy()
     {
+        PlayerController.PlayerSpawnedEvent -= OnPlayerSpawned;
         input.SelectTileEvent -= OnTileSelect;
         input.MoveCursorEvent -= OnCursorMove;
     }
 
     private void OnTileSelect(bool isSelecting)
     {
-        if (!isSelecting || !_hoveredTile)
+        Tile tile = isSelecting ? GetTileAtCursor() : null;
+        if (!tile)
         {
             _selectedTile = null;
             PlayerSelectTile?.Invoke(Result<Tile>.Fail());
@@ -61,14 +65,32 @@ public class PlayerCursor : MonoBehaviour
         }
 
         //Don't raise more events than we need to
-        if (_hoveredTile == _selectedTile)
+        if (tile == _selectedTile)
         {
             return;
         }
 
-        _selectedTile = _hoveredTile;
+        _selectedTile = tile;
 
         PlayerSelectTile?.Invoke(Result<Tile>.Pass(_selectedTile));
+    }
+
+    private void OnPlayerSpawned(PlayerController player) => _player = player;
+
+    private Tile GetTileAtCursor()
+    {
+        if (_player)
+        {
+            // The composite collider spans the ship, so resolve the cell at press time.
+            Vector3 localPosition = _player.transform.InverseTransformPoint(transform.position);
+            Vector2Int cell = ShipUtilities.LocalToGrid(localPosition).ToVector2Int();
+            if (_player.TryGetTile(cell, out Tile tile))
+            {
+                return tile;
+            }
+        }
+
+        return _hoveredLooseTile && !_hoveredLooseTile.IsAttached ? _hoveredLooseTile : null;
     }
 
     private void OnCursorMove(Vector2 obj)
@@ -82,79 +104,18 @@ public class PlayerCursor : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D other)
     {
-        if (!TryProcessColliderTrigger(other, out Tile collidedTile))
+        if (other.TryGetComponent(out Tile tile) && !tile.IsAttached)
         {
-            return;
+            _hoveredLooseTile = tile;
         }
-
-        _hoveredTile = collidedTile;
-    }
-    
-
-    private bool TryProcessColliderTrigger(
-        Collider2D other,
-        out Tile collidedTile)
-    {
-        collidedTile = null;
-        if (other.TryGetComponent(out Tile tile))
-        {
-            collidedTile = tile;
-        }
-        //Ignore EnemyAI ships
-        else if (other.TryGetComponent(out PlayerController player))
-        {
-
-            // [CB] Because the collision point is on the edge of a tile, we need
-            // to subtract a small amount.
-            // This gets us close enough to the centre of the tile for the
-            // rounding to work and get the correct index for the ship tile.
-            const float tileOffset = 0.25f;
-
-            // Get collision point relative to ship core
-            Vector2 collisionPosition
-                = player.transform.InverseTransformPoint(
-                    other.ClosestPoint(transform.position));
-
-            //Modify collision point to attempt to get tile position
-            switch (collisionPosition.x)
-            {
-                case < 0:
-                    collisionPosition.x += tileOffset;
-                    break;
-                case > 0:
-                    collisionPosition.x -= tileOffset;
-                    break;
-            }
-
-            switch (collisionPosition.y)
-            {
-                case < 0:
-                    collisionPosition.y += tileOffset;
-                    break;
-                case > 0:
-                    collisionPosition.y -= tileOffset;
-                    break;
-            }
-
-            Vector2Int gridCell = Vector2Int.RoundToInt(collisionPosition);
-
-            player.TryGetTile(gridCell, out collidedTile);
-        }
-
-        return collidedTile;
     }
 
     private void OnTriggerExit2D(Collider2D other)
     {
-        // If the tile we exited from is not the tile we're currently tracking,
-        // we don't care.
-        if (!TryProcessColliderTrigger(other, out Tile collidedTile) ||
-            collidedTile != _hoveredTile)
+        if (other.TryGetComponent(out Tile tile) && tile == _hoveredLooseTile)
         {
-            return;
+            _hoveredLooseTile = null;
         }
-
-        _hoveredTile = null;
     }
 }
 }
