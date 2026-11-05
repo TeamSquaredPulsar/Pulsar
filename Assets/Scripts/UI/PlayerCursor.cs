@@ -63,15 +63,15 @@ public class PlayerCursor : MonoBehaviour
 
     private void OnTileSelect(bool isSelecting)
     {
-        Tile tile = isSelecting ? GetTileAtCursor() : null;
-        if (!tile)
+        Result<Tile> result = isSelecting ? GetTileAtCursor() : Result<Tile>.Fail();
+        if (!result.IsSuccess)
         {
             _selectedTile = null;
             PlayerSelectTile?.Invoke(Result<Tile>.Fail());
             return;
         }
-
-        //Don't raise more events than we need to
+        
+        Tile tile = result.Value;
         if (tile == _selectedTile)
         {
             return;
@@ -84,7 +84,7 @@ public class PlayerCursor : MonoBehaviour
 
     private void OnPlayerSpawned(PlayerController player) => _player = player;
 
-    private Tile GetTileAtCursor()
+    private Result<Tile> GetTileAtCursor()
     {
         if (_player)
         {
@@ -93,11 +93,13 @@ public class PlayerCursor : MonoBehaviour
             Vector2Int cell = ShipUtilities.LocalToGrid(localPosition).ToVector2Int();
             if (_player.TryGetTile(cell, out Tile tile))
             {
-                return tile;
+                return tile ? Result<Tile>.Pass(tile) : Result<Tile>.Fail();
             }
         }
 
-        return _hoveredLooseTile && !_hoveredLooseTile.IsAttached ? _hoveredLooseTile : null;
+        return _hoveredLooseTile && !_hoveredLooseTile.IsAttached
+            ? Result<Tile>.Pass(_hoveredLooseTile)
+            : Result<Tile>.Fail();
     }
 
     private void OnCursorMove(Vector2 obj)
