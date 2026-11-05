@@ -105,6 +105,7 @@ GameObject:
   - component: {fileID: 2260344807008050488}
   - component: {fileID: 7347581372079830787}
   - component: {fileID: -4160512527206970603}
+  - component: {fileID: 4066856357463732218}
   m_Layer: 0
   m_Name: BasicChassisMount
   m_TagString: Untagged
@@ -290,7 +291,7 @@ MonoBehaviour:
   <IsAttached>k__BackingField: 0
   <TileInfo>k__BackingField: {fileID: 0}
   spritesOverride: {fileID: 0}
-  spriteRenderer: {fileID: 0}
+  spriteRenderer: {fileID: 497275641067805184}
   tileCollider: {fileID: 0}
   rigidBody: {fileID: 0}
   health: {fileID: 0}
@@ -299,7 +300,44 @@ MonoBehaviour:
   firePoints: []
   <FireRatePerSecond>k__BackingField: 0.5
   weaponStrategy: {fileID: 0}
-  targetLock: {fileID: 0}
+  targetLock: {fileID: 3694190862674088022}
+  targetRadius: {fileID: 4066856357463732218}
+--- !u!58 &4066856357463732218
+CircleCollider2D:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3485646891177161118}
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Density: 1
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_ForceSendLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_ForceReceiveLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_ContactCaptureLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_CallbackLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_IsTrigger: 1
+  m_UsedByEffector: 0
+  m_CompositeOperation: 0
+  m_CompositeOrder: 0
+  m_Offset: {x: 0, y: 0}
+  m_Radius: 0.5
 --- !u!1 &4578682168552477565
 GameObject:
   m_ObjectHideFlags: 0

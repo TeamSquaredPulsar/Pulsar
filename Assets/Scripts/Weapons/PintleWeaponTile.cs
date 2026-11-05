@@ -6,6 +6,9 @@ namespace Pulsar.Weapons.Weapons
 {
     [SerializeField]
     private Transform targetLock;
+
+    [SerializeField]
+    private CircleCollider2D targetRadius;
     
     private bool _isLockedOn;
 
@@ -13,5 +16,7 @@ namespace Pulsar.Weapons.Weapons
     {
         _isLockedOn = false;
     }
+    
+    
 }
 }
