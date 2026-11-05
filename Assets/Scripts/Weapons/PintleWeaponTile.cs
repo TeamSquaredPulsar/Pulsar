@@ -1,9 +1,5 @@
-using System;
 using UnityEngine;
-using UnityEngine.Serialization;
 
-namespace Pulsar.Weapons.Weapons
-{
     public class PintleWeaponTile : WeaponTile
 {
     [Header("Pintle Information")]
@@ -137,4 +133,4 @@ namespace Pulsar.Weapons.Weapons
         }
     }
 }
-}
+
