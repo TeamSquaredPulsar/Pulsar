@@ -51,12 +51,15 @@ public class ShipManager : MonoBehaviour
     public IReadOnlyDictionary<Vector2Int, Tile> Cells => _gridData.Cells;
     public bool OwnsTile(Tile tile) => Cells.Values.Contains(tile);
 
+    private bool _isPlayer;
+
     public event Action ShipGridUpdate;
 
     private void Start()
     {
         RefreshTiles();
         _gridData.TileOrphanedEvent += DetatchTile;
+        _isPlayer = CompareTag("Player");
     }
 
     private void OnDestroy()
@@ -83,6 +86,7 @@ public class ShipManager : MonoBehaviour
                 tile.transform.localRotation.eulerAngles.z.ToTileRotation();
             AttachTile(localCell, tile, localRot);
         }
+        thrusterManager.CalculateThrusters(ref thrusters);
     }
 
     public void AttachTile(Vector2Int cell, Tile tile, TileRotation rotation)
@@ -109,10 +113,12 @@ public class ShipManager : MonoBehaviour
         {
             case ThrusterTile thruster:
                 thrusters.Add(thruster);
+                thrusterManager.CalculateThrusters(ref thrusters);
                 break;
             case WeaponTile weapon:
                 weapons.Add(weapon);
                 weapon.SetParentCollider(compositeCollider);
+                weapon.SetTargetTag(_isPlayer);
                 break;
         }
     }
@@ -169,6 +175,7 @@ public class ShipManager : MonoBehaviour
         {
             case ThrusterTile thruster:
                 thrusters.Remove(thruster);
+                thrusterManager.CalculateThrusters(ref thrusters);
                 break;
             case WeaponTile weapon:
                 weapons.Remove(weapon);
@@ -410,6 +417,8 @@ public class ShipManager : MonoBehaviour
 
         tile.Detatch(velocity, angularVelocity + spin);
         rb.mass -= tile.Mass;
+        
+        thrusterManager.CalculateThrusters(ref thrusters);
         
         ShipGridUpdate?.Invoke();
     }

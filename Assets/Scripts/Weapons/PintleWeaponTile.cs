@@ -1,6 +1,7 @@
 using UnityEngine;
+using UnityEngine.Serialization;
 
-    public class PintleWeaponTile : WeaponTile
+public class PintleWeaponTile : WeaponTile
 {
     [Header("Pintle Information")]
     [SerializeField]
@@ -19,22 +20,19 @@ using UnityEngine;
     [Tooltip("The radius for the targeting collider")]
     private float range;
     
-    [Header("Debug")]
-    [SerializeField]
-    private Transform activeTarget;
-    [SerializeField]
-    private bool isLockedOn;
+    private Transform _activeTarget;
+    private bool _isLockedOn;
 
     private void Awake()
     {
-        isLockedOn = false;
+        _isLockedOn = false;
         
         targetRadius.radius = range;
     }
 
     private void Update()
     {
-        if (isLockedOn && IsAttached)
+        if (_isLockedOn && IsAttached)
         {
             TargetLock();
         }
@@ -45,9 +43,9 @@ using UnityEngine;
     }
     private void TargetLock()
     {
-        if (activeTarget != null)
+        if (_activeTarget != null)
         {
-            targetLock.position = activeTarget.position;
+            targetLock.position = _activeTarget.position;
         }
         targetLock.gameObject.SetActive(true);
         
@@ -68,7 +66,7 @@ using UnityEngine;
 
     public override void Fire()
     {
-        if (!isLockedOn)
+        if (!_isLockedOn)
         {
             return;
         }
@@ -82,12 +80,12 @@ using UnityEngine;
 
     private void OnTriggerStay2D(Collider2D other)
     {
-        if (other.tag == "Enemy")
+        if (other.CompareTag(TargetTag))
         {
-            if (!isLockedOn)
+            if (!_isLockedOn)
             {
-                activeTarget = other.transform;
-                isLockedOn = true;
+                _activeTarget = other.transform;
+                _isLockedOn = true;
             }
             // if (activeTarget != null)
             // {
@@ -127,9 +125,9 @@ using UnityEngine;
 
     private void OnTriggerExit2D(Collider2D other)
     {
-        if (other.transform == activeTarget)
+        if (other.transform == _activeTarget)
         {
-            isLockedOn = false;
+            _isLockedOn = false;
         }
     }
 }
