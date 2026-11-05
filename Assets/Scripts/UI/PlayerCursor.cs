@@ -11,6 +11,8 @@ public class PlayerCursor : MonoBehaviour
 {
     public static event Action<Result<Tile>> PlayerSelectTile;
     
+    public static Vector3 CursorPosition = Vector3.zero;
+    
     [SerializeField]
     private InputReader input;
 
@@ -45,6 +47,11 @@ public class PlayerCursor : MonoBehaviour
         OnCursorMove(initPos);
         
         input.EnablePlayerActions();
+    }
+
+    private void Update()
+    {
+        CursorPosition = transform.position;
     }
 
     private void OnDestroy()

@@ -89,12 +89,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5d6900ccf0fa38440855020412688b02, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Pulsar.Player::BuildManager
+  input: {fileID: 11400000, guid: c5eb4fca90495374ca60a24df65307ec, type: 2}
   radialMenu: {fileID: 8986561844064573171}
   ghostPreview: {fileID: 1592938529912175414}
   scanPadding: 2.5
   selectedTint: {r: 0.3, g: 1, b: 0.8, a: 1}
   pullSpeed: 8
-  orbitDegreesPerSecond: 90
   tileDestroySeconds: 1
 --- !u!114 &8893891361912782109
 MonoBehaviour:

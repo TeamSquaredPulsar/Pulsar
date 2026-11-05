@@ -11,10 +11,10 @@ namespace Pulsar.UI
 public class BuildManager : MonoBehaviour
 {
     private PlayerController _player;
-    private PlayerCursor _cursor;
 
-    [Header("References"), SerializeField,]
-    private RadialMenu radialMenu;
+    [Header("References")]
+    [SerializeField] private InputReader input;
+    [SerializeField] private RadialMenu radialMenu;
 
     [SerializeField]
     private GhostPreview ghostPreview;
@@ -45,11 +45,7 @@ public class BuildManager : MonoBehaviour
     {
         PlayerController.PlayerSpawnedEvent += OnPlayerSpawned;
         PlayerCursor.PlayerSelectTile += OnPlayerSelectTile;
-        _cursor = FindFirstObjectByType<PlayerCursor>();
-        if (_cursor)
-        {
-            _cursor.Input.RotateSelectedTileEvent += OnRotateSelectedTile;
-        }
+        input.RotateSelectedTileEvent += OnRotateSelectedTile;
     }
 
     private void Start()
@@ -62,10 +58,7 @@ public class BuildManager : MonoBehaviour
     {
         PlayerController.PlayerSpawnedEvent -= OnPlayerSpawned;
         PlayerCursor.PlayerSelectTile -= OnPlayerSelectTile;
-        if (_cursor)
-        {
-            _cursor.Input.RotateSelectedTileEvent -= OnRotateSelectedTile;
-        }
+        input.RotateSelectedTileEvent -= OnRotateSelectedTile;
     }
 
     private void OnPlayerSpawned(PlayerController obj)
@@ -121,11 +114,7 @@ public class BuildManager : MonoBehaviour
         //Executed when the select input is disabled
         if (!result.IsSuccess)
         {
-            if (_selectedTile && !_selectedTile.IsAttached && _atOutline)
-            {
-                UpdateScanZoneShape();
-                UpdateSelectedTile();
-            }
+            UpdateScanZoneShape();
             // If we were selecting, stop.
             DeselectTile();
             if (_updateRadialRoutine != null)
@@ -138,7 +127,7 @@ public class BuildManager : MonoBehaviour
             return;
         }
 
-        if (!_player || !result.Value || result.Value == _selectedTile)
+        if (!result.Value || result.Value == _selectedTile)
         {
             return;
         }
@@ -157,11 +146,6 @@ public class BuildManager : MonoBehaviour
             _selectedTile = null;
             return;
         }
-        if (!_cursor)
-        {
-            _selectedTile = null;
-            return;
-        }
 
         _selectedTile.Select(selectedTint);
 
@@ -170,16 +154,17 @@ public class BuildManager : MonoBehaviour
 
         _atOutline = false;
         ghostPreview.Hide();
-        _attachRotation = (Quaternion.Inverse(_player.transform.rotation)
-                           * _selectedTile.transform.rotation)
-            .eulerAngles.z.ToTileRotation();
+        Quaternion relativeRotation = Quaternion.Inverse(_player.transform.rotation)
+                                      * _selectedTile.transform.rotation;
+
+        _attachRotation = relativeRotation.eulerAngles.z.ToTileRotation();
         ApplySelectedRotation();
 
         // Capture the pickup ray ONCE. Cursor movement cannot redirect the
         // approach through the oval before this point has been reached.
         _orbitAngle = radialMenu.GetOutlineAngleFromTileToCore(
             _player.CorePosition,
-            _cursor.transform.position
+            PlayerCursor.CursorPosition
         );
 
         _updateRadialRoutine = StartCoroutine(UpdateRadialMenu());
@@ -252,7 +237,7 @@ public class BuildManager : MonoBehaviour
 
         // Only after arrival does the cursor control the outline position.
         Vector3 corePosition = _player.CorePosition;
-        Vector3 cursorPosition = _cursor.transform.position;
+        Vector3 cursorPosition = PlayerCursor.CursorPosition;
         if (((Vector2)(cursorPosition - corePosition)).sqrMagnitude > 0.0001f)
         {
             _orbitAngle = radialMenu.GetOutlineAngleFromTileToCore(

@@ -87,11 +87,6 @@ public class ShipManager : MonoBehaviour
 
     public void AttachTile(Vector2Int cell, Tile tile, TileRotation rotation)
     {
-        Debug.Log("<color=green>BEFORE ATTACH");
-        foreach (Tile e in _gridData.Cells.Values)
-        {
-            Debug.Log($"{e.Cell} ---- {e.TileInfo.tileName}");
-        }
         if (!_gridData.TrySetTile(cell, tile))
         {
             return;
@@ -106,11 +101,6 @@ public class ShipManager : MonoBehaviour
             ShipUtilities.RotateQuarterOnZAxis(rotation.ToInt()));
         tile.DestroyEvent += HandleTileDestroyed;
 
-        Debug.Log("<color=green>AFTER ATTACH");
-        foreach (Tile e in _gridData.Cells.Values)
-        {
-            Debug.Log($"{e.Cell} ---- {e.TileInfo.tileName}");
-        }
         ShipGridUpdate?.Invoke();
     }
 
