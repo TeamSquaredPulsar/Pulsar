@@ -1,10 +1,12 @@
 using System;
 using UnityEngine;
+using UnityEngine.Serialization;
 
 namespace Pulsar.Weapons.Weapons
 {
     public class PintleWeaponTile : WeaponTile
 {
+    [Header("Pintle Information")]
     [SerializeField]
     private Transform targetLock;
 
@@ -17,17 +19,26 @@ namespace Pulsar.Weapons.Weapons
     [SerializeField]
     private float rotSpeed;
 
-    private Transform _activeTarget;
-    private bool _isLockedOn;
+    [SerializeField]
+    [Tooltip("The radius for the targeting collider")]
+    private float range;
+    
+    [Header("Debug")]
+    [SerializeField]
+    private Transform activeTarget;
+    [SerializeField]
+    private bool isLockedOn;
 
     private void Awake()
     {
-        _isLockedOn = false;
+        isLockedOn = false;
+        
+        targetRadius.radius = range;
     }
 
     private void Update()
     {
-        if (_isLockedOn && IsAttached)
+        if (isLockedOn && IsAttached)
         {
             TargetLock();
         }
@@ -38,7 +49,10 @@ namespace Pulsar.Weapons.Weapons
     }
     private void TargetLock()
     {
-        targetLock.position = _activeTarget.position;
+        if (activeTarget != null)
+        {
+            targetLock.position = activeTarget.position;
+        }
         targetLock.gameObject.SetActive(true);
         
         Vector2 targetLockPos = targetLock.position;
@@ -48,7 +62,7 @@ namespace Pulsar.Weapons.Weapons
             targetLockPos.x - mountingPointPos.x) * Mathf.Rad2Deg;
         
         Quaternion targetRotation = Quaternion.Euler(
-            new Vector3(0f, 0f, angle + 90));
+            new Vector3(0f, 0f, angle - 90));
         
         mountingPoint.rotation = Quaternion.RotateTowards(
             mountingPoint.rotation, targetRotation, rotSpeed);
@@ -63,12 +77,52 @@ namespace Pulsar.Weapons.Weapons
     {
         if (other.tag == "Enemy")
         {
-            _activeTarget = other.transform;
-            _isLockedOn = true;
+            if (!isLockedOn)
+            {
+                activeTarget = other.transform;
+                isLockedOn = true;
+            }
+            // if (activeTarget != null)
+            // {
+            //     float mountX = mountingPoint.position.x;
+            //     float mountY = mountingPoint.position.y;
+            //     
+            //     float newTargetDifX = mountX -
+            //                           other.transform.position.x;
+            //     float newTargetDifY = mountY -
+            //                           other.transform.position.y;
+            //
+            //     float newTargetDif =
+            //         (Mathf.Abs(newTargetDifX) < Mathf.Abs(newTargetDifY))
+            //             ? newTargetDifX
+            //             : newTargetDifY;
+            //     
+            //     float oldTargetDifX = mountX -
+            //                           activeTarget.position.x;
+            //     float oldTargetDifY = mountY -
+            //                           activeTarget.position.y;
+            //
+            //     float oldTargetDif =
+            //         (Mathf.Abs(oldTargetDifX) < Mathf.Abs(oldTargetDifY))
+            //             ? oldTargetDifX
+            //             : oldTargetDifY;
+            //     
+            //     Debug.Log(newTargetDif);
+            //     Debug.Log(oldTargetDifX);
+            //     if (oldTargetDif - newTargetDif > -1)
+            //     {
+            //         activeTarget = other.transform;
+            //         Debug.Log("Swapping Targets");
+            //     }
+            // }
         }
-        else
+    }
+
+    private void OnTriggerExit2D(Collider2D other)
+    {
+        if (other.transform == activeTarget)
         {
-            _isLockedOn = false;
+            isLockedOn = false;
         }
     }
 }

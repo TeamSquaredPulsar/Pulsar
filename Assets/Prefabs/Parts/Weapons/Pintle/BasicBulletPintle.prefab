@@ -40,6 +40,42 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 558476425668239139}
     m_Modifications:
+    - target: {fileID: -4160512527206970603, guid: 9141fe4656a2ff0468c29dd7d8bb3239, type: 3}
+      propertyPath: range
+      value: 8
+      objectReference: {fileID: 0}
+    - target: {fileID: -4160512527206970603, guid: 9141fe4656a2ff0468c29dd7d8bb3239, type: 3}
+      propertyPath: rotSpeed
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: -4160512527206970603, guid: 9141fe4656a2ff0468c29dd7d8bb3239, type: 3}
+      propertyPath: mountingPoint
+      value: 
+      objectReference: {fileID: 1465764877035038303}
+    - target: {fileID: -4160512527206970603, guid: 9141fe4656a2ff0468c29dd7d8bb3239, type: 3}
+      propertyPath: parentCollider
+      value: 
+      objectReference: {fileID: 1351360892310735279}
+    - target: {fileID: -4160512527206970603, guid: 9141fe4656a2ff0468c29dd7d8bb3239, type: 3}
+      propertyPath: weaponStrategy
+      value: 
+      objectReference: {fileID: 11400000, guid: 67d68c3e0a11e41479e9131cdc4b126a, type: 2}
+    - target: {fileID: -4160512527206970603, guid: 9141fe4656a2ff0468c29dd7d8bb3239, type: 3}
+      propertyPath: projectilePrefab
+      value: 
+      objectReference: {fileID: 1682859016921356063, guid: a133161848d51234b97f8554a243a1ab, type: 3}
+    - target: {fileID: -4160512527206970603, guid: 9141fe4656a2ff0468c29dd7d8bb3239, type: 3}
+      propertyPath: firePoints.Array.size
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: -4160512527206970603, guid: 9141fe4656a2ff0468c29dd7d8bb3239, type: 3}
+      propertyPath: 'firePoints.Array.data[0]'
+      value: 
+      objectReference: {fileID: 8070696774538606218}
+    - target: {fileID: -4160512527206970603, guid: 9141fe4656a2ff0468c29dd7d8bb3239, type: 3}
+      propertyPath: <FireRatePerSecond>k__BackingField
+      value: 1.5
+      objectReference: {fileID: 0}
     - target: {fileID: 1923082867568248035, guid: 9141fe4656a2ff0468c29dd7d8bb3239, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0
@@ -92,6 +128,11 @@ PrefabInstance:
       addedObject: {fileID: 7972237433373595450}
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 9141fe4656a2ff0468c29dd7d8bb3239, type: 3}
+--- !u!61 &1351360892310735279 stripped
+BoxCollider2D:
+  m_CorrespondingSourceObject: {fileID: 2260344807008050488, guid: 9141fe4656a2ff0468c29dd7d8bb3239, type: 3}
+  m_PrefabInstance: {fileID: 981402303839098007}
+  m_PrefabAsset: {fileID: 0}
 --- !u!4 &1465764877035038303 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 1858250868726346440, guid: 9141fe4656a2ff0468c29dd7d8bb3239, type: 3}
@@ -162,5 +203,10 @@ PrefabInstance:
 --- !u!4 &7972237433373595450 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 1283674777054792067, guid: f88a5cea0e5b8214e8ab1f2a4ecc1588, type: 3}
+  m_PrefabInstance: {fileID: 9183847739567693497}
+  m_PrefabAsset: {fileID: 0}
+--- !u!4 &8070696774538606218 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 1113316170954926131, guid: f88a5cea0e5b8214e8ab1f2a4ecc1588, type: 3}
   m_PrefabInstance: {fileID: 9183847739567693497}
   m_PrefabAsset: {fileID: 0}
