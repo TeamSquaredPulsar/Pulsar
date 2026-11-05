@@ -66,6 +66,17 @@ namespace Pulsar.Weapons.Weapons
         
         mountingPoint.rotation = Quaternion.RotateTowards(
             mountingPoint.rotation, targetRotation, rotSpeed);
+
+        Fire();
+    }
+
+    public override void Fire()
+    {
+        if (!isLockedOn)
+        {
+            return;
+        }
+        base.Fire();
     }
 
     private void SearchingForTarget()
