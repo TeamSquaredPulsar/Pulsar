@@ -24,6 +24,10 @@ public class EnemyController : MonoBehaviour
     private const float MinDistance = 0.001f;
     private const float TileHalfDiagonal = 0.7071f;
     private const float TurnGain = 4f;
+    // Two far-apart rows of the noise, so sideways and in-out drift
+    // don't move in lockstep.
+    private const float SidewaysNoiseRow = 0f;
+    private const float InOutNoiseRow = 57.3f;
 
     private static readonly HashSet<EnemyController> _activeEnemies = new();
 
@@ -100,6 +104,15 @@ public class EnemyController : MonoBehaviour
         shipManager.ShipDestroyedEvent -= HandleShipDestroyed;
     }
 
+    // Puts a stray enemy back near the fight, stopped, as if it just spawned.
+    public void Recall(Vector3 position)
+    {
+        rb.position = position;
+        rb.linearVelocity = Vector2.zero;
+        rb.angularVelocity = 0f;
+        transform.position = position;
+    }
+
     private void HandleShipDestroyed(ShipManager obj)
     {
         //Game manager will use this for score
@@ -150,12 +163,10 @@ public class EnemyController : MonoBehaviour
             desiredDir = -dirToPlayer;
         }
 
-        if (desiredDir != Vector3.zero && enemyInfo.driftAmount > 0f)
+        if (enemyInfo.driftAmount > 0f)
         {
-            Vector3 sideways = Vector3.Cross(Vector3.forward, dirToPlayer);
-            float weave = Mathf.Sin(Time.time * enemyInfo.weaveFrequency +
-                                    _weaveOffset) * enemyInfo.driftAmount;
-            desiredDir += sideways * weave;
+            bool holdingPosition = desiredDir == Vector3.zero;
+            desiredDir += CalculateDrift(dirToPlayer, holdingPosition);
         }
 
         desiredDir += CalculateSeparation() * enemyInfo.separationStrength;
@@ -165,6 +176,32 @@ public class EnemyController : MonoBehaviour
 
         Vector2 localDir = transform.InverseTransformDirection(desiredDir);
         shipManager.Move(localDir);
+    }
+
+    // Smooth, rhythm-free wandering so enemies feel piloted, not on rails.
+    // Perlin noise drifts up and down without repeating a fixed pattern, and
+    // each enemy reads its own stretch of it (_weaveOffset), so no two move
+    // alike. While holding position the ship also bobs closer and farther;
+    // if it drifts out of its band, the chase or back-off pulls it back in.
+    private Vector3 CalculateDrift(Vector3 dirToPlayer, bool holdingPosition)
+    {
+        float t = Time.time * enemyInfo.weaveFrequency + _weaveOffset;
+        Vector3 sideways = Vector3.Cross(Vector3.forward, dirToPlayer);
+        Vector3 drift = sideways * SignedNoise(t, SidewaysNoiseRow);
+
+        if (holdingPosition)
+        {
+            drift += dirToPlayer * SignedNoise(t, InOutNoiseRow);
+            drift *= enemyInfo.holdDrift;
+        }
+
+        return drift * enemyInfo.driftAmount;
+    }
+
+    // Perlin noise remapped from about 0..1 to -1..1.
+    private static float SignedNoise(float x, float row)
+    {
+        return Mathf.Clamp(Mathf.PerlinNoise(x, row) * 2f - 1f, -1f, 1f);
     }
 
     private Vector3 CalculateSeparation()
@@ -198,21 +235,8 @@ public class EnemyController : MonoBehaviour
 
     private void HandleRotation(Vector3 dirToPlayer)
     {
-        // float targetAngle
-        //     = Mathf.Atan2(dirToPlayer.y, dirToPlayer.x) * Mathf.Rad2Deg - 90f;
-
-        // float angleDiff = Mathf.DeltaAngle(_rb.rotation, targetAngle);
-        //
-        // float targetSpin = Mathf.Clamp(angleDiff * TurnGain,
-        //     -enemyInfo.turnSpeed, enemyInfo.turnSpeed);
-        //
-        // float rotInput = Mathf.Clamp(
-        //     (targetSpin - _rb.angularVelocity) / SpinResponse, -1f, 1f);
-        //
-        // shipManager.Rotate(-rotInput);
-
-
-        //TODO Make this use a PID controller with above code
+        //TODO Replace this with a PID controller that turns through
+        //  shipManager.Rotate instead of setting angularVelocity directly
         //-90f corrects rotation ONLY for this specific Band-Aid
         float targetAngle = Mathf.Atan2(
             dirToPlayer.y, dirToPlayer.x) * Mathf.Rad2Deg - 90f;
