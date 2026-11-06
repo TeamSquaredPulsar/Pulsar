@@ -47,7 +47,7 @@ public class ShipManager : MonoBehaviour
     private Vector2 detachRadiateAngularVelocity = new(-180f, 180f);
 
     [SerializeField]
-    private float CollisionDmgMultiplier = 2f;
+    private float CollisionDmgMultiplier = 1.1f;
 
     private ShipGridData _gridData = new();
 
@@ -147,7 +147,6 @@ public class ShipManager : MonoBehaviour
             float relativeVelocity = other.relativeVelocity.magnitude;
             float damage = CalculateDmgFromOtherShip(ship, relativeVelocity);
             tile.TakeDamage(damage);
-            // Debug.Log("Damage: " + damage + ", Tile Health: " + tile.CurrentHp);
         }
         else if (other.gameObject.TryGetComponent(out Projectile projectile))
         {
@@ -159,23 +158,15 @@ public class ShipManager : MonoBehaviour
         ShipManager otherShip,
         float relativeVelocity)
     {
-        float kineticEnergy = 1 / 2 *
-                              (otherShip.rb.mass /
-                               (rb.mass + otherShip.rb.mass) *
-                               relativeVelocity);
+        float m1 = rb.mass;
+        float m2 = otherShip.rb.mass;
+        float reducedMass = (m1 * m2) / (m1 + m2);
 
-        Debug.Log("OtherShip mass:" + otherShip.rb.mass); // 3
-        Debug.Log("ship mass:" + rb.mass); // 3
-        Debug.Log("relative vel: " + relativeVelocity); // 4.1
-        Debug.Log("Kinetic Energy: " + kineticEnergy);
-
-        // Kinetic energy is resulting in 0, not sure why. Getting normal numbers
-
-        float Damage = kineticEnergy * CollisionDmgMultiplier;
-
-        Debug.Log("Damage: " + Damage);
-
-        return Damage;
+        float kineticEnergy = 0.5f * reducedMass * relativeVelocity * relativeVelocity;
+        float share = m2 / (m1 + m2);
+        float damage = kineticEnergy * share * CollisionDmgMultiplier;
+        
+        return damage;
     }
 
     public void Move(Vector2 position)
