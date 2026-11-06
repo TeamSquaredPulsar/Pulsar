@@ -42,7 +42,7 @@ public class EnemySpawner : MonoBehaviour
         _spawnedEnemies
             .ForEach(enemy =>
             {
-                if(enemy.gameObject)
+                if (enemy)
                 {
                     Destroy(enemy.gameObject);
                 }
