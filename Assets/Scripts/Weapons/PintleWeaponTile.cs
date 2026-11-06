@@ -1,5 +1,5 @@
+using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.Serialization;
 
 public class PintleWeaponTile : WeaponTile
 {
@@ -20,18 +20,31 @@ public class PintleWeaponTile : WeaponTile
     [Tooltip("The radius for the targeting collider")]
     private float range;
     
+    [SerializeField]
+    [Tooltip("Angle dif penalizes a targets score. " +
+             "Higher = prefers enemies in front of the barrel.")]
+    private float angleWeight = 0.05f;
+    
+    [SerializeField]
+    [Tooltip("Min dif for a new target to get priority")]
+    private float currentTargetBias = 1.5f;
+
     private Transform _activeTarget;
     private bool _isLockedOn;
+
+    private List<Transform> _targetsInRange = new List<Transform>();
 
     private void Awake()
     {
         _isLockedOn = false;
-        
+
         targetRadius.radius = range;
     }
 
     private void Update()
     {
+        EvaluateTargets();
+        
         if (_isLockedOn && IsAttached)
         {
             TargetLock();
@@ -41,6 +54,50 @@ public class PintleWeaponTile : WeaponTile
             SearchingForTarget();
         }
     }
+
+    private void EvaluateTargets()
+    {
+        _targetsInRange.RemoveAll(t => t == null ||
+                                       !t.gameObject.activeInHierarchy);
+
+        if (_targetsInRange.Count == 0)
+        {
+            _activeTarget = null;
+            _isLockedOn = false;
+        }
+
+        Transform bestTarget = null;
+
+        float targetScore = float.MaxValue;
+
+        Vector2 mountPos = mountingPoint.position;
+        Vector2 forwardDir = mountingPoint.up;
+
+        foreach (Transform target in _targetsInRange)
+        {
+            Vector2 dirToTarget = (Vector2)target.position - mountPos;
+            
+            float distance =  dirToTarget.magnitude;
+            float angleToTarget = Vector2.Angle(forwardDir, dirToTarget);
+
+            float score = distance + (angleToTarget * angleWeight);
+
+            if (target == _activeTarget)
+            {
+                score -= currentTargetBias;
+            }
+
+            if (score < targetScore)
+            {
+                targetScore = score;
+                bestTarget = target;
+            }
+        }
+        
+        _activeTarget = bestTarget;
+        _isLockedOn = _activeTarget != null;
+}
+    
     private void TargetLock()
     {
         if (_activeTarget != null)
@@ -56,10 +113,11 @@ public class PintleWeaponTile : WeaponTile
             targetLockPos.x - mountingPointPos.x) * Mathf.Rad2Deg;
         
         Quaternion targetRotation = Quaternion.Euler(
-            new Vector3(0f, 0f, angle - 90));
+            new Vector3(0f, 0f, angle - 90f));
         
         mountingPoint.rotation = Quaternion.RotateTowards(
-            mountingPoint.rotation, targetRotation, rotSpeed);
+            mountingPoint.rotation, targetRotation, rotSpeed 
+                                                    * Time.deltaTime);
 
         Fire();
     }
@@ -82,53 +140,20 @@ public class PintleWeaponTile : WeaponTile
     {
         if (other.CompareTag(TargetTag))
         {
-            if (!_isLockedOn)
+            if (!_targetsInRange.Contains(other.transform))
             {
-                _activeTarget = other.transform;
-                _isLockedOn = true;
+                _targetsInRange.Add(other.transform);
             }
-            // if (activeTarget != null)
-            // {
-            //     float mountX = mountingPoint.position.x;
-            //     float mountY = mountingPoint.position.y;
-            //     
-            //     float newTargetDifX = mountX -
-            //                           other.transform.position.x;
-            //     float newTargetDifY = mountY -
-            //                           other.transform.position.y;
-            //
-            //     float newTargetDif =
-            //         (Mathf.Abs(newTargetDifX) < Mathf.Abs(newTargetDifY))
-            //             ? newTargetDifX
-            //             : newTargetDifY;
-            //     
-            //     float oldTargetDifX = mountX -
-            //                           activeTarget.position.x;
-            //     float oldTargetDifY = mountY -
-            //                           activeTarget.position.y;
-            //
-            //     float oldTargetDif =
-            //         (Mathf.Abs(oldTargetDifX) < Mathf.Abs(oldTargetDifY))
-            //             ? oldTargetDifX
-            //             : oldTargetDifY;
-            //     
-            //     Debug.Log(newTargetDif);
-            //     Debug.Log(oldTargetDifX);
-            //     if (oldTargetDif - newTargetDif > -1)
-            //     {
-            //         activeTarget = other.transform;
-            //         Debug.Log("Swapping Targets");
-            //     }
-            // }
         }
     }
 
     private void OnTriggerExit2D(Collider2D other)
     {
-        if (other.transform == _activeTarget)
+        if (other.CompareTag(TargetTag))
         {
-            _isLockedOn = false;
+            _targetsInRange.Remove(other.transform);
         }
     }
 }
 
+ 
