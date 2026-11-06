@@ -14,7 +14,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::WaveDefinitionSO
   waveName: Warm-up
   pattern: 1
+  patternSpread: 40
+  maxWaveTime: 120
   entries:
   - enemyPrefab: {fileID: 8188435154698411991, guid: 9dc0c2dda0134b64e8cb399608f4b80b, type: 3}
     count: 2
-    spawnInterval: 3.0
+    spawnInterval: 3

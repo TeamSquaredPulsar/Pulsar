@@ -68,8 +68,9 @@ public class EnemySpawner : MonoBehaviour
                 {
                     Destroy(enemy.gameObject);
                 }
-            });
-        
+            }
+        }
+
         EnemyController.EnemyDefeatedEvent -= HandleEnemyDefeated;
     }
 
