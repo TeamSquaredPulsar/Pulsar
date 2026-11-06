@@ -67,9 +67,19 @@
                     "priority": 0
                 },
                 {
-                    "name": "RotateSelectedTile",
+                    "name": "CWRotateSelectedTile",
                     "type": "Button",
                     "id": "f8651cdb-f623-4db6-b9a1-bcd086e8177e",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false,
+                    "priority": 0
+                },
+                {
+                    "name": "CCWRotateSelectedTile",
+                    "type": "Button",
+                    "id": "93cd16a7-2046-4e4c-937f-3ed63b440b34",
                     "expectedControlType": "",
                     "processors": "",
                     "interactions": "",
@@ -290,11 +300,22 @@
                 {
                     "name": "",
                     "id": "763aeb1d-d23b-4b1d-b779-156080836935",
-                    "path": "<Keyboard>/tab",
+                    "path": "<Keyboard>/v",
                     "interactions": "",
                     "processors": "",
                     "groups": "",
-                    "action": "RotateSelectedTile",
+                    "action": "CWRotateSelectedTile",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "6b1c5044-74a1-4770-814c-99e943beee5e",
+                    "path": "<Keyboard>/c",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "CCWRotateSelectedTile",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }

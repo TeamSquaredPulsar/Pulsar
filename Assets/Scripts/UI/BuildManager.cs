@@ -45,7 +45,7 @@ public class BuildManager : MonoBehaviour
     {
         PlayerController.PlayerSpawnedEvent += OnPlayerSpawned;
         PlayerCursor.PlayerSelectTile += OnPlayerSelectTile;
-        input.RotateSelectedTileEvent += OnRotateSelectedTile;
+        input.RotateSelectedTileEvent += OnCwRotateSelectedTile;
     }
 
     private void Start()
@@ -58,7 +58,7 @@ public class BuildManager : MonoBehaviour
     {
         PlayerController.PlayerSpawnedEvent -= OnPlayerSpawned;
         PlayerCursor.PlayerSelectTile -= OnPlayerSelectTile;
-        input.RotateSelectedTileEvent -= OnRotateSelectedTile;
+        input.RotateSelectedTileEvent -= OnCwRotateSelectedTile;
     }
 
     private void OnPlayerSpawned(PlayerController obj)
@@ -281,7 +281,7 @@ public class BuildManager : MonoBehaviour
             _attachCell.CellToWorld(_player.transform), rotation);
     }
 
-    private void OnRotateSelectedTile() => RotateSelectedTile(1);
+    private void OnCwRotateSelectedTile(int i) => RotateSelectedTile(i);
 
     // Positive steps turn counterclockwise, negative steps turn clockwise.
     public void RotateSelectedTile(int quarterTurns)
