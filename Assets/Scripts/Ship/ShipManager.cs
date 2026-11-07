@@ -8,6 +8,7 @@ using Pulsar.Hazards;
 using Pulsar.Ship.Data;
 using Pulsar.Utilities;
 using UnityEngine;
+using UnityEngine.Serialization;
 using Random = UnityEngine.Random;
 
 namespace Pulsar.Ship
@@ -50,19 +51,18 @@ public class ShipManager : MonoBehaviour
     private float CollisionDmgMultiplier = 0.5f;
 
     private ShipGridData _gridData = new();
+    private string _shipTag;
 
     public CoreTile Core => _gridData.Core;
 
     public IReadOnlyDictionary<Vector2Int, Tile> Cells => _gridData.Cells;
     public bool OwnsTile(Tile tile) => Cells.Values.Contains(tile);
-
-    private bool _isPlayer;
-
+    
     public event Action ShipGridUpdate;
-
+    
     private void Start()
     {
-        _isPlayer = CompareTag("Player");
+        _shipTag = gameObject.tag;
         RefreshTiles();
         _gridData.TileOrphanedEvent += DetatchTile;
     }
@@ -101,6 +101,7 @@ public class ShipManager : MonoBehaviour
             return;
         }
 
+        tile.gameObject.tag = _shipTag;
         ProcessTile(tile);
         rb.mass += tile.Mass;
         tile.Attach(cell, rotation);
@@ -124,7 +125,6 @@ public class ShipManager : MonoBehaviour
             case WeaponTile weapon:
                 weapons.Add(weapon);
                 weapon.SetParentCollider(compositeCollider);
-                weapon.SetTargetTag(_isPlayer);
                 break;
         }
     }
@@ -451,6 +451,7 @@ public class ShipManager : MonoBehaviour
         }
 
         UnregisterTile(tile);
+        tile.gameObject.tag = "Untagged";
         tile.Detatch(velocity, angularVelocity + spin);
         rb.mass -= tile.Mass;
 

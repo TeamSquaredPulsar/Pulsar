@@ -32,8 +32,6 @@ public class WeaponTile : Tile
 
     private Projectile _projectile;
 
-    protected string TargetTag = "Enemy";
-
     private bool CanFire => _fireTimerRoutine == null;
 
     private new void Start()
@@ -79,13 +77,8 @@ public class WeaponTile : Tile
         _fireTimerRoutine = null;
     }
 
-    public void SetParentCollider(Collider2D newCollider)
+    public virtual void SetParentCollider(Collider2D newCollider)
     {
         parentCollider = newCollider;
-    }
-
-    public virtual void SetTargetTag(bool isPlayer)
-    {
-        TargetTag = isPlayer ?  "Enemy" : "Player";
     }
 }

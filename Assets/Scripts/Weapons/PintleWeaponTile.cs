@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Net;
 using UnityEngine;
 using UnityEngine.UIElements;
 
@@ -36,6 +37,7 @@ public class PintleWeaponTile : WeaponTile
 
     private Transform _activeTarget;
     private bool _isLockedOn;
+    private string TargetTag => gameObject.CompareTag("Player") ? "Enemy" : "Player";
     
     private readonly HashSet<Transform> _targetsInRange = new HashSet<Transform>();
     private Coroutine _searchCoroutine;
@@ -77,7 +79,8 @@ public class PintleWeaponTile : WeaponTile
          }
          EngageTargetLock();
      }
-
+     
+    #region Targetting
     private IEnumerator SearchForTargets()
     {
         while (true)
@@ -98,7 +101,8 @@ public class PintleWeaponTile : WeaponTile
     private void EvaluateTargets()
     {
         _targetsInRange.RemoveWhere(t => t == null ||
-                                       !t.gameObject.activeInHierarchy);
+                                       !t.gameObject.activeInHierarchy ||
+                                       !t.CompareTag(TargetTag));
 
         if (_targetsInRange.Count == 0)
         {
@@ -158,7 +162,7 @@ public class PintleWeaponTile : WeaponTile
         mountingPoint.rotation = Quaternion.RotateTowards(
             mountingPoint.rotation, targetRotation, rotSpeed 
                                                     * Time.deltaTime);
-
+        Debug.Log(_activeTarget.name);
         Fire();
     }
 
@@ -171,7 +175,26 @@ public class PintleWeaponTile : WeaponTile
             targetLock.gameObject.SetActive(false);
         }
     }
+    
+    #endregion
 
+    private void OnTriggerEnter2D(Collider2D other)
+    {
+        if (other.isTrigger)
+        {
+            return;
+        }
+        if (other.CompareTag(TargetTag))
+        {
+            _targetsInRange.Add(other.transform);
+        }
+    }
+
+    private void OnTriggerExit2D(Collider2D other)
+    {
+        _targetsInRange.Remove(other.transform);
+    }
+    
     public override void Fire()
     {
         if (!_isLockedOn)
@@ -181,39 +204,11 @@ public class PintleWeaponTile : WeaponTile
         base.Fire();
     }
 
-    private void OnTriggerEnter2D(Collider2D other)
+    public override void SetParentCollider(Collider2D newCollider)
     {
-        if (other.CompareTag(TargetTag))
-        {
-            if (!_targetsInRange.Contains(other.transform))
-            {
-                _targetsInRange.Add(other.transform);
-            }
-        }
-    }
-
-    private void OnTriggerExit2D(Collider2D other)
-    {
-        if (other.CompareTag(TargetTag))
-        {
-            _targetsInRange.Remove(other.transform);
-        }
-    }
-
-    public override void SetTargetTag(bool isPlayer)
-    {
-        base.SetTargetTag(isPlayer);
+        base.SetParentCollider(newCollider);
         
-        //Clear enemy target list
         _targetsInRange.Clear();
-        ClearLock();
-
-        if (targetRadius != null)
-        {
-            //Flicker the collider so it detects anything already in range
-            targetRadius.enabled = false;
-            targetRadius.enabled = true;
-        }
     }
 }
 
