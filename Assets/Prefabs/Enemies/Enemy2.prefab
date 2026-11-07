@@ -74,6 +74,7 @@ MonoBehaviour:
   thrusters: []
   detachRadiateLinearVelocity: {x: 2, y: 5}
   detachRadiateAngularVelocity: {x: -180, y: 180}
+  CollisionDmgMultiplier: 0.5
 --- !u!114 &7200000005
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -155,7 +156,7 @@ CompositeCollider2D:
   m_CompositeOperation: 0
   m_CompositeOrder: 0
   m_Offset: {x: 0, y: 0}
-  m_GeometryType: 0
+  m_GeometryType: 1
   m_GenerationType: 0
   m_EdgeRadius: 0
   m_ColliderPaths: []

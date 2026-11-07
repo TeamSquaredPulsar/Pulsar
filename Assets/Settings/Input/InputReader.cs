@@ -21,6 +21,7 @@ public class InputReader : ScriptableObject, IPlayerActions, IInputReader
 
     [SerializeField]
     private CameraData camData;
+
     private Controls _controls;
 
     private void Awake()
@@ -29,7 +30,7 @@ public class InputReader : ScriptableObject, IPlayerActions, IInputReader
         {
             return;
         }
-        
+
         CreateNewControls();
     }
 
@@ -39,7 +40,7 @@ public class InputReader : ScriptableObject, IPlayerActions, IInputReader
         {
             CreateNewControls();
         }
-        
+
         _controls?.Player.Enable();
     }
 
@@ -53,13 +54,12 @@ public class InputReader : ScriptableObject, IPlayerActions, IInputReader
         _controls.Dispose();
         _controls = null;
     }
-    
+
     private void CreateNewControls()
     {
         _controls = new Controls();
         _controls.Player.SetCallbacks(this);
     }
-    
 
     public void EnablePlayerActions()
     {
@@ -90,6 +90,7 @@ public class InputReader : ScriptableObject, IPlayerActions, IInputReader
         {
             return;
         }
+
         //True if the button is down, false if up.
         SelectTileEvent?.Invoke(!context.canceled);
     }
@@ -107,7 +108,7 @@ public class InputReader : ScriptableObject, IPlayerActions, IInputReader
 
         // Multiply by camera dimensions so we can get full screen size
         input *= camData.ScreenSize;
-        
+
         MoveCursorEvent?.Invoke(input);
     }
 

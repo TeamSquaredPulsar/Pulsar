@@ -105,6 +105,7 @@ MonoBehaviour:
   thrusters: []
   detachRadiateLinearVelocity: {x: 2, y: 5}
   detachRadiateAngularVelocity: {x: -180, y: 180}
+  CollisionDmgMultiplier: 0.5
 --- !u!114 &8617872407729157336
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -184,7 +185,7 @@ CompositeCollider2D:
   m_CompositeOperation: 0
   m_CompositeOrder: 0
   m_Offset: {x: 0, y: 0}
-  m_GeometryType: 0
+  m_GeometryType: 1
   m_GenerationType: 0
   m_EdgeRadius: 0
   m_ColliderPaths:
@@ -305,6 +306,10 @@ PrefabInstance:
     - target: {fileID: 2402461002857692903, guid: aa5c391c67940fe428fad2e4cebfb98c, type: 3}
       propertyPath: m_Name
       value: p_BasicGun
+      objectReference: {fileID: 0}
+    - target: {fileID: 2402461002857692903, guid: aa5c391c67940fe428fad2e4cebfb98c, type: 3}
+      propertyPath: m_IsActive
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 3439183271994269019, guid: aa5c391c67940fe428fad2e4cebfb98c, type: 3}
       propertyPath: m_ConnectedAnchor.x
