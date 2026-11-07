@@ -36,7 +36,10 @@ public class RadialMenu : MonoBehaviour
         outline.widthMultiplier = outlineWidthMultiplier;
         outline.startColor = outlineColor;
         outline.endColor = outlineColor;
+        outline.sortingLayerID = scanZoneSr.sortingLayerID;
         outline.sortingOrder = ScanZoneSortingOrder + 1;
+        outline.useWorldSpace = true;
+        outline.loop = true;
         outline.positionCount = Segments;
     }
 
@@ -51,16 +54,19 @@ public class RadialMenu : MonoBehaviour
 
         transform.SetPositionAndRotation(worldCenter, rotation);
 
-        scanZoneSr.transform.localScale = new Vector3(_radius.x, _radius.y, 1f);
+        // The sprite size is a diameter; PointOnOutline uses radii.
+        Vector2 spriteSize = scanZoneSr.sprite
+            ? scanZoneSr.sprite.bounds.size
+            : Vector2.one;
+        scanZoneSr.transform.localScale = new Vector3(
+            2f * _radius.x / Mathf.Max(0.0001f, spriteSize.x),
+            2f * _radius.y / Mathf.Max(0.0001f, spriteSize.y), 1f);
 
         // each segment angle
         for (int i = 0; i < Segments; i++)
         {
             float angle = i * Mathf.PI * 2f / Segments;
-            outline.SetPosition(i, new Vector2(
-                Mathf.Cos(angle) * _radius.x,
-                Mathf.Sin(angle) * _radius.y
-            ));
+            outline.SetPosition(i, PointOnOutline(angle));
         }
     }
 
@@ -114,7 +120,16 @@ public class RadialMenu : MonoBehaviour
         return numerator / denominator;
     }
 
-    public void Show() => scanZoneSr.enabled = true;
-    public void Hide() => scanZoneSr.enabled = false;
+    public void Show()
+    {
+        scanZoneSr.enabled = true;
+        outline.enabled = true;
+    }
+
+    public void Hide()
+    {
+        outline.enabled = false;
+        scanZoneSr.enabled = false;
+    }
 }
 }

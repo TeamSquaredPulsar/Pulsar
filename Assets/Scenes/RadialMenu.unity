@@ -299,6 +299,14 @@ PrefabInstance:
       propertyPath: m_Name
       value: Player
       objectReference: {fileID: 0}
+    - target: {fileID: 2054411478231971180, guid: b8226397bde29ab4abb516fe64e2ab6f, type: 3}
+      propertyPath: pullSpeed
+      value: 20
+      objectReference: {fileID: 0}
+    - target: {fileID: 2054411478231971180, guid: b8226397bde29ab4abb516fe64e2ab6f, type: 3}
+      propertyPath: scanPadding
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 2341339632320359333, guid: b8226397bde29ab4abb516fe64e2ab6f, type: 3}
       propertyPath: joint
       value: 
@@ -557,6 +565,14 @@ PrefabInstance:
       propertyPath: Targets.Array.data[0].Object
       value: 
       objectReference: {fileID: 290420417}
+    - target: {fileID: 7067975659105368029, guid: 23b839cb7fca3b247ba1200fcaa33286, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 10
+      objectReference: {fileID: 0}
+    - target: {fileID: 7710444508102941617, guid: 23b839cb7fca3b247ba1200fcaa33286, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 8255171805618094538, guid: 23b839cb7fca3b247ba1200fcaa33286, type: 3}
       propertyPath: m_Name
       value: CameraGroup
@@ -581,11 +597,11 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 1923082867568248035, guid: e218f197edbb137478393036d044a214, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 0
+      value: -3.38
       objectReference: {fileID: 0}
     - target: {fileID: 1923082867568248035, guid: e218f197edbb137478393036d044a214, type: 3}
       propertyPath: m_LocalPosition.y
-      value: -1
+      value: -1.68
       objectReference: {fileID: 0}
     - target: {fileID: 1923082867568248035, guid: e218f197edbb137478393036d044a214, type: 3}
       propertyPath: m_LocalPosition.z
