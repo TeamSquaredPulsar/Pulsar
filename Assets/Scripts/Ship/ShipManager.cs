@@ -145,8 +145,6 @@ public class ShipManager : MonoBehaviour
             float relativeVelocity = other.relativeVelocity.magnitude;
             float damage = CalculateDmgFromOtherShip(ship, relativeVelocity);
             tile.TakeDamage(damage);
-            Debug.Log("R-Velocity:" +  relativeVelocity);
-            Debug.Log("Damage:" + damage);
         }
         else if (other.gameObject.TryGetComponent(out Projectile projectile))
         {
