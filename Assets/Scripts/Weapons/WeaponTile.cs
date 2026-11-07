@@ -56,7 +56,7 @@ public class WeaponTile : Tile
             this.GetComponent<Collider2D>());
         return projectile;
     }
-    public virtual void Fire()
+    public void Fire()
     {
         if (!CanFire)
         {
@@ -77,7 +77,7 @@ public class WeaponTile : Tile
         _fireTimerRoutine = null;
     }
 
-    public virtual void SetParentCollider(Collider2D newCollider)
+    public void SetParentCollider(Collider2D newCollider)
     {
         parentCollider = newCollider;
     }

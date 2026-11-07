@@ -1,14 +1,14 @@
 using System.Collections;
 using System.Collections.Generic;
-using System.Net;
+using Pulsar.DataClasses;
+using Pulsar.Utilities;
 using UnityEngine;
-using UnityEngine.UIElements;
 
 public class PintleWeaponTile : WeaponTile
 {
     [Header("Pintle Information")]
     [SerializeField]
-    private Transform targetLock;
+    private Transform targetReticle;
 
     [SerializeField]
     private CircleCollider2D targetRadius;
@@ -32,82 +32,53 @@ public class PintleWeaponTile : WeaponTile
     [Tooltip("Min dif for a new target to get priority")]
     private float currentTargetBias = 1.5f;
 
-    [SerializeField]
-    private float searchInterval = 0.15f;
-
-    private Transform _activeTarget;
-    private bool _isLockedOn;
+    
     private string TargetTag => gameObject.CompareTag("Player") ? "Enemy" : "Player";
     
     private readonly HashSet<Transform> _targetsInRange = new HashSet<Transform>();
     private Coroutine _searchCoroutine;
-    private WaitForSeconds _searchWait;
+    private WaitForFixedUpdate _searchWait;
     
     private void Awake()
     {
-        _isLockedOn = false;
-
         targetRadius.radius = range;
-        
-        _searchWait = new WaitForSeconds(searchInterval);
-    }
-    
-    private void OnEnable()
-    {
-         _searchCoroutine = StartCoroutine(SearchForTargets());
-    }
 
-    private void OnDisable()
-    {
-        if (_searchCoroutine != null)
-        {
-            StopCoroutine(_searchCoroutine);
-            _searchCoroutine = null;
-        }
-        ClearLock();
-    }
+        targetRadius.enabled = false;
+        targetReticle.gameObject.SetActive(false);
 
-     private void Update()
-     {
-         if (!IsAttached || !_isLockedOn || _activeTarget == null)
-         {
-             if (targetLock.gameObject.activeInHierarchy)
-             {
-                 targetLock.gameObject.SetActive(false);
-             }
-             return;
-         }
-         EngageTargetLock();
-     }
+        _searchWait = new WaitForFixedUpdate();
+    }
      
     #region Targetting
     private IEnumerator SearchForTargets()
     {
-        while (true)
+        Result<Transform> activeTarget = Result<Transform>.Fail();
+        
+        // _targetsInRange.Clear();
+        yield return new WaitForEndOfFrame();
+        while (_searchCoroutine != null) 
         {
-            if (IsAttached)
+            activeTarget = EvaluateTargets(activeTarget.Value);
+            targetReticle.gameObject.SetActive(activeTarget.IsSuccess);
+            if (activeTarget.IsSuccess)
             {
-                EvaluateTargets();
-            }
-            else
-            {
-                ClearLock();
+                MoveReticle(activeTarget.Value);
+                EngageTarget();
             }
 
             yield return _searchWait;
         }
+        
+        targetReticle.gameObject.SetActive(false);
     }
 
-    private void EvaluateTargets()
+    private Result<Transform> EvaluateTargets(Transform activeTarget)
     {
-        _targetsInRange.RemoveWhere(t => t == null ||
-                                       !t.gameObject.activeInHierarchy ||
-                                       !t.CompareTag(TargetTag));
+        _targetsInRange.RemoveWhere(t => !TargetTag.Equals(t.tag));
 
         if (_targetsInRange.Count == 0)
         {
-            _activeTarget = null;
-            _isLockedOn = false;
+            return Result<Transform>.Fail();
         }
 
         Transform bestTarget = null;
@@ -120,13 +91,13 @@ public class PintleWeaponTile : WeaponTile
         foreach (Transform target in _targetsInRange)
         {
             Vector2 dirToTarget = (Vector2)target.position - mountPos;
-            
-            float distance =  dirToTarget.magnitude;
+
+            float distance = dirToTarget.magnitude;
             float angleToTarget = Vector2.Angle(forwardDir, dirToTarget);
 
             float score = distance + (angleToTarget * angleWeight);
 
-            if (target == _activeTarget)
+            if (target == activeTarget)
             {
                 score -= currentTargetBias;
             }
@@ -137,43 +108,30 @@ public class PintleWeaponTile : WeaponTile
                 bestTarget = target;
             }
         }
-        
-        _activeTarget = bestTarget;
-        _isLockedOn = _activeTarget != null;
-}
+
+        return (bestTarget) ? Result<Transform>.Pass(bestTarget)
+            : Result<Transform>.Fail();
+    }
     
-    private void EngageTargetLock()
+    private void EngageTarget()
     {
-        if (_activeTarget != null)
-        {
-            targetLock.position = _activeTarget.position;
-        }
-        targetLock.gameObject.SetActive(true);
+        Vector2 targetDir = targetReticle.position  - mountingPoint.position;
         
-        Vector2 targetLockPos = targetLock.position;
-        Vector2 mountingPointPos = mountingPoint.position;
-        
-        float angle = Mathf.Atan2(targetLockPos.y - mountingPointPos.y,
-            targetLockPos.x - mountingPointPos.x) * Mathf.Rad2Deg;
-        
+        float angle = Mathf.Atan2(targetDir.y, targetDir.x) * Mathf.Rad2Deg;
+
         Quaternion targetRotation = Quaternion.Euler(
             new Vector3(0f, 0f, angle - 90f));
         
         mountingPoint.rotation = Quaternion.RotateTowards(
             mountingPoint.rotation, targetRotation, rotSpeed 
                                                     * Time.deltaTime);
-        Debug.Log(_activeTarget.name);
+        
         Fire();
     }
 
-    private void ClearLock()
+    private void MoveReticle(Transform target)
     {
-        _activeTarget = null;
-        _isLockedOn = false;
-        if (targetLock != null && targetLock.gameObject.activeSelf)
-        {
-            targetLock.gameObject.SetActive(false);
-        }
+        targetReticle.position = target.position;
     }
     
     #endregion
@@ -194,21 +152,26 @@ public class PintleWeaponTile : WeaponTile
     {
         _targetsInRange.Remove(other.transform);
     }
-    
-    public override void Fire()
-    {
-        if (!_isLockedOn)
-        {
-            return;
-        }
-        base.Fire();
-    }
 
-    public override void SetParentCollider(Collider2D newCollider)
+    public override void Attach(Vector2Int cell, TileRotation rotation)
     {
-        base.SetParentCollider(newCollider);
+        base.Attach(cell, rotation);
         
         _targetsInRange.Clear();
+
+        targetRadius.enabled = true;
+        
+        _searchCoroutine = StartCoroutine(SearchForTargets());
+    }
+
+    public override void Detatch(Vector2? velocity = null, 
+                                    float angularVelocity = 0)
+    {
+        _searchCoroutine = null;
+        
+        targetRadius.enabled = false;
+        
+        base.Detatch(velocity, angularVelocity);
     }
 }
 

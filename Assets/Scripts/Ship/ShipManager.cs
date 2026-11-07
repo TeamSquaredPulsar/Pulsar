@@ -119,6 +119,9 @@ public class ShipManager : MonoBehaviour
                 thrusters.Add(thruster);
                 thrusterManager.CalculateThrusters(ref thrusters);
                 break;
+            case PintleWeaponTile pintle:
+                pintle.SetParentCollider(compositeCollider);
+                break;
             case WeaponTile weapon:
                 weapons.Add(weapon);
                 weapon.SetParentCollider(compositeCollider);
@@ -208,7 +211,7 @@ public class ShipManager : MonoBehaviour
                 thrusters.Remove(thruster);
                 thrusterManager.CalculateThrusters(ref thrusters);
                 break;
-            case WeaponTile weapon:
+            case WeaponTile weapon and not PintleWeaponTile:
                 weapons.Remove(weapon);
                 break;
         }

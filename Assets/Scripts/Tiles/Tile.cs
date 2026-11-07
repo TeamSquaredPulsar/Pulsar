@@ -137,7 +137,7 @@ public abstract class Tile : MonoBehaviour
         transform.SetParent(null, true);
     }
 
-    public void Attach(Vector2Int cell, TileRotation rotation)
+    public virtual void Attach(Vector2Int cell, TileRotation rotation)
     {
         IsAttached = true;
         
@@ -153,7 +153,7 @@ public abstract class Tile : MonoBehaviour
         }
     }
 
-    public void Detatch(Vector2? velocity = null, float angularVelocity = 0f)
+    public virtual void Detatch(Vector2? velocity = null, float angularVelocity = 0f)
     {
         IsAttached = false;
         transform.SetParent(null);
