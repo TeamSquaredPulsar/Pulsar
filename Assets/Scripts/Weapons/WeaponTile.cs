@@ -77,7 +77,7 @@ public class WeaponTile : Tile
         _fireTimerRoutine = null;
     }
 
-    public void SetParentCollider(Collider2D newCollider)
+    public virtual void SetParentCollider(Collider2D newCollider)
     {
         parentCollider = newCollider;
     }
