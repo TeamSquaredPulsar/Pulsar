@@ -101,10 +101,10 @@ GameObject:
   m_Component:
   - component: {fileID: 1923082867568248035}
   - component: {fileID: 2303072813145309213}
+  - component: {fileID: -4160512527206970603}
   - component: {fileID: 497275641067805184}
   - component: {fileID: 2260344807008050488}
   - component: {fileID: 7347581372079830787}
-  - component: {fileID: -4160512527206970603}
   - component: {fileID: 4066856357463732218}
   m_Layer: 0
   m_Name: BasicChassisMount
@@ -143,6 +143,38 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Pulsar.Ship::Health
   <MaxHealth>k__BackingField: 10
+--- !u!114 &-4160512527206970603
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3485646891177161118}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c019cc02558f4184caee033e91f9be62, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Weapons::Pulsar.Weapons.Weapons.PintleWeaponTile
+  baseColor: {r: 1, g: 1, b: 1, a: 1}
+  <IsAttached>k__BackingField: 0
+  <TileInfo>k__BackingField: {fileID: 11400000, guid: 9c0e50de41345d743a48948f1809c761, type: 2}
+  spritesOverride: {fileID: 11400000, guid: 98efc5c07251a3f43a4c2f648d1cb3f7, type: 2}
+  spriteRenderer: {fileID: 497275641067805184}
+  tileCollider: {fileID: 2260344807008050488}
+  rigidBody: {fileID: 7347581372079830787}
+  health: {fileID: 2303072813145309213}
+  projectilePrefab: {fileID: 0}
+  parentCollider: {fileID: 0}
+  firePoints: []
+  <FireRatePerSecond>k__BackingField: 0.5
+  weaponStrategy: {fileID: 0}
+  targetLock: {fileID: 3694190862674088022}
+  targetRadius: {fileID: 4066856357463732218}
+  mountingPoint: {fileID: 0}
+  rotSpeed: 0
+  range: 0
+  angleWeight: 0.05
+  currentTargetBias: 1.5
 --- !u!212 &497275641067805184
 SpriteRenderer:
   serializedVersion: 2
@@ -275,35 +307,6 @@ Rigidbody2D:
   m_SleepingMode: 1
   m_CollisionDetection: 0
   m_Constraints: 0
---- !u!114 &-4160512527206970603
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3485646891177161118}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: c019cc02558f4184caee033e91f9be62, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Weapons::Pulsar.Weapons.Weapons.PintleWeaponTile
-  baseColor: {r: 1, g: 1, b: 1, a: 1}
-  <IsAttached>k__BackingField: 0
-  <TileInfo>k__BackingField: {fileID: 11400000, guid: 9c0e50de41345d743a48948f1809c761, type: 2}
-  spritesOverride: {fileID: 11400000, guid: 98efc5c07251a3f43a4c2f648d1cb3f7, type: 2}
-  spriteRenderer: {fileID: 497275641067805184}
-  tileCollider: {fileID: 2260344807008050488}
-  rigidBody: {fileID: 7347581372079830787}
-  health: {fileID: 2303072813145309213}
-  projectilePrefab: {fileID: 0}
-  parentCollider: {fileID: 0}
-  firePoints: []
-  <FireRatePerSecond>k__BackingField: 0.5
-  weaponStrategy: {fileID: 0}
-  targetLock: {fileID: 3694190862674088022}
-  targetRadius: {fileID: 4066856357463732218}
-  mountingPoint: {fileID: 0}
-  rotSpeed: 0
 --- !u!58 &4066856357463732218
 CircleCollider2D:
   m_ObjectHideFlags: 0
