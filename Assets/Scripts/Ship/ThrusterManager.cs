@@ -15,9 +15,6 @@ public struct ThrustAtRotation
 public class ThrusterManager : MonoBehaviour
 {
     [SerializeField]
-    private List<ThrusterTile> thrusters;
-    
-    [SerializeField]
     private Rigidbody2D rb;
 
     //Temp field until the core has its own thruster values
@@ -38,8 +35,6 @@ public class ThrusterManager : MonoBehaviour
         {
             rb = GetComponent<Rigidbody2D>();
         }
-
-        CalculateThrusters();
     }
 
     private void FixedUpdate()
@@ -103,7 +98,7 @@ public class ThrusterManager : MonoBehaviour
 
     #region Thrust Calculations
 
-    private void CalculateThrusters()
+    public void CalculateThrusters(ref List<ThrusterTile> thrusters)
     {
         int directions = new TileRotation().Length();
         _directedThrust = new ThrustAtRotation[directions];

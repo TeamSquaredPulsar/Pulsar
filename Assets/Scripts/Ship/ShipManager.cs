@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using NaughtyAttributes;
@@ -55,9 +55,9 @@ public class ShipManager : MonoBehaviour
 
     public IReadOnlyDictionary<Vector2Int, Tile> Cells => _gridData.Cells;
     public bool OwnsTile(Tile tile) => Cells.Values.Contains(tile);
-
+    
     public event Action ShipGridUpdate;
-
+    
     private void Start()
     {
         RefreshTiles();
@@ -88,6 +88,7 @@ public class ShipManager : MonoBehaviour
                 tile.transform.localRotation.eulerAngles.z.ToTileRotation();
             AttachTile(localCell, tile, localRot);
         }
+        thrusterManager.CalculateThrusters(ref thrusters);
     }
 
     public void AttachTile(Vector2Int cell, Tile tile, TileRotation rotation)
@@ -97,6 +98,7 @@ public class ShipManager : MonoBehaviour
             return;
         }
 
+        tile.gameObject.tag = gameObject.tag;
         ProcessTile(tile);
         rb.mass += tile.Mass;
         tile.Attach(cell, rotation);
@@ -115,6 +117,10 @@ public class ShipManager : MonoBehaviour
         {
             case ThrusterTile thruster:
                 thrusters.Add(thruster);
+                thrusterManager.CalculateThrusters(ref thrusters);
+                break;
+            case PintleWeaponTile pintle:
+                pintle.SetParentCollider(compositeCollider);
                 break;
             case WeaponTile weapon:
                 weapons.Add(weapon);
@@ -203,8 +209,9 @@ public class ShipManager : MonoBehaviour
         {
             case ThrusterTile thruster:
                 thrusters.Remove(thruster);
+                thrusterManager.CalculateThrusters(ref thrusters);
                 break;
-            case WeaponTile weapon:
+            case WeaponTile weapon and not PintleWeaponTile:
                 weapons.Remove(weapon);
                 break;
         }
@@ -444,9 +451,11 @@ public class ShipManager : MonoBehaviour
         }
 
         UnregisterTile(tile);
+        tile.gameObject.tag = "Untagged";
         tile.Detatch(velocity, angularVelocity + spin);
         rb.mass -= tile.Mass;
 
+        thrusterManager.CalculateThrusters(ref thrusters);
         ShipGridUpdate?.Invoke();
     }
 

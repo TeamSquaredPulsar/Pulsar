@@ -56,7 +56,7 @@ public class WeaponTile : Tile
             this.GetComponent<Collider2D>());
         return projectile;
     }
-    public virtual void Fire()
+    public void Fire()
     {
         if (!CanFire)
         {
