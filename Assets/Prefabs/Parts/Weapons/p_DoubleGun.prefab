@@ -58,13 +58,13 @@ MonoBehaviour:
   tileCollider: {fileID: 6394848136817018224}
   rigidBody: {fileID: 2522681453652910296}
   health: {fileID: -8815025657336327204}
-  projectilePrefab: {fileID: 1682859016921356063, guid: a133161848d51234b97f8554a243a1ab, type: 3}
-  parentCollider: {fileID: 0}
-  firePoints:
+  <ProjectilePrefab>k__BackingField: {fileID: 1682859016921356063, guid: a133161848d51234b97f8554a243a1ab, type: 3}
+  <ParentCollider>k__BackingField: {fileID: 0}
+  <FirePoints>k__BackingField:
   - {fileID: 1113316170954926131}
   - {fileID: 3168602917943994867}
   <FireRatePerSecond>k__BackingField: 1
-  weaponStrategy: {fileID: 11400000, guid: 4d233d3ff0a9cbd4f833c1a4dac6bbc5, type: 2}
+  <Strategy>k__BackingField: {fileID: 11400000, guid: 4d233d3ff0a9cbd4f833c1a4dac6bbc5, type: 2}
 --- !u!114 &-8815025657336327204
 MonoBehaviour:
   m_ObjectHideFlags: 0

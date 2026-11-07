@@ -16,13 +16,11 @@ using UnityEngine.Serialization;
 /// </summary>
 public class WeaponTile : Tile, IProjectileSpawner, IWeapon
 {
-    public Collider2D Coll2D => tileCollider;
-    
     [Header("References")]
     [field: SerializeField]
     public GameObject ProjectilePrefab { get; private set; }
 
-    [field: SerializeField, GetComponentInParent,]
+    [field: SerializeField]
     public Collider2D ParentCollider { get; private set; }
 
     [field: SerializeField, ReorderableList,]
@@ -31,13 +29,14 @@ public class WeaponTile : Tile, IProjectileSpawner, IWeapon
     [field: SerializeField]
     public float FireRatePerSecond { get; protected set; } = 0.5f;
 
-    [field: SerializeField, FormerlySerializedAs("weaponStrategy"),]
+    [field: SerializeField, Expandable, FormerlySerializedAs("weaponStrategy"),]
     public WeaponStrategy Strategy { get; private set; }
 
     private Coroutine _fireTimerRoutine;
     private Projectile _projectile;
     Collider2D IProjectileSpawner.ParentCollider => ParentCollider;
 
+    public Collider2D Coll2D => tileCollider;
     public bool CanFire => _fireTimerRoutine == null;
 
     private new void Start()

@@ -52,6 +52,8 @@ MonoBehaviour:
   speed: 10
   lifeTime: 4
   hitEffectPrefab: {fileID: 0}
+  coll2D: {fileID: -6108854548401063352}
+  rb: {fileID: 7861646081704106804}
 --- !u!212 &5810745852898598321
 SpriteRenderer:
   serializedVersion: 2

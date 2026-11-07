@@ -15,9 +15,6 @@ using UnityEngine;
 public class BurstShot : WeaponStrategy
 {
     [SerializeField]
-    private int k_BulletStart;
-
-    [SerializeField]
     private int k_MaxBullets = 3;
 
     [SerializeField]
