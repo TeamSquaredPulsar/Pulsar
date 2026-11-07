@@ -84,7 +84,7 @@ public class WeaponTile : Tile
         parentCollider = newCollider;
     }
 
-    public void SetTargetTag(bool isPlayer)
+    public virtual void SetTargetTag(bool isPlayer)
     {
         TargetTag = isPlayer ?  "Enemy" : "Player";
     }

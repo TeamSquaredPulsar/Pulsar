@@ -136,7 +136,7 @@ public class PintleWeaponTile : WeaponTile
         targetLock.gameObject.SetActive(false);
     }
 
-    private void OnTriggerStay2D(Collider2D other)
+    private void OnTriggerEnter2D(Collider2D other)
     {
         if (other.CompareTag(TargetTag))
         {
@@ -152,6 +152,24 @@ public class PintleWeaponTile : WeaponTile
         if (other.CompareTag(TargetTag))
         {
             _targetsInRange.Remove(other.transform);
+        }
+    }
+
+    public override void SetTargetTag(bool isPlayer)
+    {
+        base.SetTargetTag(isPlayer);
+        
+        Debug.Log("Target Player: " + isPlayer);
+        //Clear enemy target list
+        _targetsInRange.Clear();
+        _activeTarget = null;
+        _isLockedOn = false;
+
+        if (targetRadius != null)
+        {
+            //Flicker the collider so it detects anything already in range
+            targetRadius.enabled = false;
+            targetRadius.enabled = true;
         }
     }
 }

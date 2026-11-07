@@ -57,9 +57,9 @@ public class ShipManager : MonoBehaviour
 
     private void Start()
     {
+        _isPlayer = CompareTag("Player");
         RefreshTiles();
         _gridData.TileOrphanedEvent += DetatchTile;
-        _isPlayer = CompareTag("Player");
     }
 
     private void OnDestroy()
