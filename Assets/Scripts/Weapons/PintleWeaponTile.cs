@@ -159,7 +159,6 @@ public class PintleWeaponTile : WeaponTile
     {
         base.SetTargetTag(isPlayer);
         
-        Debug.Log("Target Player: " + isPlayer);
         //Clear enemy target list
         _targetsInRange.Clear();
         _activeTarget = null;
