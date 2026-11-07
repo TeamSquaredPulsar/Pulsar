@@ -17,6 +17,7 @@ public class InputReader : ScriptableObject, IPlayerActions, IInputReader
     public event Action<float> RotateEvent;
     public event Action<Vector2> MoveCursorEvent;
     public event Action<bool> SelectTileEvent;
+    public event Action<int> RotateSelectedTileEvent;
 
     [SerializeField]
     private CameraData camData;
@@ -113,5 +114,21 @@ public class InputReader : ScriptableObject, IPlayerActions, IInputReader
     public void OnMoveCursorMouse(InputAction.CallbackContext context)
     {
         MoveCursorEvent?.Invoke(context.ReadValue<Vector2>());
+    }
+
+    public void OnCWRotateSelectedTile(InputAction.CallbackContext context)
+    {
+        if (context.performed)
+        {
+            RotateSelectedTileEvent?.Invoke(1);
+        }
+    }
+
+    public void OnCCWRotateSelectedTile(InputAction.CallbackContext context)
+    {
+        if (context.performed)
+        {
+            RotateSelectedTileEvent?.Invoke(-1);
+        }
     }
 }

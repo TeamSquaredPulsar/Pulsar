@@ -87,12 +87,12 @@ public class ShipManager : MonoBehaviour
 
     public void AttachTile(Vector2Int cell, Tile tile, TileRotation rotation)
     {
-        ProcessTile(tile);
         if (!_gridData.TrySetTile(cell, tile))
         {
             return;
         }
 
+        ProcessTile(tile);
         rb.mass += tile.Mass;
         tile.Attach(cell, rotation);
         tile.transform.SetParent(transform);
@@ -100,6 +100,7 @@ public class ShipManager : MonoBehaviour
             ShipUtilities.GridToLocal(cell),
             ShipUtilities.RotateQuarterOnZAxis(rotation.ToInt()));
         tile.DestroyEvent += HandleTileDestroyed;
+
         ShipGridUpdate?.Invoke();
     }
 
@@ -165,6 +166,13 @@ public class ShipManager : MonoBehaviour
             return;
         }
 
+        UnregisterTile(tile);
+        ShipGridUpdate?.Invoke();
+    }
+
+    private void UnregisterTile(Tile tile)
+    {
+        tile.DestroyEvent -= HandleTileDestroyed;
         switch (tile)
         {
             case ThrusterTile thruster:
@@ -174,9 +182,6 @@ public class ShipManager : MonoBehaviour
                 weapons.Remove(weapon);
                 break;
         }
-
-        tile.DestroyEvent -= HandleTileDestroyed;
-        ShipGridUpdate?.Invoke();
     }
     
     private void OnCoreDestroyed()
@@ -408,6 +413,7 @@ public class ShipManager : MonoBehaviour
             throw new Exception("Removed the wrong tile!");
         }
 
+        UnregisterTile(tile);
         tile.Detatch(velocity, angularVelocity + spin);
         rb.mass -= tile.Mass;
         

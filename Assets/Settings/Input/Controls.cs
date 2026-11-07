@@ -151,6 +151,26 @@ public partial class @Controls: IInputActionCollection2, IDisposable
                     ""interactions"": """",
                     ""initialStateCheck"": true,
                     ""priority"": 0
+                },
+                {
+                    ""name"": ""CWRotateSelectedTile"",
+                    ""type"": ""Button"",
+                    ""id"": ""f8651cdb-f623-4db6-b9a1-bcd086e8177e"",
+                    ""expectedControlType"": """",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false,
+                    ""priority"": 0
+                },
+                {
+                    ""name"": ""CCWRotateSelectedTile"",
+                    ""type"": ""Button"",
+                    ""id"": ""93cd16a7-2046-4e4c-937f-3ed63b440b34"",
+                    ""expectedControlType"": """",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false,
+                    ""priority"": 0
                 }
             ],
             ""bindings"": [
@@ -362,6 +382,28 @@ public partial class @Controls: IInputActionCollection2, IDisposable
                     ""action"": ""MoveCursorMouse"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""763aeb1d-d23b-4b1d-b779-156080836935"",
+                    ""path"": ""<Keyboard>/v"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""CWRotateSelectedTile"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""6b1c5044-74a1-4770-814c-99e943beee5e"",
+                    ""path"": ""<Keyboard>/c"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""CCWRotateSelectedTile"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         }
@@ -376,6 +418,8 @@ public partial class @Controls: IInputActionCollection2, IDisposable
         m_Player_SelectTile = m_Player.FindAction("SelectTile", throwIfNotFound: true);
         m_Player_MoveCursorGamepad = m_Player.FindAction("MoveCursorGamepad", throwIfNotFound: true);
         m_Player_MoveCursorMouse = m_Player.FindAction("MoveCursorMouse", throwIfNotFound: true);
+        m_Player_CWRotateSelectedTile = m_Player.FindAction("CWRotateSelectedTile", throwIfNotFound: true);
+        m_Player_CCWRotateSelectedTile = m_Player.FindAction("CCWRotateSelectedTile", throwIfNotFound: true);
     }
 
     ~@Controls()
@@ -462,6 +506,8 @@ public partial class @Controls: IInputActionCollection2, IDisposable
     private readonly InputAction m_Player_SelectTile;
     private readonly InputAction m_Player_MoveCursorGamepad;
     private readonly InputAction m_Player_MoveCursorMouse;
+    private readonly InputAction m_Player_CWRotateSelectedTile;
+    private readonly InputAction m_Player_CCWRotateSelectedTile;
     /// <summary>
     /// Provides access to input actions defined in input action map "Player".
     /// </summary>
@@ -497,6 +543,14 @@ public partial class @Controls: IInputActionCollection2, IDisposable
         /// Provides access to the underlying input action "Player/MoveCursorMouse".
         /// </summary>
         public InputAction @MoveCursorMouse => m_Wrapper.m_Player_MoveCursorMouse;
+        /// <summary>
+        /// Provides access to the underlying input action "Player/CWRotateSelectedTile".
+        /// </summary>
+        public InputAction @CWRotateSelectedTile => m_Wrapper.m_Player_CWRotateSelectedTile;
+        /// <summary>
+        /// Provides access to the underlying input action "Player/CCWRotateSelectedTile".
+        /// </summary>
+        public InputAction @CCWRotateSelectedTile => m_Wrapper.m_Player_CCWRotateSelectedTile;
         /// <summary>
         /// Provides access to the underlying input action map instance.
         /// </summary>
@@ -541,6 +595,12 @@ public partial class @Controls: IInputActionCollection2, IDisposable
             @MoveCursorMouse.started += instance.OnMoveCursorMouse;
             @MoveCursorMouse.performed += instance.OnMoveCursorMouse;
             @MoveCursorMouse.canceled += instance.OnMoveCursorMouse;
+            @CWRotateSelectedTile.started += instance.OnCWRotateSelectedTile;
+            @CWRotateSelectedTile.performed += instance.OnCWRotateSelectedTile;
+            @CWRotateSelectedTile.canceled += instance.OnCWRotateSelectedTile;
+            @CCWRotateSelectedTile.started += instance.OnCCWRotateSelectedTile;
+            @CCWRotateSelectedTile.performed += instance.OnCCWRotateSelectedTile;
+            @CCWRotateSelectedTile.canceled += instance.OnCCWRotateSelectedTile;
         }
 
         /// <summary>
@@ -570,6 +630,12 @@ public partial class @Controls: IInputActionCollection2, IDisposable
             @MoveCursorMouse.started -= instance.OnMoveCursorMouse;
             @MoveCursorMouse.performed -= instance.OnMoveCursorMouse;
             @MoveCursorMouse.canceled -= instance.OnMoveCursorMouse;
+            @CWRotateSelectedTile.started -= instance.OnCWRotateSelectedTile;
+            @CWRotateSelectedTile.performed -= instance.OnCWRotateSelectedTile;
+            @CWRotateSelectedTile.canceled -= instance.OnCWRotateSelectedTile;
+            @CCWRotateSelectedTile.started -= instance.OnCCWRotateSelectedTile;
+            @CCWRotateSelectedTile.performed -= instance.OnCCWRotateSelectedTile;
+            @CCWRotateSelectedTile.canceled -= instance.OnCCWRotateSelectedTile;
         }
 
         /// <summary>
@@ -652,5 +718,19 @@ public partial class @Controls: IInputActionCollection2, IDisposable
         /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
         /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
         void OnMoveCursorMouse(InputAction.CallbackContext context);
+        /// <summary>
+        /// Method invoked when associated input action "CWRotateSelectedTile" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
+        /// </summary>
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
+        void OnCWRotateSelectedTile(InputAction.CallbackContext context);
+        /// <summary>
+        /// Method invoked when associated input action "CCWRotateSelectedTile" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
+        /// </summary>
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
+        void OnCCWRotateSelectedTile(InputAction.CallbackContext context);
     }
 }

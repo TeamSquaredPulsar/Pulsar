@@ -184,7 +184,8 @@ public class EnemySpawner : MonoBehaviour
     // on top of another enemy (gives up after MaxSpawnAttempts tries).
     private Vector3 FindSpawnPosition(float radius)
     {
-        Vector3 position = PlayerController.PlayerPosition + SpawnOffset(radius);
+        Vector3 position
+            = PlayerController.PlayerPosition + SpawnOffset(radius);
         for (int attempt = 0;
              attempt < MaxSpawnAttempts &&
              IsTooCloseToAnEnemy(position, radius);

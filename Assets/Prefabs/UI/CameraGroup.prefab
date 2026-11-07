@@ -26,7 +26,7 @@ Transform:
   m_GameObject: {fileID: 2549686187472598095}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 1}
+  m_LocalPosition: {x: 0, y: 0, z: -1763}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -179,7 +179,6 @@ MonoBehaviour:
   mainCamera: {fileID: 6694399800490252111}
   mainMenuCamera: {fileID: 7903410290157337451}
   gameplayCamera: {fileID: 8681821143790247424}
-  pPlayerPrefab: {fileID: 1843940356141040302, guid: b8226397bde29ab4abb516fe64e2ab6f, type: 3}
   targetGroup: {fileID: 4302849032076014864}
   playerRadius: 1
   playerWeight: 4.5
@@ -212,7 +211,7 @@ Transform:
   m_GameObject: {fileID: 8558096481514896224}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: -9.000001}
+  m_LocalPosition: {x: 0, y: 0, z: -1773}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -312,7 +311,7 @@ MonoBehaviour:
   LateralAdjustment: 0
   FovRange: {x: 1, y: 100}
   DollyRange: {x: -100, y: 100}
-  OrthoSizeRange: {x: 15, y: 1000}
+  OrthoSizeRange: {x: 12, y: 1000}
 --- !u!114 &1147742596823905516
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -349,7 +348,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1535299576213119972, guid: 353cdbf40f1135e49926004f779abd67, type: 3}
       propertyPath: m_LocalPosition.z
-      value: 0
+      value: -1773
       objectReference: {fileID: 0}
     - target: {fileID: 1535299576213119972, guid: 353cdbf40f1135e49926004f779abd67, type: 3}
       propertyPath: m_LocalRotation.w
@@ -381,7 +380,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2474062319082034991, guid: 353cdbf40f1135e49926004f779abd67, type: 3}
       propertyPath: orthographic size
-      value: 15
+      value: 12
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
