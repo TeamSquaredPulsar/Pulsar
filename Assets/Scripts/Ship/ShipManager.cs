@@ -20,10 +20,11 @@ public class ShipManager : MonoBehaviour
     {
         Core.TakeDamage(Core.CurrentHp);
     }
-    
+
     public event Action<ShipManager> ShipDestroyedEvent;
-    
-    [Header("Refs"), SerializeField,]
+
+    [Header("Refs")]
+    [SerializeField]
     private CompositeCollider2D compositeCollider;
 
     [SerializeField]
@@ -38,11 +39,15 @@ public class ShipManager : MonoBehaviour
     [SerializeField]
     private List<ThrusterTile> thrusters = new(10);
 
-    [Header("Detach Explosion"), SerializeField,]
+    [Header("Detach Explosion")]
+    [SerializeField]
     private Vector2 detachRadiateLinearVelocity = new(2f, 5f);
 
     [SerializeField]
     private Vector2 detachRadiateAngularVelocity = new(-180f, 180f);
+
+    [SerializeField]
+    private float CollisionDmgMultiplier = 0.5f;
 
     private ShipGridData _gridData = new();
 
@@ -73,13 +78,13 @@ public class ShipManager : MonoBehaviour
         _gridData = new ShipGridData();
         weapons = new List<WeaponTile>();
         thrusters = new List<ThrusterTile>();
-        
+
         foreach (Tile tile in GetComponentsInChildren<Tile>())
         {
-            Vector2Int localCell = 
+            Vector2Int localCell =
                 ShipUtilities.LocalToGrid(
                     tile.transform.localPosition).ToVector2Int();
-            TileRotation localRot = 
+            TileRotation localRot =
                 tile.transform.localRotation.eulerAngles.z.ToTileRotation();
             AttachTile(localCell, tile, localRot);
         }
@@ -136,10 +141,31 @@ public class ShipManager : MonoBehaviour
             return;
         }
 
-        if (other.gameObject.TryGetComponent(out Projectile projectile))
+        if (other.gameObject.TryGetComponent(out ShipManager ship))
+        {
+            float relativeVelocity = other.relativeVelocity.magnitude;
+            float damage = CalculateDmgFromOtherShip(ship, relativeVelocity);
+            tile.TakeDamage(damage);
+        }
+        else if (other.gameObject.TryGetComponent(out Projectile projectile))
         {
             tile.TakeDamage(projectile.Damage);
         }
+    }
+
+    private float CalculateDmgFromOtherShip(
+        ShipManager otherShip,
+        float relativeVelocity)
+    {
+        float m1 = rb.mass;
+        float m2 = otherShip.rb.mass;
+        float reducedMass = (m1 * m2) / (m1 + m2);
+
+        float kineticEnergy = 0.5f * reducedMass * relativeVelocity * relativeVelocity;
+        float share = m2 / (m1 + m2);
+        float damage = kineticEnergy * share * CollisionDmgMultiplier;
+        
+        return damage;
     }
 
     public void Move(Vector2 position)
@@ -158,7 +184,7 @@ public class ShipManager : MonoBehaviour
         {
             OnCoreDestroyed();
         }
-        
+
         rb.mass -= tile.Mass;
         if (!_gridData.RemoveTile(tile.Cell).IsSuccess)
         {
@@ -183,18 +209,19 @@ public class ShipManager : MonoBehaviour
                 break;
         }
     }
-    
+
     private void OnCoreDestroyed()
-    { foreach (Tile tile in _gridData.Tiles)
+    {
+        foreach (Tile tile in _gridData.Tiles)
         {
             if (tile is CoreTile)
             {
                 continue;
             }
-            
+
             DetatchTile(tile);
         }
-        
+
         ShipDestroyedEvent?.Invoke(this);
         Destroy(gameObject);
     }
@@ -222,10 +249,13 @@ public class ShipManager : MonoBehaviour
             ShipUtilities.GridToLocal((min + max) * 0.5f),
             new Vector3(size.x, size.y, 0f));
     }
-    
+
     #region ATTACH-DETACH
 
-    public bool CanAttach(Vector2Int pos, TileInfoSO infoSo, TileRotation rotation)
+    public bool CanAttach(
+        Vector2Int pos,
+        TileInfoSO infoSo,
+        TileRotation rotation)
     {
         // Cannot attach to an occupied cell
         if (_gridData.ContainsCell(pos))
@@ -283,7 +313,6 @@ public class ShipManager : MonoBehaviour
 
         return count;
     }
-
 
     public Result<(Vector2Int cell, TileRotation rotation)> FindBestAttachment(
         TileInfoSO infoSo,
@@ -362,9 +391,10 @@ public class ShipManager : MonoBehaviour
             }
         }
 
-        return !bestRot.HasValue 
-            ? Result<(Vector2Int cell, TileRotation rotation)>.Fail() 
-            : Result<(Vector2Int cell, TileRotation rotation)>.Pass((bestCell, bestRot.Value));
+        return !bestRot.HasValue
+            ? Result<(Vector2Int cell, TileRotation rotation)>.Fail()
+            : Result<(Vector2Int cell, TileRotation rotation)>.Pass((bestCell,
+                bestRot.Value));
     }
 
     private void DetatchTile(Tile tile)
@@ -374,7 +404,7 @@ public class ShipManager : MonoBehaviour
         Vector2 linearVelocity = rb.linearVelocity;
         float angularVelocity = rb.angularVelocity;
         Vector2 explosionCenter = Core.transform.position;
-        
+
         float minSpeed = Mathf.Max(0f,
             Mathf.Min(detachRadiateLinearVelocity.x,
                 detachRadiateLinearVelocity.y));
@@ -416,11 +446,10 @@ public class ShipManager : MonoBehaviour
         UnregisterTile(tile);
         tile.Detatch(velocity, angularVelocity + spin);
         rb.mass -= tile.Mass;
-        
+
         ShipGridUpdate?.Invoke();
     }
 
     #endregion
-
 }
 }
