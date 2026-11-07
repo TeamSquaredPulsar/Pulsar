@@ -1,5 +1,7 @@
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UIElements;
 
 public class PintleWeaponTile : WeaponTile
 {
@@ -29,29 +31,67 @@ public class PintleWeaponTile : WeaponTile
     [Tooltip("Min dif for a new target to get priority")]
     private float currentTargetBias = 1.5f;
 
+    [SerializeField]
+    private float searchInterval = 0.15f;
+
     private Transform _activeTarget;
     private bool _isLockedOn;
     
-    private HashSet<Transform> _targetsInRange = new HashSet<Transform>();
-
+    private readonly HashSet<Transform> _targetsInRange = new HashSet<Transform>();
+    private Coroutine _searchCoroutine;
+    private WaitForSeconds _searchWait;
+    
     private void Awake()
     {
         _isLockedOn = false;
 
         targetRadius.radius = range;
+        
+        _searchWait = new WaitForSeconds(searchInterval);
+    }
+    
+    private void OnEnable()
+    {
+         _searchCoroutine = StartCoroutine(SearchForTargets());
     }
 
-    private void Update()
+    private void OnDisable()
     {
-        EvaluateTargets();
-        
-        if (_isLockedOn && IsAttached)
+        if (_searchCoroutine != null)
         {
-            TargetLock();
+            StopCoroutine(_searchCoroutine);
+            _searchCoroutine = null;
         }
-        else
+        ClearLock();
+    }
+
+     private void Update()
+     {
+         if (!IsAttached || !_isLockedOn || _activeTarget == null)
+         {
+             if (targetLock.gameObject.activeInHierarchy)
+             {
+                 targetLock.gameObject.SetActive(false);
+             }
+             return;
+         }
+         EngageTargetLock();
+     }
+
+    private IEnumerator SearchForTargets()
+    {
+        while (true)
         {
-            SearchingForTarget();
+            if (IsAttached)
+            {
+                EvaluateTargets();
+            }
+            else
+            {
+                ClearLock();
+            }
+
+            yield return _searchWait;
         }
     }
 
@@ -98,7 +138,7 @@ public class PintleWeaponTile : WeaponTile
         _isLockedOn = _activeTarget != null;
 }
     
-    private void TargetLock()
+    private void EngageTargetLock()
     {
         if (_activeTarget != null)
         {
@@ -122,6 +162,16 @@ public class PintleWeaponTile : WeaponTile
         Fire();
     }
 
+    private void ClearLock()
+    {
+        _activeTarget = null;
+        _isLockedOn = false;
+        if (targetLock != null && targetLock.gameObject.activeSelf)
+        {
+            targetLock.gameObject.SetActive(false);
+        }
+    }
+
     public override void Fire()
     {
         if (!_isLockedOn)
@@ -129,11 +179,6 @@ public class PintleWeaponTile : WeaponTile
             return;
         }
         base.Fire();
-    }
-
-    private void SearchingForTarget()
-    {
-        targetLock.gameObject.SetActive(false);
     }
 
     private void OnTriggerEnter2D(Collider2D other)
@@ -161,8 +206,7 @@ public class PintleWeaponTile : WeaponTile
         
         //Clear enemy target list
         _targetsInRange.Clear();
-        _activeTarget = null;
-        _isLockedOn = false;
+        ClearLock();
 
         if (targetRadius != null)
         {
