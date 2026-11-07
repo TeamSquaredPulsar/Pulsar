@@ -105,7 +105,7 @@ MonoBehaviour:
   thrusters: []
   detachRadiateLinearVelocity: {x: 2, y: 5}
   detachRadiateAngularVelocity: {x: -180, y: 180}
-  CollisionDmgMultiplier: 2
+  CollisionDmgMultiplier: 0.5
 --- !u!114 &8617872407729157336
 MonoBehaviour:
   m_ObjectHideFlags: 0

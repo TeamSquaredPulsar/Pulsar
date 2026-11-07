@@ -47,7 +47,7 @@ public class ShipManager : MonoBehaviour
     private Vector2 detachRadiateAngularVelocity = new(-180f, 180f);
 
     [SerializeField]
-    private float CollisionDmgMultiplier = 1.1f;
+    private float CollisionDmgMultiplier = 0.5f;
 
     private ShipGridData _gridData = new();
 
@@ -132,8 +132,6 @@ public class ShipManager : MonoBehaviour
 
     private void OnCollisionEnter2D(Collision2D other)
     {
-        Debug.Log(other.gameObject.name);
-
         const int contactPointIndex = 0;
         if (!_gridData.TryGetClosestTile(
                 other.GetContact(contactPointIndex).point,
@@ -147,6 +145,8 @@ public class ShipManager : MonoBehaviour
             float relativeVelocity = other.relativeVelocity.magnitude;
             float damage = CalculateDmgFromOtherShip(ship, relativeVelocity);
             tile.TakeDamage(damage);
+            Debug.Log("R-Velocity:" +  relativeVelocity);
+            Debug.Log("Damage:" + damage);
         }
         else if (other.gameObject.TryGetComponent(out Projectile projectile))
         {
