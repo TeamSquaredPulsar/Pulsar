@@ -8,7 +8,6 @@ using Pulsar.Hazards;
 using Pulsar.Ship.Data;
 using Pulsar.Utilities;
 using UnityEngine;
-using UnityEngine.Serialization;
 using Random = UnityEngine.Random;
 
 namespace Pulsar.Ship
@@ -51,7 +50,6 @@ public class ShipManager : MonoBehaviour
     private float CollisionDmgMultiplier = 0.5f;
 
     private ShipGridData _gridData = new();
-    private string _shipTag;
 
     public CoreTile Core => _gridData.Core;
 
@@ -62,7 +60,6 @@ public class ShipManager : MonoBehaviour
     
     private void Start()
     {
-        _shipTag = gameObject.tag;
         RefreshTiles();
         _gridData.TileOrphanedEvent += DetatchTile;
     }
@@ -101,7 +98,7 @@ public class ShipManager : MonoBehaviour
             return;
         }
 
-        tile.gameObject.tag = _shipTag;
+        tile.gameObject.tag = gameObject.tag;
         ProcessTile(tile);
         rb.mass += tile.Mass;
         tile.Attach(cell, rotation);
