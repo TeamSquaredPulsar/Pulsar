@@ -31,8 +31,8 @@ public class PintleWeaponTile : WeaponTile
 
     private Transform _activeTarget;
     private bool _isLockedOn;
-
-    private List<Transform> _targetsInRange = new List<Transform>();
+    
+    private HashSet<Transform> _targetsInRange = new HashSet<Transform>();
 
     private void Awake()
     {
@@ -57,7 +57,7 @@ public class PintleWeaponTile : WeaponTile
 
     private void EvaluateTargets()
     {
-        _targetsInRange.RemoveAll(t => t == null ||
+        _targetsInRange.RemoveWhere(t => t == null ||
                                        !t.gameObject.activeInHierarchy);
 
         if (_targetsInRange.Count == 0)
