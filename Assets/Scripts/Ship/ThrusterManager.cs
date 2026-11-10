@@ -19,15 +19,19 @@ public class ThrusterManager : MonoBehaviour
 
     //Temp field until the core has its own thruster values
     [SerializeField]
-    private float coreThrust = 2;
+    private float coreThrust = 3;
 
     [SerializeField]
     private float rotationalThrust = 2;
+
+    [SerializeField]
+    private float rotationScaler = 1f;
 
     private ThrustAtRotation[] _directedThrust;
 
     private Vector2 _moveInput;
     private float _rotInput;
+    private float _curRotThrust;
 
     private void Awake()
     {
@@ -57,7 +61,7 @@ public class ThrusterManager : MonoBehaviour
 
     private void ApplyRotation()
     {
-        rb.AddTorque(_rotInput * rotationalThrust, ForceMode2D.Force);
+        rb.AddTorque(_rotInput * _curRotThrust, ForceMode2D.Force);
     }
 
     private void ApplyThrust()
@@ -117,6 +121,8 @@ public class ThrusterManager : MonoBehaviour
             _directedThrust[thruster.Rotation.ToInt()].Thrust
                 += thruster.Thrust;
         }
+        
+        _curRotThrust = rotationalThrust + rotationScaler * thrusters.Count;
     }
 
     private ThrustAtRotation
