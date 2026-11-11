@@ -183,6 +183,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: BasicBulletPintle
       objectReference: {fileID: 0}
+    - target: {fileID: 7347581372079830787, guid: 9141fe4656a2ff0468c29dd7d8bb3239, type: 3}
+      propertyPath: m_Mass
+      value: 3
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects:
