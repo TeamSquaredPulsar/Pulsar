@@ -5,7 +5,7 @@ public class ThrusterTile : Tile
     
     [field: SerializeField]
     public float Thrust { get; private set; } = 0.1f;
-    
+    [SerializeField][GetComponent]
     private SpriteRenderer _spriteRenderer;
 
     private void Awake()
