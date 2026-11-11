@@ -14,13 +14,18 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::WaveDefinitionSO
   waveName: Siege
   pattern: 2
+  patternSpread: 40
+  maxWaveTime: 120
   entries:
   - enemyPrefab: {fileID: 5225403383299695173, guid: dd0c52cd24254a1cb392a9337681186b, type: 3}
     count: 1
-    spawnInterval: 3.0
+    spawnInterval: 10
   - enemyPrefab: {fileID: 7300000001, guid: 066a27f89cca417bbf862bb54ef7b612, type: 3}
     count: 1
     spawnInterval: 2.5
   - enemyPrefab: {fileID: 939562278696158235, guid: 50e6449a2b964d0caeada879ad16d0b7, type: 3}
     count: 2
-    spawnInterval: 2.0
+    spawnInterval: 2
+  - enemyPrefab: {fileID: 7882822764531990208, guid: 929a74155f7e4b7291d6c800572c02e8, type: 3}
+    count: 2
+    spawnInterval: 8

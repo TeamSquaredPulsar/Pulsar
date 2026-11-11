@@ -14,10 +14,15 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::WaveDefinitionSO
   waveName: The old crew
   pattern: 0
+  patternSpread: 40
+  maxWaveTime: 120
   entries:
   - enemyPrefab: {fileID: 7100000001, guid: 6107522afb8c499f90bf713e550ecb43, type: 3}
     count: 2
     spawnInterval: 2.5
   - enemyPrefab: {fileID: 7300000001, guid: 066a27f89cca417bbf862bb54ef7b612, type: 3}
+    count: 1
+    spawnInterval: 2.5
+  - enemyPrefab: {fileID: 939562278696158235, guid: 36f9a9e9ad858f64fa8ad4b68e97d765, type: 3}
     count: 1
     spawnInterval: 2.5

@@ -14,7 +14,12 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::WaveDefinitionSO
   waveName: Pincer
   pattern: 2
+  patternSpread: 40
+  maxWaveTime: 120
   entries:
   - enemyPrefab: {fileID: 7091166893725290549, guid: 6399b865050a4e85b46b5fdb75bf1474, type: 3}
-    count: 2
-    spawnInterval: 3.0
+    count: 4
+    spawnInterval: 3
+  - enemyPrefab: {fileID: 8188435154698411991, guid: 9dc0c2dda0134b64e8cb399608f4b80b, type: 3}
+    count: 4
+    spawnInterval: 3
