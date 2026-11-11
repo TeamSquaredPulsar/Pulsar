@@ -109,11 +109,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4a065edf6c6f717428c6f24af01794d8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ThrusterManager
-  thrusters:
-  - {fileID: 2341339632320359333}
   rb: {fileID: 8716755017154123671}
   coreThrust: 2
   rotationalThrust: 2
+  rotationScaler: 1
 --- !u!50 &8716755017154123671
 Rigidbody2D:
   serializedVersion: 5
@@ -287,19 +286,19 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1486952502805023581, guid: d41f92095f77c0c419e9feb661d7963f, type: 3}
       propertyPath: m_LocalRotation.w
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 1486952502805023581, guid: d41f92095f77c0c419e9feb661d7963f, type: 3}
       propertyPath: m_LocalRotation.x
-      value: -0
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 1486952502805023581, guid: d41f92095f77c0c419e9feb661d7963f, type: 3}
       propertyPath: m_LocalRotation.y
-      value: -0
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 1486952502805023581, guid: d41f92095f77c0c419e9feb661d7963f, type: 3}
       propertyPath: m_LocalRotation.z
-      value: -0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 1486952502805023581, guid: d41f92095f77c0c419e9feb661d7963f, type: 3}
       propertyPath: m_LocalEulerAnglesHint.x
@@ -311,7 +310,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1486952502805023581, guid: d41f92095f77c0c419e9feb661d7963f, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
-      value: 0
+      value: 180
       objectReference: {fileID: 0}
     - target: {fileID: 7104587906449742241, guid: d41f92095f77c0c419e9feb661d7963f, type: 3}
       propertyPath: m_ConnectedRigidBody

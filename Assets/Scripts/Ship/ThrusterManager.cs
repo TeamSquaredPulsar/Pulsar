@@ -72,8 +72,8 @@ public class ThrusterManager : MonoBehaviour
             ThrustAtRotation thrustY = GetThrustAtRotation(
                 _moveInput.y switch
                 {
-                    > 0 => TileRotation.Up,
-                    < 0 => TileRotation.Down,
+                    < 0 => TileRotation.Up,
+                    > 0 => TileRotation.Down,
                     _ => throw new ArgumentOutOfRangeException(
                         nameof(_moveInput) + ".y",
                         "Already checked Y could not be 0!"),

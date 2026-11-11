@@ -87,12 +87,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4a065edf6c6f717428c6f24af01794d8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ThrusterManager
-  thrusters:
-  - {fileID: 8112126599397905569}
-  - {fileID: 5881562080108163827}
   rb: {fileID: 2633532515144847099}
   coreThrust: 2
   rotationalThrust: 2
+  rotationScaler: 1
 --- !u!50 &2633532515144847099
 Rigidbody2D:
   serializedVersion: 5
@@ -1293,7 +1291,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1486952502805023581, guid: d41f92095f77c0c419e9feb661d7963f, type: 3}
       propertyPath: m_LocalRotation.w
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 1486952502805023581, guid: d41f92095f77c0c419e9feb661d7963f, type: 3}
       propertyPath: m_LocalRotation.x
@@ -1305,7 +1303,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1486952502805023581, guid: d41f92095f77c0c419e9feb661d7963f, type: 3}
       propertyPath: m_LocalRotation.z
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 1486952502805023581, guid: d41f92095f77c0c419e9feb661d7963f, type: 3}
       propertyPath: m_LocalEulerAnglesHint.x
@@ -1317,7 +1315,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1486952502805023581, guid: d41f92095f77c0c419e9feb661d7963f, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
-      value: 0
+      value: 180
       objectReference: {fileID: 0}
     - target: {fileID: 9113379072927920375, guid: d41f92095f77c0c419e9feb661d7963f, type: 3}
       propertyPath: m_Name
@@ -1333,17 +1331,6 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 1486952502805023581, guid: d41f92095f77c0c419e9feb661d7963f, type: 3}
   m_PrefabInstance: {fileID: 5904292291172622343}
   m_PrefabAsset: {fileID: 0}
---- !u!114 &5881562080108163827 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 31458138794939124, guid: d41f92095f77c0c419e9feb661d7963f, type: 3}
-  m_PrefabInstance: {fileID: 5904292291172622343}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: c73fc15b171ddc347ab826efbd8c2757, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::ThrusterTile
 --- !u!1001 &7171499904339017107
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -1490,7 +1477,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1486952502805023581, guid: d41f92095f77c0c419e9feb661d7963f, type: 3}
       propertyPath: m_LocalRotation.w
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 1486952502805023581, guid: d41f92095f77c0c419e9feb661d7963f, type: 3}
       propertyPath: m_LocalRotation.x
@@ -1502,7 +1489,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1486952502805023581, guid: d41f92095f77c0c419e9feb661d7963f, type: 3}
       propertyPath: m_LocalRotation.z
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 1486952502805023581, guid: d41f92095f77c0c419e9feb661d7963f, type: 3}
       propertyPath: m_LocalEulerAnglesHint.x
@@ -1514,7 +1501,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1486952502805023581, guid: d41f92095f77c0c419e9feb661d7963f, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
-      value: 0
+      value: 180
       objectReference: {fileID: 0}
     - target: {fileID: 9113379072927920375, guid: d41f92095f77c0c419e9feb661d7963f, type: 3}
       propertyPath: m_Name
@@ -1530,17 +1517,6 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 1486952502805023581, guid: d41f92095f77c0c419e9feb661d7963f, type: 3}
   m_PrefabInstance: {fileID: 8141332934083135061}
   m_PrefabAsset: {fileID: 0}
---- !u!114 &8112126599397905569 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 31458138794939124, guid: d41f92095f77c0c419e9feb661d7963f, type: 3}
-  m_PrefabInstance: {fileID: 8141332934083135061}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: c73fc15b171ddc347ab826efbd8c2757, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::ThrusterTile
 --- !u!1001 &8501487934028206752
 PrefabInstance:
   m_ObjectHideFlags: 0
