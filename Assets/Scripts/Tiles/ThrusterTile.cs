@@ -1,3 +1,4 @@
+using Nrjwolf.Tools.AttachAttributes;
 using UnityEngine;
 
 public class ThrusterTile : Tile
