@@ -57,7 +57,7 @@ public class ThrusterManager : MonoBehaviour
 
     public void HandleThrust(Vector2 thrust)
     {
-        foreach (ThrustAtRotation dir in _directedThrust)
+        foreach (ThrustAtRotation dir in _directedThrust.Where(dir => dir.Thrusters != null))
         {
             if (dir.Thrusters == null)
             {
