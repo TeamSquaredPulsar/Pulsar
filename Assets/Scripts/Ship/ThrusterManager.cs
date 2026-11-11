@@ -175,7 +175,6 @@ public class ThrusterManager : MonoBehaviour
 
     private void ShowActiveThrusters(ThrusterTile[] dirThrusters)
     {
-        if (dirThrusters.Length == 0) return;
         foreach (ThrusterTile t in dirThrusters)
         {
             t.SetActive(true);
