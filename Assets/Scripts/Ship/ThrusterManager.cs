@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using Pulsar.DataClasses;
 using Pulsar.DataClasses.Extensions;
 using UnityEngine;
@@ -10,6 +11,7 @@ public struct ThrustAtRotation
 {
     public TileRotation Orientation;
     public float Thrust;
+    public ThrusterTile[] Thrusters;
 }
 
 public class ThrusterManager : MonoBehaviour
@@ -19,15 +21,19 @@ public class ThrusterManager : MonoBehaviour
 
     //Temp field until the core has its own thruster values
     [SerializeField]
-    private float coreThrust = 2;
+    private float coreThrust = 3;
 
     [SerializeField]
     private float rotationalThrust = 2;
+
+    [SerializeField]
+    private float rotationScaler = 1f;
 
     private ThrustAtRotation[] _directedThrust;
 
     private Vector2 _moveInput;
     private float _rotInput;
+    private float _curRotThrust;
 
     private void Awake()
     {
@@ -52,12 +58,42 @@ public class ThrusterManager : MonoBehaviour
 
     public void HandleThrust(Vector2 thrust)
     {
+        foreach (ThrustAtRotation dir in _directedThrust.Where(dir => dir.Thrusters != null))
+        {
+            if (dir.Thrusters == null)
+            {
+                continue;
+            }
+            foreach (ThrusterTile t in dir.Thrusters)
+            {
+                t.SetActive(false);
+            }
+        }
+        
         _moveInput = thrust;
+
+        if (_moveInput.x < 0)
+        {
+            ShowActiveThrusters(_directedThrust[(int)TileRotation.Right].Thrusters);
+        }
+        if (_moveInput.x > 0)
+        {
+            ShowActiveThrusters(_directedThrust[(int)TileRotation.Left].Thrusters);
+        }
+
+        if (_moveInput.y < 0)
+        {
+            ShowActiveThrusters(_directedThrust[(int)TileRotation.Up].Thrusters);
+        }
+        if (_moveInput.y > 0)
+        {
+            ShowActiveThrusters(_directedThrust[(int)TileRotation.Down].Thrusters);
+        }
     }
 
     private void ApplyRotation()
     {
-        rb.AddTorque(_rotInput * rotationalThrust, ForceMode2D.Force);
+        rb.AddTorque(_rotInput * _curRotThrust, ForceMode2D.Force);
     }
 
     private void ApplyThrust()
@@ -68,8 +104,8 @@ public class ThrusterManager : MonoBehaviour
             ThrustAtRotation thrustY = GetThrustAtRotation(
                 _moveInput.y switch
                 {
-                    > 0 => TileRotation.Up,
-                    < 0 => TileRotation.Down,
+                    < 0 => TileRotation.Up,
+                    > 0 => TileRotation.Down,
                     _ => throw new ArgumentOutOfRangeException(
                         nameof(_moveInput) + ".y",
                         "Already checked Y could not be 0!"),
@@ -82,8 +118,8 @@ public class ThrusterManager : MonoBehaviour
             ThrustAtRotation thrustX = GetThrustAtRotation(
                 _moveInput.x switch
                 {
-                    > 0 => TileRotation.Right,
-                    < 0 => TileRotation.Left,
+                    < 0 => TileRotation.Right,
+                    > 0 => TileRotation.Left,
                     _ => throw new ArgumentOutOfRangeException(
                         nameof(_moveInput) + ".X",
                         "Already checked X could not be 0!"),
@@ -103,8 +139,12 @@ public class ThrusterManager : MonoBehaviour
         int directions = new TileRotation().Length();
         _directedThrust = new ThrustAtRotation[directions];
 
+        List<ThrusterTile>[] groupedThrusters = 
+            new List<ThrusterTile>[directions];
+        
         for (int i = 0; i < directions; i++)
         {
+            groupedThrusters[i] = new List<ThrusterTile>();
             _directedThrust[i] = new ThrustAtRotation
             {
                 Orientation = (TileRotation)i,
@@ -114,9 +154,18 @@ public class ThrusterManager : MonoBehaviour
         
         foreach (ThrusterTile thruster in thrusters)
         {
-            _directedThrust[thruster.Rotation.ToInt()].Thrust
+            int rotIndex = thruster.Rotation.ToInt();
+            _directedThrust[rotIndex].Thrust
                 += thruster.Thrust;
+            groupedThrusters[rotIndex].Add(thruster);
         }
+        
+        for (int i = 0; i < directions; i++)
+        {
+            _directedThrust[i].Thrusters = groupedThrusters[i].ToArray();
+        }
+        
+        _curRotThrust = rotationalThrust + rotationScaler * thrusters.Count;
     }
 
     private ThrustAtRotation
@@ -124,6 +173,14 @@ public class ThrusterManager : MonoBehaviour
         _directedThrust[(int)orientation];
 
     #endregion
+
+    private void ShowActiveThrusters(ThrusterTile[] dirThrusters)
+    {
+        foreach (ThrusterTile t in dirThrusters)
+        {
+            t.SetActive(true);
+        }
+    }
 }
 
 }
