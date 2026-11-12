@@ -1,3 +1,4 @@
+using Nrjwolf.Tools.AttachAttributes;
 using UnityEngine;
 
 public class ThrusterTile : Tile
@@ -5,6 +6,20 @@ public class ThrusterTile : Tile
     
     [field: SerializeField]
     public float Thrust { get; private set; } = 0.1f;
+    [SerializeField][GetComponent]
+    private SpriteRenderer _spriteRenderer;
+
+    private void Awake()
+    {
+        _spriteRenderer = GetComponent<SpriteRenderer>();
+        SetActive(false);
+    }
+    
+    public void SetActive(bool active)
+    {
+        _spriteRenderer.color = (active) ? Color.red : Color.white;
+        
+    }
         
     public void Move(float amount, ref Rigidbody2D parentRb)
     {
