@@ -148,6 +148,7 @@ public abstract class Tile : MonoBehaviour
         // collider to merge with the parents collider properly.
         if (rigidBody)
         {
+            rigidBody.simulated = false;
             Destroy(rigidBody);
             rigidBody = null;
         }
