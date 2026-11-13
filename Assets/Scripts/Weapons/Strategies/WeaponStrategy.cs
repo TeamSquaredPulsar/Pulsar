@@ -24,7 +24,7 @@ public abstract class WeaponStrategy : ScriptableObject
     public abstract void
         Fire(
             Transform[] firePoints,
-            WeaponTile weapon,
+            Weapon weapon,
             Func<Transform, GameObject> spawnProjectile);
 
     protected void VerifyFirePoints(

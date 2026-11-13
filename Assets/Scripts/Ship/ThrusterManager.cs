@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using Pulsar.DataClasses;
 using Pulsar.DataClasses.Extensions;
+using Pulsar.Interfaces;
 using UnityEngine;
 
 namespace Pulsar.Ship
@@ -15,7 +16,7 @@ public struct ThrustAtRotation
 public class ThrusterManager : MonoBehaviour
 {
     [SerializeField]
-    private List<ThrusterTile> thrusters;
+    private List<IThrustable> thrusters;
     
     [SerializeField]
     private Rigidbody2D rb;

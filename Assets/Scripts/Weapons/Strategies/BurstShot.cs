@@ -25,7 +25,7 @@ public class BurstShot : WeaponStrategy
     /// <inheritdoc/>
     public override void Fire(
         Transform[] firePoints,
-        WeaponTile weapon,
+        Weapon weapon,
         Func<Transform, GameObject> spawnProjectile)
     {
         VerifyFirePoints(firePoints, k_max_firePoints);

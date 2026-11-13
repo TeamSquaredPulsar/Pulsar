@@ -9,7 +9,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1283674777054792067}
-  - component: {fileID: 9156844168472924138}
+  - component: {fileID: 2685936949618963826}
   - component: {fileID: -8815025657336327204}
   - component: {fileID: 4676953174740963180}
   - component: {fileID: 6394848136817018224}
@@ -38,7 +38,7 @@ Transform:
   - {fileID: 3168602917943994867}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &9156844168472924138
+--- !u!114 &2685936949618963826
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -47,9 +47,9 @@ MonoBehaviour:
   m_GameObject: {fileID: 2402461002857692903}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: fbcf854d2b026ba4bb1127a641953488, type: 3}
+  m_Script: {fileID: 11500000, guid: b7840a352fdff8c44954e925029eff57, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::Weapon
+  m_EditorClassIdentifier: Weapons::Pulsar.Weapons.ManualWeapon
   baseColor: {r: 1, g: 1, b: 1, a: 1}
   <IsAttached>k__BackingField: 0
   <TileInfo>k__BackingField: {fileID: 11400000, guid: 71fb61585e3013a43b3726d73a977655, type: 2}
@@ -63,7 +63,7 @@ MonoBehaviour:
   <FirePoints>k__BackingField:
   - {fileID: 1113316170954926131}
   - {fileID: 3168602917943994867}
-  <FireRatePerSecond>k__BackingField: 1
+  <FireRatePerSecond>k__BackingField: 0.5
   <Strategy>k__BackingField: {fileID: 11400000, guid: 4d233d3ff0a9cbd4f833c1a4dac6bbc5, type: 2}
 --- !u!114 &-8815025657336327204
 MonoBehaviour:

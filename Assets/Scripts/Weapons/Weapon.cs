@@ -1,10 +1,8 @@
 using System.Collections;
 using NaughtyAttributes;
-using Nrjwolf.Tools.AttachAttributes;
 using Pulsar.Hazards;
 using Pulsar.Weapons;
 using UnityEngine;
-using UnityEngine.Serialization;
 
 /// <summary>
 /// Represents a weapon
@@ -14,7 +12,7 @@ using UnityEngine.Serialization;
 /// @author Alfredo Luzardo
 /// @version 1.1
 /// </summary>
-public class WeaponTile : Tile, IProjectileSpawner, IWeapon
+public abstract class Weapon : Tile, IProjectileSpawner, IWeapon
 {
     [Header("References")]
     [field: SerializeField]
@@ -23,13 +21,15 @@ public class WeaponTile : Tile, IProjectileSpawner, IWeapon
     [field: SerializeField]
     public Collider2D ParentCollider { get; private set; }
 
-    [field: SerializeField, ReorderableList,]
+    [field: SerializeField]
+    [field: ReorderableList]
     public Transform[] FirePoints { get; private set; }
 
     [field: SerializeField]
     public float FireRatePerSecond { get; protected set; } = 0.5f;
 
-    [field: SerializeField, Expandable, FormerlySerializedAs("weaponStrategy"),]
+    [field: SerializeField]
+    [field: Expandable]
     public WeaponStrategy Strategy { get; private set; }
 
     private Coroutine _fireTimerRoutine;
@@ -47,17 +47,20 @@ public class WeaponTile : Tile, IProjectileSpawner, IWeapon
 
     public GameObject SpawnProjectile(Transform spawnPoint)
     {
-        GameObject projectile = _projectile.SpawnProjectile(spawnPoint, ParentCollider);
+        GameObject projectile
+            = _projectile.SpawnProjectile(spawnPoint, ParentCollider);
         Physics2D.IgnoreCollision(projectile.GetComponent<Collider2D>(),
             Coll2D);
         return projectile;
     }
+
     public void Fire()
     {
         if (!CanFire)
         {
             return;
         }
+
         Strategy.Fire(FirePoints, this, SpawnProjectile);
         StartFireTimer();
     }
