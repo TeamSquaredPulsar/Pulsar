@@ -20,9 +20,9 @@ MonoBehaviour:
   - enemyPrefab: {fileID: 8501487934028206752, guid: 6a6a746bee8c4d40a9b8ecc68c33b98e, type: 3}
     count: 1
     spawnInterval: 3
-  - enemyPrefab: {fileID: 8188435154698411991, guid: 9dc0c2dda0134b64e8cb399608f4b80b, type: 3}
-    count: 3
-    spawnInterval: 8
   - enemyPrefab: {fileID: 7300000001, guid: 066a27f89cca417bbf862bb54ef7b612, type: 3}
     count: 2
+    spawnInterval: 10
+  - enemyPrefab: {fileID: 8188435154698411991, guid: 9bc80658375d3514b83eaa2770a879f5, type: 3}
+    count: 1
     spawnInterval: 10

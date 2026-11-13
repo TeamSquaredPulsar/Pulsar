@@ -14,7 +14,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1283674777054792067, guid: f88a5cea0e5b8214e8ab1f2a4ecc1588, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 0.2
+      value: 0.22
       objectReference: {fileID: 0}
     - target: {fileID: 1283674777054792067, guid: f88a5cea0e5b8214e8ab1f2a4ecc1588, type: 3}
       propertyPath: m_LocalPosition.z
@@ -67,6 +67,11 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 1113316170954926131, guid: f88a5cea0e5b8214e8ab1f2a4ecc1588, type: 3}
   m_PrefabInstance: {fileID: 1851296726388096217}
   m_PrefabAsset: {fileID: 0}
+--- !u!212 &6437544589814838197 stripped
+SpriteRenderer:
+  m_CorrespondingSourceObject: {fileID: 4676953174740963180, guid: f88a5cea0e5b8214e8ab1f2a4ecc1588, type: 3}
+  m_PrefabInstance: {fileID: 1851296726388096217}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &2695609690963279153
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -112,6 +117,10 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 1597895781104856423}
     - target: {fileID: -4160512527206970603, guid: 9141fe4656a2ff0468c29dd7d8bb3239, type: 3}
+      propertyPath: turretSprites
+      value: 
+      objectReference: {fileID: 11400000, guid: 839d2178e26ad654c910ed7f4c86801b, type: 2}
+    - target: {fileID: -4160512527206970603, guid: 9141fe4656a2ff0468c29dd7d8bb3239, type: 3}
       propertyPath: parentCollider
       value: 
       objectReference: {fileID: 4194787609717399561}
@@ -127,6 +136,10 @@ PrefabInstance:
       propertyPath: projectilePrefab
       value: 
       objectReference: {fileID: 1682859016921356063, guid: a133161848d51234b97f8554a243a1ab, type: 3}
+    - target: {fileID: -4160512527206970603, guid: 9141fe4656a2ff0468c29dd7d8bb3239, type: 3}
+      propertyPath: activeTurretSprite
+      value: 
+      objectReference: {fileID: 6437544589814838197}
     - target: {fileID: -4160512527206970603, guid: 9141fe4656a2ff0468c29dd7d8bb3239, type: 3}
       propertyPath: firePoints.Array.size
       value: 1
@@ -179,13 +192,17 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 2303072813145309213, guid: 9141fe4656a2ff0468c29dd7d8bb3239, type: 3}
+      propertyPath: <MaxHealth>k__BackingField
+      value: 10.34
+      objectReference: {fileID: 0}
     - target: {fileID: 3485646891177161118, guid: 9141fe4656a2ff0468c29dd7d8bb3239, type: 3}
       propertyPath: m_Name
       value: BasicBulletPintle
       objectReference: {fileID: 0}
     - target: {fileID: 7347581372079830787, guid: 9141fe4656a2ff0468c29dd7d8bb3239, type: 3}
       propertyPath: m_Mass
-      value: 3
+      value: 1.5
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

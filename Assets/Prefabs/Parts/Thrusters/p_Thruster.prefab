@@ -56,7 +56,8 @@ MonoBehaviour:
   tileCollider: {fileID: 6303449030629206126}
   rigidBody: {fileID: 8993274152522921009}
   health: {fileID: 8159396282816949206}
-  <Thrust>k__BackingField: 5
+  <Thrust>k__BackingField: 6
+  _spriteRenderer: {fileID: 0}
 --- !u!114 &8159396282816949206
 MonoBehaviour:
   m_ObjectHideFlags: 0

@@ -47,7 +47,7 @@ public abstract class Tile : MonoBehaviour
     private Rigidbody2D rigidBody;
 
     [SerializeField]
-    private Health health;
+    protected Health health;
 
     private const int FloatingSortingOrder = 10;
 
@@ -58,7 +58,7 @@ public abstract class Tile : MonoBehaviour
 
     public Sprite Sprite => spriteRenderer.sprite;
 
-    private void Awake()
+    protected virtual void Awake()
     {
         //Initializing in awake to stop the chance of it being destroyed before caches
         _rbInfo = new TileRbInfo
@@ -69,14 +69,14 @@ public abstract class Tile : MonoBehaviour
         };
     }
     
-    public void Start()
+    protected virtual void Start()
     {
         health.DestroyEvent += OnDead;
         health.HealthStateChanged += OnHealthStateChanged;
         UpdateSprite(HealthState.FullHealth);
     }
 
-    public void OnDestroy()
+    protected virtual void OnDestroy()
     {
         health.DestroyEvent -= OnDead;
         health.HealthStateChanged -= OnHealthStateChanged;

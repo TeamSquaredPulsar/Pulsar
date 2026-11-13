@@ -16,7 +16,7 @@ MonoBehaviour:
   acceleration: 10
   stoppingDistance: 6
   retreatDistance: 3
-  turnSpeed: 30
+  turnSpeed: 25
   driftAmount: 0.5
   weaveFrequency: 2.5
   holdDrift: 0.5
