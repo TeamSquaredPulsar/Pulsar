@@ -18,8 +18,11 @@ MonoBehaviour:
   maxWaveTime: 120
   entries:
   - enemyPrefab: {fileID: 7091166893725290549, guid: 6399b865050a4e85b46b5fdb75bf1474, type: 3}
-    count: 4
-    spawnInterval: 3
+    count: 2
+    spawnInterval: 15
   - enemyPrefab: {fileID: 8188435154698411991, guid: 9dc0c2dda0134b64e8cb399608f4b80b, type: 3}
     count: 4
+    spawnInterval: 3
+  - enemyPrefab: {fileID: 7882822764531990208, guid: 929a74155f7e4b7291d6c800572c02e8, type: 3}
+    count: 1
     spawnInterval: 3
