@@ -1,6 +1,5 @@
 using System;
 using System.Collections;
-using Nrjwolf.Tools.AttachAttributes;
 using Pulsar.DataClasses;
 using Pulsar.Ship;
 using Pulsar.Utilities;
@@ -21,7 +20,7 @@ public class PlayerController : MonoBehaviour
     [SerializeField]
     private InputReader input;
 
-    [GetComponent, SerializeField,]
+    [SerializeField]
     private ShipManager ship;
 
     public Vector2 CorePosition => ship.Core.transform.position;

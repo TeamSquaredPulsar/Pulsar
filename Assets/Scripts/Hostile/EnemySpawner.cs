@@ -1,7 +1,6 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using NaughtyAttributes;
 using Pulsar.Player;
 using UnityEngine;
 using Random = UnityEngine.Random;
@@ -16,8 +15,7 @@ public class EnemySpawner : MonoBehaviour
     private const float LeashCheckInterval = 1f;
 
     public event Action WaveCompleteEvent;
-
-    [ShowNonSerializedField]
+    
     private WaveDefinitionSO _wave;
 
     [Header("Spawning")]
