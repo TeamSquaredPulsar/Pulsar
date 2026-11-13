@@ -20,7 +20,8 @@ public class ShipManager : MonoBehaviour
     [Button]
     private void DebugKillShip()
     {
-        Core.TakeDamage(Core.CurrentHp);
+        Tile core = ((Tile)Core);
+        core.TakeDamage(core.CurrentHp);
     }
 
     public event Action<ShipManager> ShipDestroyedEvent;
@@ -51,7 +52,7 @@ public class ShipManager : MonoBehaviour
 
     private ShipGridData _gridData = new();
 
-    public CoreTile Core => _gridData.Core;
+    public IShipCore Core => _gridData.Core;
 
     public IReadOnlyDictionary<Vector2Int, Tile> Cells => _gridData.Cells;
     public bool OwnsTile(Tile tile) => Cells.Values.Contains(tile);
@@ -128,6 +129,7 @@ public class ShipManager : MonoBehaviour
         {
             _weapons.Add(manualWeapon);
         }
+        
     }
 
     public void Fire()
@@ -413,7 +415,7 @@ public class ShipManager : MonoBehaviour
         Vector2 centerOfMass = rb.worldCenterOfMass;
         Vector2 linearVelocity = rb.linearVelocity;
         float angularVelocity = rb.angularVelocity;
-        Vector2 explosionCenter = Core.transform.position;
+        Vector2 explosionCenter = ((Tile)Core).transform.position;
 
         float minSpeed = Mathf.Max(0f,
             Mathf.Min(detachRadiateLinearVelocity.x,

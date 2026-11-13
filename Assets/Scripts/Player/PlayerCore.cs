@@ -12,6 +12,11 @@ namespace Pulsar
         [field: SerializeField]
         public float Thrust { get; private set; }
 
+        private void Awake()
+        {
+            DestroyEvent += (_) => OnCoreDestroyed?.Invoke();
+        }
+        
         public void Activate(float amount, in Rigidbody2D targetRb)
         {
             throw new NotImplementedException();
