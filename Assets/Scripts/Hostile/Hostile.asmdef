@@ -1,0 +1,20 @@
+{
+    "name": "Hostile",
+    "rootNamespace": "",
+    "references": [
+        "GUID:e88c340cb7092554a83836f929d7dacc",
+        "GUID:4ada457e02011104d9008eceaa61154f",
+        "GUID:bd9e1f1715d621147881d1b0790de60b",
+        "GUID:4b4794e38edc74eb8986ad993a5ad5c8",
+        "GUID:776d03a35f1b52c4a9aed9f56d7b4229"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}
