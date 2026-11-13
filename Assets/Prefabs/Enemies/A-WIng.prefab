@@ -9,7 +9,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 8980317795236290852}
-  - component: {fileID: 650936910112136055}
+  - component: {fileID: 4031004962401357717}
   - component: {fileID: 500316016107051698}
   - component: {fileID: 6106752217416643590}
   - component: {fileID: 2633532515144847099}
@@ -40,7 +40,7 @@ Transform:
   - {fileID: 5856695703261131753}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &650936910112136055
+--- !u!114 &4031004962401357717
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -51,8 +51,8 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 5ba67c83c42d025438ce9548f5b4effb, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::EnemyController
-  enemyInfo: {fileID: 11400000, guid: 6ae6f0f976344938a83043949882cc1c, type: 2}
+  m_EditorClassIdentifier: Hostile::EnemyController
+  enemyInfo: {fileID: 11400000, guid: aa326d857026b46428ff0d5149c5751d, type: 2}
   shipManager: {fileID: 500316016107051698}
   rb: {fileID: 2633532515144847099}
 --- !u!114 &500316016107051698
