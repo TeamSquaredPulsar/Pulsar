@@ -1,5 +1,5 @@
 ﻿{
   "name": "Interfaces",
   "rootNamespace": "Pulsar",
-  "references":[ "GUID:0e507fec9d74f3f45b9582b999bf74ae" ]
+  "references":[ "GUID:0e507fec9d74f3f45b9582b999bf74ae", "GUID:aa86c6edaf847b544b44790230e36643" ]
 }

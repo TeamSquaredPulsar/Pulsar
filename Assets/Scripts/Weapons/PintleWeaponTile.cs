@@ -5,6 +5,8 @@ using Pulsar.Utilities;
 using Pulsar.Weapons;
 using UnityEngine;
 
+namespace Pulsar.Weapons
+{
 public class PintleWeaponTile : AutoWeapon
 {
     [Header("Pintle Information")]
@@ -23,23 +25,26 @@ public class PintleWeaponTile : AutoWeapon
     [SerializeField]
     [Tooltip("The radius for the targeting collider")]
     private float range;
-    
+
     [SerializeField]
     [Tooltip("Angle dif penalizes a targets score. " +
              "Higher = prefers enemies in front of the barrel.")]
     private float angleWeight = 0.05f;
-    
+
     [SerializeField]
     [Tooltip("Min dif for a new target to get priority")]
     private float currentTargetBias = 1.5f;
 
-    
-    private string TargetTag => gameObject.CompareTag("Player") ? "Enemy" : "Player";
-    
-    private readonly HashSet<Transform> _targetsInRange = new HashSet<Transform>();
+
+    private string TargetTag =>
+        gameObject.CompareTag("Player") ? "Enemy" : "Player";
+
+    private readonly HashSet<Transform> _targetsInRange
+        = new HashSet<Transform>();
+
     private Coroutine _searchCoroutine;
     private WaitForFixedUpdate _searchWait;
-    
+
     private void Awake()
     {
         targetRadius.radius = range;
@@ -49,15 +54,16 @@ public class PintleWeaponTile : AutoWeapon
 
         _searchWait = new WaitForFixedUpdate();
     }
-     
+
     #region Targetting
+
     private IEnumerator SearchForTargets()
     {
         Result<Transform> activeTarget = Result<Transform>.Fail();
-        
+
         // _targetsInRange.Clear();
         yield return new WaitForEndOfFrame();
-        while (_searchCoroutine != null) 
+        while (_searchCoroutine != null)
         {
             activeTarget = EvaluateTargets(activeTarget.Value);
             targetReticle.gameObject.SetActive(activeTarget.IsSuccess);
@@ -69,7 +75,7 @@ public class PintleWeaponTile : AutoWeapon
 
             yield return _searchWait;
         }
-        
+
         targetReticle.gameObject.SetActive(false);
     }
 
@@ -110,23 +116,24 @@ public class PintleWeaponTile : AutoWeapon
             }
         }
 
-        return (bestTarget) ? Result<Transform>.Pass(bestTarget)
+        return (bestTarget)
+            ? Result<Transform>.Pass(bestTarget)
             : Result<Transform>.Fail();
     }
-    
+
     private void EngageTarget()
     {
-        Vector2 targetDir = targetReticle.position  - mountingPoint.position;
-        
+        Vector2 targetDir = targetReticle.position - mountingPoint.position;
+
         float angle = Mathf.Atan2(targetDir.y, targetDir.x) * Mathf.Rad2Deg;
 
         Quaternion targetRotation = Quaternion.Euler(
             new Vector3(0f, 0f, angle - 90f));
-        
+
         mountingPoint.rotation = Quaternion.RotateTowards(
-            mountingPoint.rotation, targetRotation, rotSpeed 
+            mountingPoint.rotation, targetRotation, rotSpeed
                                                     * Time.deltaTime);
-        
+
         Fire();
     }
 
@@ -134,7 +141,7 @@ public class PintleWeaponTile : AutoWeapon
     {
         targetReticle.position = target.position;
     }
-    
+
     #endregion
 
     private void OnTriggerEnter2D(Collider2D other)
@@ -143,6 +150,7 @@ public class PintleWeaponTile : AutoWeapon
         {
             return;
         }
+
         if (other.CompareTag(TargetTag))
         {
             _targetsInRange.Add(other.transform);
@@ -157,23 +165,23 @@ public class PintleWeaponTile : AutoWeapon
     public override void Attach(Vector2Int cell, TileRotation rotation)
     {
         base.Attach(cell, rotation);
-        
+
         _targetsInRange.Clear();
 
         targetRadius.enabled = true;
-        
+
         _searchCoroutine = StartCoroutine(SearchForTargets());
     }
 
-    public override void Detatch(Vector2? velocity = null, 
-                                    float angularVelocity = 0)
+    public override void Detatch(
+        Vector2? velocity = null,
+        float angularVelocity = 0)
     {
         _searchCoroutine = null;
-        
+
         targetRadius.enabled = false;
-        
+
         base.Detatch(velocity, angularVelocity);
     }
 }
-
- 
+}
