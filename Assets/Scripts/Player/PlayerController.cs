@@ -23,7 +23,14 @@ public class PlayerController : MonoBehaviour
     [SerializeField]
     private ShipManager ship;
 
-    public Vector2 CorePosition => ship.Core.transform.position;
+    public Vector2 CorePosition
+    {
+        get
+        {
+            Tile core = (Tile)ship.Core;
+            return core.transform.position;
+        }
+    }
 
     private bool _isShooting;
     private Coroutine _shootingCoroutine;
