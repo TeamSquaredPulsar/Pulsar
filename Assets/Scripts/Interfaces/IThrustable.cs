@@ -1,10 +1,13 @@
-﻿using UnityEngine;
+﻿using Pulsar.DataClasses;
+using UnityEngine;
 
 namespace Pulsar.Interfaces
 {
 public interface IThrustable
 {
     float Thrust { get; }
+
+    TileRotation Rotation { get; }
 
     void Move(float amount, ref Rigidbody2D targetRb)
     {

@@ -5,6 +5,7 @@ using NaughtyAttributes;
 using Pulsar.DataClasses;
 using Pulsar.DataClasses.Extensions;
 using Pulsar.Hazards;
+using Pulsar.Interfaces;
 using Pulsar.Ship.Data;
 using Pulsar.Utilities;
 using Pulsar.Weapons;
@@ -32,12 +33,9 @@ public class ShipManager : MonoBehaviour
 
     [SerializeField]
     private ThrusterManager thrusterManager;
-
-    [SerializeField]
-    private List<ManualWeapon> weapons = new(10);
-
-    [SerializeField]
-    private List<ThrusterTile> thrusters = new(10);
+    
+    private List<ManualWeapon> _weapons = new(10);
+    private List<IThrustable> _thrusters = new(10);
 
     [Header("Detach Explosion")]
     [SerializeField]
@@ -73,8 +71,8 @@ public class ShipManager : MonoBehaviour
     private void RefreshTiles()
     {
         _gridData = new ShipGridData();
-        weapons = new List<ManualWeapon>();
-        thrusters = new List<ThrusterTile>();
+        _weapons = new List<ManualWeapon>();
+        _thrusters = new List<IThrustable>();
 
         foreach (Tile tile in GetComponentsInChildren<Tile>())
         {
@@ -110,10 +108,10 @@ public class ShipManager : MonoBehaviour
         switch (tile)
         {
             case ThrusterTile thruster:
-                thrusters.Add(thruster);
+                _thrusters.Add(thruster);
                 break;
             case ManualWeapon weapon:
-                weapons.Add(weapon);
+                _weapons.Add(weapon);
                 weapon.SetParentCollider(compositeCollider);
                 break;
         }
@@ -121,7 +119,7 @@ public class ShipManager : MonoBehaviour
 
     public void Fire()
     {
-        foreach (ManualWeapon weapon in weapons)
+        foreach (ManualWeapon weapon in _weapons)
         {
             weapon.Fire();
         }
@@ -166,15 +164,17 @@ public class ShipManager : MonoBehaviour
             Debug.LogError($"Failed to remove {tile.name}");
             return;
         }
-
-        switch (tile)
+        
+        // [CB] Since we *could* have a tile that is a thruster AND a manual weapon
+        // We need to do all checks in a row rather than using a switch statement.
+        if (tile is IThrustable thrustable)
         {
-            case ThrusterTile thruster:
-                thrusters.Remove(thruster);
-                break;
-            case ManualWeapon weapon:
-                weapons.Remove(weapon);
-                break;
+            _thrusters.Remove(thrustable);
+        }
+
+        if (tile is ManualWeapon weapon)
+        {
+            _weapons.Remove(weapon);
         }
 
         tile.DestroyEvent -= HandleTileDestroyed;

@@ -15,8 +15,7 @@ public struct ThrustAtRotation
 
 public class ThrusterManager : MonoBehaviour
 {
-    [SerializeField]
-    private List<IThrustable> thrusters;
+    private List<IThrustable> _thrusters;
     
     [SerializeField]
     private Rigidbody2D rb;
@@ -118,7 +117,7 @@ public class ThrusterManager : MonoBehaviour
             };
         }
         
-        foreach (ThrusterTile thruster in thrusters)
+        foreach (IThrustable thruster in _thrusters)
         {
             _directedThrust[thruster.Rotation.ToInt()].Thrust
                 += thruster.Thrust;
