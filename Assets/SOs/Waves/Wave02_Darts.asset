@@ -14,7 +14,12 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::WaveDefinitionSO
   waveName: Darts
   pattern: 1
+  patternSpread: 40
+  maxWaveTime: 120
   entries:
   - enemyPrefab: {fileID: 939562278696158235, guid: 50e6449a2b964d0caeada879ad16d0b7, type: 3}
-    count: 3
-    spawnInterval: 2.5
+    count: 1
+    spawnInterval: 9
+  - enemyPrefab: {fileID: 8188435154698411991, guid: 9dc0c2dda0134b64e8cb399608f4b80b, type: 3}
+    count: 2
+    spawnInterval: 10

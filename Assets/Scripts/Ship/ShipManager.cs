@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using NaughtyAttributes;
@@ -25,7 +25,8 @@ public class ShipManager : MonoBehaviour
 
     public event Action<ShipManager> ShipDestroyedEvent;
 
-    [Header("Refs")][SerializeField]
+    [Header("Refs")]
+    [SerializeField]
     private CompositeCollider2D compositeCollider;
 
     [SerializeField]
@@ -36,6 +37,7 @@ public class ShipManager : MonoBehaviour
     
     private List<ManualWeapon> _weapons = new(10);
     private List<IThrustable> _thrusters = new(10);
+    
 
     [Header("Detach Explosion")]
     [SerializeField]
@@ -44,15 +46,18 @@ public class ShipManager : MonoBehaviour
     [SerializeField]
     private Vector2 detachRadiateAngularVelocity = new(-180f, 180f);
 
+    [SerializeField]
+    private float collisionDmgMultiplier = 0.5f;
+
     private ShipGridData _gridData = new();
 
     public CoreTile Core => _gridData.Core;
 
     public IReadOnlyDictionary<Vector2Int, Tile> Cells => _gridData.Cells;
     public bool OwnsTile(Tile tile) => Cells.Values.Contains(tile);
-
+    
     public event Action ShipGridUpdate;
-
+    
     private void Start()
     {
         RefreshTiles();
@@ -83,16 +88,18 @@ public class ShipManager : MonoBehaviour
                 tile.transform.localRotation.eulerAngles.z.ToTileRotation();
             AttachTile(localCell, tile, localRot);
         }
+        thrusterManager.CalculateThrusters(ref _thrusters);
     }
 
     public void AttachTile(Vector2Int cell, Tile tile, TileRotation rotation)
     {
-        ProcessTile(tile);
         if (!_gridData.TrySetTile(cell, tile))
         {
             return;
         }
 
+        tile.gameObject.tag = gameObject.tag;
+        ProcessTile(tile);
         rb.mass += tile.Mass;
         tile.Attach(cell, rotation);
         tile.transform.SetParent(transform);
@@ -100,20 +107,26 @@ public class ShipManager : MonoBehaviour
             ShipUtilities.GridToLocal(cell),
             ShipUtilities.RotateQuarterOnZAxis(rotation.ToInt()));
         tile.DestroyEvent += HandleTileDestroyed;
+
         ShipGridUpdate?.Invoke();
     }
 
     private void ProcessTile(Tile tile)
     {
-        switch (tile)
+        if (tile is IThrustable thrustable)
         {
-            case ThrusterTile thruster:
-                _thrusters.Add(thruster);
-                break;
-            case ManualWeapon weapon:
-                _weapons.Add(weapon);
-                weapon.SetParentCollider(compositeCollider);
-                break;
+            _thrusters.Add(thrustable);
+            thrusterManager.CalculateThrusters(ref _thrusters);
+        }
+
+        if (tile is Weapon weapon)
+        {
+            weapon.SetParentCollider(compositeCollider);
+        }
+
+        if (tile is ManualWeapon manualWeapon)
+        {
+            _weapons.Add(manualWeapon);
         }
     }
 
@@ -135,10 +148,31 @@ public class ShipManager : MonoBehaviour
             return;
         }
 
-        if (other.gameObject.TryGetComponent(out Projectile projectile))
+        if (other.gameObject.TryGetComponent(out ShipManager ship))
+        {
+            float relativeVelocity = other.relativeVelocity.magnitude;
+            float damage = CalculateDmgFromOtherShip(ship, relativeVelocity);
+            tile.TakeDamage(damage);
+        }
+        else if (other.gameObject.TryGetComponent(out Projectile projectile))
         {
             tile.TakeDamage(projectile.Damage);
         }
+    }
+
+    private float CalculateDmgFromOtherShip(
+        ShipManager otherShip,
+        float relativeVelocity)
+    {
+        float m1 = rb.mass;
+        float m2 = otherShip.rb.mass;
+        float reducedMass = (m1 * m2) / (m1 + m2);
+
+        float kineticEnergy = 0.5f * reducedMass * relativeVelocity * relativeVelocity;
+        float share = m2 / (m1 + m2);
+        float damage = kineticEnergy * share * collisionDmgMultiplier;
+        
+        return damage;
     }
 
     public void Move(Vector2 position)
@@ -165,6 +199,14 @@ public class ShipManager : MonoBehaviour
             return;
         }
         
+
+        UnregisterTile(tile);
+        ShipGridUpdate?.Invoke();
+    }
+    
+    private void UnregisterTile(Tile tile)
+    {
+        tile.DestroyEvent -= HandleTileDestroyed;
         // [CB] Since we *could* have a tile that is a thruster AND a manual weapon
         // We need to do all checks in a row rather than using a switch statement.
         if (tile is IThrustable thrustable)
@@ -176,9 +218,6 @@ public class ShipManager : MonoBehaviour
         {
             _weapons.Remove(weapon);
         }
-
-        tile.DestroyEvent -= HandleTileDestroyed;
-        ShipGridUpdate?.Invoke();
     }
 
     private void OnCoreDestroyed()
@@ -414,9 +453,12 @@ public class ShipManager : MonoBehaviour
             throw new Exception("Removed the wrong tile!");
         }
 
+        UnregisterTile(tile);
+        tile.gameObject.tag = "Untagged";
         tile.Detatch(velocity, angularVelocity + spin);
         rb.mass -= tile.Mass;
 
+        thrusterManager.CalculateThrusters(ref _thrusters);
         ShipGridUpdate?.Invoke();
     }
 

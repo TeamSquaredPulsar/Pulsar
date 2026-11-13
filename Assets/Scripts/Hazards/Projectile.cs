@@ -1,5 +1,3 @@
-
-using Nrjwolf.Tools.AttachAttributes;
 using UnityEngine;
 
 namespace Pulsar.Hazards
@@ -31,9 +29,9 @@ public class Projectile : MonoBehaviour
     [SerializeField]
     private GameObject hitEffectPrefab;
 
-    [GetComponent, SerializeField,]
+    [SerializeField]
     private Collider2D coll2D;
-    [GetComponent, SerializeField,]
+    [SerializeField]
     private Rigidbody2D rb;
     
     /// <summary>

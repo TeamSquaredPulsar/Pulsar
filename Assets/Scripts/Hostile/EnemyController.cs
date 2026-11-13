@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using Nrjwolf.Tools.AttachAttributes;
 using Pulsar.Player;
 using Pulsar.Ship;
 using UnityEngine;
@@ -31,7 +30,7 @@ public class EnemyController : MonoBehaviour
 
     private static readonly HashSet<EnemyController> _activeEnemies = new();
 
-    [GetComponent, SerializeField,]
+    [SerializeField]
     private Rigidbody2D rb;
 
     // TODO: make this a boolean value with a coroutine to handle if you can fire or not

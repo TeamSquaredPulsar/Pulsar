@@ -13,7 +13,6 @@ MonoBehaviour:
   m_Name: pThruster
   m_EditorClassIdentifier: Assembly-CSharp::Pulsar.Ship.TileDef
   tileName: pThruster
-  type: 2
   hp: 10
-  connectableEdges: 01000000
+  connectableEdges: 00000100
   sprites: {fileID: 11400000, guid: 89f57687458a6104ab76ed377118085f, type: 2}

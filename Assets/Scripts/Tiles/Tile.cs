@@ -137,7 +137,7 @@ public abstract class Tile : MonoBehaviour
         transform.SetParent(null, true);
     }
 
-    public void Attach(Vector2Int cell, TileRotation rotation)
+    public virtual void Attach(Vector2Int cell, TileRotation rotation)
     {
         IsAttached = true;
         
@@ -148,12 +148,13 @@ public abstract class Tile : MonoBehaviour
         // collider to merge with the parents collider properly.
         if (rigidBody)
         {
+            rigidBody.simulated = false;
             Destroy(rigidBody);
             rigidBody = null;
         }
     }
 
-    public void Detatch(Vector2? velocity = null, float angularVelocity = 0f)
+    public virtual void Detatch(Vector2? velocity = null, float angularVelocity = 0f)
     {
         IsAttached = false;
         transform.SetParent(null);

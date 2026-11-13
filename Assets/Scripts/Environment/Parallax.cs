@@ -1,12 +1,11 @@
 using NaughtyAttributes;
-using Nrjwolf.Tools.AttachAttributes;
 using Pulsar.DataClasses;
 using UnityEngine;
 
 [RequireComponent(typeof(SpriteRenderer))]
 public class Parallax : MonoBehaviour
 {
-    [Header("References"),GetComponent,SerializeField,]
+    [Header("References"),SerializeField,]
     private SpriteRenderer spriteRenderer;
     
     [SerializeField]

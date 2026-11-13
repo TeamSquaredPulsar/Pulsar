@@ -9,11 +9,12 @@ public interface IThrustable
 
     TileRotation Rotation { get; }
 
-    void Move(float amount, ref Rigidbody2D targetRb)
+    void Activate(float amount, in Rigidbody2D targetRb)
     {
-        Debug.Log($"I want to move {amount}");
         //TODO: Add movement logic here
         // Apply force to rigidbody at the point i exist at
     }
+
+    void Deactivate();
 }
 }

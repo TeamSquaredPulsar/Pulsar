@@ -17,9 +17,11 @@ public class InputReader : ScriptableObject, IPlayerActions, IInputReader
     public event Action<float> RotateEvent;
     public event Action<Vector2> MoveCursorEvent;
     public event Action<bool> SelectTileEvent;
+    public event Action<int> RotateSelectedTileEvent;
 
     [SerializeField]
     private CameraData camData;
+
     private Controls _controls;
 
     private void Awake()
@@ -28,7 +30,7 @@ public class InputReader : ScriptableObject, IPlayerActions, IInputReader
         {
             return;
         }
-        
+
         CreateNewControls();
     }
 
@@ -38,7 +40,7 @@ public class InputReader : ScriptableObject, IPlayerActions, IInputReader
         {
             CreateNewControls();
         }
-        
+
         _controls?.Player.Enable();
     }
 
@@ -52,13 +54,12 @@ public class InputReader : ScriptableObject, IPlayerActions, IInputReader
         _controls.Dispose();
         _controls = null;
     }
-    
+
     private void CreateNewControls()
     {
         _controls = new Controls();
         _controls.Player.SetCallbacks(this);
     }
-    
 
     public void EnablePlayerActions()
     {
@@ -89,6 +90,7 @@ public class InputReader : ScriptableObject, IPlayerActions, IInputReader
         {
             return;
         }
+
         //True if the button is down, false if up.
         SelectTileEvent?.Invoke(!context.canceled);
     }
@@ -106,12 +108,28 @@ public class InputReader : ScriptableObject, IPlayerActions, IInputReader
 
         // Multiply by camera dimensions so we can get full screen size
         input *= camData.ScreenSize;
-        
+
         MoveCursorEvent?.Invoke(input);
     }
 
     public void OnMoveCursorMouse(InputAction.CallbackContext context)
     {
         MoveCursorEvent?.Invoke(context.ReadValue<Vector2>());
+    }
+
+    public void OnCWRotateSelectedTile(InputAction.CallbackContext context)
+    {
+        if (context.performed)
+        {
+            RotateSelectedTileEvent?.Invoke(1);
+        }
+    }
+
+    public void OnCCWRotateSelectedTile(InputAction.CallbackContext context)
+    {
+        if (context.performed)
+        {
+            RotateSelectedTileEvent?.Invoke(-1);
+        }
     }
 }
