@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using Pulsar.Player;
 using Pulsar.UI;
 using TMPro;
@@ -18,14 +19,24 @@ public class UIManager : MonoBehaviour
     
     [SerializeField]
     private GameObject gameOverMenu;
+
+    [SerializeField]
+    private bool useMainMenuScene;
     
     private TMP_Text _scoreText;
 
-    private void Start()
+    private IEnumerator Start()
     {
         GameManager.OnEnemyKill += UpdateScore;
         PlayerController.PlayerLossEvent += OnPlayerLoss;
         _scoreText = gameplayUI.GetComponentInChildren<TMP_Text>();
+
+        if (useMainMenuScene)
+        {
+            // Let the scene cameras and other managers finish initialization first.
+            yield return null;
+            OnStartGameClicked();
+        }
     }
 
     private void OnDestroy()
@@ -50,6 +61,12 @@ public class UIManager : MonoBehaviour
 
     public void OnToMainMenuClicked()
     {
+        if (useMainMenuScene)
+        {
+            SceneTransition.LoadScene("MainMenu");
+            return;
+        }
+
         GameStateChangeEvent?.Invoke(GameState.MainMenu);
         mainMenu.SetActive(true);
         gameplayUI.SetActive(false);
