@@ -7,9 +7,9 @@ namespace Pulsar
 [CreateAssetMenu(fileName = "MultiShot", menuName = "Scriptable Objects/MultiShot"),
  Serializable,
 ]
-public class MultiShot : WeaponStrategy
+public class SpreadShot : WeaponStrategy
 {
-    [SerializeField, Min(1),OnValueChanged("SetupFirePoints"),]
+    [SerializeField][Min(1)][OnValueChanged("SetupFirePoints")]
     protected int maxFirePoints = 1;
 
     public override void Fire(Transform[] firePoints, Weapon weapon, Func<Transform, GameObject> spawnProjectile)
