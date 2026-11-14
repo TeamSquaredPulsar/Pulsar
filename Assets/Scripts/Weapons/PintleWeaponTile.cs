@@ -2,7 +2,6 @@ using System.Collections;
 using System.Collections.Generic;
 using Pulsar.DataClasses;
 using Pulsar.Utilities;
-using Pulsar.Weapons;
 using UnityEngine;
 
 namespace Pulsar.Weapons

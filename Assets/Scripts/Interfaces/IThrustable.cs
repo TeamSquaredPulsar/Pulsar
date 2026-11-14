@@ -3,6 +3,12 @@ using UnityEngine;
 
 namespace Pulsar.Interfaces
 {
+/// <summary>
+/// Interface for any tile that can apply thrust to a rigidbody.
+/// Doesn't have to be a ship!
+/// @author Corey Buchan
+/// @version 0.9
+/// </summary>
 public interface IThrustable
 {
     float Thrust { get; }

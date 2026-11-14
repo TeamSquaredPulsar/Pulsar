@@ -38,7 +38,7 @@ public abstract class Tile : MonoBehaviour
     private TileSpritesSO spritesOverride;
     
     [SerializeField]
-    private SpriteRenderer spriteRenderer;
+    protected SpriteRenderer spriteRenderer;
 
     [SerializeField]
     protected BoxCollider2D tileCollider;

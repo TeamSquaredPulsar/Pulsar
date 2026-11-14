@@ -6,22 +6,18 @@ public class ThrusterTile : Tile, IThrustable
     
     [field: SerializeField]
     public float Thrust { get; private set; } = 0.1f;
-
-
-
-    [SerializeField]
-    private SpriteRenderer _spriteRenderer;
+    
 
     private void Awake()
     {
-        _spriteRenderer = GetComponent<SpriteRenderer>();
+        spriteRenderer = GetComponent<SpriteRenderer>();
         Deactivate();
         
     }
     
     public void Activate(float amount, ref Rigidbody2D parentRb)
     {
-        _spriteRenderer.color = Color.red;
+        spriteRenderer.color = Color.red;
         Debug.Log($"I want to move {amount}");
         //TODO: Add movement logic here
         // Apply force to rigidbody at the point i exist at
@@ -29,6 +25,6 @@ public class ThrusterTile : Tile, IThrustable
     
     public void Deactivate()
     {
-        _spriteRenderer.color = Color.white;
+        spriteRenderer.color = Color.white;
     }
 }

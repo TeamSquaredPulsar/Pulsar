@@ -181,7 +181,7 @@ public class ThrusterManager : MonoBehaviour
     {
         foreach (IThrustable t in dirThrusters)
         {
-            t.Activate(0, in rb);
+            t.Activate(t.Thrust, in rb);
         }
     }
 }
