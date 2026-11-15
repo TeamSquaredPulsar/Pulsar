@@ -65,7 +65,7 @@ MonoBehaviour:
   - {fileID: 1113316170954926131}
   - {fileID: 5255507717241388619}
   - {fileID: 4021481277316506663}
-  <FireRatePerSecond>k__BackingField: 0.5
+  <FireRatePerSecond>k__BackingField: 1
   <Strategy>k__BackingField: {fileID: 11400000, guid: 10c72afaf46727041b29bfd2ec24cc45, type: 2}
 --- !u!114 &-4585569959407033398
 MonoBehaviour:

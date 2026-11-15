@@ -266,7 +266,7 @@ public class ShipManager : MonoBehaviour
 
     public bool CanAttach(
         Vector2Int pos,
-        TileInfoSO infoSo,
+        TileInfo info,
         TileRotation rotation)
     {
         // Cannot attach to an occupied cell
@@ -280,7 +280,7 @@ public class ShipManager : MonoBehaviour
         {
             // Get the tile edge facing this direction after rotation
             int localDir = direction.Subtract(rotation).ToInt();
-            if (!infoSo.connectableEdges[localDir])
+            if (!info.connectableEdges[localDir])
             {
                 continue;
             }
@@ -299,7 +299,7 @@ public class ShipManager : MonoBehaviour
 
     private int CountConnections(
         Vector2Int pos,
-        TileInfoSO infoSo,
+        TileInfo info,
         TileRotation rotation)
     {
         // Count all neighbours that can connect at this position and rotation
@@ -309,7 +309,7 @@ public class ShipManager : MonoBehaviour
         {
             // Get the tile edge after rotation
             int localDir = direction.Subtract(rotation).ToInt();
-            if (!infoSo.connectableEdges[localDir])
+            if (!info.connectableEdges[localDir])
             {
                 continue;
             }
@@ -327,7 +327,7 @@ public class ShipManager : MonoBehaviour
     }
 
     public Result<(Vector2Int cell, TileRotation rotation)> FindBestAttachment(
-        TileInfoSO infoSo,
+        TileInfo info,
         Vector3 worldPos)
     {
         // Convert world position to ship grid position
@@ -381,14 +381,14 @@ public class ShipManager : MonoBehaviour
                          typeof(TileRotation)))
             {
                 // TODO: [CB] See if we can make these functions take a TileRotation in.
-                if (!CanAttach(candidate, infoSo, direction))
+                if (!CanAttach(candidate, info, direction))
                 {
                     continue;
                 }
 
                 // prefer more connections
                 int connectionCount
-                    = CountConnections(candidate, infoSo, direction);
+                    = CountConnections(candidate, info, direction);
 
                 if (bestRot == null
                     || dist < bestDist - 0.01f

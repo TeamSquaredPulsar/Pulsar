@@ -1,6 +1,6 @@
 {
-    "name": "Weapons",
-    "rootNamespace": "Pulsar",
+    "name": "Pulsar.Weapons",
+    "rootNamespace": "Pulsar.Weapons",
     "references": [
         "GUID:bd9e1f1715d621147881d1b0790de60b",
         "GUID:79ea8987a0b114145af912fe21e11a1d",

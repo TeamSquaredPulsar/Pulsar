@@ -1,5 +1,4 @@
 using System;
-using Nrjwolf.Tools.AttachAttributes;
 using Pulsar.DataClasses;
 using Pulsar.DataClasses.Extensions;
 using Pulsar.Interactions;
@@ -28,15 +27,14 @@ public abstract class Tile : MonoBehaviour
 
     // 0 1 2 3 = 0 90 180 270 (counterclockwise)
     public TileRotation Rotation { get; private set; }
-
-    [field: SerializeField]
+    
     public bool IsAttached { get; private set; }
-
+    [Header("Tile data")]
     [field: SerializeField]
-    public TileInfoSO TileInfo { get; private set; }
+    public TileInfo TileInfo { get; private set; }
     
     [SerializeField]
-    private TileSpritesSO spritesOverride;
+    private TileSprites spritesOverride;
     
     [SerializeField]
     protected SpriteRenderer spriteRenderer;
@@ -50,11 +48,11 @@ public abstract class Tile : MonoBehaviour
     [SerializeField]
     private Health health;
 
-    private const int FloatingSortingOrder = 10;
+    private const int k_FloatingSortingOrder = 10;
 
     private TileRbInfo _rbInfo;
 
-    private TileSpritesSO sprites =>
+    private TileSprites Sprites =>
         spritesOverride ? spritesOverride : TileInfo.sprites;
 
     public Sprite Sprite => spriteRenderer.sprite;
@@ -119,7 +117,7 @@ public abstract class Tile : MonoBehaviour
     
     private void UpdateSprite(HealthState state)
     {
-        Sprite next = sprites ? sprites.Get(state) : null;
+        Sprite next = Sprites ? Sprites.Get(state) : null;
         
         if (next)
         {
@@ -155,7 +153,7 @@ public abstract class Tile : MonoBehaviour
     public void Deselect()
     {
         Unhighlight();
-        spriteRenderer.sortingOrder = FloatingSortingOrder;
+        spriteRenderer.sortingOrder = k_FloatingSortingOrder;
         rigidBody.SetFloatRb(Vector2.zero, 0f, _rbInfo);
         tileCollider.enabled = true;
         transform.SetParent(null, true);

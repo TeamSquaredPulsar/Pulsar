@@ -5,8 +5,8 @@ namespace Pulsar.DataClasses.Extensions
 {
 public static class TileRotationExtensions
 {
-    private const int FullCircleDegrees = 360;
-    private static readonly int CircleSteps = FullCircleDegrees / Enum.GetNames(typeof(TileRotation))
+    private const int k_FullCircleDegrees = 360;
+    private static readonly int CircleSteps = k_FullCircleDegrees / Enum.GetNames(typeof(TileRotation))
         .Length;
     public static TileRotation ToTileRotation(this float rotDegrees)
     {

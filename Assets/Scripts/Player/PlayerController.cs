@@ -69,7 +69,7 @@ public class PlayerController : MonoBehaviour
 
     public bool CanAttach(
         Vector2Int location,
-        TileInfoSO tileInfo,
+        TileInfo tileInfo,
         TileRotation rotation) => ship.CanAttach(location, tileInfo, rotation);
 
     public void AttachTile(
@@ -78,7 +78,7 @@ public class PlayerController : MonoBehaviour
         TileRotation rotation) => ship.AttachTile(location, tile, rotation);
 
     public Result<(Vector2Int, TileRotation)> FindBestAttachment(
-        TileInfoSO tileInfo,
+        TileInfo tileInfo,
         Vector3 worldPosition) =>
         ship.FindBestAttachment(tileInfo, worldPosition);
     

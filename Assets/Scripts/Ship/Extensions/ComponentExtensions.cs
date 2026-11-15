@@ -6,7 +6,7 @@ namespace Pulsar.Ship.Extensions
 {
 public static class ComponentExtensions
 {
-    private const BindingFlags AllFlags = BindingFlags.Public |
+    private const BindingFlags k_AllFlags = BindingFlags.Public |
                                                     BindingFlags.Instance |
                                                     BindingFlags.NonPublic;
     public static T CopyComponentSettingsTo<T>(
@@ -17,14 +17,14 @@ public static class ComponentExtensions
         Type type = original.GetType();
 
         // Copy Fields (variables)
-        FieldInfo[] fields = type.GetFields(AllFlags);
+        FieldInfo[] fields = type.GetFields(k_AllFlags);
         foreach (FieldInfo field in fields)
         {
             field.SetValue(destination, field.GetValue(original));
         }
 
         // Copy Properties (like colours, materials, enabled states)
-        PropertyInfo[] properties = type.GetProperties(AllFlags);
+        PropertyInfo[] properties = type.GetProperties(k_AllFlags);
         foreach (PropertyInfo property in properties)
         {
             // Only copy if the property can be read and written to, and isn't obsolete

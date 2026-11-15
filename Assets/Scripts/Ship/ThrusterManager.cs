@@ -19,10 +19,6 @@ public class ThrusterManager : MonoBehaviour
     [SerializeField]
     private Rigidbody2D rb;
 
-    //Temp field until the core has its own thruster values
-    [SerializeField]
-    private float coreThrust = 3;
-
     [SerializeField]
     private float rotationalThrust = 2;
 
@@ -110,7 +106,7 @@ public class ThrusterManager : MonoBehaviour
                         nameof(_moveInput) + ".y",
                         "Already checked Y could not be 0!"),
                 });
-            localForce.y = _moveInput.y * (thrustY.Thrust + coreThrust);
+            localForce.y = _moveInput.y * thrustY.Thrust;
         }
 
         if (_moveInput.x != 0)
@@ -124,7 +120,7 @@ public class ThrusterManager : MonoBehaviour
                         nameof(_moveInput) + ".X",
                         "Already checked X could not be 0!"),
                 });
-            localForce.x = _moveInput.x * (thrustX.Thrust + coreThrust);
+            localForce.x = _moveInput.x * thrustX.Thrust;
         }
 
         rb.AddRelativeForce(localForce, ForceMode2D.Force);

@@ -31,10 +31,10 @@ public abstract class Weapon : Tile, IProjectileSpawner, IWeapon
     [field: SerializeField]
     [field: Expandable]
     public WeaponStrategy Strategy { get; private set; }
-
+    Collider2D IProjectileSpawner.ParentCollider => ParentCollider;
+    
     private Coroutine _fireTimerRoutine;
     private Projectile _projectile;
-    Collider2D IProjectileSpawner.ParentCollider => ParentCollider;
 
     public Collider2D Coll2D => tileCollider;
     public bool CanFire => _fireTimerRoutine == null;

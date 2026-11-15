@@ -163,7 +163,7 @@ MonoBehaviour:
   range: 12
   angleWeight: 0.05
   currentTargetBias: 1.5
-  <ThrustForce>k__BackingField: 0.01
+  <ThrustForce>k__BackingField: 3
   <RotationForce>k__BackingField: 1
 --- !u!114 &4009485083793066549
 MonoBehaviour:

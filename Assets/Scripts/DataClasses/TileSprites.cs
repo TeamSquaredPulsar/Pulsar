@@ -6,7 +6,7 @@ using UnityEngine;
 namespace Pulsar.DataClasses
 {
 [CreateAssetMenu(fileName = "NewSprites", menuName = "Pulsar/Tile Sprites")]
-public class TileSpritesSO : ScriptableObject
+public class TileSprites : ScriptableObject
 {
     private const int k_Length = 5;
     private const int k_FirstSprite = 0;

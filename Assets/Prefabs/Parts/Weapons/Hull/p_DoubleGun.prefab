@@ -63,7 +63,7 @@ MonoBehaviour:
   <FirePoints>k__BackingField:
   - {fileID: 1113316170954926131}
   - {fileID: 3168602917943994867}
-  <FireRatePerSecond>k__BackingField: 0.5
+  <FireRatePerSecond>k__BackingField: 1
   <Strategy>k__BackingField: {fileID: 11400000, guid: 4d233d3ff0a9cbd4f833c1a4dac6bbc5, type: 2}
 --- !u!114 &-8815025657336327204
 MonoBehaviour:
