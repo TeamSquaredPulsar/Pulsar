@@ -1,6 +1,8 @@
 using System;
 using UnityEngine;
 
+namespace Pulsar.Weapons.Strategies
+{
 /// <summary>
 /// Shoots a single bullet at a time
 /// </summary>
@@ -8,19 +10,20 @@ using UnityEngine;
     menuName = "Scriptable Objects/DoubleShot")]
 public class DoubleShot : WeaponStrategy
 {
-    private int k_leftFirePoint = 0;
-    private int k_rightFirePoint = 1;
-    private int k_max_firePoints = 2;
+    private const int k_LeftFirePoint = 0;
+    private const int k_RightFirePoint = 1;
+    private const int k_MaxFirePoints = 2;
 
     /// <inheritdoc/>
     public override void Fire(
         Transform[] firePoints,
-        WeaponTile weapon,
+        Weapon weapon,
         Func<Transform, GameObject> spawnProjectile)
     {
-        VerifyFirePoints(firePoints, k_max_firePoints);
+        VerifyFirePoints(firePoints, k_MaxFirePoints);
 
-        spawnProjectile(firePoints[k_leftFirePoint]);
-        spawnProjectile(firePoints[k_rightFirePoint]);
+        spawnProjectile(firePoints[k_LeftFirePoint]);
+        spawnProjectile(firePoints[k_RightFirePoint]);
     }
+}
 }

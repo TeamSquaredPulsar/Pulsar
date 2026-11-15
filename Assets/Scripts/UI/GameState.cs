@@ -1,6 +1,6 @@
 namespace Pulsar.UI
 {
-public enum GameState : int
+public enum GameState
 {
     MainMenu, Playing, GameOver,
 }

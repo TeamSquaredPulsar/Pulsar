@@ -1,5 +1,8 @@
 {
   "dependencies": {
+    "com.audune.utils.dictionary": "https://github.com/audunegames/serializabledictionary.git",
+    "com.audune.utils.unityeditor": "https://github.com/audunegames/unityeditor-utils.git",
+    "com.dbrizov.naughtyattributes": "https://github.com/dbrizov/NaughtyAttributes.git#upm",
     "com.unity.2d.animation": "13.0.6",
     "com.unity.2d.aseprite": "3.0.2",
     "com.unity.2d.psdimporter": "12.0.2",
@@ -51,8 +54,6 @@
     "com.unity.modules.video": "1.0.0",
     "com.unity.modules.vr": "1.0.0",
     "com.unity.modules.wind": "1.0.0",
-    "com.unity.modules.xr": "1.0.0",
-    "nrjwolf.games.attachattributes": "https://github.com/Nrjwolf/unity-auto-attach-component-attributes.git",
-    "com.dbrizov.naughtyattributes": "https://github.com/dbrizov/NaughtyAttributes.git#upm"
+    "com.unity.modules.xr": "1.0.0"
   }
 }

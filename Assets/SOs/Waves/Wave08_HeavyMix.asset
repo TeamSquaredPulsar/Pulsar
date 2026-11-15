@@ -17,9 +17,6 @@ MonoBehaviour:
   patternSpread: 40
   maxWaveTime: 120
   entries:
-  - enemyPrefab: {fileID: 7200000001, guid: 8c274582b3d847f0aa28676bee7ba62a, type: 3}
-    count: 1
-    spawnInterval: 3
   - enemyPrefab: {fileID: 8501487934028206752, guid: 6a6a746bee8c4d40a9b8ecc68c33b98e, type: 3}
     count: 1
     spawnInterval: 3
@@ -27,5 +24,8 @@ MonoBehaviour:
     count: 2
     spawnInterval: 2
   - enemyPrefab: {fileID: 8188435154698411991, guid: 9dc0c2dda0134b64e8cb399608f4b80b, type: 3}
+    count: 3
+    spawnInterval: 2
+  - enemyPrefab: {fileID: 7200000001, guid: 8c274582b3d847f0aa28676bee7ba62a, type: 3}
     count: 3
     spawnInterval: 2

@@ -1,0 +1,18 @@
+using UnityEngine;
+
+namespace Pulsar.DataClasses
+{
+[CreateAssetMenu(fileName = "NewTileInfo", menuName = "Pulsar/Tile Info")]
+public class TileInfo : ScriptableObject
+{
+    [Header("Common Info")]
+    public string tileName;
+
+    public float hp = 10f;
+
+    public bool[] connectableEdges = { true, true, true, true, };
+
+    [Header("Health Sprites (default)")]
+    public TileSprites sprites;
+}
+}

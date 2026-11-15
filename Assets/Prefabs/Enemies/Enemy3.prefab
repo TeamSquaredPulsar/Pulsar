@@ -270,7 +270,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 1283674777054792067, guid: 1ef1e4ec71f58694687c1a4d1dcfb63c, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 1283674777054792067, guid: 1ef1e4ec71f58694687c1a4d1dcfb63c, type: 3}
       propertyPath: m_LocalPosition.y
@@ -338,6 +338,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 7300000011}
     m_Modifications:
+    - target: {fileID: 31458138794939124, guid: d41f92095f77c0c419e9feb661d7963f, type: 3}
+      propertyPath: _spriteRenderer
+      value: 
+      objectReference: {fileID: 8688311972824855574}
     - target: {fileID: 1486952502805023581, guid: d41f92095f77c0c419e9feb661d7963f, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0
@@ -396,6 +400,11 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 1486952502805023581, guid: d41f92095f77c0c419e9feb661d7963f, type: 3}
   m_PrefabInstance: {fileID: 7300000014}
   m_PrefabAsset: {fileID: 0}
+--- !u!212 &8688311972824855574 stripped
+SpriteRenderer:
+  m_CorrespondingSourceObject: {fileID: 8688311974718774552, guid: d41f92095f77c0c419e9feb661d7963f, type: 3}
+  m_PrefabInstance: {fileID: 7300000014}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &7300000017
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -404,6 +413,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 7300000011}
     m_Modifications:
+    - target: {fileID: 31458138794939124, guid: d41f92095f77c0c419e9feb661d7963f, type: 3}
+      propertyPath: _spriteRenderer
+      value: 
+      objectReference: {fileID: 8688311972824855561}
     - target: {fileID: 1486952502805023581, guid: d41f92095f77c0c419e9feb661d7963f, type: 3}
       propertyPath: m_LocalPosition.x
       value: 1
@@ -464,6 +477,11 @@ PrefabInstance:
 --- !u!4 &1486952510002258508 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 1486952502805023581, guid: d41f92095f77c0c419e9feb661d7963f, type: 3}
+  m_PrefabInstance: {fileID: 7300000017}
+  m_PrefabAsset: {fileID: 0}
+--- !u!212 &8688311972824855561 stripped
+SpriteRenderer:
+  m_CorrespondingSourceObject: {fileID: 8688311974718774552, guid: d41f92095f77c0c419e9feb661d7963f, type: 3}
   m_PrefabInstance: {fileID: 7300000017}
   m_PrefabAsset: {fileID: 0}
 --- !u!1001 &7300000020

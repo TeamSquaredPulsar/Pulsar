@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using Nrjwolf.Tools.AttachAttributes;
 using Pulsar.Player;
 using Pulsar.Ship;
 using UnityEngine;
@@ -15,7 +14,7 @@ public class EnemyController : MonoBehaviour
         _activeEnemies;
 
     [SerializeField]
-    private EnemyInfoSO enemyInfo;
+    private EnemyInfo enemyInfo;
 
     [SerializeField]
     private ShipManager shipManager;
@@ -24,6 +23,7 @@ public class EnemyController : MonoBehaviour
     private const float MinDistance = 0.001f;
     private const float TileHalfDiagonal = 0.7071f;
     private const float TurnGain = 4f;
+
     // Two far-apart rows of the noise, so sideways and in-out drift
     // don't move in lockstep.
     private const float SidewaysNoiseRow = 0f;
@@ -31,7 +31,7 @@ public class EnemyController : MonoBehaviour
 
     private static readonly HashSet<EnemyController> _activeEnemies = new();
 
-    [GetComponent, SerializeField,]
+    [SerializeField]
     private Rigidbody2D rb;
 
     // TODO: make this a boolean value with a coroutine to handle if you can fire or not

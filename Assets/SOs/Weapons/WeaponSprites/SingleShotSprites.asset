@@ -12,8 +12,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d5984b22c70d4854a98abd039ce21891, type: 3}
   m_Name: SingleShotSprites
   m_EditorClassIdentifier: Tiles::Pulsar.Tiles.TileSpritesSO
-  fullHealth: {fileID: 21300000, guid: 1abe46b73714070499c85791784dd4f4, type: 3}
-  seventyFivePercent: {fileID: 21300000, guid: 1abe46b73714070499c85791784dd4f4, type: 3}
-  fiftyPercent: {fileID: 21300000, guid: 1abe46b73714070499c85791784dd4f4, type: 3}
-  twentyFivePercent: {fileID: 21300000, guid: 1abe46b73714070499c85791784dd4f4, type: 3}
-  tenPercent: {fileID: 21300000, guid: 1abe46b73714070499c85791784dd4f4, type: 3}
+  spriteSheet: {fileID: 2800000, guid: a6c848d1a60ffb54ebf29b1deb29de8b, type: 3}
+  frames:
+  - {fileID: 5338180055565293344, guid: a6c848d1a60ffb54ebf29b1deb29de8b, type: 3}
+  - {fileID: -245557561, guid: a6c848d1a60ffb54ebf29b1deb29de8b, type: 3}
+  - {fileID: 37475313, guid: a6c848d1a60ffb54ebf29b1deb29de8b, type: 3}
+  - {fileID: -134000927, guid: a6c848d1a60ffb54ebf29b1deb29de8b, type: 3}
+  - {fileID: -2059115848, guid: a6c848d1a60ffb54ebf29b1deb29de8b, type: 3}

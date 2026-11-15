@@ -12,8 +12,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d5984b22c70d4854a98abd039ce21891, type: 3}
   m_Name: ThrusterSprites
   m_EditorClassIdentifier: Tiles::Pulsar.Tiles.TileHealthSpritesSO
-  fullHealth: {fileID: 21300000, guid: 6b8d1d3a6ff32604a8795b0b012d615a, type: 3}
-  seventyFivePercent: {fileID: 21300000, guid: 6b8d1d3a6ff32604a8795b0b012d615a, type: 3}
-  fiftyPercent: {fileID: 21300000, guid: 6b8d1d3a6ff32604a8795b0b012d615a, type: 3}
-  twentyFivePercent: {fileID: 21300000, guid: 6b8d1d3a6ff32604a8795b0b012d615a, type: 3}
-  tenPercent: {fileID: 21300000, guid: 6b8d1d3a6ff32604a8795b0b012d615a, type: 3}
+  spriteSheet: {fileID: 2800000, guid: d52d1ff1a42719749ac6897f40767c2d, type: 3}
+  frames:
+  - {fileID: 557217962434929949, guid: d52d1ff1a42719749ac6897f40767c2d, type: 3}
+  - {fileID: 573343304, guid: d52d1ff1a42719749ac6897f40767c2d, type: 3}
+  - {fileID: -140846683, guid: d52d1ff1a42719749ac6897f40767c2d, type: 3}
+  - {fileID: -1511129631, guid: d52d1ff1a42719749ac6897f40767c2d, type: 3}
+  - {fileID: 301093553, guid: d52d1ff1a42719749ac6897f40767c2d, type: 3}

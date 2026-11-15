@@ -1,30 +1,38 @@
-using Nrjwolf.Tools.AttachAttributes;
+using Audune.Utils.Dictionary;
+using Pulsar.DataClasses;
+using Pulsar.Interfaces;
 using UnityEngine;
 
-public class ThrusterTile : Tile
+public class ThrusterTile : Tile, IThrustable
 {
-    
-    [field: SerializeField]
-    public float Thrust { get; private set; } = 0.1f;
-    [SerializeField][GetComponent]
-    private SpriteRenderer _spriteRenderer;
+    [field:SerializeField]
+    [field:SerializableDictionaryOptions(keyHeader = "Direction",
+        valueHeader = "Force")]
+    public SerializableDictionary<TileRotation, float> DirectionalThrust
+    {
+        get;
+        private set;
+    }
 
-    private void Awake()
+    [field: SerializeField]
+    [Min(0f)]
+    public float RotationForce { get; private set; }
+
+    public void ActivateThrust(float amount, in Rigidbody2D targetRb)
     {
-        _spriteRenderer = GetComponent<SpriteRenderer>();
-        SetActive(false);
+        spriteRenderer.color = Color.red;
     }
-    
-    public void SetActive(bool active)
+
+    public void DeactivateThrust()
     {
-        _spriteRenderer.color = (active) ? Color.red : Color.white;
-        
+        spriteRenderer.color = Color.white;
     }
-        
-    public void Move(float amount, ref Rigidbody2D parentRb)
+
+    public void ActivateRotation(float amount, in Rigidbody2D targetRb)
     {
-        Debug.Log($"I want to move {amount}");
-        //TODO: Add movement logic here
-        // Apply force to rigidbody at the point i exist at
+    }
+
+    public void DeactivateRotation()
+    {
     }
 }

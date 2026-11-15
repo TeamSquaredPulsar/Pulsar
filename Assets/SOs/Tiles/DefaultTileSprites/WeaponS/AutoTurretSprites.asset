@@ -1,0 +1,21 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d5984b22c70d4854a98abd039ce21891, type: 3}
+  m_Name: AutoTurretSprites
+  m_EditorClassIdentifier: Pulsar.DataClasses::Pulsar.DataClasses.TileSpritesSO
+  spriteSheet: {fileID: 2800000, guid: e0d107b66423cf641853a63aa465e5c2, type: 3}
+  frames:
+  - {fileID: -8428354817757708096, guid: e0d107b66423cf641853a63aa465e5c2, type: 3}
+  - {fileID: -2689306485645098440, guid: e0d107b66423cf641853a63aa465e5c2, type: 3}
+  - {fileID: -7977929363021724030, guid: e0d107b66423cf641853a63aa465e5c2, type: 3}
+  - {fileID: -8680681277087390560, guid: e0d107b66423cf641853a63aa465e5c2, type: 3}
+  - {fileID: -2983887438894159636, guid: e0d107b66423cf641853a63aa465e5c2, type: 3}

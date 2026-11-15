@@ -1,6 +1,8 @@
 using System;
 using UnityEngine;
 
+namespace Pulsar.Weapons.Strategies
+{
 /// <summary>
 /// Represents a WeaponStrategy
 ///
@@ -16,7 +18,7 @@ public abstract class WeaponStrategy : ScriptableObject
 {
     /// <summary>
     /// Abstract Fire function
-    /// 
+    ///
     /// </summary>
     /// <param name="firePoints"></param>
     ///  <param name="weapon"></param>
@@ -24,7 +26,7 @@ public abstract class WeaponStrategy : ScriptableObject
     public abstract void
         Fire(
             Transform[] firePoints,
-            WeaponTile weapon,
+            Weapon weapon,
             Func<Transform, GameObject> spawnProjectile);
 
     protected void VerifyFirePoints(
@@ -37,4 +39,5 @@ public abstract class WeaponStrategy : ScriptableObject
                 "Fire points must be at least " + maxFirePoints);
         }
     }
+}
 }
