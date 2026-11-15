@@ -108,14 +108,7 @@ public class ShipManager : MonoBehaviour
             ShipUtilities.GridToLocal(cell),
             ShipUtilities.RotateQuarterOnZAxis(rotation.ToInt()));
 
-        if (tile is IShipCore core)
-        {
-            core.OnCoreDestroyed += () => ShipDestroyedEvent?.Invoke(this);
-        }
-        else
-        {
-            tile.DestroyEvent += HandleTileDestroyed;
-        }
+        tile.DestroyEvent += HandleTileDestroyed;
 
         ShipGridUpdate?.Invoke();
     }
@@ -197,7 +190,7 @@ public class ShipManager : MonoBehaviour
 
     private void HandleTileDestroyed(Tile tile)
     {
-        if (tile is CoreTile)
+        if (tile is IShipCore)
         {
             OnCoreDestroyed();
         }
@@ -234,7 +227,7 @@ public class ShipManager : MonoBehaviour
     {
         foreach (Tile tile in _gridData.Tiles)
         {
-            if (tile is CoreTile)
+            if (tile is IShipCore)
             {
                 continue;
             }

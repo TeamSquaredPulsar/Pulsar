@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace Pulsar.Interfaces
+﻿namespace Pulsar.Interfaces
 {
 /// <summary>
 /// Interface for any tile that wants to count as a ship core.
@@ -13,6 +11,5 @@ namespace Pulsar.Interfaces
 /// </summary>
 public interface IShipCore
 {
-    event Action OnCoreDestroyed;
 }
 }
