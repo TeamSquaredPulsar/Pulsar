@@ -189,8 +189,7 @@ MonoBehaviour:
       value: 5
     - key: 3
       value: 5
-  <ThrustForce>k__BackingField: 5
-  <RotationForce>k__BackingField: 5
+  <RotationForce>k__BackingField: 2
 --- !u!61 &5095908355809572340
 BoxCollider2D:
   m_ObjectHideFlags: 0

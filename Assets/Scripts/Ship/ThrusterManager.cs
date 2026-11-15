@@ -19,12 +19,6 @@ public class ThrusterManager : MonoBehaviour
     [SerializeField]
     private Rigidbody2D rb;
 
-    [SerializeField]
-    private float rotationalThrust = 2;
-
-    [SerializeField]
-    private float rotationScaler = 1.5f;
-
     private ThrustAtRotation[] _directedThrust;
     private static readonly int Directions = new TileRotation().Length();
 
@@ -94,7 +88,7 @@ public class ThrusterManager : MonoBehaviour
 
     private void ApplyRotation()
     {
-        rb.AddTorque(_rotInput * _curRotThrust * rotationScaler,
+        rb.AddTorque(_rotInput * _curRotThrust,
             ForceMode2D.Force);
     }
 
@@ -176,15 +170,13 @@ public class ThrusterManager : MonoBehaviour
                 groupedThrusters[rotIndex].Add(thruster);
             }
 
-            rotationalThrust += thruster.RotationForce;
+            _curRotThrust += thruster.RotationForce;
         }
 
         for (int i = 0; i < Directions; i++)
         {
             _directedThrust[i].Thrusters = groupedThrusters[i].ToArray();
         }
-
-        _curRotThrust = rotationalThrust;
     }
 
     private ThrustAtRotation GetThrustAtRotation(TileRotation orientation) =>
