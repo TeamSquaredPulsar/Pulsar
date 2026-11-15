@@ -9,7 +9,7 @@ namespace Pulsar.Ship
 {
 public class ThrustAtRotation
 {
-    public float Thrust = 5;
+    public float Thrust = 0;
     public readonly List<IThrustable> Thrusters = new();
 
     public void Reset()
@@ -60,6 +60,8 @@ public class ThrusterManager : MonoBehaviour
         foreach (TileRotation rotation in new TileRotation().Values())
         {
             List<IThrustable> thrusters = _directedThrust[rotation].Thrusters;
+            // Can't modify a list during a foreach loop, so we need to iterate manually.
+            // Start from the back so we don't fuck with the range.
             for (int i = thrusters.Count - 1; i >= 0; i--)
             {
                 // Cache list
