@@ -7,13 +7,13 @@ namespace Pulsar.Ship.Extensions
 public static class ComponentExtensions
 {
     private const BindingFlags k_AllFlags = BindingFlags.Public |
-                                                    BindingFlags.Instance |
-                                                    BindingFlags.NonPublic;
+                                            BindingFlags.Instance |
+                                            BindingFlags.NonPublic;
+
     public static T CopyComponentSettingsTo<T>(
         this T original,
         in T destination) where T : Component
     {
-
         Type type = original.GetType();
 
         // Copy Fields (variables)
@@ -34,7 +34,7 @@ public static class ComponentExtensions
                 try
                 {
                     property.SetValue(
-                        destination, 
+                        destination,
                         property.GetValue(original, null),
                         null
                     );

@@ -3,7 +3,8 @@ using UnityEngine;
 
 public class CoreTile : Tile, IThrustable
 {
-    [field: SerializeField][Min(0f)]
+    [field: SerializeField]
+    [Min(0f)]
     public float ThrustForce { get; private set; } = 0.1f;
 
     [field: SerializeField]
@@ -12,9 +13,8 @@ public class CoreTile : Tile, IThrustable
 
     public void Activate()
     {
-        
     }
-    
+
     public void Deactivate()
     {
         //TODO: Whatever logic we need to do here

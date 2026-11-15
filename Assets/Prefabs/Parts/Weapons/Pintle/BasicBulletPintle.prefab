@@ -76,49 +76,13 @@ PrefabInstance:
     m_TransformParent: {fileID: 0}
     m_Modifications:
     - target: {fileID: -4160512527206970603, guid: 9141fe4656a2ff0468c29dd7d8bb3239, type: 3}
-      propertyPath: range
-      value: 12
-      objectReference: {fileID: 0}
-    - target: {fileID: -4160512527206970603, guid: 9141fe4656a2ff0468c29dd7d8bb3239, type: 3}
-      propertyPath: health
-      value: 
-      objectReference: {fileID: 4223974295867866412}
-    - target: {fileID: -4160512527206970603, guid: 9141fe4656a2ff0468c29dd7d8bb3239, type: 3}
-      propertyPath: rotSpeed
-      value: 40
-      objectReference: {fileID: 0}
-    - target: {fileID: -4160512527206970603, guid: 9141fe4656a2ff0468c29dd7d8bb3239, type: 3}
-      propertyPath: rigidBody
-      value: 
-      objectReference: {fileID: 4656547120611789362}
-    - target: {fileID: -4160512527206970603, guid: 9141fe4656a2ff0468c29dd7d8bb3239, type: 3}
       propertyPath: targetLock
-      value: 
-      objectReference: {fileID: 1597895781104856423}
-    - target: {fileID: -4160512527206970603, guid: 9141fe4656a2ff0468c29dd7d8bb3239, type: 3}
-      propertyPath: targetRadius
-      value: 
-      objectReference: {fileID: 2096666369018647243}
-    - target: {fileID: -4160512527206970603, guid: 9141fe4656a2ff0468c29dd7d8bb3239, type: 3}
-      propertyPath: tileCollider
-      value: 
-      objectReference: {fileID: 4194787609717399561}
-    - target: {fileID: -4160512527206970603, guid: 9141fe4656a2ff0468c29dd7d8bb3239, type: 3}
-      propertyPath: mountingPoint
-      value: 
-      objectReference: {fileID: 4368896167409995769}
-    - target: {fileID: -4160512527206970603, guid: 9141fe4656a2ff0468c29dd7d8bb3239, type: 3}
-      propertyPath: targetReticle
       value: 
       objectReference: {fileID: 1597895781104856423}
     - target: {fileID: -4160512527206970603, guid: 9141fe4656a2ff0468c29dd7d8bb3239, type: 3}
       propertyPath: parentCollider
       value: 
       objectReference: {fileID: 4194787609717399561}
-    - target: {fileID: -4160512527206970603, guid: 9141fe4656a2ff0468c29dd7d8bb3239, type: 3}
-      propertyPath: spriteRenderer
-      value: 
-      objectReference: {fileID: 2562010754282317617}
     - target: {fileID: -4160512527206970603, guid: 9141fe4656a2ff0468c29dd7d8bb3239, type: 3}
       propertyPath: weaponStrategy
       value: 
@@ -135,18 +99,6 @@ PrefabInstance:
       propertyPath: 'firePoints.Array.data[0]'
       value: 
       objectReference: {fileID: 1639991655727879402}
-    - target: {fileID: -4160512527206970603, guid: 9141fe4656a2ff0468c29dd7d8bb3239, type: 3}
-      propertyPath: <Strategy>k__BackingField
-      value: 
-      objectReference: {fileID: 11400000, guid: 67d68c3e0a11e41479e9131cdc4b126a, type: 2}
-    - target: {fileID: -4160512527206970603, guid: 9141fe4656a2ff0468c29dd7d8bb3239, type: 3}
-      propertyPath: <ProjectilePrefab>k__BackingField
-      value: 
-      objectReference: {fileID: 1682859016921356063, guid: a133161848d51234b97f8554a243a1ab, type: 3}
-    - target: {fileID: -4160512527206970603, guid: 9141fe4656a2ff0468c29dd7d8bb3239, type: 3}
-      propertyPath: <FireRatePerSecond>k__BackingField
-      value: 1.5
-      objectReference: {fileID: 0}
     - target: {fileID: -4160512527206970603, guid: 9141fe4656a2ff0468c29dd7d8bb3239, type: 3}
       propertyPath: <FirePoints>k__BackingField.Array.size
       value: 1
@@ -195,9 +147,21 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 2303072813145309213, guid: 9141fe4656a2ff0468c29dd7d8bb3239, type: 3}
+      propertyPath: currentHealth
+      value: 10
+      objectReference: {fileID: 0}
+    - target: {fileID: 2303072813145309213, guid: 9141fe4656a2ff0468c29dd7d8bb3239, type: 3}
+      propertyPath: <MaxHealth>k__BackingField
+      value: 10
+      objectReference: {fileID: 0}
     - target: {fileID: 3485646891177161118, guid: 9141fe4656a2ff0468c29dd7d8bb3239, type: 3}
       propertyPath: m_Name
       value: BasicBulletPintle
+      objectReference: {fileID: 0}
+    - target: {fileID: 4066856357463732218, guid: 9141fe4656a2ff0468c29dd7d8bb3239, type: 3}
+      propertyPath: m_Radius
+      value: 5.28
       objectReference: {fileID: 0}
     - target: {fileID: 7347581372079830787, guid: 9141fe4656a2ff0468c29dd7d8bb3239, type: 3}
       propertyPath: m_Mass
@@ -216,39 +180,13 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 3694190862674088022, guid: 9141fe4656a2ff0468c29dd7d8bb3239, type: 3}
   m_PrefabInstance: {fileID: 2695609690963279153}
   m_PrefabAsset: {fileID: 0}
---- !u!58 &2096666369018647243 stripped
-CircleCollider2D:
-  m_CorrespondingSourceObject: {fileID: 4066856357463732218, guid: 9141fe4656a2ff0468c29dd7d8bb3239, type: 3}
-  m_PrefabInstance: {fileID: 2695609690963279153}
-  m_PrefabAsset: {fileID: 0}
---- !u!212 &2562010754282317617 stripped
-SpriteRenderer:
-  m_CorrespondingSourceObject: {fileID: 497275641067805184, guid: 9141fe4656a2ff0468c29dd7d8bb3239, type: 3}
-  m_PrefabInstance: {fileID: 2695609690963279153}
-  m_PrefabAsset: {fileID: 0}
 --- !u!61 &4194787609717399561 stripped
 BoxCollider2D:
   m_CorrespondingSourceObject: {fileID: 2260344807008050488, guid: 9141fe4656a2ff0468c29dd7d8bb3239, type: 3}
   m_PrefabInstance: {fileID: 2695609690963279153}
   m_PrefabAsset: {fileID: 0}
---- !u!114 &4223974295867866412 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 2303072813145309213, guid: 9141fe4656a2ff0468c29dd7d8bb3239, type: 3}
-  m_PrefabInstance: {fileID: 2695609690963279153}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d1236c1e551165b48b0864561b6c2156, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Pulsar.Ship::Health
 --- !u!4 &4368896167409995769 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 1858250868726346440, guid: 9141fe4656a2ff0468c29dd7d8bb3239, type: 3}
-  m_PrefabInstance: {fileID: 2695609690963279153}
-  m_PrefabAsset: {fileID: 0}
---- !u!50 &4656547120611789362 stripped
-Rigidbody2D:
-  m_CorrespondingSourceObject: {fileID: 7347581372079830787, guid: 9141fe4656a2ff0468c29dd7d8bb3239, type: 3}
   m_PrefabInstance: {fileID: 2695609690963279153}
   m_PrefabAsset: {fileID: 0}

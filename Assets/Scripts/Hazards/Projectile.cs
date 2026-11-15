@@ -6,7 +6,7 @@ namespace Pulsar.Hazards
 /// Represents a Projectile
 ///
 /// Reference: https://www.youtube.com/watch?v=2mThTAhD16M
-/// 
+///
 /// @author Alfredo Luzardo
 /// @version 1.1
 /// </summary>
@@ -31,9 +31,10 @@ public class Projectile : MonoBehaviour
 
     [SerializeField]
     private Collider2D coll2D;
+
     [SerializeField]
     private Rigidbody2D rb;
-    
+
     /// <summary>
     /// Start method.
     /// </summary>
@@ -41,7 +42,7 @@ public class Projectile : MonoBehaviour
     {
         Destroy(gameObject, lifeTime);
     }
-    
+
     /// <summary>
     /// When it collides, activate the hit effect, damage to the other,
     /// and destroy itself
@@ -72,7 +73,8 @@ public class Projectile : MonoBehaviour
         Vector2 inheritedVelocity = firingBody != null
             ? firingBody.linearVelocity
             : Vector2.zero;
-        rb.linearVelocity = inheritedVelocity + (Vector2)rb.transform.up * speed;
+        rb.linearVelocity
+            = inheritedVelocity + (Vector2)rb.transform.up * speed;
     }
 
     /// <summary>
@@ -90,10 +92,10 @@ public class Projectile : MonoBehaviour
         projectile.transform.up = spawnTransform.up;
 
         projectile.GetComponent<Projectile>().Initialize(parentCollider);
-        
+
         Physics2D.IgnoreCollision(projectile.GetComponent<Collider2D>(),
             parentCollider);
-        
+
         // if (projectile.TryGetComponent(out Rigidbody2D rb))
         // {
         //     // Inherit the firing ship's motion once, when the bullet is launched.

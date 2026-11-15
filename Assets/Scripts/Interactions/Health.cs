@@ -1,4 +1,5 @@
 using System;
+using NaughtyAttributes;
 using UnityEngine;
 
 namespace Pulsar.Interactions
@@ -7,17 +8,21 @@ public class Health : MonoBehaviour
 {
     [field: SerializeField]
     [Min(1)]
+    [field: OnValueChanged("SetCurrentHealth")]
     public float MaxHealth { get; set; }
 
     public float CurrentHealth
     {
-        get => _currentHealth;
-        private set => _currentHealth = Mathf.Clamp(value, NoHealth, MaxHealth);
+        get => currentHealth;
+        private set => currentHealth = Mathf.Clamp(value, NoHealth, MaxHealth);
     }
 
-    private float _currentHealth;
-    private HealthState _currentHealthState;
+    [field: ProgressBar("MaxHealth", EColor.Red)]
+    [MaxValue("MaxHealth")]
+    [SerializeField]
+    private float currentHealth;
 
+    private HealthState _currentHealthState;
 
     private const float NoHealth = 0;
     private const float TenPercent = 0.1f;
@@ -28,8 +33,12 @@ public class Health : MonoBehaviour
     public event Action<Health> DestroyEvent;
     public event Action<HealthState> HealthStateChanged;
 
-
     private void Awake()
+    {
+        SetCurrentHealth();
+    }
+
+    private void SetCurrentHealth()
     {
         CurrentHealth = MaxHealth;
         _currentHealthState = GetHealthState();
@@ -38,7 +47,7 @@ public class Health : MonoBehaviour
     public void TakeDamage(float damage)
     {
         CurrentHealth -= damage;
-        
+
         UpdateHealthState();
 
         if (CurrentHealth <= NoHealth)
@@ -50,10 +59,10 @@ public class Health : MonoBehaviour
     public void AddHealth(float health)
     {
         CurrentHealth += health;
-        
+
         UpdateHealthState();
     }
-    
+
     private void UpdateHealthState()
     {
         HealthState newState = GetHealthState();
@@ -67,12 +76,12 @@ public class Health : MonoBehaviour
 
         HealthStateChanged?.Invoke(newState);
     }
-    
+
     private HealthState GetHealthState()
     {
-        float healthPercent = CurrentHealth / MaxHealth;
+        float healthPerc = CurrentHealth / MaxHealth;
 
-        return healthPercent switch
+        return healthPerc switch
         {
             <= TenPercent => HealthState.LessOrEqualTo10Percent,
             <= TwentyFivePercent => HealthState.LessOrEqualTo25Percent,

@@ -1,6 +1,8 @@
 using System;
 using UnityEngine;
 
+namespace Pulsar.Weapons.Strategies
+{
 /// <summary>
 /// Shoots three bullets at a time
 ///
@@ -27,4 +29,5 @@ public class TripleShot : WeaponStrategy
             spawnProjectile(firePoint);
         }
     }
+}
 }

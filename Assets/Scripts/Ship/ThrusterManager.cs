@@ -54,36 +54,44 @@ public class ThrusterManager : MonoBehaviour
 
     public void HandleThrust(Vector2 thrust)
     {
-        foreach (ThrustAtRotation dir in _directedThrust.Where(dir => dir.Thrusters != null))
+        foreach (ThrustAtRotation dir in _directedThrust.Where(dir =>
+                     dir.Thrusters != null))
         {
             if (dir.Thrusters == null)
             {
                 continue;
             }
+
             foreach (IThrustable t in dir.Thrusters)
             {
                 t.Deactivate();
             }
         }
-        
+
         _moveInput = thrust;
 
         if (_moveInput.x < 0)
         {
-            ShowActiveThrusters(_directedThrust[(int)TileRotation.Right].Thrusters);
+            ShowActiveThrusters(_directedThrust[(int)TileRotation.Right]
+                .Thrusters);
         }
+
         if (_moveInput.x > 0)
         {
-            ShowActiveThrusters(_directedThrust[(int)TileRotation.Left].Thrusters);
+            ShowActiveThrusters(_directedThrust[(int)TileRotation.Left]
+                .Thrusters);
         }
 
         if (_moveInput.y < 0)
         {
-            ShowActiveThrusters(_directedThrust[(int)TileRotation.Up].Thrusters);
+            ShowActiveThrusters(_directedThrust[(int)TileRotation.Up]
+                .Thrusters);
         }
+
         if (_moveInput.y > 0)
         {
-            ShowActiveThrusters(_directedThrust[(int)TileRotation.Down].Thrusters);
+            ShowActiveThrusters(_directedThrust[(int)TileRotation.Down]
+                .Thrusters);
         }
     }
 
@@ -135,9 +143,9 @@ public class ThrusterManager : MonoBehaviour
         int directions = new TileRotation().Length();
         _directedThrust = new ThrustAtRotation[directions];
 
-        List<IThrustable>[] groupedThrusters = 
+        List<IThrustable>[] groupedThrusters =
             new List<IThrustable>[directions];
-        
+
         for (int i = 0; i < directions; i++)
         {
             groupedThrusters[i] = new List<IThrustable>();
@@ -146,7 +154,7 @@ public class ThrusterManager : MonoBehaviour
                 Thrust = 0f,
             };
         }
-        
+
         foreach (IThrustable thruster in thrusters)
         {
             int rotIndex = thruster.Rotation.ToInt();
@@ -154,12 +162,12 @@ public class ThrusterManager : MonoBehaviour
                 += thruster.ThrustForce;
             groupedThrusters[rotIndex].Add(thruster);
         }
-        
+
         for (int i = 0; i < directions; i++)
         {
             _directedThrust[i].Thrusters = groupedThrusters[i].ToArray();
         }
-        
+
         _curRotThrust = rotationalThrust + rotationScaler * thrusters.Count;
     }
 
@@ -177,5 +185,4 @@ public class ThrusterManager : MonoBehaviour
         }
     }
 }
-
 }

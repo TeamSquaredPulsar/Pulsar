@@ -3,19 +3,20 @@ using UnityEngine;
 
 public class ThrusterTile : Tile, IThrustable
 {
-    [field: SerializeField][Min(0f)]
+    [field: SerializeField]
+    [Min(0f)]
     public float ThrustForce { get; private set; } = 0.1f;
 
-    [field: SerializeField][Min(0f)]
+    [field: SerializeField]
+    [Min(0f)]
     public float RotationForce { get; private set; }
 
     private void Awake()
     {
         spriteRenderer = GetComponent<SpriteRenderer>();
         Deactivate();
-        
     }
-    
+
     public void Activate(float amount, ref Rigidbody2D parentRb)
     {
         spriteRenderer.color = Color.red;
@@ -23,7 +24,7 @@ public class ThrusterTile : Tile, IThrustable
         //TODO: Add movement logic here
         // Apply force to rigidbody at the point i exist at
     }
-    
+
     public void Deactivate()
     {
         spriteRenderer.color = Color.white;

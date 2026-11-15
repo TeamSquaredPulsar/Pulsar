@@ -27,7 +27,7 @@ public class TileSprites : ScriptableObject
         {
             return null;
         }
-        
+
         int index = state switch
         {
             HealthState.FullHealth             => k_FirstSprite,
@@ -35,14 +35,14 @@ public class TileSprites : ScriptableObject
             HealthState.LessOrEqualTo50Percent => k_ThirdSprite,
             HealthState.LessOrEqualTo25Percent => k_FourthSprite,
             HealthState.LessOrEqualTo10Percent => k_FifthSprite,
-            _ => k_FirstSprite,
+            _                                  => k_FirstSprite,
         };
 
-        // safety clamp in case there aren't enough sprites in the sheet 
-        index = Mathf.Min(index, frames.Length - 1); 
+        // safety clamp in case there aren't enough sprites in the sheet
+        index = Mathf.Min(index, frames.Length - 1);
         return frames[index] ? frames[index] : frames[k_FirstSprite];
     }
-    
+
     // This auto gets the sliced frames and puts them in order in the list
 #if UNITY_EDITOR
     private void OnValidate()
@@ -53,17 +53,17 @@ public class TileSprites : ScriptableObject
         }
 
         string path = AssetDatabase.GetAssetPath(spriteSheet);
-        
+
         Sprite[] sliced = AssetDatabase.LoadAllAssetsAtPath(path)
             .OfType<Sprite>()
             // s.rect is the pixel rectangle that the frame takes up in its
-            // spritesheet 
+            // spritesheet
             .OrderByDescending(s => s.rect.y)
             .ThenBy(s => s.rect.x)
             .ToArray();
- 
+
         // to check if we split it up into frames yet or not, because if not
-        // it would wipe the array 
+        // it would wipe the array
         if (sliced.Length > 0)
         {
             frames = sliced;

@@ -100,8 +100,8 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 8333102018394350530}
-  - component: {fileID: 8525024055157982409}
   - component: {fileID: 4009485083793066549}
+  - component: {fileID: 8525024055157982409}
   - component: {fileID: 5095908355809572340}
   - component: {fileID: 7540636520406933749}
   - component: {fileID: 2261048118168935301}
@@ -130,6 +130,20 @@ Transform:
   - {fileID: 433469968832905233}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &4009485083793066549
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5342938517668441560}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d1236c1e551165b48b0864561b6c2156, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Interactions::Pulsar.Interactions.Health
+  <MaxHealth>k__BackingField: 10
+  currentHealth: 10
 --- !u!114 &8525024055157982409
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -145,16 +159,16 @@ MonoBehaviour:
   baseColor: {r: 1, g: 1, b: 1, a: 1}
   <IsAttached>k__BackingField: 0
   <TileInfo>k__BackingField: {fileID: 11400000, guid: 2fc0edad448d5f34e831dd954138aabd, type: 2}
-  spritesOverride: {fileID: 11400000, guid: ec3e1b98f7cb9804e825880aa2014b85, type: 2}
-  spriteRenderer: {fileID: 7540636520406933749}
   tileCollider: {fileID: 5095908355809572340}
   rigidBody: {fileID: 2261048118168935301}
   health: {fileID: 4009485083793066549}
+  spritesOverride: {fileID: 11400000, guid: ec3e1b98f7cb9804e825880aa2014b85, type: 2}
+  spriteRenderer: {fileID: 7540636520406933749}
   <ProjectilePrefab>k__BackingField: {fileID: 1682859016921356063, guid: a133161848d51234b97f8554a243a1ab, type: 3}
   <ParentCollider>k__BackingField: {fileID: 0}
   <FirePoints>k__BackingField:
   - {fileID: 4593652288710760860}
-  <FireRatePerSecond>k__BackingField: 0.5
+  <FireRatePerSecond>k__BackingField: 1.5
   <Strategy>k__BackingField: {fileID: 11400000, guid: 67d68c3e0a11e41479e9131cdc4b126a, type: 2}
   targetReticle: {fileID: 433469968832905233}
   targetRadius: {fileID: 6101688074798165259}
@@ -165,19 +179,6 @@ MonoBehaviour:
   currentTargetBias: 1.5
   <ThrustForce>k__BackingField: 3
   <RotationForce>k__BackingField: 1
---- !u!114 &4009485083793066549
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5342938517668441560}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d1236c1e551165b48b0864561b6c2156, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Interactions::Pulsar.Interactions.Health
-  <MaxHealth>k__BackingField: 10
 --- !u!61 &5095908355809572340
 BoxCollider2D:
   m_ObjectHideFlags: 0

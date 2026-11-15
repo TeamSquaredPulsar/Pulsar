@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using Pulsar.Weapons.Strategies;
+using UnityEngine;
 
 namespace Pulsar.Weapons
 {

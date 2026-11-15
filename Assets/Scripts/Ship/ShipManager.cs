@@ -35,10 +35,9 @@ public class ShipManager : MonoBehaviour
 
     [SerializeField]
     private ThrusterManager thrusterManager;
-    
+
     private List<ManualWeapon> _weapons = new(10);
     private List<IThrustable> _thrusters = new(10);
-    
 
     [Header("Detach Explosion")]
     [SerializeField]
@@ -56,9 +55,9 @@ public class ShipManager : MonoBehaviour
 
     public IReadOnlyDictionary<Vector2Int, Tile> Cells => _gridData.Cells;
     public bool OwnsTile(Tile tile) => Cells.Values.Contains(tile);
-    
+
     public event Action ShipGridUpdate;
-    
+
     private void Start()
     {
         RefreshTiles();
@@ -89,6 +88,7 @@ public class ShipManager : MonoBehaviour
                 tile.transform.localRotation.eulerAngles.z.ToTileRotation();
             AttachTile(localCell, tile, localRot);
         }
+
         thrusterManager.CalculateThrusters(in _thrusters);
     }
 
@@ -129,7 +129,6 @@ public class ShipManager : MonoBehaviour
         {
             _weapons.Add(manualWeapon);
         }
-        
     }
 
     public void Fire()
@@ -170,10 +169,11 @@ public class ShipManager : MonoBehaviour
         float m2 = otherShip.rb.mass;
         float reducedMass = (m1 * m2) / (m1 + m2);
 
-        float kineticEnergy = 0.5f * reducedMass * relativeVelocity * relativeVelocity;
+        float kineticEnergy
+            = 0.5f * reducedMass * relativeVelocity * relativeVelocity;
         float share = m2 / (m1 + m2);
         float damage = kineticEnergy * share * collisionDmgMultiplier;
-        
+
         return damage;
     }
 
@@ -200,12 +200,12 @@ public class ShipManager : MonoBehaviour
             Debug.LogError($"Failed to remove {tile.name}");
             return;
         }
-        
+
 
         UnregisterTile(tile);
         ShipGridUpdate?.Invoke();
     }
-    
+
     private void UnregisterTile(Tile tile)
     {
         tile.DestroyEvent -= HandleTileDestroyed;
@@ -338,13 +338,7 @@ public class ShipManager : MonoBehaviour
         TileRotation? bestRot = null;
         int bestConnectionCount = 0;
         Vector2Int bestCell = default;
-        // public static readonly Vector2Int[] Dirs =
-        // {
-        //     Vector2Int.up,
-        //     Vector2Int.right,
-        //     Vector2Int.down,
-        //     Vector2Int.left,
-        // };
+
         HashSet<Vector2Int> candidates = new();
         foreach (Vector2Int occupied in Cells.Keys)
         {
@@ -430,7 +424,7 @@ public class ShipManager : MonoBehaviour
 
         Vector2 worldPos = tile.transform.position;
 
-        // Inherit movement 
+        // Inherit movement
         Vector2 offset = worldPos - centerOfMass;
         Vector2 velocity = linearVelocity +
                            new Vector2(-offset.y, offset.x) *

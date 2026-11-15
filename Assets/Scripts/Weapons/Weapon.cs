@@ -1,9 +1,11 @@
 using System.Collections;
 using NaughtyAttributes;
 using Pulsar.Hazards;
-using Pulsar.Weapons;
+using Pulsar.Weapons.Strategies;
 using UnityEngine;
 
+namespace Pulsar.Weapons
+{
 /// <summary>
 /// Represents a weapon
 ///
@@ -31,8 +33,9 @@ public abstract class Weapon : Tile, IProjectileSpawner, IWeapon
     [field: SerializeField]
     [field: Expandable]
     public WeaponStrategy Strategy { get; private set; }
+
     Collider2D IProjectileSpawner.ParentCollider => ParentCollider;
-    
+
     private Coroutine _fireTimerRoutine;
     private Projectile _projectile;
 
@@ -80,4 +83,5 @@ public abstract class Weapon : Tile, IProjectileSpawner, IWeapon
     {
         ParentCollider = newCollider;
     }
+}
 }

@@ -1,6 +1,8 @@
 using System;
 using UnityEngine;
 
+namespace Pulsar.Weapons.Strategies
+{
 /// <summary>
 /// Shoots a single bullet at a time
 ///
@@ -26,4 +28,5 @@ public class SingleShot : WeaponStrategy
 
         spawnProjectile(firePoints[k_MainFirePoint]);
     }
+}
 }

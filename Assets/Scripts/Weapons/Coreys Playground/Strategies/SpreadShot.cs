@@ -2,7 +2,7 @@ using System;
 using NaughtyAttributes;
 using UnityEngine;
 
-namespace Pulsar
+namespace Pulsar.Weapons.Strategies
 {
 /// <summary>
 /// Creates a weapon that fires from more than 1 point every time it fires.
@@ -12,7 +12,6 @@ namespace Pulsar
 [CreateAssetMenu(fileName = "MultiShot",
     menuName = "Scriptable Objects/MultiShot")]
 [Serializable]
-
 public class SpreadShot : WeaponStrategy
 {
     [SerializeField]

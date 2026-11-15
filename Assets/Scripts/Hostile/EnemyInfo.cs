@@ -1,7 +1,7 @@
 using UnityEngine;
 
 [CreateAssetMenu(fileName = "NewEnemyInfo", menuName = "Pulsar/Enemy Info")]
-public class EnemyInfoSO : ScriptableObject
+public class EnemyInfo : ScriptableObject
 {
     [Header("Movement")]
     public float

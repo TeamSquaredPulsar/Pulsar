@@ -2,6 +2,8 @@ using System;
 using System.Collections;
 using UnityEngine;
 
+namespace Pulsar.Weapons.Strategies
+{
 /// <summary>
 /// Represents a BurstShot
 ///
@@ -49,4 +51,5 @@ public class BurstShot : WeaponStrategy
             yield return new WaitForSeconds(k_bulletGapTime);
         }
     }
+}
 }

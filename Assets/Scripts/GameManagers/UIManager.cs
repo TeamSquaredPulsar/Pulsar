@@ -15,10 +15,10 @@ public class UIManager : MonoBehaviour
 
     [SerializeField]
     private GameObject gameplayUI;
-    
+
     [SerializeField]
     private GameObject gameOverMenu;
-    
+
     private TMP_Text _scoreText;
 
     private void Start()

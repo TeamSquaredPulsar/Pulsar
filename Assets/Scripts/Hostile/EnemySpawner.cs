@@ -15,8 +15,8 @@ public class EnemySpawner : MonoBehaviour
     private const float LeashCheckInterval = 1f;
 
     public event Action WaveCompleteEvent;
-    
-    private WaveDefinitionSO _wave;
+
+    private WaveDefinition _wave;
 
     [Header("Spawning")]
     [Tooltip("Distance from the player to the enemy's edge, not its center.")]
@@ -69,7 +69,7 @@ public class EnemySpawner : MonoBehaviour
         EnemyController.EnemyDefeatedEvent -= HandleEnemyDefeated;
     }
 
-    public void LoadNewWave(WaveDefinitionSO newWave)
+    public void LoadNewWave(WaveDefinition newWave)
     {
         _wave = newWave;
     }
@@ -93,7 +93,7 @@ public class EnemySpawner : MonoBehaviour
     // Spawns the whole wave, then waits until every enemy from it is gone
     // (or the wave's safety timer runs out) and reports the wave complete
     // exactly once.
-    private IEnumerator RunWave(WaveDefinitionSO wave)
+    private IEnumerator RunWave(WaveDefinition wave)
     {
         _patternAngle = Random.Range(0f, FullCircle);
         _spawnCount = 0;

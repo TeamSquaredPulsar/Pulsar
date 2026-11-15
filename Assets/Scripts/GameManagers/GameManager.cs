@@ -11,7 +11,7 @@ namespace Pulsar
 public class GameManager : MonoBehaviour
 {
     public static event Action<int> OnEnemyKill;
-    
+
     [SerializeField, RequiredType(typeof(PlayerController)),]
     private GameObject playerPrefab;
 
@@ -20,15 +20,15 @@ public class GameManager : MonoBehaviour
 
     [SerializeField]
     private int waveDelaySeconds;
-    
+
     [SerializeField, ReorderableList,]
-    private List<WaveDefinitionSO> waveDefinitions;
-    
+    private List<WaveDefinition> waveDefinitions;
+
     private EnemySpawner _enemySpawner;
     private int _currentWave;
     private int _score;
     private Coroutine _awaitingWave;
-    
+
     private void Awake()
     {
         UIManager.GameStateChangeEvent += OnGameStateChange;
@@ -71,6 +71,7 @@ public class GameManager : MonoBehaviour
         {
             StopCoroutine(_awaitingWave);
         }
+
         Destroy(_enemySpawner.gameObject);
         _currentWave = 0;
     }
@@ -82,6 +83,7 @@ public class GameManager : MonoBehaviour
         {
             Destroy(tile.gameObject);
         }
+
         Instantiate(playerPrefab, Vector3.zero, Quaternion.identity);
         _enemySpawner = Instantiate(enemySpawnerPrefab, Vector3.zero,
             Quaternion.identity).GetComponent<EnemySpawner>();
@@ -90,12 +92,14 @@ public class GameManager : MonoBehaviour
     }
 
     private void HandleWaveComplete()
-    { _currentWave++;
+    {
+        _currentWave++;
         if (_currentWave >= waveDefinitions.Count)
         {
             //TODO: Victory screen.
             return;
         }
+
         LoadNextWave();
     }
 
@@ -113,4 +117,3 @@ public class GameManager : MonoBehaviour
     }
 }
 }
-
