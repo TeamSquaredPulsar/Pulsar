@@ -34,7 +34,7 @@ public class WeaponTile : Tile
 
     private bool CanFire => _fireTimerRoutine == null;
 
-    private new void Start()
+    protected override void Start()
     {
         base.Start();
         _projectile = projectilePrefab.gameObject.GetComponent<Projectile>();

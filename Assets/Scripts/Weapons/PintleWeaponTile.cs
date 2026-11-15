@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using Pulsar.DataClasses;
+using Pulsar.Interactions;
 using Pulsar.Utilities;
 using UnityEngine;
 
@@ -32,6 +33,11 @@ public class PintleWeaponTile : WeaponTile
     [Tooltip("Min dif for a new target to get priority")]
     private float currentTargetBias = 1.5f;
 
+    [SerializeField]
+    private TileSpritesSO turretSprites;
+    
+    [SerializeField] 
+    private SpriteRenderer activeTurretSprite;
     
     private string TargetTag => gameObject.CompareTag("Player") ? "Enemy" : "Player";
     
@@ -39,7 +45,7 @@ public class PintleWeaponTile : WeaponTile
     private Coroutine _searchCoroutine;
     private WaitForFixedUpdate _searchWait;
     
-    private void Awake()
+    protected override void Awake()
     {
         targetRadius.radius = range;
 
@@ -48,7 +54,29 @@ public class PintleWeaponTile : WeaponTile
 
         _searchWait = new WaitForFixedUpdate();
     }
-     
+
+    protected override void Start()
+    {
+        activeTurretSprite.sprite = turretSprites.Get(HealthState.FullHealth);
+        base.Start();
+        health.HealthStateChanged += UpdateTurretSprite;
+    }
+
+    protected override void OnDestroy()
+    {
+        base.OnDestroy();
+        health.HealthStateChanged -= UpdateTurretSprite;
+    }
+
+    private void UpdateTurretSprite(HealthState state)
+    {
+        Sprite next = turretSprites ? turretSprites.Get(state) : null;
+        
+        if (next)
+        {
+            activeTurretSprite.sprite = next;
+        }
+    }
     #region Targetting
     private IEnumerator SearchForTargets()
     {
@@ -125,7 +153,7 @@ public class PintleWeaponTile : WeaponTile
         mountingPoint.rotation = Quaternion.RotateTowards(
             mountingPoint.rotation, targetRotation, rotSpeed 
                                                     * Time.deltaTime);
-        
+
         Fire();
     }
 

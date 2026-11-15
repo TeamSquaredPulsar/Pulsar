@@ -21,13 +21,13 @@ public class ThrusterManager : MonoBehaviour
 
     //Temp field until the core has its own thruster values
     [SerializeField]
-    private float coreThrust = 3;
+    private float coreThrust = 5;
 
     [SerializeField]
     private float rotationalThrust = 2;
 
     [SerializeField]
-    private float rotationScaler = 1f;
+    private float rotationScaler = 1.5f;
 
     private ThrustAtRotation[] _directedThrust;
 
