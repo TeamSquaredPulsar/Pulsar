@@ -14,12 +14,12 @@ public class WaveEntry
 public enum SpawnPattern
 {
     Surround, // Anywhere around the player
-    OneSide,  // All from one direction
-    Pincer,   // From two opposite directions, alternating
+    OneSide, // All from one direction
+    Pincer, // From two opposite directions, alternating
 }
 
 [CreateAssetMenu(fileName = "NewWave", menuName = "Pulsar/Wave Definition")]
-public class WaveDefinitionSO : ScriptableObject
+public class WaveDefinition : ScriptableObject
 {
     public string waveName;
     public SpawnPattern pattern = SpawnPattern.Surround;

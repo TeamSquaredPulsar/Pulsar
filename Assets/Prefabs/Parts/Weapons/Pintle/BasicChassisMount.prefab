@@ -143,6 +143,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Pulsar.Ship::Health
   <MaxHealth>k__BackingField: 10
+  currentHealth: 10
 --- !u!114 &-4160512527206970603
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -158,23 +159,25 @@ MonoBehaviour:
   baseColor: {r: 1, g: 1, b: 1, a: 1}
   <IsAttached>k__BackingField: 0
   <TileInfo>k__BackingField: {fileID: 11400000, guid: 9c0e50de41345d743a48948f1809c761, type: 2}
-  spritesOverride: {fileID: 11400000, guid: 98efc5c07251a3f43a4c2f648d1cb3f7, type: 2}
-  spriteRenderer: {fileID: 497275641067805184}
   tileCollider: {fileID: 2260344807008050488}
   rigidBody: {fileID: 7347581372079830787}
   health: {fileID: 2303072813145309213}
-  projectilePrefab: {fileID: 0}
-  parentCollider: {fileID: 0}
-  firePoints: []
-  <FireRatePerSecond>k__BackingField: 0.5
-  weaponStrategy: {fileID: 0}
-  targetLock: {fileID: 3694190862674088022}
+  spritesOverride: {fileID: 11400000, guid: 98efc5c07251a3f43a4c2f648d1cb3f7, type: 2}
+  spriteRenderer: {fileID: 497275641067805184}
+  <ProjectilePrefab>k__BackingField: {fileID: 1682859016921356063, guid: a133161848d51234b97f8554a243a1ab, type: 3}
+  <ParentCollider>k__BackingField: {fileID: 0}
+  <FirePoints>k__BackingField: []
+  <FireRatePerSecond>k__BackingField: 1.5
+  <Strategy>k__BackingField: {fileID: 11400000, guid: 67d68c3e0a11e41479e9131cdc4b126a, type: 2}
+  targetReticle: {fileID: 3694190862674088022}
   targetRadius: {fileID: 4066856357463732218}
-  mountingPoint: {fileID: 0}
-  rotSpeed: 0
-  range: 0
+  mountingPoint: {fileID: 1858250868726346440}
+  rotSpeed: 40
+  range: 12
   angleWeight: 0.05
   currentTargetBias: 1.5
+  turretSprites: {fileID: 0}
+  activeTurretSprite: {fileID: 0}
 --- !u!212 &497275641067805184
 SpriteRenderer:
   serializedVersion: 2

@@ -1,6 +1,8 @@
 using System;
 using UnityEngine;
 
+namespace Pulsar.Weapons.Strategies
+{
 /// <summary>
 /// Shoots a single bullet at a time
 ///
@@ -13,17 +15,18 @@ using UnityEngine;
     menuName = "Scriptable Objects/SingleShot")]
 public class SingleShot : WeaponStrategy
 {
-    private int k_mainFirePoint = 0;
-    private int k_max_firePoints = 1;
+    private const int k_MainFirePoint = 0;
+    private const int k_MaxFirePoints = 1;
 
     /// <inheritdoc/>
     public override void Fire(
         Transform[] firePoints,
-        WeaponTile weapon,
+        Weapon weapon,
         Func<Transform, GameObject> spawnProjectile)
     {
-        VerifyFirePoints(firePoints, k_max_firePoints);
+        VerifyFirePoints(firePoints, k_MaxFirePoints);
 
-        spawnProjectile(firePoints[k_mainFirePoint]);
+        spawnProjectile(firePoints[k_MainFirePoint]);
     }
+}
 }

@@ -5,13 +5,14 @@ MonoImporter:
   serializedVersion: 2
   defaultReferences:
   - <TileInfo>k__BackingField: {fileID: 11400000, guid: 71fb61585e3013a43b3726d73a977655, type: 2}
+  - spritesOverride: {instanceID: 0}
   - spriteRenderer: {instanceID: 0}
   - tileCollider: {instanceID: 0}
   - rigidBody: {instanceID: 0}
   - health: {instanceID: 0}
-  - projectilePrefab: {instanceID: 0}
-  - parentCollider: {instanceID: 0}
-  - weaponStrategy: {instanceID: 0}
+  - <ProjectilePrefab>k__BackingField: {fileID: 1682859016921356063, guid: a133161848d51234b97f8554a243a1ab, type: 3}
+  - <ParentCollider>k__BackingField: {instanceID: 0}
+  - <Strategy>k__BackingField: {fileID: 11400000, guid: 67d68c3e0a11e41479e9131cdc4b126a, type: 2}
   executionOrder: 0
   icon: {instanceID: 0}
   userData: 

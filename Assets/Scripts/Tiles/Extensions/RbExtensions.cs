@@ -16,7 +16,8 @@ public static class RbExtensions
     public static Rigidbody2D SetFloatRb(
         this Rigidbody2D original,
         Vector2 velocity,
-        float angularVelocity, TileRbInfo rbInfo
+        float angularVelocity,
+        TileRbInfo rbInfo
     )
     {
         original.transform.SetParent(null, true);

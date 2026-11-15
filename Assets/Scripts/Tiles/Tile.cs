@@ -1,6 +1,5 @@
 using System;
 using Pulsar.DataClasses;
-using Pulsar.DataClasses.Extensions;
 using Pulsar.Interactions;
 using UnityEngine;
 
@@ -12,18 +11,17 @@ public struct TileRbInfo
 }
 
 [RequireComponent(typeof(BoxCollider2D),
-     typeof(SpriteRenderer),
-     typeof(Health)),]
+    typeof(SpriteRenderer),
+    typeof(Health)),]
 public abstract class Tile : MonoBehaviour
 {
     public event Action<Tile> DestroyEvent;
 
+    [Header("Basic Info")]
     [SerializeField]
     private Color baseColor = Color.white;
 
     public Vector2Int Cell { get; private set; }
-
-    public float CurrentHp => health.CurrentHealth;
 
     // 0 1 2 3 = 0 90 180 270 (counterclockwise)
     public TileRotation Rotation { get; private set; }
@@ -32,31 +30,34 @@ public abstract class Tile : MonoBehaviour
     public bool IsAttached { get; private set; }
 
     [field: SerializeField]
-    public TileInfoSO TileInfo { get; private set; }
-    
-    [SerializeField]
-    private TileSpritesSO spritesOverride;
-    
-    [SerializeField]
-    private SpriteRenderer spriteRenderer;
+    public TileInfo TileInfo { get; private set; }
 
     [SerializeField]
-    private BoxCollider2D tileCollider;
+    protected BoxCollider2D tileCollider;
 
     [SerializeField]
     private Rigidbody2D rigidBody;
 
+    [Header("Health Info")]
     [SerializeField]
     protected Health health;
 
-    private const int FloatingSortingOrder = 10;
+    public float CurrentHp => health.CurrentHealth;
 
     private TileRbInfo _rbInfo;
 
-    private TileSpritesSO sprites =>
+    [Header("Rendering")]
+    [SerializeField]
+    private TileSprites spritesOverride;
+
+    [SerializeField]
+    protected SpriteRenderer spriteRenderer;
+
+    private TileSprites Sprites =>
         spritesOverride ? spritesOverride : TileInfo.sprites;
 
     public Sprite Sprite => spriteRenderer.sprite;
+    private const int k_FloatingSortingOrder = 10;
 
     protected virtual void Awake()
     {
@@ -68,7 +69,7 @@ public abstract class Tile : MonoBehaviour
             Mass = rigidBody.mass,
         };
     }
-    
+
     protected virtual void Start()
     {
         health.DestroyEvent += OnDead;
@@ -87,16 +88,16 @@ public abstract class Tile : MonoBehaviour
         DestroyEvent?.Invoke(this);
         Destroy(gameObject);
     }
-    
+
     private void OnHealthStateChanged(HealthState state)
     {
         UpdateSprite(state);
     }
-    
+
     private void UpdateSprite(HealthState state)
     {
-        Sprite next = sprites ? sprites.Get(state) : null;
-        
+        Sprite next = Sprites ? Sprites.Get(state) : null;
+
         if (next)
         {
             spriteRenderer.sprite = next;
@@ -131,7 +132,7 @@ public abstract class Tile : MonoBehaviour
     public void Deselect()
     {
         Unhighlight();
-        spriteRenderer.sortingOrder = FloatingSortingOrder;
+        spriteRenderer.sortingOrder = k_FloatingSortingOrder;
         rigidBody.SetFloatRb(Vector2.zero, 0f, _rbInfo);
         tileCollider.enabled = true;
         transform.SetParent(null, true);
@@ -140,10 +141,10 @@ public abstract class Tile : MonoBehaviour
     public virtual void Attach(Vector2Int cell, TileRotation rotation)
     {
         IsAttached = true;
-        
+
         Cell = cell;
         Rotation = rotation;
-        
+
         // [CB] Unfortunately we need to destroy the rigidbodies in order for the
         // collider to merge with the parents collider properly.
         if (rigidBody)
@@ -154,11 +155,13 @@ public abstract class Tile : MonoBehaviour
         }
     }
 
-    public virtual void Detatch(Vector2? velocity = null, float angularVelocity = 0f)
+    public virtual void Detatch(
+        Vector2? velocity = null,
+        float angularVelocity = 0f)
     {
         IsAttached = false;
         transform.SetParent(null);
-        
+
         Vector2 selectedVel = velocity ?? Vector2.zero;
         if (!rigidBody)
         {

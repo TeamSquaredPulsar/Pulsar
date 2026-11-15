@@ -1,0 +1,23 @@
+fileFormatVersion: 2
+guid: c019cc02558f4184caee033e91f9be62
+MonoImporter:
+  externalObjects: {}
+  serializedVersion: 2
+  defaultReferences:
+  - <TileInfo>k__BackingField: {fileID: 11400000, guid: 71fb61585e3013a43b3726d73a977655, type: 2}
+  - tileCollider: {instanceID: 0}
+  - rigidBody: {instanceID: 0}
+  - health: {instanceID: 0}
+  - spritesOverride: {instanceID: 0}
+  - spriteRenderer: {instanceID: 0}
+  - <ProjectilePrefab>k__BackingField: {instanceID: 0}
+  - <ParentCollider>k__BackingField: {instanceID: 0}
+  - <Strategy>k__BackingField: {instanceID: 0}
+  - targetReticle: {instanceID: 0}
+  - targetRadius: {instanceID: 0}
+  - mountingPoint: {instanceID: 0}
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

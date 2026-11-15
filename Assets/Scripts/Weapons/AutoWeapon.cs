@@ -5,7 +5,9 @@ using Pulsar.Interactions;
 using Pulsar.Utilities;
 using UnityEngine;
 
-public class PintleWeaponTile : WeaponTile
+namespace Pulsar.Weapons
+{
+public class AutoWeapon : Weapon
 {
     [Header("Pintle Information")]
     [SerializeField]
@@ -23,30 +25,31 @@ public class PintleWeaponTile : WeaponTile
     [SerializeField]
     [Tooltip("The radius for the targeting collider")]
     private float range;
-    
+
     [SerializeField]
     [Tooltip("Angle dif penalizes a targets score. " +
              "Higher = prefers enemies in front of the barrel.")]
     private float angleWeight = 0.05f;
-    
+
     [SerializeField]
     [Tooltip("Min dif for a new target to get priority")]
     private float currentTargetBias = 1.5f;
 
     [SerializeField]
-    private TileSpritesSO turretSprites;
-    
-    [SerializeField] 
+    private TileSprites turretSprites;
+
+    [SerializeField]
     private SpriteRenderer activeTurretSprite;
-    
+
     private string TargetTag => gameObject.CompareTag("Player") ? "Enemy" : "Player";
-    
+
     private readonly HashSet<Transform> _targetsInRange = new HashSet<Transform>();
     private Coroutine _searchCoroutine;
     private WaitForFixedUpdate _searchWait;
-    
+
     protected override void Awake()
     {
+        base.Awake();
         targetRadius.radius = range;
 
         targetRadius.enabled = false;
@@ -54,6 +57,7 @@ public class PintleWeaponTile : WeaponTile
 
         _searchWait = new WaitForFixedUpdate();
     }
+
 
     protected override void Start()
     {
@@ -71,20 +75,21 @@ public class PintleWeaponTile : WeaponTile
     private void UpdateTurretSprite(HealthState state)
     {
         Sprite next = turretSprites ? turretSprites.Get(state) : null;
-        
+
         if (next)
         {
             activeTurretSprite.sprite = next;
         }
     }
     #region Targetting
+
     private IEnumerator SearchForTargets()
     {
         Result<Transform> activeTarget = Result<Transform>.Fail();
-        
+
         // _targetsInRange.Clear();
         yield return new WaitForEndOfFrame();
-        while (_searchCoroutine != null) 
+        while (_searchCoroutine != null)
         {
             activeTarget = EvaluateTargets(activeTarget.Value);
             targetReticle.gameObject.SetActive(activeTarget.IsSuccess);
@@ -96,7 +101,7 @@ public class PintleWeaponTile : WeaponTile
 
             yield return _searchWait;
         }
-        
+
         targetReticle.gameObject.SetActive(false);
     }
 
@@ -137,21 +142,22 @@ public class PintleWeaponTile : WeaponTile
             }
         }
 
-        return (bestTarget) ? Result<Transform>.Pass(bestTarget)
+        return (bestTarget)
+            ? Result<Transform>.Pass(bestTarget)
             : Result<Transform>.Fail();
     }
-    
+
     private void EngageTarget()
     {
-        Vector2 targetDir = targetReticle.position  - mountingPoint.position;
-        
+        Vector2 targetDir = targetReticle.position - mountingPoint.position;
+
         float angle = Mathf.Atan2(targetDir.y, targetDir.x) * Mathf.Rad2Deg;
 
         Quaternion targetRotation = Quaternion.Euler(
             new Vector3(0f, 0f, angle - 90f));
-        
+
         mountingPoint.rotation = Quaternion.RotateTowards(
-            mountingPoint.rotation, targetRotation, rotSpeed 
+            mountingPoint.rotation, targetRotation, rotSpeed
                                                     * Time.deltaTime);
 
         Fire();
@@ -161,7 +167,7 @@ public class PintleWeaponTile : WeaponTile
     {
         targetReticle.position = target.position;
     }
-    
+
     #endregion
 
     private void OnTriggerEnter2D(Collider2D other)
@@ -170,6 +176,7 @@ public class PintleWeaponTile : WeaponTile
         {
             return;
         }
+
         if (other.CompareTag(TargetTag))
         {
             _targetsInRange.Add(other.transform);
@@ -184,23 +191,23 @@ public class PintleWeaponTile : WeaponTile
     public override void Attach(Vector2Int cell, TileRotation rotation)
     {
         base.Attach(cell, rotation);
-        
+
         _targetsInRange.Clear();
 
         targetRadius.enabled = true;
-        
+
         _searchCoroutine = StartCoroutine(SearchForTargets());
     }
 
-    public override void Detatch(Vector2? velocity = null, 
-                                    float angularVelocity = 0)
+    public override void Detatch(
+        Vector2? velocity = null,
+        float angularVelocity = 0)
     {
         _searchCoroutine = null;
-        
+
         targetRadius.enabled = false;
-        
+
         base.Detatch(velocity, angularVelocity);
     }
 }
-
- 
+}

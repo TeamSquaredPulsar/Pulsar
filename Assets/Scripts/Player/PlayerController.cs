@@ -23,7 +23,14 @@ public class PlayerController : MonoBehaviour
     [SerializeField]
     private ShipManager ship;
 
-    public Vector2 CorePosition => ship.Core.transform.position;
+    public Vector2 CorePosition
+    {
+        get
+        {
+            Tile core = (Tile)ship.Core;
+            return core.transform.position;
+        }
+    }
 
     private bool _isShooting;
     private Coroutine _shootingCoroutine;
@@ -62,7 +69,7 @@ public class PlayerController : MonoBehaviour
 
     public bool CanAttach(
         Vector2Int location,
-        TileInfoSO tileInfo,
+        TileInfo tileInfo,
         TileRotation rotation) => ship.CanAttach(location, tileInfo, rotation);
 
     public void AttachTile(
@@ -71,7 +78,7 @@ public class PlayerController : MonoBehaviour
         TileRotation rotation) => ship.AttachTile(location, tile, rotation);
 
     public Result<(Vector2Int, TileRotation)> FindBestAttachment(
-        TileInfoSO tileInfo,
+        TileInfo tileInfo,
         Vector3 worldPosition) =>
         ship.FindBestAttachment(tileInfo, worldPosition);
     

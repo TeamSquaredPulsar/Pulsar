@@ -1,6 +1,8 @@
 using System;
 using UnityEngine;
 
+namespace Pulsar.Weapons.Strategies
+{
 /// <summary>
 /// Shoots three bullets at a time
 ///
@@ -11,20 +13,21 @@ using UnityEngine;
     menuName = "Scriptable Objects/TripleShot")]
 public class TripleShot : WeaponStrategy
 {
-    private int _maxBullets = 3;
-    private int k_max_firePoints = 3;
+    private const int k_MaxBullets = 3;
+    private const int k_MaxFirePoints = 3;
 
     /// <inheritdoc/>
     public override void Fire(
         Transform[] firePoints,
-        WeaponTile weapon,
+        Weapon weapon,
         Func<Transform, GameObject> spawnProjectile)
     {
-        VerifyFirePoints(firePoints, k_max_firePoints);
+        VerifyFirePoints(firePoints, k_MaxFirePoints);
 
-        foreach (Transform firePoint in firePoints[.._maxBullets])
+        foreach (Transform firePoint in firePoints[..k_MaxBullets])
         {
             spawnProjectile(firePoint);
         }
     }
+}
 }
