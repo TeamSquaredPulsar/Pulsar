@@ -10,7 +10,7 @@ public struct TileRbInfo
     public float Mass;
 }
 
-[RequireComponent(typeof(BoxCollider2D),
+[RequireComponent(typeof(Collider2D),
     typeof(SpriteRenderer),
     typeof(Health)),]
 public abstract class Tile : MonoBehaviour
@@ -33,7 +33,7 @@ public abstract class Tile : MonoBehaviour
     public TileInfo TileInfo { get; private set; }
 
     [SerializeField]
-    protected BoxCollider2D tileCollider;
+    protected Collider2D tileCollider;
 
     [SerializeField]
     private Rigidbody2D rigidBody;

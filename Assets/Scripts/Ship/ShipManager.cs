@@ -276,26 +276,7 @@ public class ShipManager : MonoBehaviour
             return false;
         }
 
-        foreach (TileRotation direction in Enum.GetValues(
-                     typeof(TileRotation)))
-        {
-            // Get the tile edge facing this direction after rotation
-            int localDir = direction.Subtract(rotation).ToInt();
-            if (!info.connectableEdges[localDir])
-            {
-                continue;
-            }
-
-            // Check the neighbour's opposite edge; both touching edges must connect
-            Vector2Int neighborPos = pos + direction.ToVector2Int();
-            if (_gridData.TryGetTile(neighborPos, out Tile neighbor)
-                && neighbor.EdgeConnectable(direction.Opposite()))
-            {
-                return true;
-            }
-        }
-
-        return false;
+        return CountConnections(pos, info, rotation) > 0;
     }
 
     private int CountConnections(

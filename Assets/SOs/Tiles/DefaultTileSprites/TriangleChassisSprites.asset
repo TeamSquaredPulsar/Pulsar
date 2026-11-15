@@ -1,0 +1,21 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d5984b22c70d4854a98abd039ce21891, type: 3}
+  m_Name: TriangleChassisSprites
+  m_EditorClassIdentifier: Tiles::Pulsar.Tiles.TileHealthSpritesSO
+  spriteSheet: {fileID: 2800000, guid: 3e5d66f2efebcfc46aa1fd405e0ccdb3, type: 3}
+  frames:
+  - {fileID: -7018085805182037971, guid: 3e5d66f2efebcfc46aa1fd405e0ccdb3, type: 3}
+  - {fileID: 66637950, guid: 3e5d66f2efebcfc46aa1fd405e0ccdb3, type: 3}
+  - {fileID: 1820317214, guid: 3e5d66f2efebcfc46aa1fd405e0ccdb3, type: 3}
+  - {fileID: -567614550, guid: 3e5d66f2efebcfc46aa1fd405e0ccdb3, type: 3}
+  - {fileID: -528478456, guid: 3e5d66f2efebcfc46aa1fd405e0ccdb3, type: 3}
