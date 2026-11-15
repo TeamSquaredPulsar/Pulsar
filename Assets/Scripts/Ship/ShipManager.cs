@@ -89,7 +89,7 @@ public class ShipManager : MonoBehaviour
                 tile.transform.localRotation.eulerAngles.z.ToTileRotation();
             AttachTile(localCell, tile, localRot);
         }
-        thrusterManager.CalculateThrusters(ref _thrusters);
+        thrusterManager.CalculateThrusters(in _thrusters);
     }
 
     public void AttachTile(Vector2Int cell, Tile tile, TileRotation rotation)
@@ -117,7 +117,7 @@ public class ShipManager : MonoBehaviour
         if (tile is IThrustable thrustable)
         {
             _thrusters.Add(thrustable);
-            thrusterManager.CalculateThrusters(ref _thrusters);
+            thrusterManager.CalculateThrusters(in _thrusters);
         }
 
         if (tile is Weapon weapon)
@@ -460,7 +460,7 @@ public class ShipManager : MonoBehaviour
         tile.Detatch(velocity, angularVelocity + spin);
         rb.mass -= tile.Mass;
 
-        thrusterManager.CalculateThrusters(ref _thrusters);
+        thrusterManager.CalculateThrusters(in _thrusters);
         ShipGridUpdate?.Invoke();
     }
 

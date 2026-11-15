@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using UnityEngine;
+using UnityEngine.Serialization;
 
 /// <summary>
 /// Represents a BurstShot
@@ -15,12 +16,12 @@ using UnityEngine;
 public class BurstShot : WeaponStrategy
 {
     [SerializeField]
-    private int k_MaxBullets = 3;
+    private int maxBullets = 3;
 
     [SerializeField]
     private float k_bulletGapTime = 0.1f;
 
-    private int k_max_firePoints = 1;
+    private const int k_MaxFirePoints = 1;
 
     /// <inheritdoc/>
     public override void Fire(
@@ -28,7 +29,7 @@ public class BurstShot : WeaponStrategy
         Weapon weapon,
         Func<Transform, GameObject> spawnProjectile)
     {
-        VerifyFirePoints(firePoints, k_max_firePoints);
+        VerifyFirePoints(firePoints, k_MaxFirePoints);
 
         weapon.StartCoroutine(Burst(firePoints, spawnProjectile));
     }
@@ -43,7 +44,7 @@ public class BurstShot : WeaponStrategy
         Transform[] firePoints,
         Func<Transform, GameObject> spawnProjectile)
     {
-        for (int i = 0; i < k_MaxBullets; i++)
+        for (int i = 0; i < maxBullets; i++)
         {
             spawnProjectile(firePoints[i % firePoints.Length]);
             yield return new WaitForSeconds(k_bulletGapTime);

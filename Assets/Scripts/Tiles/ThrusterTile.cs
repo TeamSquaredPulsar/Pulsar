@@ -3,10 +3,11 @@ using UnityEngine;
 
 public class ThrusterTile : Tile, IThrustable
 {
-    
-    [field: SerializeField]
-    public float Thrust { get; private set; } = 0.1f;
-    
+    [field: SerializeField][Min(0f)]
+    public float ThrustForce { get; private set; } = 0.1f;
+
+    [field: SerializeField][Min(0f)]
+    public float RotationForce { get; private set; }
 
     private void Awake()
     {

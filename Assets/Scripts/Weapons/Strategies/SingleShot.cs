@@ -13,8 +13,8 @@ using UnityEngine;
     menuName = "Scriptable Objects/SingleShot")]
 public class SingleShot : WeaponStrategy
 {
-    private int k_mainFirePoint = 0;
-    private int k_max_firePoints = 1;
+    private const int MainFirePoint = 0;
+    private const int MaxFirePoints = 1;
 
     /// <inheritdoc/>
     public override void Fire(
@@ -22,8 +22,8 @@ public class SingleShot : WeaponStrategy
         Weapon weapon,
         Func<Transform, GameObject> spawnProjectile)
     {
-        VerifyFirePoints(firePoints, k_max_firePoints);
+        VerifyFirePoints(firePoints, MaxFirePoints);
 
-        spawnProjectile(firePoints[k_mainFirePoint]);
+        spawnProjectile(firePoints[MainFirePoint]);
     }
 }

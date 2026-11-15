@@ -1,5 +1,3 @@
-using UnityEngine;
-
 namespace Pulsar.Interactions
 {
     public enum HealthState

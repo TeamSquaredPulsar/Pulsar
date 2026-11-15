@@ -70,15 +70,15 @@ public class Health : MonoBehaviour
     
     private HealthState GetHealthState()
     {
-        float healthPerc = CurrentHealth / MaxHealth;
+        float healthPercent = CurrentHealth / MaxHealth;
 
-        return healthPerc switch
+        return healthPercent switch
         {
             <= TenPercent => HealthState.LessOrEqualTo10Percent,
             <= TwentyFivePercent => HealthState.LessOrEqualTo25Percent,
             <= FiftyPercent => HealthState.LessOrEqualTo50Percent,
             <= SeventyFivePercent => HealthState.LessOrEqualTo75Percent,
-            _ => HealthState.FullHealth
+            _ => HealthState.FullHealth,
         };
     }
 }

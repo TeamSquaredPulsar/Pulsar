@@ -1,6 +1,6 @@
 namespace Pulsar.DataClasses
 {
-public enum TileRotation : int
+public enum TileRotation
 {
     Up = 0,
     Left = 1,

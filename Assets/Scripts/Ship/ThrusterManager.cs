@@ -10,15 +10,12 @@ namespace Pulsar.Ship
 {
 public struct ThrustAtRotation
 {
-    public TileRotation Orientation;
     public float Thrust;
     public IThrustable[] Thrusters;
 }
 
 public class ThrusterManager : MonoBehaviour
 {
-    private List<IThrustable> _thrusters;
-    
     [SerializeField]
     private Rigidbody2D rb;
 
@@ -137,7 +134,7 @@ public class ThrusterManager : MonoBehaviour
 
     #region Thrust Calculations
 
-    public void CalculateThrusters(ref List<IThrustable> thrusters)
+    public void CalculateThrusters(in List<IThrustable> thrusters)
     {
         int directions = new TileRotation().Length();
         _directedThrust = new ThrustAtRotation[directions];
@@ -150,16 +147,15 @@ public class ThrusterManager : MonoBehaviour
             groupedThrusters[i] = new List<IThrustable>();
             _directedThrust[i] = new ThrustAtRotation
             {
-                Orientation = (TileRotation)i,
                 Thrust = 0f,
             };
         }
         
-        foreach (IThrustable thruster in _thrusters)
+        foreach (IThrustable thruster in thrusters)
         {
             int rotIndex = thruster.Rotation.ToInt();
             _directedThrust[rotIndex].Thrust
-                += thruster.Thrust;
+                += thruster.ThrustForce;
             groupedThrusters[rotIndex].Add(thruster);
         }
         
@@ -181,7 +177,7 @@ public class ThrusterManager : MonoBehaviour
     {
         foreach (IThrustable t in dirThrusters)
         {
-            t.Activate(t.Thrust, in rb);
+            t.Activate(t.ThrustForce, in rb);
         }
     }
 }

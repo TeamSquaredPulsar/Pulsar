@@ -8,9 +8,9 @@ using UnityEngine;
     menuName = "Scriptable Objects/DoubleShot")]
 public class DoubleShot : WeaponStrategy
 {
-    private int k_leftFirePoint = 0;
-    private int k_rightFirePoint = 1;
-    private int k_max_firePoints = 2;
+    private const int LeftFirePoint = 0;
+    private const int RightFirePoint = 1;
+    private const int MaxFirePoints = 2;
 
     /// <inheritdoc/>
     public override void Fire(
@@ -18,9 +18,9 @@ public class DoubleShot : WeaponStrategy
         Weapon weapon,
         Func<Transform, GameObject> spawnProjectile)
     {
-        VerifyFirePoints(firePoints, k_max_firePoints);
+        VerifyFirePoints(firePoints, MaxFirePoints);
 
-        spawnProjectile(firePoints[k_leftFirePoint]);
-        spawnProjectile(firePoints[k_rightFirePoint]);
+        spawnProjectile(firePoints[LeftFirePoint]);
+        spawnProjectile(firePoints[RightFirePoint]);
     }
 }

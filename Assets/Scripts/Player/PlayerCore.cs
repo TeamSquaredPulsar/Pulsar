@@ -13,13 +13,15 @@ namespace Pulsar
 public class PlayerCore : PintleWeaponTile, IThrustable, IShipCore
 {
     public event Action OnCoreDestroyed;
-
+    
     [field: SerializeField]
-    public float Thrust { get; private set; }
+    public float ThrustForce { get; private set; }
+    [field: SerializeField]
+    public float RotationForce { get; private set; }
 
     private void Awake()
     {
-        DestroyEvent += (_) => OnCoreDestroyed?.Invoke();
+        DestroyEvent += _ => OnCoreDestroyed?.Invoke();
     }
 
     public void Activate(float amount, in Rigidbody2D targetRb)

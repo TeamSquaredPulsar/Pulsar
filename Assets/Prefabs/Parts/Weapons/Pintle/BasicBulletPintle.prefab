@@ -136,9 +136,25 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 1639991655727879402}
     - target: {fileID: -4160512527206970603, guid: 9141fe4656a2ff0468c29dd7d8bb3239, type: 3}
+      propertyPath: <Strategy>k__BackingField
+      value: 
+      objectReference: {fileID: 11400000, guid: 67d68c3e0a11e41479e9131cdc4b126a, type: 2}
+    - target: {fileID: -4160512527206970603, guid: 9141fe4656a2ff0468c29dd7d8bb3239, type: 3}
+      propertyPath: <ProjectilePrefab>k__BackingField
+      value: 
+      objectReference: {fileID: 1682859016921356063, guid: a133161848d51234b97f8554a243a1ab, type: 3}
+    - target: {fileID: -4160512527206970603, guid: 9141fe4656a2ff0468c29dd7d8bb3239, type: 3}
       propertyPath: <FireRatePerSecond>k__BackingField
       value: 1.5
       objectReference: {fileID: 0}
+    - target: {fileID: -4160512527206970603, guid: 9141fe4656a2ff0468c29dd7d8bb3239, type: 3}
+      propertyPath: <FirePoints>k__BackingField.Array.size
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: -4160512527206970603, guid: 9141fe4656a2ff0468c29dd7d8bb3239, type: 3}
+      propertyPath: '<FirePoints>k__BackingField.Array.data[0]'
+      value: 
+      objectReference: {fileID: 1639991655727879402}
     - target: {fileID: 1923082867568248035, guid: 9141fe4656a2ff0468c29dd7d8bb3239, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0

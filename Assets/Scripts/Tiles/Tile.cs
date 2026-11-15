@@ -1,4 +1,5 @@
 using System;
+using Nrjwolf.Tools.AttachAttributes;
 using Pulsar.DataClasses;
 using Pulsar.DataClasses.Extensions;
 using Pulsar.Interactions;
@@ -80,6 +81,29 @@ public abstract class Tile : MonoBehaviour
     {
         health.DestroyEvent -= OnDead;
         health.HealthStateChanged -= OnHealthStateChanged;
+    }
+
+    private void OnValidate()
+    {
+        if (spriteRenderer == null)
+        {
+            spriteRenderer = GetComponent<SpriteRenderer>();
+        }
+
+        if (tileCollider == null)
+        {
+            tileCollider = GetComponent<BoxCollider2D>();
+        }
+
+        if (rigidBody == null)
+        {
+            rigidBody = GetComponent<Rigidbody2D>();
+        }
+
+        if (health == null)
+        {
+            health = GetComponent<Health>();
+        }
     }
 
     private void OnDead(Health _)

@@ -6,7 +6,7 @@ namespace Pulsar.Weapons
 /// @author Corey Buchan
 /// @version 0.9
 /// </summary>
-public abstract class AutoWeapon : Weapon
+public class AutoWeapon : Weapon
 {
 }
 }

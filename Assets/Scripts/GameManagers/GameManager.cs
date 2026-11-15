@@ -5,7 +5,6 @@ using NaughtyAttributes;
 using Pulsar.Player;
 using Pulsar.UI;
 using UnityEngine;
-using Object = System.Object;
 
 namespace Pulsar
 {

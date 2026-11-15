@@ -11,7 +11,8 @@ namespace Pulsar.Interfaces
 /// </summary>
 public interface IThrustable
 {
-    float Thrust { get; }
+    float ThrustForce { get; }
+    float RotationForce { get; }
 
     TileRotation Rotation { get; }
 
