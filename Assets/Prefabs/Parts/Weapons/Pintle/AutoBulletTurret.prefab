@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 1283674777054792067}
   - component: {fileID: 4676953174740963180}
   m_Layer: 0
-  m_Name: BasicGunPintle
+  m_Name: AutoBulletTurret
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -26,7 +26,7 @@ Transform:
   m_GameObject: {fileID: 2402461002857692903}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0.2, z: 0}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -82,12 +82,12 @@ SpriteRenderer:
   m_SortingLayer: 4
   m_SortingOrder: 11
   m_MaskInteraction: 0
-  m_Sprite: {fileID: 21300000, guid: 1abe46b73714070499c85791784dd4f4, type: 3}
-  m_Color: {r: 1, g: 0.940041, b: 0.5235849, a: 1}
+  m_Sprite: {fileID: -8428354817757708096, guid: e0d107b66423cf641853a63aa465e5c2, type: 3}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
-  m_Size: {x: 1, y: 1}
+  m_Size: {x: 0.75, y: 1.25}
   m_AdaptiveModeThreshold: 0.5
   m_SpriteTileMode: 0
   m_WasSpriteAssigned: 1

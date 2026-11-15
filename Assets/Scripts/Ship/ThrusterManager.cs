@@ -19,11 +19,15 @@ public class ThrusterManager : MonoBehaviour
     [SerializeField]
     private Rigidbody2D rb;
 
+    //Temp field until the core has its own thruster values
+    [SerializeField]
+    private float coreThrust = 5;
+
     [SerializeField]
     private float rotationalThrust = 2;
 
     [SerializeField]
-    private float rotationScaler = 1f;
+    private float rotationScaler = 1.5f;
 
     private ThrustAtRotation[] _directedThrust;
 

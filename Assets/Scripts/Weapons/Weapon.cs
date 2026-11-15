@@ -42,7 +42,7 @@ public abstract class Weapon : Tile, IProjectileSpawner, IWeapon
     public Collider2D Coll2D => tileCollider;
     public bool CanFire => _fireTimerRoutine == null;
 
-    private new void Start()
+    protected override void Start()
     {
         base.Start();
         _projectile = ProjectilePrefab.gameObject.GetComponent<Projectile>();
