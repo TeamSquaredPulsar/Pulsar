@@ -193,6 +193,7 @@ public class ShipManager : MonoBehaviour
         if (tile is IShipCore)
         {
             OnCoreDestroyed();
+            return;
         }
 
         rb.mass -= tile.Mass;
