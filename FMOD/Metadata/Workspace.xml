@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<objects serializationModel="Studio.02.02.00">
+	<object class="Workspace" id="{ff2c8fbc-4673-415d-b43d-dceb233faaea}">
+		<property name="builtBanksOutputDirectory">
+			<value>D:/Repo/Unity/Pulsar/FMOD</value>
+		</property>
+		<relationship name="masterEventFolder">
+			<destination>{bf6da14d-3a7a-414d-a4e6-656e27c6b2aa}</destination>
+		</relationship>
+		<relationship name="masterTagFolder">
+			<destination>{87579b1d-2444-44fa-9acf-e8826041e8c2}</destination>
+		</relationship>
+		<relationship name="masterEffectPresetFolder">
+			<destination>{7d4a7239-fb34-4d3a-9eda-6f84bf77303b}</destination>
+		</relationship>
+		<relationship name="masterParameterPresetFolder">
+			<destination>{31e29b1f-381f-4b59-adfb-27664cd3c976}</destination>
+		</relationship>
+		<relationship name="masterBankFolder">
+			<destination>{8700f655-37e2-4649-a875-72dcc44dfd23}</destination>
+		</relationship>
+		<relationship name="masterSandboxFolder">
+			<destination>{1daa6e2d-680b-4350-a9da-27c066022826}</destination>
+		</relationship>
+		<relationship name="masterAssetFolder">
+			<destination>{8909ad75-74cc-4c66-9508-a79f24205421}</destination>
+		</relationship>
+		<relationship name="mixer">
+			<destination>{458f68e7-895b-4972-8a60-7ce6432d7618}</destination>
+		</relationship>
+		<relationship name="profilerSessionFolder">
+			<destination>{ff42c86e-dbf0-4ec4-b187-3c77d251d7bd}</destination>
+		</relationship>
+		<relationship name="platforms">
+			<destination>{a2e44960-8936-433d-a0fb-f9af78866563}</destination>
+		</relationship>
+	</object>
+</objects>

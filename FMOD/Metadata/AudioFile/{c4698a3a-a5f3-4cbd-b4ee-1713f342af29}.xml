@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<objects serializationModel="Studio.02.02.00">
+	<object class="AudioFile" id="{c4698a3a-a5f3-4cbd-b4ee-1713f342af29}">
+		<property name="assetPath">
+			<value>GUNPis_Pistol Fire Longer Tail_05.wav</value>
+		</property>
+		<property name="frequencyInKHz">
+			<value>48</value>
+		</property>
+		<property name="channelCount">
+			<value>2</value>
+		</property>
+		<property name="length">
+			<value>0.70054166666666662</value>
+		</property>
+		<relationship name="masterAssetFolder">
+			<destination>{8909ad75-74cc-4c66-9508-a79f24205421}</destination>
+		</relationship>
+	</object>
+</objects>

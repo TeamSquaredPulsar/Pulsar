@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<objects serializationModel="Studio.02.02.00">
+	<object class="AudioFile" id="{0fa973f9-6ae1-4052-8246-6c89002aa766}">
+		<property name="assetPath">
+			<value>LASRGun_Particle Compressor Fire_01.wav</value>
+		</property>
+		<property name="frequencyInKHz">
+			<value>48</value>
+		</property>
+		<property name="channelCount">
+			<value>2</value>
+		</property>
+		<property name="length">
+			<value>0.53062500000000001</value>
+		</property>
+		<relationship name="masterAssetFolder">
+			<destination>{8909ad75-74cc-4c66-9508-a79f24205421}</destination>
+		</relationship>
+	</object>
+</objects>

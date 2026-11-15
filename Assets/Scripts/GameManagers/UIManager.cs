@@ -1,4 +1,5 @@
 using System;
+using Pulsar.DataClasses;
 using Pulsar.Player;
 using Pulsar.UI;
 using TMPro;
@@ -6,7 +7,7 @@ using UnityEngine;
 
 namespace Pulsar
 {
-public class UIManager : MonoBehaviour
+public class UIManager : Singleton<UIManager>
 {
     public static event Action<GameState> GameStateChangeEvent;
 
