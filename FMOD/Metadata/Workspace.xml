@@ -2,7 +2,7 @@
 <objects serializationModel="Studio.02.02.00">
 	<object class="Workspace" id="{ff2c8fbc-4673-415d-b43d-dceb233faaea}">
 		<property name="builtBanksOutputDirectory">
-			<value>D:/Repo/Unity/Pulsar/FMOD</value>
+			<value>../FMOD/Build</value>
 		</property>
 		<relationship name="masterEventFolder">
 			<destination>{bf6da14d-3a7a-414d-a4e6-656e27c6b2aa}</destination>
