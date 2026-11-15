@@ -176,6 +176,8 @@ MonoBehaviour:
   range: 12
   angleWeight: 0.05
   currentTargetBias: 1.5
+  turretSprites: {fileID: 0}
+  activeTurretSprite: {fileID: 0}
 --- !u!212 &497275641067805184
 SpriteRenderer:
   serializedVersion: 2

@@ -20,8 +20,9 @@ public class PlayerCore : AutoWeapon, IThrustable, IShipCore
     [field: SerializeField]
     public float RotationForce { get; private set; }
 
-    private void Awake()
+    protected override void Awake()
     {
+        base.Awake();
         DestroyEvent += _ => OnCoreDestroyed?.Invoke();
     }
 

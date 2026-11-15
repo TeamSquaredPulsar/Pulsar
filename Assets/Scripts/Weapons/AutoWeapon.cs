@@ -36,19 +36,20 @@ public class AutoWeapon : Weapon
     private float currentTargetBias = 1.5f;
 
     [SerializeField]
-    private TileSpritesSO turretSprites;
-    
-    [SerializeField] 
+    private TileSprites turretSprites;
+
+    [SerializeField]
     private SpriteRenderer activeTurretSprite;
-    
+
     private string TargetTag => gameObject.CompareTag("Player") ? "Enemy" : "Player";
-    
+
     private readonly HashSet<Transform> _targetsInRange = new HashSet<Transform>();
     private Coroutine _searchCoroutine;
     private WaitForFixedUpdate _searchWait;
-    
+
     protected override void Awake()
     {
+        base.Awake();
         targetRadius.radius = range;
 
         targetRadius.enabled = false;
@@ -74,7 +75,7 @@ public class AutoWeapon : Weapon
     private void UpdateTurretSprite(HealthState state)
     {
         Sprite next = turretSprites ? turretSprites.Get(state) : null;
-        
+
         if (next)
         {
             activeTurretSprite.sprite = next;
