@@ -1,3 +1,4 @@
+using FMODUnity;
 using NaughtyAttributes;
 using Pulsar.DataClasses;
 using Pulsar.Player;
@@ -73,6 +74,7 @@ public class CameraManager : MonoBehaviour
     private void OnPlayerSpawned(PlayerController obj)
     {
         targetGroup.AddMember(obj.transform, playerWeight, playerRadius);
+        mainCamera.GetComponent<StudioListener>().SetAttenuationObject(obj.gameObject);
         PrioritizeGameplayCamera();
     }
 }

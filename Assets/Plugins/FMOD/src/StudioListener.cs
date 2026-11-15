@@ -14,6 +14,11 @@ namespace FMODUnity
 
         private Vector3 lastFramePosition = Vector3.zero;
 
+        public void SetAttenuationObject(GameObject newAttenuationObject)
+        {
+            attenuationObject = newAttenuationObject;
+        }
+
 #if UNITY_PHYSICS_EXIST
         private Rigidbody rigidBody;
 #endif
