@@ -166,7 +166,7 @@ public class ThrusterManager : MonoBehaviour
                 TileRotation worldRot
                     = thruster.Rotation.Subtract(rotIndex.ToTileRotation());
                 if (!thruster.DirectionalThrust.TryGetValue(worldRot,
-                        out float thrust) && thrust != 0)
+                        out float thrust) || thrust == 0)
                 {
                     continue;
                 }
