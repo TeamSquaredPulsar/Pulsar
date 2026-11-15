@@ -16,12 +16,11 @@ public interface IThrustable
 
     TileRotation Rotation { get; }
 
-    void Activate(float amount, in Rigidbody2D targetRb)
-    {
-        //TODO: Add movement logic here
-        // Apply force to rigidbody at the point i exist at
-    }
+    void ActivateThrust(float amount, in Rigidbody2D targetRb);
 
-    void Deactivate();
+    void DeactivateThrust();
+
+    void ActivateRotation(float amount, in Rigidbody2D targetRb);
+    void DeactivateRotation();
 }
 }

@@ -107,7 +107,15 @@ public class ShipManager : MonoBehaviour
         tile.transform.SetLocalPositionAndRotation(
             ShipUtilities.GridToLocal(cell),
             ShipUtilities.RotateQuarterOnZAxis(rotation.ToInt()));
-        tile.DestroyEvent += HandleTileDestroyed;
+
+        if (tile is IShipCore core)
+        {
+            core.OnCoreDestroyed += () => ShipDestroyedEvent?.Invoke(this);
+        }
+        else
+        {
+            tile.DestroyEvent += HandleTileDestroyed;
+        }
 
         ShipGridUpdate?.Invoke();
     }

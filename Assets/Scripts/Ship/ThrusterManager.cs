@@ -19,10 +19,6 @@ public class ThrusterManager : MonoBehaviour
     [SerializeField]
     private Rigidbody2D rb;
 
-    //Temp field until the core has its own thruster values
-    [SerializeField]
-    private float coreThrust = 5;
-
     [SerializeField]
     private float rotationalThrust = 2;
 
@@ -51,24 +47,16 @@ public class ThrusterManager : MonoBehaviour
 
     #region Thruster Use
 
-    public void HandleRotation(float rot)
-    {
-        _rotInput = rot * -1f;
-    }
+    public void HandleRotation(float rot) => _rotInput = rot;
 
     public void HandleThrust(Vector2 thrust)
     {
         foreach (ThrustAtRotation dir in _directedThrust.Where(dir =>
                      dir.Thrusters != null))
         {
-            if (dir.Thrusters == null)
-            {
-                continue;
-            }
-
             foreach (IThrustable t in dir.Thrusters)
             {
-                t.Deactivate();
+                t.DeactivateThrust();
             }
         }
 
@@ -101,7 +89,8 @@ public class ThrusterManager : MonoBehaviour
 
     private void ApplyRotation()
     {
-        rb.AddTorque(_rotInput * _curRotThrust, ForceMode2D.Force);
+        rb.AddTorque(_rotInput * _curRotThrust * rotationScaler,
+            ForceMode2D.Force);
     }
 
     private void ApplyThrust()
@@ -165,6 +154,7 @@ public class ThrusterManager : MonoBehaviour
             _directedThrust[rotIndex].Thrust
                 += thruster.ThrustForce;
             groupedThrusters[rotIndex].Add(thruster);
+            rotationalThrust += thruster.RotationForce;
         }
 
         for (int i = 0; i < directions; i++)
@@ -172,7 +162,7 @@ public class ThrusterManager : MonoBehaviour
             _directedThrust[i].Thrusters = groupedThrusters[i].ToArray();
         }
 
-        _curRotThrust = rotationalThrust + rotationScaler * thrusters.Count;
+        _curRotThrust = rotationalThrust;
     }
 
     private ThrustAtRotation
@@ -185,7 +175,7 @@ public class ThrusterManager : MonoBehaviour
     {
         foreach (IThrustable t in dirThrusters)
         {
-            t.Activate(t.ThrustForce, in rb);
+            t.ActivateThrust(t.ThrustForce, in rb);
         }
     }
 }

@@ -174,13 +174,13 @@ MonoBehaviour:
   targetRadius: {fileID: 6101688074798165259}
   mountingPoint: {fileID: 4131069597832306565}
   rotSpeed: 40
-  range: 12
+  range: 15
   angleWeight: 0.05
   currentTargetBias: 1.5
   turretSprites: {fileID: 11400000, guid: 839d2178e26ad654c910ed7f4c86801b, type: 2}
   activeTurretSprite: {fileID: 8082630242208235203}
-  <ThrustForce>k__BackingField: 3
-  <RotationForce>k__BackingField: 1
+  <ThrustForce>k__BackingField: 5
+  <RotationForce>k__BackingField: 5
 --- !u!61 &5095908355809572340
 BoxCollider2D:
   m_ObjectHideFlags: 0

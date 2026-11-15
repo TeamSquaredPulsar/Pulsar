@@ -11,22 +11,28 @@ public class ThrusterTile : Tile, IThrustable
     [Min(0f)]
     public float RotationForce { get; private set; }
 
-    private void Awake()
+    protected override void Awake()
     {
+        base.Awake();
         spriteRenderer = GetComponent<SpriteRenderer>();
-        Deactivate();
+        DeactivateThrust();
     }
 
-    public void Activate(float amount, ref Rigidbody2D parentRb)
+    public void ActivateThrust(float amount, in Rigidbody2D targetRb)
     {
         spriteRenderer.color = Color.red;
-        Debug.Log($"I want to move {amount}");
-        //TODO: Add movement logic here
-        // Apply force to rigidbody at the point i exist at
     }
 
-    public void Deactivate()
+    public void DeactivateThrust()
     {
         spriteRenderer.color = Color.white;
+    }
+
+    public void ActivateRotation(float amount, in Rigidbody2D targetRb)
+    {
+    }
+
+    public void DeactivateRotation()
+    {
     }
 }

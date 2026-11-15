@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using JetBrains.Annotations;
 using Pulsar.DataClasses;
 using Pulsar.DataClasses.Extensions;
 using Pulsar.Interfaces;
@@ -20,6 +21,7 @@ public class ShipGridData
 
     public IReadOnlyList<Tile> Tiles => _cells.Values.ToList();
 
+    [CanBeNull]
     public IShipCore Core { get; private set; }
 
     public bool ContainsCell(Vector2Int cell) => _cells.ContainsKey(cell);
@@ -44,7 +46,7 @@ public class ShipGridData
             return Result<Tile>.Fail();
         }
 
-        if (tile == (Tile)Core)
+        if (tile is CoreTile)
         {
             Core = null;
         }
@@ -110,7 +112,9 @@ public class ShipGridData
         // Get all tiles still connect to Core
         // Basically iff there is no core nothing is reachable and
         // every remaining tile is orphaned
-        HashSet<Vector2Int> reachable = Flood(((Tile)Core).Cell);
+        HashSet<Vector2Int> reachable = Core != null
+            ? Flood(((Tile)Core).Cell)
+            : new HashSet<Vector2Int>();
 
         // Remove all tiles still in Cells which not connect to Core
         Cells.Keys.Where(cell => !reachable.Contains(cell))

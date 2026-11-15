@@ -26,14 +26,22 @@ public class PlayerCore : AutoWeapon, IThrustable, IShipCore
         DestroyEvent += _ => OnCoreDestroyed?.Invoke();
     }
 
-    public void Activate(float amount, in Rigidbody2D targetRb)
+    public void ActivateThrust(float amount, in Rigidbody2D targetRb)
     {
         spriteRenderer.color = Color.red;
     }
 
-    public void Deactivate()
+    public void DeactivateThrust()
     {
         spriteRenderer.color = Color.white;
+    }
+
+    public void ActivateRotation(float amount, in Rigidbody2D targetRb)
+    {
+    }
+
+    public void DeactivateRotation()
+    {
     }
 }
 }

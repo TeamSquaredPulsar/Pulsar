@@ -1,8 +1,11 @@
+using System;
 using Pulsar.Interfaces;
 using UnityEngine;
 
-public class CoreTile : Tile, IThrustable
+public class CoreTile : Tile, IThrustable, IShipCore
 {
+    public event Action OnCoreDestroyed;
+
     [field: SerializeField]
     [Min(0f)]
     public float ThrustForce { get; private set; } = 0.1f;
@@ -11,12 +14,25 @@ public class CoreTile : Tile, IThrustable
     [Min(0f)]
     public float RotationForce { get; private set; } = 0.1f;
 
-    public void Activate()
+    protected override void Awake()
+    {
+        base.Awake();
+        DestroyEvent += _ => OnCoreDestroyed?.Invoke();
+    }
+
+    public void ActivateThrust(float amount, in Rigidbody2D targetRb)
     {
     }
 
-    public void Deactivate()
+    public void DeactivateThrust()
     {
-        //TODO: Whatever logic we need to do here
+    }
+
+    public void ActivateRotation(float amount, in Rigidbody2D targetRb)
+    {
+    }
+
+    public void DeactivateRotation()
+    {
     }
 }
