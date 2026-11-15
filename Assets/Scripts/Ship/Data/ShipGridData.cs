@@ -112,8 +112,8 @@ public class ShipGridData
         // Get all tiles still connect to Core
         // Basically iff there is no core nothing is reachable and
         // every remaining tile is orphaned
-        HashSet<Vector2Int> reachable = Core != null
-            ? Flood(((Tile)Core).Cell)
+        HashSet<Vector2Int> reachable = Core is Tile coreTile
+            ? Flood(coreTile.Cell)
             : new HashSet<Vector2Int>();
 
         // Remove all tiles still in Cells which not connect to Core

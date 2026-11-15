@@ -26,6 +26,7 @@ public class ThrusterManager : MonoBehaviour
     private float rotationScaler = 1.5f;
 
     private ThrustAtRotation[] _directedThrust;
+    private static readonly int Directions = new TileRotation().Length();
 
     private Vector2 _moveInput;
     private float _rotInput;
@@ -64,26 +65,30 @@ public class ThrusterManager : MonoBehaviour
 
         if (_moveInput.x < 0)
         {
-            ShowActiveThrusters(_directedThrust[(int)TileRotation.Right]
-                .Thrusters);
+            ShowActiveThrusters(_moveInput.x,
+                in _directedThrust[(int)TileRotation.Right]
+                    .Thrusters);
         }
 
         if (_moveInput.x > 0)
         {
-            ShowActiveThrusters(_directedThrust[(int)TileRotation.Left]
-                .Thrusters);
+            ShowActiveThrusters(_moveInput.x,
+                in _directedThrust[(int)TileRotation.Left]
+                    .Thrusters);
         }
 
         if (_moveInput.y < 0)
         {
-            ShowActiveThrusters(_directedThrust[(int)TileRotation.Up]
-                .Thrusters);
+            ShowActiveThrusters(_moveInput.y,
+                in _directedThrust[(int)TileRotation.Up]
+                    .Thrusters);
         }
 
         if (_moveInput.y > 0)
         {
-            ShowActiveThrusters(_directedThrust[(int)TileRotation.Down]
-                .Thrusters);
+            ShowActiveThrusters(_moveInput.y,
+                in _directedThrust[(int)TileRotation.Down]
+                    .Thrusters);
         }
     }
 
@@ -133,13 +138,12 @@ public class ThrusterManager : MonoBehaviour
 
     public void CalculateThrusters(in List<IThrustable> thrusters)
     {
-        int directions = new TileRotation().Length();
-        _directedThrust = new ThrustAtRotation[directions];
+        _directedThrust = new ThrustAtRotation[Directions];
 
         List<IThrustable>[] groupedThrusters =
-            new List<IThrustable>[directions];
+            new List<IThrustable>[Directions];
 
-        for (int i = 0; i < directions; i++)
+        for (int i = 0; i < Directions; i++)
         {
             groupedThrusters[i] = new List<IThrustable>();
             _directedThrust[i] = new ThrustAtRotation
@@ -150,14 +154,32 @@ public class ThrusterManager : MonoBehaviour
 
         foreach (IThrustable thruster in thrusters)
         {
-            int rotIndex = thruster.Rotation.ToInt();
-            _directedThrust[rotIndex].Thrust
-                += thruster.ThrustForce;
-            groupedThrusters[rotIndex].Add(thruster);
+            for (int rotIndex = 0; rotIndex < Directions; rotIndex++)
+            {
+                // [CB] We need to convert from the tiles rotation
+                // to the relative ship rotation.
+                // For example, a Thruster who faces Left should only activate
+                // when the player wants to move Left.
+                // But its data says it applies thrust in the Up direction,
+                // so we need to subtract the TileRotation
+                // to the forces to return it to a 'neutral' position.
+                TileRotation worldRot
+                    = thruster.Rotation.Subtract(rotIndex.ToTileRotation());
+                if (!thruster.DirectionalThrust.TryGetValue(worldRot,
+                        out float thrust) && thrust != 0)
+                {
+                    continue;
+                }
+
+                _directedThrust[rotIndex].Thrust
+                    += thrust;
+                groupedThrusters[rotIndex].Add(thruster);
+            }
+
             rotationalThrust += thruster.RotationForce;
         }
 
-        for (int i = 0; i < directions; i++)
+        for (int i = 0; i < Directions; i++)
         {
             _directedThrust[i].Thrusters = groupedThrusters[i].ToArray();
         }
@@ -165,17 +187,18 @@ public class ThrusterManager : MonoBehaviour
         _curRotThrust = rotationalThrust;
     }
 
-    private ThrustAtRotation
-        GetThrustAtRotation(TileRotation orientation) =>
+    private ThrustAtRotation GetThrustAtRotation(TileRotation orientation) =>
         _directedThrust[(int)orientation];
 
     #endregion
 
-    private void ShowActiveThrusters(IThrustable[] dirThrusters)
+    private void ShowActiveThrusters(
+        float amount,
+        in IThrustable[] dirThrusters)
     {
         foreach (IThrustable t in dirThrusters)
         {
-            t.ActivateThrust(t.ThrustForce, in rb);
+            t.ActivateThrust(amount, in rb);
         }
     }
 }

@@ -1,9 +1,10 @@
-using System;
+using Audune.Utils.Dictionary;
+using Pulsar.DataClasses;
 using Pulsar.Interfaces;
 using Pulsar.Weapons;
 using UnityEngine;
 
-namespace Pulsar
+namespace Pulsar.Player
 {
 /// <summary>
 /// Special Core Tile to allow the player to have a pintle weapon as their core.
@@ -12,19 +13,17 @@ namespace Pulsar
 /// </summary>
 public class PlayerCore : AutoWeapon, IThrustable, IShipCore
 {
-    public event Action OnCoreDestroyed;
-
-    [field: SerializeField]
-    public float ThrustForce { get; private set; }
+    [field:SerializeField]
+    [field:SerializableDictionaryOptions(keyHeader = "Direction",
+        valueHeader = "Force")]
+    public SerializableDictionary<TileRotation, float> DirectionalThrust
+    {
+        get;
+        private set;
+    }
 
     [field: SerializeField]
     public float RotationForce { get; private set; }
-
-    protected override void Awake()
-    {
-        base.Awake();
-        DestroyEvent += _ => OnCoreDestroyed?.Invoke();
-    }
 
     public void ActivateThrust(float amount, in Rigidbody2D targetRb)
     {

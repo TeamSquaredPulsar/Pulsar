@@ -1,5 +1,6 @@
 ﻿using Pulsar.DataClasses;
 using UnityEngine;
+using Audune.Utils.Dictionary;
 
 namespace Pulsar.Interfaces
 {
@@ -11,7 +12,9 @@ namespace Pulsar.Interfaces
 /// </summary>
 public interface IThrustable
 {
-    float ThrustForce { get; }
+    [Tooltip("Treat up as 'Forward' and down as 'Back'")]
+    SerializableDictionary<TileRotation, float> DirectionalThrust { get; }
+
     float RotationForce { get; }
 
     TileRotation Rotation { get; }

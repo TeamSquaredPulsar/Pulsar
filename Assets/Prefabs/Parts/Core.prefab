@@ -70,8 +70,18 @@ MonoBehaviour:
   health: {fileID: 2303072813145309213}
   spritesOverride: {fileID: 11400000, guid: 085efe85fed4e2b44a3b05eb11c1f7d6, type: 2}
   spriteRenderer: {fileID: 497275641067805184}
+  <DirectionalThrust>k__BackingField:
+    _entries:
+    - key: 0
+      value: 5
+    - key: 2
+      value: 5
+    - key: 1
+      value: 5
+    - key: 3
+      value: 5
   <ThrustForce>k__BackingField: 5
-  <RotationForce>k__BackingField: 0.1
+  <RotationForce>k__BackingField: 5
 --- !u!212 &497275641067805184
 SpriteRenderer:
   serializedVersion: 2

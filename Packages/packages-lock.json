@@ -1,5 +1,21 @@
 {
   "dependencies": {
+    "com.audune.utils.dictionary": {
+      "version": "https://github.com/audunegames/serializabledictionary.git",
+      "depth": 0,
+      "source": "git",
+      "dependencies": {
+        "com.audune.utils.unityeditor": "2.0.9"
+      },
+      "hash": "1918e3ed247bb27c0e8a2d7cdbccee9e0f321e22"
+    },
+    "com.audune.utils.unityeditor": {
+      "version": "https://github.com/audunegames/unityeditor-utils.git",
+      "depth": 0,
+      "source": "git",
+      "dependencies": {},
+      "hash": "c2a2ef9edfc4b95a0b4d3b3831227aec5c27bc65"
+    },
     "com.dbrizov.naughtyattributes": {
       "version": "https://github.com/dbrizov/NaughtyAttributes.git#upm",
       "depth": 0,

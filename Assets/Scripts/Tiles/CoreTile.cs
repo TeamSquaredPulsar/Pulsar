@@ -1,31 +1,31 @@
-using System;
+using Audune.Utils.Dictionary;
+using Pulsar.DataClasses;
 using Pulsar.Interfaces;
 using UnityEngine;
 
 public class CoreTile : Tile, IThrustable, IShipCore
 {
-    public event Action OnCoreDestroyed;
-
     [field: SerializeField]
-    [Min(0f)]
-    public float ThrustForce { get; private set; } = 0.1f;
+    [field: SerializableDictionaryOptions(keyHeader = "Direction",
+        valueHeader = "Force")]
+    public SerializableDictionary<TileRotation, float> DirectionalThrust
+    {
+        get;
+        private set;
+    }
 
     [field: SerializeField]
     [Min(0f)]
     public float RotationForce { get; private set; } = 0.1f;
 
-    protected override void Awake()
-    {
-        base.Awake();
-        DestroyEvent += _ => OnCoreDestroyed?.Invoke();
-    }
-
     public void ActivateThrust(float amount, in Rigidbody2D targetRb)
     {
+        spriteRenderer.color = Color.red;
     }
 
     public void DeactivateThrust()
     {
+        spriteRenderer.color = Color.white;
     }
 
     public void ActivateRotation(float amount, in Rigidbody2D targetRb)
