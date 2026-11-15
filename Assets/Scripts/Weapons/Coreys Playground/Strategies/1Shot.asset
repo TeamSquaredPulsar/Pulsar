@@ -11,5 +11,5 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 7237042201e52064faa6b796cd2a3823, type: 3}
   m_Name: 1Shot
-  m_EditorClassIdentifier: Weapons::Pulsar.MultiShot
+  m_EditorClassIdentifier: Weapons::Pulsar.SpreadShot
   maxFirePoints: 1

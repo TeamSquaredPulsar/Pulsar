@@ -9,14 +9,13 @@ namespace Pulsar.Weapons.Strategies
 /// @author Corey Buchan
 /// @version 0.9
 /// </summary>
-[CreateAssetMenu(fileName = "MultiShot",
-    menuName = "Scriptable Objects/MultiShot")]
+[CreateAssetMenu(fileName = "SpreadShot",
+    menuName = "Scriptable Objects/SpreadShot")]
 [Serializable]
 public class SpreadShot : WeaponStrategy
 {
     [SerializeField]
     [Min(1)]
-    [OnValueChanged("SetupFirePoints")]
     protected int maxFirePoints = 1;
 
     public override void Fire(
