@@ -1,4 +1,5 @@
 using System;
+using Pulsar.Audio;
 using UnityEngine;
 
 namespace Pulsar.Weapons.Strategies
@@ -27,6 +28,8 @@ public class SingleShot : WeaponStrategy
         VerifyFirePoints(firePoints, k_MaxFirePoints);
 
         spawnProjectile(firePoints[k_MainFirePoint]);
+        AudioManager.Instance.PlayOneShot(weaponFiredSound,
+            firePoints[k_MainFirePoint].position);
     }
 }
 }

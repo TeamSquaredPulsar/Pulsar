@@ -1,4 +1,5 @@
 using System;
+using FMODUnity;
 using UnityEngine;
 
 namespace Pulsar.Weapons.Strategies
@@ -16,6 +17,9 @@ namespace Pulsar.Weapons.Strategies
 [Serializable]
 public abstract class WeaponStrategy : ScriptableObject
 {
+    [SerializeField]
+    protected EventReference weaponFiredSound;
+
     /// <summary>
     /// Abstract Fire function
     ///
@@ -23,11 +27,10 @@ public abstract class WeaponStrategy : ScriptableObject
     /// <param name="firePoints"></param>
     ///  <param name="weapon"></param>
     /// <param name="spawnProjectile"></param>
-    public abstract void
-        Fire(
-            Transform[] firePoints,
-            Weapon weapon,
-            Func<Transform, GameObject> spawnProjectile);
+    public abstract void Fire(
+        Transform[] firePoints,
+        Weapon weapon,
+        Func<Transform, GameObject> spawnProjectile);
 
     protected void VerifyFirePoints(
         Transform[] firePoints,

@@ -1,4 +1,5 @@
 using System;
+using Pulsar.Audio;
 using UnityEngine;
 
 namespace Pulsar.Weapons.Strategies
@@ -24,6 +25,8 @@ public class DoubleShot : WeaponStrategy
 
         spawnProjectile(firePoints[k_LeftFirePoint]);
         spawnProjectile(firePoints[k_RightFirePoint]);
+        AudioManager.Instance.PlayOneShot(weaponFiredSound,
+            firePoints[k_LeftFirePoint].position);
     }
 }
 }

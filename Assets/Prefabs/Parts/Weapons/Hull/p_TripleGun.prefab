@@ -74,6 +74,13 @@ MonoBehaviour:
   spritesOverride: {fileID: 11400000, guid: e9a9583326b35d642bcf32b4b683fb2b, type: 2}
   spriteRenderer: {fileID: 4676953174740963180}
   <ProjectilePrefab>k__BackingField: {fileID: 1682859016921356063, guid: a133161848d51234b97f8554a243a1ab, type: 3}
+  <WeaponFiredSound>k__BackingField:
+    Guid:
+      Data1: -1573229566
+      Data2: 1171786981
+      Data3: -947611748
+      Data4: 1321384672
+    Path: event:/ShootMedium
   <ParentCollider>k__BackingField: {fileID: 0}
   <FirePoints>k__BackingField:
   - {fileID: 1113316170954926131}

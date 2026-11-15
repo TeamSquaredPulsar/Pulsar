@@ -1,4 +1,5 @@
 using System;
+using Pulsar.Audio;
 using UnityEngine;
 
 namespace Pulsar.Weapons.Strategies
@@ -28,6 +29,8 @@ public class TripleShot : WeaponStrategy
         {
             spawnProjectile(firePoint);
         }
+        AudioManager.Instance.PlayOneShot(weaponFiredSound,
+            firePoints[k_MaxBullets/2].position);
     }
 }
 }

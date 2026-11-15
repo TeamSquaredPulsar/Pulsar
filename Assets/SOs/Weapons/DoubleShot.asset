@@ -12,5 +12,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ecabc2a2d24f8e445853b21c98477b83, type: 3}
   m_Name: DoubleShot
   m_EditorClassIdentifier: Assembly-CSharp::DoubleShot
-  k_LeftOfFirePointUnits: 0.1
-  k_RightOfFirePointUnits: 0.1
+  weaponFiredSound:
+    Guid:
+      Data1: -1573229566
+      Data2: 1171786981
+      Data3: -947611748
+      Data4: 1321384672
+    Path: event:/ShootMedium

@@ -65,6 +65,7 @@ public abstract class Weapon : Tile, IProjectileSpawner, IWeapon
         }
 
         Strategy.Fire(FirePoints, this, SpawnProjectile);
+
         StartFireTimer();
     }
 
