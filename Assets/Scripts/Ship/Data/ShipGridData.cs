@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using JetBrains.Annotations;
 using Pulsar.DataClasses;
-using Pulsar.DataClasses.Extensions;
 using Pulsar.Interfaces;
 using Pulsar.Utilities;
 using UnityEngine;

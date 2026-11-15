@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using NaughtyAttributes;
 using Pulsar.DataClasses;
-using Pulsar.DataClasses.Extensions;
 using Pulsar.Hazards;
 using Pulsar.Interfaces;
 using Pulsar.Ship.Data;

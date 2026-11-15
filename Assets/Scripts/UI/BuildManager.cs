@@ -1,6 +1,5 @@
 using System.Collections;
 using Pulsar.DataClasses;
-using Pulsar.DataClasses.Extensions;
 using Pulsar.Utilities;
 using Pulsar.Player;
 using UnityEngine;
@@ -138,7 +137,7 @@ public class BuildManager : MonoBehaviour
                 = StartCoroutine(DestroyTileTimer(_selectedTile));
             return;
         }
-        
+
         if (_selectedTile.IsAttached)
         {
             //Attached to an enemy ship; ignore

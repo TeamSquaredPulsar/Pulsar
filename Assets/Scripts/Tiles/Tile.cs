@@ -1,6 +1,5 @@
 using System;
 using Pulsar.DataClasses;
-using Pulsar.DataClasses.Extensions;
 using Pulsar.Interactions;
 using UnityEngine;
 
