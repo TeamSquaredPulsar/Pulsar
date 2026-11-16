@@ -16,15 +16,6 @@ namespace Pulsar.Ship
 [RequireComponent(typeof(CompositeCollider2D), typeof(Rigidbody2D))]
 public class ShipManager : MonoBehaviour
 {
-    [Button]
-    private void DebugKillShip()
-    {
-        Tile core = ((Tile)Core);
-        core.TakeDamage(core.CurrentHp);
-    }
-
-    public event Action<ShipManager> ShipDestroyedEvent;
-
     [Header("Refs")]
     [SerializeField]
     private CompositeCollider2D compositeCollider;
@@ -34,9 +25,6 @@ public class ShipManager : MonoBehaviour
 
     [SerializeField]
     private ThrusterManager thrusterManager;
-
-    private List<ManualWeapon> _weapons = new(10);
-    private List<IThrustable> _thrusters = new(10);
 
     [Header("Detach Explosion")]
     [SerializeField]
@@ -49,13 +37,13 @@ public class ShipManager : MonoBehaviour
     private float collisionDmgMultiplier = 0.5f;
 
     private ShipGridData _gridData = new();
+    private List<IThrustable> _thrusters = new(10);
+
+    private List<ManualWeapon> _weapons = new(10);
 
     public IShipCore Core => _gridData.Core;
 
     public IReadOnlyDictionary<Vector2Int, Tile> Cells => _gridData.Cells;
-    public bool OwnsTile(Tile tile) => Cells.Values.Contains(tile);
-
-    public event Action ShipGridUpdate;
 
     private void Start()
     {
@@ -71,6 +59,46 @@ public class ShipManager : MonoBehaviour
             tile.DestroyEvent -= HandleTileDestroyed;
         }
     }
+
+    private void OnCollisionEnter2D(Collision2D other)
+    {
+        const int contactPointIndex = 0;
+        if (!_gridData.TryGetClosestTile(
+                other.GetContact(contactPointIndex).point,
+                out Tile tile))
+        {
+            return;
+        }
+
+        if (other.gameObject.TryGetComponent(out ShipManager ship))
+        {
+            float relativeVelocity = other.relativeVelocity.magnitude;
+            float damage = CalculateDmgFromOtherShip(ship, relativeVelocity);
+            tile.TakeDamage(damage);
+        }
+        else if (other.gameObject.TryGetComponent(
+                     out ExplosiveProjectile explosiveProjectile))
+        {
+            Vector2 hitPoint = other.GetContact(contactPointIndex).point;
+            ApplyExplosion(hitPoint, tile, explosiveProjectile);
+        }
+        else if (other.gameObject.TryGetComponent(out Projectile projectile))
+        {
+            tile.TakeDamage(projectile.Damage);
+        }
+    }
+
+    [Button]
+    private void DebugKillShip()
+    {
+        Tile core = ((Tile)Core);
+        core.TakeDamage(core.CurrentHp);
+    }
+
+    public event Action<ShipManager> ShipDestroyedEvent;
+    public bool OwnsTile(Tile tile) => Cells.Values.Contains(tile);
+
+    public event Action ShipGridUpdate;
 
     private void RefreshTiles()
     {
@@ -139,28 +167,6 @@ public class ShipManager : MonoBehaviour
         }
     }
 
-    private void OnCollisionEnter2D(Collision2D other)
-    {
-        const int contactPointIndex = 0;
-        if (!_gridData.TryGetClosestTile(
-                other.GetContact(contactPointIndex).point,
-                out Tile tile))
-        {
-            return;
-        }
-
-        if (other.gameObject.TryGetComponent(out ShipManager ship))
-        {
-            float relativeVelocity = other.relativeVelocity.magnitude;
-            float damage = CalculateDmgFromOtherShip(ship, relativeVelocity);
-            tile.TakeDamage(damage);
-        }
-        else if (other.gameObject.TryGetComponent(out Projectile projectile))
-        {
-            tile.TakeDamage(projectile.Damage);
-        }
-    }
-
     private float CalculateDmgFromOtherShip(
         ShipManager otherShip,
         float relativeVelocity)
@@ -175,6 +181,41 @@ public class ShipManager : MonoBehaviour
         float damage = kineticEnergy * share * collisionDmgMultiplier;
 
         return damage;
+    }
+
+    private void ApplyExplosion(
+        Vector2 hitPoint,
+        Tile hitTile,
+        ExplosiveProjectile explosive)
+    {
+        float radius = explosive.ExplosionRadius;
+
+        foreach (Tile tile in _gridData.Tiles)
+        {
+            // tile thats hit takes normal damage
+            if (tile == hitTile)
+            {
+                tile.TakeDamage(explosive.Damage);
+                continue;
+            }
+
+            float distance = Vector2.Distance(
+                tile.transform.position, hitPoint);
+
+            if (distance > radius)
+            {
+                continue;
+            }
+
+            // this is the 0 - 1, where 0 is the hit point and 1 is at the edge
+            float normalizedDistance = distance / radius;
+
+            float damage = explosive.Damage *
+                           Mathf.Lerp(1f, explosive.EdgeDamageFraction,
+                               normalizedDistance);
+
+            tile.TakeDamage(damage);
+        }
     }
 
     public void Move(Vector2 position)
