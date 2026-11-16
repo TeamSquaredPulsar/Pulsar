@@ -58,7 +58,6 @@ public class ThrusterTile : Tile, IThrustable
         if (state == PLAYBACK_STATE.STOPPED)
         {
             _emitter.Play();
-            Debug.Log("Starting audio");
             // _emitter.EventInstance.start();
         }
     }
@@ -71,7 +70,6 @@ public class ThrusterTile : Tile, IThrustable
             or PLAYBACK_STATE.STOPPED))
         {
             _emitter.Stop();
-            Debug.Log("Stopping audio");
             // _emitter.EventInstance.stop(FMOD.Studio.STOP_MODE.ALLOWFADEOUT);
         }
     }

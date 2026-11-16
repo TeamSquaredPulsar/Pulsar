@@ -56,8 +56,8 @@ MonoBehaviour:
     Path: event:/UI/ButtonClick
   <Thrust>k__BackingField:
     Guid:
-      Data1: 74341328
-      Data2: 1234315250
-      Data3: 163970191
-      Data4: 1712490126
+      Data1: -1322091886
+      Data2: 1316776494
+      Data3: 1977580694
+      Data4: -794381517
     Path: event:/Inputs/Thrust
