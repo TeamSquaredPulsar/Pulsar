@@ -17,6 +17,7 @@ namespace Pulsar.Weapons.Strategies
 [Serializable]
 public abstract class WeaponStrategy : ScriptableObject
 {
+
     [SerializeField]
     protected EventReference weaponFiredSound;
 

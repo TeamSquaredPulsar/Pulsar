@@ -18,6 +18,6 @@ MonoBehaviour:
       Data2: 1273565976
       Data3: 1212372111
       Data4: -220254140
-    Path: event:/ShootLight
+    Path: event:/Attack/ShootLight
   maxBullets: 3
   k_bulletGapTime: 0.1

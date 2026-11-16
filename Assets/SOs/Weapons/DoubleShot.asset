@@ -18,4 +18,4 @@ MonoBehaviour:
       Data2: 1171786981
       Data3: -947611748
       Data4: 1321384672
-    Path: event:/ShootMedium
+    Path: event:/Attack/ShootMedium

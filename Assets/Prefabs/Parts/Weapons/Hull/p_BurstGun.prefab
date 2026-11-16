@@ -71,6 +71,20 @@ MonoBehaviour:
   health: {fileID: -7642045392217383493}
   spritesOverride: {fileID: 11400000, guid: 0585c281154e1734485b72b474742b88, type: 2}
   spriteRenderer: {fileID: 4676953174740963180}
+  damageStateChangeSound:
+    Guid:
+      Data1: 1660910153
+      Data2: 1263548361
+      Data3: -413367378
+      Data4: 1675320881
+    Path: event:/Damage/ReduceState
+  onHitSound:
+    Guid:
+      Data1: 1366578804
+      Data2: 1111099715
+      Data3: 1340059779
+      Data4: -543357253
+    Path: event:/Damage/Hit
   <ProjectilePrefab>k__BackingField: {fileID: 1682859016921356063, guid: a133161848d51234b97f8554a243a1ab, type: 3}
   <ParentCollider>k__BackingField: {fileID: 0}
   <FirePoints>k__BackingField:

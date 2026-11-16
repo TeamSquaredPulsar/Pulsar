@@ -415,7 +415,9 @@ MonoBehaviour:
   MasterBanks:
   - Master
   Banks:
+  - Damage
   - Music
+  - UI
   - Weapon
   BanksToLoad: []
   LiveUpdatePort: 9264

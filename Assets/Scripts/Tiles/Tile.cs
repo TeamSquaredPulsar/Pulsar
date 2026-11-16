@@ -1,4 +1,7 @@
 using System;
+using FMODUnity;
+using NaughtyAttributes;
+using Pulsar.Audio;
 using Pulsar.DataClasses;
 using Pulsar.Interactions;
 using UnityEngine;
@@ -59,6 +62,13 @@ public abstract class Tile : MonoBehaviour
     public Sprite Sprite => spriteRenderer.sprite;
     private const int k_FloatingSortingOrder = 10;
 
+    [BoxGroup("Audio")]
+    [SerializeField]
+    protected EventReference damageStateChangeSound;
+    [BoxGroup("Audio")]
+    [SerializeField]
+    protected EventReference onHitSound;
+
     protected virtual void Awake()
     {
         //Initializing in awake to stop the chance of it being destroyed before caches
@@ -91,6 +101,8 @@ public abstract class Tile : MonoBehaviour
 
     private void OnHealthStateChanged(HealthState state)
     {
+        AudioManager.Instance.PlayOneShot(damageStateChangeSound,
+            transform.position);
         UpdateSprite(state);
     }
 
@@ -106,7 +118,11 @@ public abstract class Tile : MonoBehaviour
 
     public float Mass => _rbInfo.Mass; //It can return mass even when destroyed
 
-    public void TakeDamage(float damage) => health.TakeDamage(damage);
+    public void TakeDamage(float damage)
+    {
+        AudioManager.Instance.PlayOneShot(onHitSound, transform.position);
+        health.TakeDamage(damage);
+    }
 
     /// <summary>
     /// To ask whether the rotated tile can connect from dir
