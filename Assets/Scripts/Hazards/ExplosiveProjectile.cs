@@ -18,6 +18,9 @@ public class ExplosiveProjectile : Projectile
     [field: Tooltip("Tiles within this distance of the hit point take damage.")]
     public float ExplosionRadius { get; private set; } = 1.5f;
 
+    [SerializeField]
+    private ParticleSystem ps;
+
     [field: SerializeField]
     [field: Range(0f, 1f)]
     // Fraction of dmg dealt at the edge of the radius
@@ -34,6 +37,11 @@ public class ExplosiveProjectile : Projectile
     [Min(0f)]
     private float maxSpeed = 10f;
 
+    private void Awake()
+    {
+        ps = GetComponentInChildren<ParticleSystem>();
+    }
+
     private void FixedUpdate()
     {
         Vector2 forward = transform.up;
@@ -48,8 +56,12 @@ public class ExplosiveProjectile : Projectile
         float boost = Mathf.Min(acceleration * Time.fixedDeltaTime,
             maxSpeed - forwardSpeed);
 
+        if (ps != null)
+        {
+            ps.Play();
+        }
+
         rb.linearVelocity += forward * boost;
     }
-
 }
 }
