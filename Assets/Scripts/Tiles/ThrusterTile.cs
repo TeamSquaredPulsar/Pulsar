@@ -31,25 +31,14 @@ public class ThrusterTile : Tile, IThrustable
 
     public void ActivateThrust(float amount, in Rigidbody2D targetRb)
     {
-        thrusterAudio.getPlaybackState(out PLAYBACK_STATE state);
-        if (state == PLAYBACK_STATE.STOPPED)
-        {
-            Debug.Log("Starting thruster audio");
-            thrusterAudio.start();
-        }
+        StartAudio();
 
         spriteRenderer.color = Color.red;
     }
 
     public void DeactivateThrust()
     {
-        thrusterAudio.getPlaybackState(out PLAYBACK_STATE state);
-        Debug.Log($"Playback state: {state}");
-        if (state is not (PLAYBACK_STATE.STOPPING or PLAYBACK_STATE.STOPPED))
-        {
-            Debug.Log("Stopping thruster audio");
-            thrusterAudio.stop(STOP_MODE.ALLOWFADEOUT);
-        }
+        StopAudio();
         spriteRenderer.color = Color.white;
     }
 
@@ -59,5 +48,29 @@ public class ThrusterTile : Tile, IThrustable
 
     public void DeactivateRotation()
     {
+    }
+
+    private void StartAudio()
+    {
+        thrusterAudio.getPlaybackState(out PLAYBACK_STATE state);
+        if (state == PLAYBACK_STATE.STOPPED)
+        {
+            thrusterAudio.start();
+        }
+    }
+
+    private void StopAudio()
+    {
+        thrusterAudio.getPlaybackState(out PLAYBACK_STATE state);
+        if (state is not (PLAYBACK_STATE.STOPPING or PLAYBACK_STATE.STOPPED))
+        {
+            thrusterAudio.stop(STOP_MODE.ALLOWFADEOUT);
+        }
+    }
+
+    protected override void OnDestroy()
+    {
+        StopAudio();
+        base.OnDestroy();
     }
 }
