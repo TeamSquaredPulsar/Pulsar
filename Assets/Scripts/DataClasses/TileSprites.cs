@@ -6,7 +6,7 @@ using UnityEngine;
 namespace Pulsar.DataClasses
 {
 [CreateAssetMenu(fileName = "NewSprites", menuName = "Pulsar/Tile Sprites")]
-public class TileSpritesSO : ScriptableObject
+public class TileSprites : ScriptableObject
 {
     private const int k_Length = 5;
     private const int k_FirstSprite = 0;
@@ -27,7 +27,7 @@ public class TileSpritesSO : ScriptableObject
         {
             return null;
         }
-        
+
         int index = state switch
         {
             HealthState.FullHealth             => k_FirstSprite,
@@ -35,14 +35,14 @@ public class TileSpritesSO : ScriptableObject
             HealthState.LessOrEqualTo50Percent => k_ThirdSprite,
             HealthState.LessOrEqualTo25Percent => k_FourthSprite,
             HealthState.LessOrEqualTo10Percent => k_FifthSprite,
-            _ => k_FirstSprite,
+            _                                  => k_FirstSprite,
         };
 
-        // safety clamp in case there aren't enough sprites in the sheet 
-        index = Mathf.Min(index, frames.Length - 1); 
+        // safety clamp in case there aren't enough sprites in the sheet
+        index = Mathf.Min(index, frames.Length - 1);
         return frames[index] ? frames[index] : frames[k_FirstSprite];
     }
-    
+
     // This auto gets the sliced frames and puts them in order in the list
 #if UNITY_EDITOR
     private void OnValidate()
@@ -53,17 +53,17 @@ public class TileSpritesSO : ScriptableObject
         }
 
         string path = AssetDatabase.GetAssetPath(spriteSheet);
-        
+
         Sprite[] sliced = AssetDatabase.LoadAllAssetsAtPath(path)
             .OfType<Sprite>()
             // s.rect is the pixel rectangle that the frame takes up in its
-            // spritesheet 
+            // spritesheet
             .OrderByDescending(s => s.rect.y)
             .ThenBy(s => s.rect.x)
             .ToArray();
- 
+
         // to check if we split it up into frames yet or not, because if not
-        // it would wipe the array 
+        // it would wipe the array
         if (sliced.Length > 0)
         {
             frames = sliced;

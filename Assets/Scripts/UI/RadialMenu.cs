@@ -5,15 +5,16 @@ namespace Pulsar.UI
 [RequireComponent(typeof(LineRenderer), typeof(SpriteRenderer))]
 public class RadialMenu : MonoBehaviour
 {
-    private const int Segments = 64;
-    private const int ScanZoneSortingOrder = -10;
+    private const int k_Segments = 64;
+    private const int k_ScanZoneSortingOrder = -10;
 
     // cached oval params 
     private Vector3 _center;
     private Vector2 _radius;
     private Quaternion _rotation;
 
-    [Header("Scan zone"), SerializeField,]
+    [Header("Scan zone")]
+    [SerializeField]
     private SpriteRenderer scanZoneSr;
 
     [SerializeField]
@@ -31,16 +32,16 @@ public class RadialMenu : MonoBehaviour
     private void Awake()
     {
         scanZoneSr.color = scanZoneColor;
-        scanZoneSr.sortingOrder = ScanZoneSortingOrder;
+        scanZoneSr.sortingOrder = k_ScanZoneSortingOrder;
 
         outline.widthMultiplier = outlineWidthMultiplier;
         outline.startColor = outlineColor;
         outline.endColor = outlineColor;
         outline.sortingLayerID = scanZoneSr.sortingLayerID;
-        outline.sortingOrder = ScanZoneSortingOrder + 1;
+        outline.sortingOrder = k_ScanZoneSortingOrder + 1;
         outline.useWorldSpace = true;
         outline.loop = true;
-        outline.positionCount = Segments;
+        outline.positionCount = k_Segments;
     }
 
     public void UpdateShape(
@@ -63,9 +64,9 @@ public class RadialMenu : MonoBehaviour
             2f * _radius.y / Mathf.Max(0.0001f, spriteSize.y), 1f);
 
         // each segment angle
-        for (int i = 0; i < Segments; i++)
+        for (int i = 0; i < k_Segments; i++)
         {
-            float angle = i * Mathf.PI * 2f / Segments;
+            float angle = i * Mathf.PI * 2f / k_Segments;
             outline.SetPosition(i, PointOnOutline(angle));
         }
     }

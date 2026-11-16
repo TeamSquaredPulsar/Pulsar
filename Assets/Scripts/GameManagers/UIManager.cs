@@ -16,7 +16,7 @@ public class UIManager : MonoBehaviour
 
     [SerializeField]
     private GameObject gameplayUI;
-    
+
     [SerializeField]
     private GameObject gameOverMenu;
 

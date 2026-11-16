@@ -16,6 +16,7 @@ public class CameraManager : MonoBehaviour
 
     [SerializeField]
     private CinemachineCamera mainMenuCamera;
+
     [SerializeField]
     private CinemachineCamera gameplayCamera;
 
@@ -25,12 +26,13 @@ public class CameraManager : MonoBehaviour
     [BoxGroup("Target Group"), SerializeField,]
     private float playerRadius;
 
-    [BoxGroup("Target Group"), SerializeField,]
+    [BoxGroup("Target Group")]
+    [SerializeField]
     private float playerWeight;
 
-    private const int HighPriority = 100;
-    private const int LowPriority = 0;
-    
+    private const int k_HighPriority = 100;
+    private const int k_LowPriority = 0;
+
     private void Awake()
     {
         cameraDataAsset.MainCamera = mainCamera;
@@ -48,19 +50,19 @@ public class CameraManager : MonoBehaviour
         PlayerController.PlayerSpawnedEvent -= OnPlayerSpawned;
         PlayerController.PlayerLossEvent -= OnPlayerLoss;
     }
-    
+
     private void PrioritizeMenuCamera()
     {
-        mainMenuCamera.Priority = HighPriority;
-        gameplayCamera.Priority = LowPriority;
+        mainMenuCamera.Priority = k_HighPriority;
+        gameplayCamera.Priority = k_LowPriority;
     }
 
     private void PrioritizeGameplayCamera()
     {
-        mainMenuCamera.Priority = LowPriority;
-        gameplayCamera.Priority = HighPriority;
+        mainMenuCamera.Priority = k_LowPriority;
+        gameplayCamera.Priority = k_HighPriority;
     }
-    
+
     private void OnPlayerLoss(PlayerController obj)
     {
         targetGroup.RemoveMember(obj.transform);
