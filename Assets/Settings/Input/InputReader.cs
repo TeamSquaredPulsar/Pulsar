@@ -68,6 +68,10 @@ public class InputReader : ScriptableObject, IPlayerActions, IInputReader
 
     public void OnMove(InputAction.CallbackContext context)
     {
+        if (context.performed)
+        {
+            return;
+        }
         MoveEvent?.Invoke(context.ReadValue<Vector2>());
     }
 
@@ -85,7 +89,7 @@ public class InputReader : ScriptableObject, IPlayerActions, IInputReader
     public void OnSelectTile(InputAction.CallbackContext context)
     {
         // Don't trigger on started because it causes
-        // the event to fire twice on mouse click   
+        // the event to fire twice on mouse click
         if (context.started)
         {
             return;

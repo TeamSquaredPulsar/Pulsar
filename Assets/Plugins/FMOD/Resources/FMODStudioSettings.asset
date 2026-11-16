@@ -416,6 +416,7 @@ MonoBehaviour:
   - Master
   Banks:
   - Damage
+  - Input
   - Music
   - UI
   - Weapon
