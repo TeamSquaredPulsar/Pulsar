@@ -256,6 +256,7 @@ public class ShipManager : MonoBehaviour
         if (tile is IThrustable thrustable)
         {
             _thrusters.Remove(thrustable);
+            thrusterManager.CalculateThrusters(in _thrusters);
         }
 
         if (tile is ManualWeapon weapon)

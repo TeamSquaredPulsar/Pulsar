@@ -106,11 +106,9 @@ MonoBehaviour:
   compositeCollider: {fileID: 2214052083980208980}
   rb: {fileID: 2776980645195997529}
   thrusterManager: {fileID: 8617872407729157336}
-  weapons: []
-  thrusters: []
   detachRadiateLinearVelocity: {x: 2, y: 5}
   detachRadiateAngularVelocity: {x: -180, y: 180}
-  CollisionDmgMultiplier: 0.5
+  collisionDmgMultiplier: 0.5
 --- !u!114 &8617872407729157336
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -124,9 +122,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ThrusterManager
   rb: {fileID: 2776980645195997529}
-  coreThrust: 2
-  rotationalThrust: 2
-  rotationScaler: 1
 --- !u!50 &2776980645195997529
 Rigidbody2D:
   serializedVersion: 5
