@@ -49,10 +49,12 @@ public abstract class Weapon : Tile, IProjectileSpawner, IWeapon
     protected override void Start()
     {
         base.Start();
-        _projectile = ProjectilePrefab.gameObject.GetComponent<Projectile>();
+        _projectile = ProjectilePrefab
+            ? ProjectilePrefab.GetComponent<Projectile>()
+            : null;
     }
 
-    public GameObject SpawnProjectile(Transform spawnPoint)
+    public virtual GameObject SpawnProjectile(Transform spawnPoint)
     {
         GameObject projectile
             = _projectile.SpawnProjectile(spawnPoint, ParentCollider);
@@ -61,7 +63,7 @@ public abstract class Weapon : Tile, IProjectileSpawner, IWeapon
         return projectile;
     }
 
-    public void Fire()
+    public virtual void Fire()
     {
         if (!CanFire)
         {
