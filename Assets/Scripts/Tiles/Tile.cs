@@ -65,6 +65,7 @@ public abstract class Tile : MonoBehaviour
     [BoxGroup("Audio")]
     [SerializeField]
     protected EventReference damageStateChangeSound;
+
     [BoxGroup("Audio")]
     [SerializeField]
     protected EventReference onHitSound;
@@ -101,8 +102,10 @@ public abstract class Tile : MonoBehaviour
 
     private void OnHealthStateChanged(HealthState state)
     {
-        AudioManager.Instance.PlayOneShot(damageStateChangeSound,
-            transform.position);
+        AudioManager.Instance.PlayOneShot(
+            FmodEvents.Instance.ShipReduceState,
+            transform.position
+        );
         UpdateSprite(state);
     }
 
@@ -120,7 +123,9 @@ public abstract class Tile : MonoBehaviour
 
     public void TakeDamage(float damage)
     {
-        AudioManager.Instance.PlayOneShot(onHitSound, transform.position);
+        AudioManager.Instance.PlayOneShot(
+            FmodEvents.Instance.ShipHit,
+            transform.position);
         health.TakeDamage(damage);
     }
 

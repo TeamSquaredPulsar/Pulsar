@@ -18,5 +18,18 @@ public abstract class SoSingleton<T> : ScriptableObject
 
         Instance = this as T;
     }
+
+    private void OnEnable()
+    {
+        if (Instance == null)
+        {
+            Instance = this as T;
+        }
+    }
+
+    private void OnDisable()
+    {
+        Instance = null;
+    }
 }
 }

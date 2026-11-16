@@ -29,7 +29,8 @@ public class TripleShot : WeaponStrategy
         {
             spawnProjectile(firePoint);
         }
-        AudioManager.Instance.PlayOneShot(weaponFiredSound,
+        AudioManager.Instance.PlayOneShot(
+            FmodEvents.Instance.ShootHeavy,
             firePoints[k_MaxBullets/2].position);
     }
 }

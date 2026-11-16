@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using NaughtyAttributes;
+using Pulsar.Audio;
 using Pulsar.DataClasses;
 using Pulsar.Player;
 using Pulsar.UI;
@@ -29,6 +30,14 @@ public class GameManager : Singleton<GameManager>
     private int _currentWave;
     private int _score;
     private Coroutine _awaitingWave;
+
+    [BoxGroup("Audio")]
+    [SerializeField]
+    private AudioManager audioManager;
+
+    [BoxGroup("Audio")]
+    [SerializeField]
+    private FmodEvents audioEvents;
 
     protected override void Awake()
     {

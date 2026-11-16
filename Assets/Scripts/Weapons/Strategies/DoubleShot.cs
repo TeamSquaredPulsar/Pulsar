@@ -25,7 +25,8 @@ public class DoubleShot : WeaponStrategy
 
         spawnProjectile(firePoints[k_LeftFirePoint]);
         spawnProjectile(firePoints[k_RightFirePoint]);
-        AudioManager.Instance.PlayOneShot(weaponFiredSound,
+        AudioManager.Instance.PlayOneShot(
+            FmodEvents.Instance.ShootHeavy,
             firePoints[k_LeftFirePoint].position);
     }
 }

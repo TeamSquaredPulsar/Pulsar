@@ -58,3 +58,5 @@ MonoBehaviour:
   - {fileID: 11400000, guid: da419b9be66f4ec3b554f7d23fd4d645, type: 2}
   - {fileID: 11400000, guid: 3f5b098804994908a10b326fda6d3b0b, type: 2}
   - {fileID: 11400000, guid: 3c98a37892be4035b5f9e790f10f9455, type: 2}
+  audioManager: {fileID: 11400000, guid: b93f15ff1e15c794ba814aa4875bc1c1, type: 2}
+  audioEvents: {fileID: 11400000, guid: f9dbdf1e115dd5c4087a04b8e3b63d99, type: 2}

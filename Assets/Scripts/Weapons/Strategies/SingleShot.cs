@@ -28,7 +28,8 @@ public class SingleShot : WeaponStrategy
         VerifyFirePoints(firePoints, k_MaxFirePoints);
 
         spawnProjectile(firePoints[k_MainFirePoint]);
-        AudioManager.Instance.PlayOneShot(weaponFiredSound,
+        AudioManager.Instance.PlayOneShot(
+            FmodEvents.Instance.ShootLight,
             firePoints[k_MainFirePoint].position);
     }
 }

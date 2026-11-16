@@ -49,7 +49,8 @@ public class BurstShot : WeaponStrategy
         for (int i = 0; i < maxBullets; i++)
         {
             spawnProjectile(firePoints[i % firePoints.Length]);
-            AudioManager.Instance.PlayOneShot(weaponFiredSound,
+            AudioManager.Instance.PlayOneShot(
+                FmodEvents.Instance.ShootLight,
                 firePoints[i % firePoints.Length].position);
             yield return new WaitForSeconds(k_bulletGapTime);
         }
