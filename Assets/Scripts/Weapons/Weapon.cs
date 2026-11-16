@@ -1,6 +1,7 @@
 using System.Collections;
 using NaughtyAttributes;
 using Pulsar.Hazards;
+using Pulsar.Interactions;
 using Pulsar.Weapons.Strategies;
 using UnityEngine;
 
@@ -16,37 +17,28 @@ namespace Pulsar.Weapons
 /// </summary>
 public abstract class Weapon : Tile, IProjectileSpawner, IWeapon
 {
-    [Header("References")]
-    [field: SerializeField]
-    public GameObject ProjectilePrefab { get; private set; }
-
-    [field: SerializeField]
-    public Collider2D ParentCollider { get; private set; }
-
-    [field: SerializeField]
-    [field: ReorderableList]
-    public Transform[] FirePoints { get; private set; }
-
     [field: SerializeField]
     public float FireRatePerSecond { get; protected set; } = 0.5f;
 
     [field: SerializeField]
-    [field: Expandable]
-    public WeaponStrategy Strategy { get; private set; }
-
-    Collider2D IProjectileSpawner.ParentCollider => ParentCollider;
+    public Sprite ReloadingSprite { get; private set; }
 
     private Coroutine _fireTimerRoutine;
     private Projectile _projectile;
-
-    public Collider2D Coll2D => tileCollider;
-    public bool CanFire => _fireTimerRoutine == null;
 
     protected override void Start()
     {
         base.Start();
         _projectile = ProjectilePrefab.gameObject.GetComponent<Projectile>();
     }
+
+    [Header("References")]
+    [field: SerializeField]
+    public GameObject ProjectilePrefab { get; private set; }
+
+    Collider2D IProjectileSpawner.ParentCollider => ParentCollider;
+
+    public Collider2D Coll2D => tileCollider;
 
     public GameObject SpawnProjectile(Transform spawnPoint)
     {
@@ -56,6 +48,19 @@ public abstract class Weapon : Tile, IProjectileSpawner, IWeapon
             Coll2D);
         return projectile;
     }
+
+    [field: SerializeField]
+    public Collider2D ParentCollider { get; private set; }
+
+    [field: SerializeField]
+    [field: ReorderableList]
+    public Transform[] FirePoints { get; private set; }
+
+    [field: SerializeField]
+    [field: Expandable]
+    public WeaponStrategy Strategy { get; private set; }
+
+    public bool CanFire => _fireTimerRoutine == null;
 
     public void Fire()
     {
@@ -71,17 +76,24 @@ public abstract class Weapon : Tile, IProjectileSpawner, IWeapon
     private void StartFireTimer()
     {
         _fireTimerRoutine = StartCoroutine(ActivateFireTimer());
+        RefreshSprite();
     }
 
     private IEnumerator ActivateFireTimer()
     {
         yield return new WaitForSeconds(1 / FireRatePerSecond);
         _fireTimerRoutine = null;
+        RefreshSprite();
     }
 
     public void SetParentCollider(Collider2D newCollider)
     {
         ParentCollider = newCollider;
     }
+
+    protected override Sprite GetCurrentSprite(HealthState state) =>
+        ReloadingSprite && !CanFire
+            ? ReloadingSprite
+            : base.GetCurrentSprite(state);
 }
 }

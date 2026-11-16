@@ -33,7 +33,7 @@ public class Projectile : MonoBehaviour
     private Collider2D coll2D;
 
     [SerializeField]
-    private Rigidbody2D rb;
+    protected Rigidbody2D rb;
 
     /// <summary>
     /// Start method.

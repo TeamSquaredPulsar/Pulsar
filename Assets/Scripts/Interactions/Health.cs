@@ -6,10 +6,21 @@ namespace Pulsar.Interactions
 {
 public class Health : MonoBehaviour
 {
+    private const float NoHealth = 0;
+    private const float TenPercent = 0.1f;
+    private const float TwentyFivePercent = 0.25f;
+    private const float FiftyPercent = 0.5f;
+    private const float SeventyFivePercent = 0.75f;
+
     [field: SerializeField]
     [Min(1)]
     [field: OnValueChanged("SetCurrentHealth")]
     public float MaxHealth { get; set; }
+
+    [field: ProgressBar("MaxHealth", EColor.Red)]
+    [MaxValue("MaxHealth")]
+    [SerializeField]
+    private float currentHealth;
 
     public float CurrentHealth
     {
@@ -17,31 +28,20 @@ public class Health : MonoBehaviour
         private set => currentHealth = Mathf.Clamp(value, NoHealth, MaxHealth);
     }
 
-    [field: ProgressBar("MaxHealth", EColor.Red)]
-    [MaxValue("MaxHealth")]
-    [SerializeField]
-    private float currentHealth;
-
-    private HealthState _currentHealthState;
-
-    private const float NoHealth = 0;
-    private const float TenPercent = 0.1f;
-    private const float TwentyFivePercent = 0.25f;
-    private const float FiftyPercent = 0.5f;
-    private const float SeventyFivePercent = 0.75f;
-
-    public event Action<Health> DestroyEvent;
-    public event Action<HealthState> HealthStateChanged;
+    public HealthState CurrentHealthState { get; private set; }
 
     private void Awake()
     {
         SetCurrentHealth();
     }
 
+    public event Action<Health> DestroyEvent;
+    public event Action<HealthState> HealthStateChanged;
+
     private void SetCurrentHealth()
     {
         CurrentHealth = MaxHealth;
-        _currentHealthState = GetHealthState();
+        CurrentHealthState = GetHealthState();
     }
 
     public void TakeDamage(float damage)
@@ -67,12 +67,12 @@ public class Health : MonoBehaviour
     {
         HealthState newState = GetHealthState();
 
-        if (newState == _currentHealthState)
+        if (newState == CurrentHealthState)
         {
             return;
         }
 
-        _currentHealthState = newState;
+        CurrentHealthState = newState;
 
         HealthStateChanged?.Invoke(newState);
     }
