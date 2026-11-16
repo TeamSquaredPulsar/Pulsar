@@ -85,7 +85,7 @@ public abstract class Tile : MonoBehaviour
     {
         health.DestroyEvent += OnDead;
         health.HealthStateChanged += OnHealthStateChanged;
-        UpdateSprite(HealthState.FullHealth);
+        RefreshSprite();
     }
 
     protected virtual void OnDestroy()
@@ -106,18 +106,20 @@ public abstract class Tile : MonoBehaviour
             FmodEvents.Instance.ShipReduceState,
             transform.position
         );
-        UpdateSprite(state);
+        RefreshSprite();
     }
 
-    private void UpdateSprite(HealthState state)
+    protected void RefreshSprite()
     {
-        Sprite next = Sprites ? Sprites.Get(state) : null;
-
+        Sprite next = GetCurrentSprite(health.CurrentHealthState);
         if (next)
         {
             spriteRenderer.sprite = next;
         }
     }
+
+    protected virtual Sprite GetCurrentSprite(HealthState state) =>
+        Sprites ? Sprites.Get(state) : null;
 
     public float Mass => _rbInfo.Mass; //It can return mass even when destroyed
 

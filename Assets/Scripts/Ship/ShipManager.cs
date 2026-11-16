@@ -155,6 +155,11 @@ public class ShipManager : MonoBehaviour
             float damage = CalculateDmgFromOtherShip(ship, relativeVelocity);
             tile.TakeDamage(damage);
         }
+        else if (other.gameObject.TryGetComponent(out ExplosiveProjectile explosiveProjectile))
+        {
+            Vector2 hitPoint = other.GetContact(contactPointIndex).point;
+            ApplyExplosion(hitPoint, tile, explosiveProjectile);
+        }
         else if (other.gameObject.TryGetComponent(out Projectile projectile))
         {
             tile.TakeDamage(projectile.Damage);
@@ -175,6 +180,40 @@ public class ShipManager : MonoBehaviour
         float damage = kineticEnergy * share * collisionDmgMultiplier;
 
         return damage;
+    }
+
+    private void ApplyExplosion(
+        Vector2 hitPoint,
+        Tile hitTile,
+        ExplosiveProjectile explosive)
+    {
+        float radius = explosive.ExplosionRadius;
+
+        foreach (Tile tile in _gridData.Tiles)
+        {
+            // tile thats hit takes normal damage
+            if (tile == hitTile)
+            {
+                tile.TakeDamage(explosive.Damage);
+                continue;
+            }
+
+            float distance = Vector2.Distance(
+                tile.transform.position, hitPoint);
+
+            if (distance > radius)
+            {
+                continue;
+            }
+
+            // this is the 0 - 1, where 0 is the hit point and 1 is at the edge
+            float normalizedDistance = distance / radius;
+
+            float damage = explosive.Damage *
+                           Mathf.Lerp(1f, explosive.EdgeDamageFraction, normalizedDistance);
+
+            tile.TakeDamage(damage);
+        }
     }
 
     public void Move(Vector2 position)

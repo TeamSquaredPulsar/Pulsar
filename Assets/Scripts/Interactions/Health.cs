@@ -22,7 +22,7 @@ public class Health : MonoBehaviour
     [SerializeField]
     private float currentHealth;
 
-    private HealthState _currentHealthState;
+    public HealthState CurrentHealthState { get; private set; }
 
     private const float NoHealth = 0;
     private const float TenPercent = 0.1f;
@@ -41,7 +41,7 @@ public class Health : MonoBehaviour
     private void SetCurrentHealth()
     {
         CurrentHealth = MaxHealth;
-        _currentHealthState = GetHealthState();
+        CurrentHealthState = GetHealthState();
     }
 
     public void TakeDamage(float damage)
@@ -67,12 +67,12 @@ public class Health : MonoBehaviour
     {
         HealthState newState = GetHealthState();
 
-        if (newState == _currentHealthState)
+        if (newState == CurrentHealthState)
         {
             return;
         }
 
-        _currentHealthState = newState;
+        CurrentHealthState = newState;
 
         HealthStateChanged?.Invoke(newState);
     }

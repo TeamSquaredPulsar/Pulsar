@@ -1,6 +1,7 @@
 using System.Collections;
 using NaughtyAttributes;
 using Pulsar.Hazards;
+using Pulsar.Interactions;
 using Pulsar.Weapons.Strategies;
 using UnityEngine;
 
@@ -33,6 +34,9 @@ public abstract class Weapon : Tile, IProjectileSpawner, IWeapon
     [field: SerializeField]
     [field: Expandable]
     public WeaponStrategy Strategy { get; private set; }
+
+    [field: SerializeField]
+    public Sprite ReloadingSprite { get; private set; }
 
     Collider2D IProjectileSpawner.ParentCollider => ParentCollider;
 
@@ -72,17 +76,24 @@ public abstract class Weapon : Tile, IProjectileSpawner, IWeapon
     private void StartFireTimer()
     {
         _fireTimerRoutine = StartCoroutine(ActivateFireTimer());
+        RefreshSprite();
     }
 
     private IEnumerator ActivateFireTimer()
     {
         yield return new WaitForSeconds(1 / FireRatePerSecond);
         _fireTimerRoutine = null;
+        RefreshSprite();
     }
 
     public void SetParentCollider(Collider2D newCollider)
     {
         ParentCollider = newCollider;
     }
+
+    protected override Sprite GetCurrentSprite(HealthState state) =>
+        ReloadingSprite && !CanFire
+            ? ReloadingSprite
+            : base.GetCurrentSprite(state);
 }
 }
