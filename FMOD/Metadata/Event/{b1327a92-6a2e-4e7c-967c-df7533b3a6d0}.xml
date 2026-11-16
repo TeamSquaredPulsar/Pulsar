@@ -5,7 +5,7 @@
 			<value>Thrust</value>
 		</property>
 		<property name="outputFormat">
-			<value>1</value>
+			<value>2</value>
 		</property>
 		<relationship name="folder">
 			<destination>{79e5f119-dc69-4765-925a-63163d63c0c2}</destination>
@@ -99,6 +99,9 @@
 			<value>7.4000000000000012</value>
 		</property>
 		<property name="name" />
+		<property name="looping">
+			<value>true</value>
+		</property>
 		<relationship name="sounds">
 			<destination>{5ff11973-f3f9-43b8-8718-275a6d78fd15}</destination>
 			<destination>{2afa0e76-794b-4805-81c2-78aca298d0d9}</destination>
@@ -122,10 +125,10 @@
 	</object>
 	<object class="LoopRegion" id="{4f6abce7-1067-4930-bccd-29fe131ed307}">
 		<property name="position">
-			<value>0.20000000000000001</value>
+			<value>0</value>
 		</property>
 		<property name="length">
-			<value>7.2000000000000011</value>
+			<value>7.4000000000000004</value>
 		</property>
 		<relationship name="timeline">
 			<destination>{e6c60e7e-488c-4a16-acf2-091d0c38f6e4}</destination>
@@ -137,6 +140,7 @@
 	<object class="MixerBusEffectChain" id="{e6369cea-cf2d-4ecd-b28e-ccfdc737f451}">
 		<relationship name="effects">
 			<destination>{7205cac0-d238-486e-82fc-085045093c02}</destination>
+			<destination>{b688bab2-22e8-4c00-8bdd-3cf63d781f24}</destination>
 		</relationship>
 	</object>
 	<object class="MixerBusPanner" id="{8818d00c-bfa3-4b44-8a3d-6f07c707f500}" />
@@ -164,9 +168,12 @@
 	<object class="MixerBusEffectChain" id="{ebee48bc-4aa6-442f-b64e-5c94718528ad}">
 		<relationship name="effects">
 			<destination>{8065525f-aa89-410a-953b-d2afe42ecb43}</destination>
+			<destination>{3629cd98-7f8e-4ff5-ae9f-2733ebcd212a}</destination>
 		</relationship>
 	</object>
 	<object class="MixerBusPanner" id="{872068dd-5151-444a-974a-65c13770c00b}" />
 	<object class="MixerBusFader" id="{7205cac0-d238-486e-82fc-085045093c02}" />
+	<object class="SpatialiserEffect" id="{b688bab2-22e8-4c00-8bdd-3cf63d781f24}" />
 	<object class="MixerBusFader" id="{8065525f-aa89-410a-953b-d2afe42ecb43}" />
+	<object class="SpatialiserEffect" id="{3629cd98-7f8e-4ff5-ae9f-2733ebcd212a}" />
 </objects>

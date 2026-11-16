@@ -1,10 +1,12 @@
 using Audune.Utils.Dictionary;
+using FMOD.Studio;
 using Pulsar.Audio;
 using Pulsar.DataClasses;
 using Pulsar.Interfaces;
 using UnityEngine;
-using FMOD.Studio;
+using FMODUnity;
 
+[RequireComponent(typeof(StudioEventEmitter))]
 public class ThrusterTile : Tile, IThrustable
 {
     [field: SerializeField]
@@ -20,25 +22,25 @@ public class ThrusterTile : Tile, IThrustable
     [Min(0f)]
     public float RotationForce { get; private set; }
 
-    private EventInstance thrusterAudio;
+    private StudioEventEmitter _emitter;
 
     protected override void Start()
     {
         base.Start();
-        thrusterAudio
-            = AudioManager.Instance.CreateInstance(FmodEvents.Instance.Thrust);
+        _emitter = AudioManager.Instance.CreateEmitter(
+            FmodEvents.Instance.Thrust, gameObject);
     }
 
     public void ActivateThrust(float amount, in Rigidbody2D targetRb)
     {
         StartAudio();
-
         spriteRenderer.color = Color.red;
     }
 
     public void DeactivateThrust()
     {
         StopAudio();
+
         spriteRenderer.color = Color.white;
     }
 
@@ -52,25 +54,31 @@ public class ThrusterTile : Tile, IThrustable
 
     private void StartAudio()
     {
-        thrusterAudio.getPlaybackState(out PLAYBACK_STATE state);
+        _emitter.EventInstance.getPlaybackState(out PLAYBACK_STATE state);
         if (state == PLAYBACK_STATE.STOPPED)
         {
-            thrusterAudio.start();
+            _emitter.Play();
+            Debug.Log("Starting audio");
+            // _emitter.EventInstance.start();
         }
     }
 
     private void StopAudio()
     {
-        thrusterAudio.getPlaybackState(out PLAYBACK_STATE state);
-        if (state is not (PLAYBACK_STATE.STOPPING or PLAYBACK_STATE.STOPPED))
+        _emitter.EventInstance.getPlaybackState(out PLAYBACK_STATE state);
+        Debug.Log(state);
+        if (state is not (PLAYBACK_STATE.STOPPING
+            or PLAYBACK_STATE.STOPPED))
         {
-            thrusterAudio.stop(STOP_MODE.ALLOWFADEOUT);
+            _emitter.Stop();
+            Debug.Log("Stopping audio");
+            // _emitter.EventInstance.stop(FMOD.Studio.STOP_MODE.ALLOWFADEOUT);
         }
     }
 
     protected override void OnDestroy()
     {
-        StopAudio();
+        _emitter.Stop();
         base.OnDestroy();
     }
 }

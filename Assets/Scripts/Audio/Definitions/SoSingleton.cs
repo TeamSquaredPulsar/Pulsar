@@ -19,7 +19,7 @@ public abstract class SoSingleton<T> : ScriptableObject
         Instance = this as T;
     }
 
-    private void OnEnable()
+    protected virtual void OnEnable()
     {
         if (Instance == null)
         {
@@ -27,7 +27,7 @@ public abstract class SoSingleton<T> : ScriptableObject
         }
     }
 
-    private void OnDisable()
+    protected virtual  void OnDisable()
     {
         Instance = null;
     }
