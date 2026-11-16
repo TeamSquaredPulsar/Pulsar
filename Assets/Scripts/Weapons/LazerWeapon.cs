@@ -26,6 +26,24 @@ public class LazerWeapon : ManualWeapon
     private float releaseDelay = 0.1f;
 
     [SerializeField]
+    [Min(0.1f)]
+    private float timeToOverheat = 3f;
+
+    [SerializeField]
+    [Min(0.1f)]
+    private float timeToCool = 2f;
+
+    [SerializeField]
+    [Min(0f)]
+    private float overheatLockTime = 2f;
+
+    [SerializeField]
+    private Color coolColor = Color.cyan;
+
+    [SerializeField]
+    private Color hotColor = Color.red;
+
+    [SerializeField]
     private LineRenderer beam;
 
     // k_MaxBeamHits is the number of things the raycast can report back
@@ -37,6 +55,9 @@ public class LazerWeapon : ManualWeapon
     private bool _isFiring;
     private float _lastFireTime;
     private float _tickTimer;
+    // 0 -> 1 is overheated
+    private float _heat;
+    public float Heat => _heat;
 
     private Transform FirePoint => FirePoints[k_FirstFirePoint];
 
@@ -56,6 +77,11 @@ public class LazerWeapon : ManualWeapon
 
     public override void Fire()
     {
+        if (!CanFire)
+        {
+            return;
+        }
+
         if (!_isFiring)
         {
             _isFiring = true;
@@ -68,14 +94,7 @@ public class LazerWeapon : ManualWeapon
     private void StopBeam()
     {
         _isFiring = false;
-        foreach (Transform firePoint in FirePoints)
-        {
-            LineRenderer line = GetBeamLine(firePoint);
-            if (line)
-            {
-                line.enabled = false;
-            }
-        }
+        beam.enabled = false;
     }
 
     private bool IsTriggerHeld => Time.time - _lastFireTime <= releaseDelay;
@@ -84,6 +103,7 @@ public class LazerWeapon : ManualWeapon
     {
         if (!_isFiring)
         {
+            Cool();
             return;
         }
 
@@ -93,9 +113,27 @@ public class LazerWeapon : ManualWeapon
             return;
         }
 
+        _heat += Time.deltaTime / timeToOverheat;
+        if (_heat >= 1f)
+        {
+            Overheat();
+            return;
+        }
+
         UpdateBeam(AdvanceTick());
     }
 
+    private void Cool()
+    {
+        _heat = Mathf.Max(0f, _heat - Time.deltaTime / timeToCool);
+    }
+
+    private void Overheat()
+    {
+        StopBeam();
+        _heat = 0f;
+        StartCooldown(overheatLockTime);
+    }
     /// <summary>
     /// Returns true once every tickInterval seconds.
     /// </summary>
@@ -177,12 +215,6 @@ public class LazerWeapon : ManualWeapon
         }
     }
 
-    /// <summary>
-    /// Finds the tile nearest the hit point on whatever the beam hit.
-    /// A ship's tiles are merged into one composite collider on the ship, so the
-    /// ray hits the ship itself; we then pick the tile whose centre is closest.
-    /// Also works for loose tiles floating on their own.
-    /// </summary>
     private static Tile FindClosestTile(RaycastHit2D hit)
     {
         Vector2 point = hit.point;
@@ -209,6 +241,10 @@ public class LazerWeapon : ManualWeapon
 
     private void DrawBeam(Vector2 start, Vector2 end)
     {
+        Color color = Color.Lerp(coolColor, hotColor, _heat);
+        beam.startColor = color;
+        beam.endColor = color;
+
         beam.SetPosition(0, start);
         beam.SetPosition(1, end);
         beam.enabled = true;

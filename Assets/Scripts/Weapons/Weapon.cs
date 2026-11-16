@@ -74,15 +74,17 @@ public abstract class Weapon : Tile, IProjectileSpawner, IWeapon
         StartFireTimer();
     }
 
-    private void StartFireTimer()
+    private void StartFireTimer() => StartCooldown(1 / FireRatePerSecond);
+
+    protected void StartCooldown(float seconds)
     {
-        _fireTimerRoutine = StartCoroutine(ActivateFireTimer());
+        _fireTimerRoutine = StartCoroutine(ActivateFireTimer(seconds));
         RefreshSprite();
     }
 
-    private IEnumerator ActivateFireTimer()
+    private IEnumerator ActivateFireTimer(float seconds)
     {
-        yield return new WaitForSeconds(1 / FireRatePerSecond);
+        yield return new WaitForSeconds(seconds);
         _fireTimerRoutine = null;
         RefreshSprite();
     }
