@@ -10,8 +10,10 @@ public class SettingsScreen : MonoBehaviour
 {
     public static readonly Vector2Int[] Resolutions =
     {
+        new Vector2Int(2560, 1440),
         new Vector2Int(1920, 1080),
-        new Vector2Int(1600, 900)
+        new Vector2Int(1600, 900),
+        new Vector2Int(1280, 720),
     };
 
     [SerializeField] private MainMenu mainMenu;
