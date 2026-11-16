@@ -69,7 +69,7 @@ MonoBehaviour:
   tileCollider: {fileID: 6394848136817018224}
   rigidBody: {fileID: 5928138776274610662}
   health: {fileID: -5485010578142242551}
-  spritesOverride: {fileID: 11400000, guid: ec3e1b98f7cb9804e825880aa2014b85, type: 2}
+  spritesOverride: {fileID: 11400000, guid: 0cc08e3d53e133d45ab54f0b03295858, type: 2}
   spriteRenderer: {fileID: 4676953174740963180}
   <ProjectilePrefab>k__BackingField: {fileID: 1682859016921356063, guid: e71450bc54cfb3e46b63c63e7591062c, type: 3}
   <ParentCollider>k__BackingField: {fileID: 0}
@@ -77,6 +77,7 @@ MonoBehaviour:
   - {fileID: 1113316170954926131}
   <FireRatePerSecond>k__BackingField: 0.4
   <Strategy>k__BackingField: {fileID: 11400000, guid: 67d68c3e0a11e41479e9131cdc4b126a, type: 2}
+  <ReloadingSprite>k__BackingField: {fileID: -1572805289, guid: fbfc6b67b857fdd4e9884bff523e81d7, type: 3}
 --- !u!212 &4676953174740963180
 SpriteRenderer:
   serializedVersion: 2
@@ -126,7 +127,7 @@ SpriteRenderer:
   m_SortingLayer: 4
   m_SortingOrder: 0
   m_MaskInteraction: 0
-  m_Sprite: {fileID: 21300000, guid: 1abe46b73714070499c85791784dd4f4, type: 3}
+  m_Sprite: {fileID: 3579042001588550975, guid: fbfc6b67b857fdd4e9884bff523e81d7, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
