@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -17,10 +18,11 @@ public class SettingsScreen : MonoBehaviour
     [SerializeField] private Button backButton;
     [SerializeField] private Slider volumeSlider;
     [SerializeField] private Toggle fullscreenToggle;
-    [SerializeField] private Button resolutionButton;
-    [SerializeField] private TMP_Text resolutionLabel;
+    [SerializeField] private TMP_Dropdown resolutionDropdown;
     [SerializeField] private Slider musicVolumeSlider;
     [SerializeField] private Slider vfxVolumeSlider;
+    [SerializeField] private Button keybindingButton;
+    [SerializeField] private ControlsScreen controlsScreen;
 
     private void OnEnable()
     {
@@ -29,12 +31,13 @@ public class SettingsScreen : MonoBehaviour
         musicVolumeSlider.SetValueWithoutNotify(settings.musicVolume);
         vfxVolumeSlider.SetValueWithoutNotify(settings.vfxVolume);
         fullscreenToggle.SetIsOnWithoutNotify(settings.fullscreen);
-        RefreshResolutionLabel();
+        RefreshResolutionDropdown();
 
+        keybindingButton.onClick.AddListener(controlsScreen.Open);
         backButton.onClick.AddListener(Back);
         volumeSlider.onValueChanged.AddListener(SetVolume);
         fullscreenToggle.onValueChanged.AddListener(SetFullscreen);
-        resolutionButton.onClick.AddListener(CycleResolution);
+        resolutionDropdown.onValueChanged.AddListener(SetResolution);
         musicVolumeSlider.onValueChanged.AddListener(SetMusicVolume);
         vfxVolumeSlider.onValueChanged.AddListener(SetVfxVolume);
         volumeSlider.Select();
@@ -42,13 +45,19 @@ public class SettingsScreen : MonoBehaviour
 
     private void OnDisable()
     {
+        keybindingButton.onClick.RemoveListener(controlsScreen.Open);
         backButton.onClick.RemoveListener(Back);
         volumeSlider.onValueChanged.RemoveListener(SetVolume);
         fullscreenToggle.onValueChanged.RemoveListener(SetFullscreen);
-        resolutionButton.onClick.RemoveListener(CycleResolution);
+        resolutionDropdown.onValueChanged.RemoveListener(SetResolution);
         musicVolumeSlider.onValueChanged.RemoveListener(SetMusicVolume);
         vfxVolumeSlider.onValueChanged.RemoveListener(SetVfxVolume);
         GameSettingsStore.Save();
+    }
+
+    public void SelectKeybindingButton()
+    {
+        keybindingButton.Select();
     }
 
     public void Back()
@@ -84,19 +93,21 @@ public class SettingsScreen : MonoBehaviour
         }
 
         GameSettingsStore.SetResolution(Resolutions[index]);
-        RefreshResolutionLabel();
+        resolutionDropdown.SetValueWithoutNotify(index);
+        resolutionDropdown.RefreshShownValue();
     }
 
-    private void CycleResolution()
+    private void RefreshResolutionDropdown()
     {
+        List<string> options = new List<string>(Resolutions.Length);
+        foreach (Vector2Int resolution in Resolutions)
+            options.Add($"{resolution.x} x {resolution.y}");
+        resolutionDropdown.ClearOptions();
+        resolutionDropdown.AddOptions(options);
+        resolutionDropdown.interactable = options.Count > 0;
         int index = Array.IndexOf(Resolutions, GameSettingsStore.Current.resolution);
-        SetResolution((index + 1) % Resolutions.Length);
-    }
-
-    private void RefreshResolutionLabel()
-    {
-        GameSettings settings = GameSettingsStore.Current;
-        resolutionLabel.text = $"{settings.resolution.x} x {settings.resolution.y}";
+        resolutionDropdown.SetValueWithoutNotify(Mathf.Max(0, index));
+        resolutionDropdown.RefreshShownValue();
     }
 }
 }
