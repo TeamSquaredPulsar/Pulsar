@@ -41,6 +41,10 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 638676332929021623}
     - target: {fileID: -4160512527206970603, guid: 9141fe4656a2ff0468c29dd7d8bb3239, type: 3}
+      propertyPath: muzzleEffectPrefab
+      value: 
+      objectReference: {fileID: 3746964275708600174, guid: a3146839e3348e04f8cc69417d7e4b6d, type: 3}
+    - target: {fileID: -4160512527206970603, guid: 9141fe4656a2ff0468c29dd7d8bb3239, type: 3}
       propertyPath: firePoints.Array.size
       value: 1
       objectReference: {fileID: 0}
