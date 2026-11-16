@@ -1,0 +1,63 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 51fdedfd7b4d1f844bdbf10b899aa49f, type: 3}
+  m_Name: FmodEvents
+  m_EditorClassIdentifier: Pulsar.Audio::Pulsar.Audio.FmodEvents
+  <ShipHit>k__BackingField:
+    Guid:
+      Data1: 1366578804
+      Data2: 1111099715
+      Data3: 1340059779
+      Data4: -543357253
+    Path: event:/Damage/Hit
+  <ShipReduceState>k__BackingField:
+    Guid:
+      Data1: 1660910153
+      Data2: 1263548361
+      Data3: -413367378
+      Data4: 1675320881
+    Path: event:/Damage/ReduceState
+  <ShipDestroy>k__BackingField:
+    Guid:
+      Data1: -1291833547
+      Data2: 1106631890
+      Data3: 1685536658
+      Data4: 2075120112
+    Path: event:/Damage/Destroy
+  <ShootLight>k__BackingField:
+    Guid:
+      Data1: 1046454040
+      Data2: 1273565976
+      Data3: 1212372111
+      Data4: -220254140
+    Path: event:/Attack/ShootLight
+  <ShootHeavy>k__BackingField:
+    Guid:
+      Data1: -1573229566
+      Data2: 1171786981
+      Data3: -947611748
+      Data4: 1321384672
+    Path: event:/Attack/ShootMedium
+  <ButtonClick>k__BackingField:
+    Guid:
+      Data1: 933815169
+      Data2: 1240766666
+      Data3: -1507514455
+      Data4: 1055560915
+    Path: event:/UI/ButtonClick
+  <Thrust>k__BackingField:
+    Guid:
+      Data1: 0
+      Data2: 0
+      Data3: 0
+      Data4: 0
+    Path: 

@@ -5,7 +5,7 @@ using UnityEngine;
 namespace Pulsar.Audio
 {
 [CreateAssetMenu(fileName = "AudioManager",
-    menuName = "Pulsar/Audio Manager")]
+    menuName = "Pulsar/Audio/Audio Manager")]
 [Serializable]
 public class AudioManager : SoSingleton<AudioManager>
 {
