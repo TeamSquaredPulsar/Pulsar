@@ -49,7 +49,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: d1236c1e551165b48b0864561b6c2156, type: 3}
-  m_Name: 
+  m_Name:
   m_EditorClassIdentifier: Pulsar.Ship::Health
   <MaxHealth>k__BackingField: 10
   currentHealth: 0
@@ -63,7 +63,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: b7840a352fdff8c44954e925029eff57, type: 3}
-  m_Name: 
+  m_Name:
   m_EditorClassIdentifier: Weapons::Pulsar.Weapons.ManualWeapon
   baseColor: {r: 1, g: 1, b: 1, a: 1}
   <IsAttached>k__BackingField: 0
@@ -73,6 +73,9 @@ MonoBehaviour:
   health: {fileID: -4585569959407033398}
   spritesOverride: {fileID: 11400000, guid: e9a9583326b35d642bcf32b4b683fb2b, type: 2}
   spriteRenderer: {fileID: 4676953174740963180}
+  <FireRatePerSecond>k__BackingField: 1
+  <ReloadingSprite>k__BackingField: {fileID: 0}
+  muzzleEffectPrefab: {fileID: 3746964275708600174, guid: a3146839e3348e04f8cc69417d7e4b6d, type: 3}
   damageStateChangeSound:
     Guid:
       Data1: 1660910153
@@ -93,7 +96,6 @@ MonoBehaviour:
   - {fileID: 1113316170954926131}
   - {fileID: 5255507717241388619}
   - {fileID: 4021481277316506663}
-  <FireRatePerSecond>k__BackingField: 1
   <Strategy>k__BackingField: {fileID: 11400000, guid: 10c72afaf46727041b29bfd2ec24cc45, type: 2}
 --- !u!212 &4676953174740963180
 SpriteRenderer:

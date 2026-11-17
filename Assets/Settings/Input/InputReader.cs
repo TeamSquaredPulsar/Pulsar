@@ -41,24 +41,36 @@ public class InputReader : ScriptableObject, IPlayerActions, IInputReader
             CreateNewControls();
         }
 
+        InputBindingStore.Changed += ReloadBindings;
+        ReloadBindings();
         _controls?.Player.Enable();
     }
 
     private void OnDisable()
     {
+        InputBindingStore.Changed -= ReloadBindings;
         _controls?.Player.Disable();
     }
 
     private void OnDestroy()
     {
-        _controls.Dispose();
+        _controls?.Dispose();
         _controls = null;
     }
 
     private void CreateNewControls()
     {
         _controls = new Controls();
+        InputBindingStore.Load(_controls.asset);
         _controls.Player.SetCallbacks(this);
+    }
+
+    private void ReloadBindings()
+    {
+        bool enabled = _controls.Player.enabled;
+        _controls.Player.Disable();
+        InputBindingStore.Load(_controls.asset);
+        if (enabled) _controls.Player.Enable();
     }
 
     public void EnablePlayerActions()

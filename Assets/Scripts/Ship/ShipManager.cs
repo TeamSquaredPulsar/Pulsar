@@ -16,15 +16,6 @@ namespace Pulsar.Ship
 [RequireComponent(typeof(CompositeCollider2D), typeof(Rigidbody2D))]
 public class ShipManager : MonoBehaviour
 {
-    [Button]
-    private void DebugKillShip()
-    {
-        Tile core = ((Tile)Core);
-        core.TakeDamage(core.CurrentHp);
-    }
-
-    public event Action<ShipManager> ShipDestroyedEvent;
-
     [Header("Refs")]
     [SerializeField]
     private CompositeCollider2D compositeCollider;
@@ -34,9 +25,6 @@ public class ShipManager : MonoBehaviour
 
     [SerializeField]
     private ThrusterManager thrusterManager;
-
-    private List<ManualWeapon> _weapons = new(10);
-    private List<IThrustable> _thrusters = new(10);
 
     [Header("Detach Explosion")]
     [SerializeField]
@@ -49,13 +37,13 @@ public class ShipManager : MonoBehaviour
     private float collisionDmgMultiplier = 0.5f;
 
     private ShipGridData _gridData = new();
+    private List<IThrustable> _thrusters = new(10);
+
+    private List<ManualWeapon> _weapons = new(10);
 
     public IShipCore Core => _gridData.Core;
 
     public IReadOnlyDictionary<Vector2Int, Tile> Cells => _gridData.Cells;
-    public bool OwnsTile(Tile tile) => Cells.Values.Contains(tile);
-
-    public event Action ShipGridUpdate;
 
     private void Start()
     {
@@ -71,6 +59,46 @@ public class ShipManager : MonoBehaviour
             tile.DestroyEvent -= HandleTileDestroyed;
         }
     }
+
+    private void OnCollisionEnter2D(Collision2D other)
+    {
+        const int contactPointIndex = 0;
+        if (!_gridData.TryGetClosestTile(
+                other.GetContact(contactPointIndex).point,
+                out Tile tile))
+        {
+            return;
+        }
+
+        if (other.gameObject.TryGetComponent(out ShipManager ship))
+        {
+            float relativeVelocity = other.relativeVelocity.magnitude;
+            float damage = CalculateDmgFromOtherShip(ship, relativeVelocity);
+            tile.TakeDamage(damage);
+        }
+        else if (other.gameObject.TryGetComponent(
+                     out ExplosiveProjectile explosiveProjectile))
+        {
+            Vector2 hitPoint = other.GetContact(contactPointIndex).point;
+            ApplyExplosion(hitPoint, tile, explosiveProjectile);
+        }
+        else if (other.gameObject.TryGetComponent(out Projectile projectile))
+        {
+            tile.TakeDamage(projectile.Damage);
+        }
+    }
+
+    [Button]
+    private void DebugKillShip()
+    {
+        Tile core = ((Tile)Core);
+        core.TakeDamage(core.CurrentHp);
+    }
+
+    public event Action<ShipManager> ShipDestroyedEvent;
+    public bool OwnsTile(Tile tile) => Cells.Values.Contains(tile);
+
+    public event Action ShipGridUpdate;
 
     private void RefreshTiles()
     {
@@ -139,33 +167,6 @@ public class ShipManager : MonoBehaviour
         }
     }
 
-    private void OnCollisionEnter2D(Collision2D other)
-    {
-        const int contactPointIndex = 0;
-        if (!_gridData.TryGetClosestTile(
-                other.GetContact(contactPointIndex).point,
-                out Tile tile))
-        {
-            return;
-        }
-
-        if (other.gameObject.TryGetComponent(out ShipManager ship))
-        {
-            float relativeVelocity = other.relativeVelocity.magnitude;
-            float damage = CalculateDmgFromOtherShip(ship, relativeVelocity);
-            tile.TakeDamage(damage);
-        }
-        else if (other.gameObject.TryGetComponent(out ExplosiveProjectile explosiveProjectile))
-        {
-            Vector2 hitPoint = other.GetContact(contactPointIndex).point;
-            ApplyExplosion(hitPoint, tile, explosiveProjectile);
-        }
-        else if (other.gameObject.TryGetComponent(out Projectile projectile))
-        {
-            tile.TakeDamage(projectile.Damage);
-        }
-    }
-
     private float CalculateDmgFromOtherShip(
         ShipManager otherShip,
         float relativeVelocity)
@@ -210,7 +211,8 @@ public class ShipManager : MonoBehaviour
             float normalizedDistance = distance / radius;
 
             float damage = explosive.Damage *
-                           Mathf.Lerp(1f, explosive.EdgeDamageFraction, normalizedDistance);
+                           Mathf.Lerp(1f, explosive.EdgeDamageFraction,
+                               normalizedDistance);
 
             tile.TakeDamage(damage);
         }
@@ -254,6 +256,7 @@ public class ShipManager : MonoBehaviour
         if (tile is IThrustable thrustable)
         {
             _thrusters.Remove(thrustable);
+            thrusterManager.CalculateThrusters(in _thrusters);
         }
 
         if (tile is ManualWeapon weapon)
@@ -315,26 +318,7 @@ public class ShipManager : MonoBehaviour
             return false;
         }
 
-        foreach (TileRotation direction in Enum.GetValues(
-                     typeof(TileRotation)))
-        {
-            // Get the tile edge facing this direction after rotation
-            int localDir = direction.Subtract(rotation).ToInt();
-            if (!info.connectableEdges[localDir])
-            {
-                continue;
-            }
-
-            // Check the neighbour's opposite edge; both touching edges must connect
-            Vector2Int neighborPos = pos + direction.ToVector2Int();
-            if (_gridData.TryGetTile(neighborPos, out Tile neighbor)
-                && neighbor.EdgeConnectable(direction.Opposite()))
-            {
-                return true;
-            }
-        }
-
-        return false;
+        return CountConnections(pos, info, rotation) > 0;
     }
 
     private int CountConnections(

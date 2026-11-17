@@ -13,21 +13,16 @@ public struct TileRbInfo
     public float Mass;
 }
 
-[RequireComponent(typeof(BoxCollider2D),
+[RequireComponent(typeof(Collider2D),
     typeof(SpriteRenderer),
     typeof(Health)),]
 public abstract class Tile : MonoBehaviour
 {
-    public event Action<Tile> DestroyEvent;
+    private const int k_FloatingSortingOrder = 10;
 
     [Header("Basic Info")]
     [SerializeField]
     private Color baseColor = Color.white;
-
-    public Vector2Int Cell { get; private set; }
-
-    // 0 1 2 3 = 0 90 180 270 (counterclockwise)
-    public TileRotation Rotation { get; private set; }
 
     [field: SerializeField]
     public bool IsAttached { get; private set; }
@@ -36,7 +31,7 @@ public abstract class Tile : MonoBehaviour
     public TileInfo TileInfo { get; private set; }
 
     [SerializeField]
-    protected BoxCollider2D tileCollider;
+    protected Collider2D tileCollider;
 
     [SerializeField]
     private Rigidbody2D rigidBody;
@@ -45,10 +40,6 @@ public abstract class Tile : MonoBehaviour
     [SerializeField]
     protected Health health;
 
-    public float CurrentHp => health.CurrentHealth;
-
-    private TileRbInfo _rbInfo;
-
     [Header("Rendering")]
     [SerializeField]
     private TileSprites spritesOverride;
@@ -56,11 +47,21 @@ public abstract class Tile : MonoBehaviour
     [SerializeField]
     protected SpriteRenderer spriteRenderer;
 
+    private TileRbInfo _rbInfo;
+
+    public Vector2Int Cell { get; private set; }
+
+    // 0 1 2 3 = 0 90 180 270 (counterclockwise)
+    public TileRotation Rotation { get; private set; }
+
+    public float CurrentHp => health.CurrentHealth;
+
     private TileSprites Sprites =>
         spritesOverride ? spritesOverride : TileInfo.sprites;
 
     public Sprite Sprite => spriteRenderer.sprite;
-    private const int k_FloatingSortingOrder = 10;
+
+    public float Mass => _rbInfo.Mass; //It can return mass even when destroyed
 
     [BoxGroup("Audio")]
     [SerializeField]
@@ -94,6 +95,8 @@ public abstract class Tile : MonoBehaviour
         health.HealthStateChanged -= OnHealthStateChanged;
     }
 
+    public event Action<Tile> DestroyEvent;
+
     private void OnDead(Health _)
     {
         DestroyEvent?.Invoke(this);
@@ -120,8 +123,6 @@ public abstract class Tile : MonoBehaviour
 
     protected virtual Sprite GetCurrentSprite(HealthState state) =>
         Sprites ? Sprites.Get(state) : null;
-
-    public float Mass => _rbInfo.Mass; //It can return mass even when destroyed
 
     public void TakeDamage(float damage)
     {

@@ -1,10 +1,11 @@
 using Audune.Utils.Dictionary;
-using FMOD.Studio;
 using Pulsar.Audio;
 using Pulsar.DataClasses;
 using Pulsar.Interfaces;
 using UnityEngine;
+using FMOD.Studio;
 using FMODUnity;
+using NaughtyAttributes;
 
 [RequireComponent(typeof(StudioEventEmitter))]
 public class ThrusterTile : Tile, IThrustable
@@ -24,6 +25,19 @@ public class ThrusterTile : Tile, IThrustable
 
     private StudioEventEmitter _emitter;
 
+    [SerializeField]
+    private ParticleSystem ps;
+
+    protected override void Awake()
+    {
+        base.Awake();
+        ps = GetComponentInChildren<ParticleSystem>();
+        if (ps != null && ps.isPlaying)
+        {
+            ps.Stop();
+        }
+    }
+
     protected override void Start()
     {
         base.Start();
@@ -31,17 +45,28 @@ public class ThrusterTile : Tile, IThrustable
             FmodEvents.Instance.Thrust, gameObject);
     }
 
+    protected override void OnDestroy()
+    {
+        _emitter.Stop();
+        base.OnDestroy();
+    }
+
     public void ActivateThrust(float amount, in Rigidbody2D targetRb)
     {
         StartAudio();
-        spriteRenderer.color = Color.red;
+        if (!ps)
+        {
+            ps.Play();
+        }
     }
 
     public void DeactivateThrust()
     {
         StopAudio();
-
-        spriteRenderer.color = Color.white;
+        if (!ps)
+        {
+            ps.Stop();
+        }
     }
 
     public void ActivateRotation(float amount, in Rigidbody2D targetRb)
@@ -50,6 +75,15 @@ public class ThrusterTile : Tile, IThrustable
 
     public void DeactivateRotation()
     {
+    }
+
+    // deactivate effect on detachment
+    public override void Detatch(
+        Vector2? velocity = null,
+        float angularVelocity = 0f)
+    {
+        DeactivateThrust();
+        base.Detatch(velocity, angularVelocity);
     }
 
     private void StartAudio()
@@ -72,11 +106,5 @@ public class ThrusterTile : Tile, IThrustable
             _emitter.Stop();
             // _emitter.EventInstance.stop(FMOD.Studio.STOP_MODE.ALLOWFADEOUT);
         }
-    }
-
-    protected override void OnDestroy()
-    {
-        _emitter.Stop();
-        base.OnDestroy();
     }
 }

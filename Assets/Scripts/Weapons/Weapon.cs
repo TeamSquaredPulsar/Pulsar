@@ -1,9 +1,11 @@
 using System.Collections;
+using System.Collections.Generic;
 using NaughtyAttributes;
 using Pulsar.Hazards;
 using Pulsar.Interactions;
 using Pulsar.Weapons.Strategies;
 using UnityEngine;
+using UnityEngine.Serialization;
 
 namespace Pulsar.Weapons
 {
@@ -17,9 +19,64 @@ namespace Pulsar.Weapons
 /// </summary>
 public abstract class Weapon : Tile, IProjectileSpawner, IWeapon
 {
+    [field: SerializeField]
+    public float FireRatePerSecond { get; protected set; } = 0.5f;
+
+    [field: SerializeField]
+    public Sprite ReloadingSprite { get; private set; }
+
+    [FormerlySerializedAs("ps")]
+    [SerializeField]
+    private ParticleSystem muzzleEffectPrefab;
+
+    private Dictionary<Transform, ParticleSystem> _fireEffectMap = new();
+
+    private Coroutine _fireTimerRoutine;
+    private Projectile _projectile;
+
+    protected override void Start()
+    {
+        base.Start();
+        _projectile = ProjectilePrefab.gameObject.GetComponent<Projectile>();
+
+        // passing the muzzle particle effect as a child to each fire point
+        if (muzzleEffectPrefab == null)
+        {
+            return;
+        }
+
+        foreach (Transform firePoint in FirePoints)
+        {
+            ParticleSystem effect = Instantiate(muzzleEffectPrefab, firePoint);
+            _fireEffectMap[firePoint] = effect;
+        }
+    }
+
     [Header("References")]
     [field: SerializeField]
     public GameObject ProjectilePrefab { get; private set; }
+
+    Collider2D IProjectileSpawner.ParentCollider => ParentCollider;
+
+    public Collider2D Coll2D => tileCollider;
+
+    public GameObject SpawnProjectile(Transform spawnPoint)
+    {
+        GameObject projectile
+            = _projectile.SpawnProjectile(spawnPoint, ParentCollider);
+        Physics2D.IgnoreCollision(projectile.GetComponent<Collider2D>(),
+            Coll2D);
+
+        bool effectFound
+            = _fireEffectMap.TryGetValue(spawnPoint, out ParticleSystem effect);
+
+        if (effectFound)
+        {
+            effect.Play();
+        }
+
+        return projectile;
+    }
 
     [field: SerializeField]
     public Collider2D ParentCollider { get; private set; }
@@ -29,37 +86,10 @@ public abstract class Weapon : Tile, IProjectileSpawner, IWeapon
     public Transform[] FirePoints { get; private set; }
 
     [field: SerializeField]
-    public float FireRatePerSecond { get; protected set; } = 0.5f;
-
-    [field: SerializeField]
     [field: Expandable]
     public WeaponStrategy Strategy { get; private set; }
 
-    [field: SerializeField]
-    public Sprite ReloadingSprite { get; private set; }
-
-    Collider2D IProjectileSpawner.ParentCollider => ParentCollider;
-
-    private Coroutine _fireTimerRoutine;
-    private Projectile _projectile;
-
-    public Collider2D Coll2D => tileCollider;
     public bool CanFire => _fireTimerRoutine == null;
-
-    protected override void Start()
-    {
-        base.Start();
-        _projectile = ProjectilePrefab.gameObject.GetComponent<Projectile>();
-    }
-
-    public GameObject SpawnProjectile(Transform spawnPoint)
-    {
-        GameObject projectile
-            = _projectile.SpawnProjectile(spawnPoint, ParentCollider);
-        Physics2D.IgnoreCollision(projectile.GetComponent<Collider2D>(),
-            Coll2D);
-        return projectile;
-    }
 
     public void Fire()
     {
