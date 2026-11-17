@@ -1,5 +1,147 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
+--- !u!1 &622711021975160826
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 2962289106014211685}
+  - component: {fileID: 3826569573896130254}
+  m_Layer: 0
+  m_Name: Beam
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &2962289106014211685
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 622711021975160826}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 8333102018394350530}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!120 &3826569573896130254
+LineRenderer:
+  serializedVersion: 3
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 622711021975160826}
+  m_Enabled: 1
+  m_CastShadows: 1
+  m_ReceiveShadows: 1
+  m_DynamicOccludee: 1
+  m_StaticShadowCaster: 0
+  m_MotionVectors: 0
+  m_LightProbeUsage: 0
+  m_ReflectionProbeUsage: 0
+  m_RayTracingMode: 0
+  m_RayTraceProcedural: 0
+  m_RayTracingAccelStructBuildFlagsOverride: 0
+  m_RayTracingAccelStructBuildFlags: 1
+  m_SmallMeshCulling: 1
+  m_ForceMeshLod: -1
+  m_MeshLodSelectionBias: 0
+  m_RenderingLayerMask: 1
+  m_RendererPriority: 0
+  m_Materials:
+  - {fileID: 10754, guid: 0000000000000000f000000000000000, type: 0}
+  m_StaticBatchInfo:
+    firstSubMesh: 0
+    subMeshCount: 0
+  m_StaticBatchRoot: {fileID: 0}
+  m_ProbeAnchor: {fileID: 0}
+  m_LightProbeVolumeOverride: {fileID: 0}
+  m_ScaleInLightmap: 1
+  m_ReceiveGI: 1
+  m_PreserveUVs: 0
+  m_IgnoreNormalsForChartDetection: 0
+  m_ImportantGI: 0
+  m_StitchLightmapSeams: 1
+  m_SelectedEditorRenderState: 3
+  m_MinimumChartSize: 4
+  m_AutoUVMaxDistance: 0.5
+  m_AutoUVMaxAngle: 89
+  m_LightmapParameters: {fileID: 0}
+  m_GlobalIlluminationMeshLod: 0
+  m_SortingLayerID: -1273028609
+  m_SortingLayer: 5
+  m_SortingOrder: 20
+  m_MaskInteraction: 0
+  m_Positions:
+  - {x: 0, y: 0, z: 0}
+  - {x: 0, y: 0, z: 1}
+  m_Parameters:
+    serializedVersion: 3
+    widthMultiplier: 0.06
+    widthCurve:
+      serializedVersion: 2
+      m_Curve:
+      - serializedVersion: 3
+        time: 0
+        value: 1
+        inSlope: 0
+        outSlope: 0
+        tangentMode: 0
+        weightedMode: 0
+        inWeight: 0.33333334
+        outWeight: 0.33333334
+      m_PreInfinity: 2
+      m_PostInfinity: 2
+      m_RotationOrder: 4
+    colorGradient:
+      serializedVersion: 2
+      key0: {r: 1, g: 1, b: 1, a: 1}
+      key1: {r: 1, g: 1, b: 1, a: 1}
+      key2: {r: 0, g: 0, b: 0, a: 0}
+      key3: {r: 0, g: 0, b: 0, a: 0}
+      key4: {r: 0, g: 0, b: 0, a: 0}
+      key5: {r: 0, g: 0, b: 0, a: 0}
+      key6: {r: 0, g: 0, b: 0, a: 0}
+      key7: {r: 0, g: 0, b: 0, a: 0}
+      ctime0: 0
+      ctime1: 65535
+      ctime2: 0
+      ctime3: 0
+      ctime4: 0
+      ctime5: 0
+      ctime6: 0
+      ctime7: 0
+      atime0: 0
+      atime1: 65535
+      atime2: 0
+      atime3: 0
+      atime4: 0
+      atime5: 0
+      atime6: 0
+      atime7: 0
+      m_Mode: 0
+      m_ColorSpace: -1
+      m_NumColorKeys: 2
+      m_NumAlphaKeys: 2
+    numCornerVertices: 0
+    numCapVertices: 0
+    alignment: 0
+    textureMode: 0
+    textureScale: {x: 1, y: 1}
+    shadowBias: 0.5
+    generateLightingData: 0
+  m_UseWorldSpace: 1
+  m_Loop: 0
+  m_ApplyActiveColorSpace: 1
 --- !u!1 &4274753123073224683
 GameObject:
   m_ObjectHideFlags: 0
@@ -106,6 +248,7 @@ GameObject:
   - component: {fileID: 7540636520406933749}
   - component: {fileID: 2261048118168935301}
   - component: {fileID: 6101688074798165259}
+  - component: {fileID: -3269957206215241566}
   m_Layer: 0
   m_Name: PlayerCore
   m_TagString: Untagged
@@ -128,6 +271,7 @@ Transform:
   m_Children:
   - {fileID: 4131069597832306565}
   - {fileID: 433469968832905233}
+  - {fileID: 2962289106014211685}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &4009485083793066549
@@ -170,14 +314,15 @@ MonoBehaviour:
   - {fileID: 4593652288710760860}
   <FireRatePerSecond>k__BackingField: 1.5
   <Strategy>k__BackingField: {fileID: 11400000, guid: 67d68c3e0a11e41479e9131cdc4b126a, type: 2}
+  <ReloadingSprite>k__BackingField: {fileID: 0}
   targetReticle: {fileID: 433469968832905233}
   targetRadius: {fileID: 6101688074798165259}
   mountingPoint: {fileID: 4131069597832306565}
   rotSpeed: 40
-  range: 15
+  range: 6
   angleWeight: 0.05
   currentTargetBias: 1.5
-  turretSprites: {fileID: 11400000, guid: 839d2178e26ad654c910ed7f4c86801b, type: 2}
+  turretSprites: {fileID: 11400000, guid: 5508e9fb22a4fbd4c8270d7233ab46b8, type: 2}
   activeTurretSprite: {fileID: 8082630242208235203}
   <DirectionalThrust>k__BackingField:
     _entries:
@@ -358,6 +503,31 @@ CircleCollider2D:
   m_CompositeOrder: 0
   m_Offset: {x: 0, y: 0}
   m_Radius: 0.5
+--- !u!114 &-3269957206215241566
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5342938517668441560}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 271f5d30700241d792044a01b9033576, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Pulsar.Weapons::Pulsar.Weapons.LazerBeam
+  range: 6
+  damagePerTick: 0.1
+  tickInterval: 0.1
+  releaseDelay: 0.1
+  timeToOverheat: 2
+  timeToCool: 1
+  overheatLockTime: 2
+  coolColor: {r: 0.09203625, g: 1, b: 0, a: 1}
+  hotColor: {r: 1, g: 0.61126673, b: 0, a: 1}
+  beam: {fileID: 3826569573896130254}
+  segments: 8
+  jitter: 0.15
+  crackleInterval: 0.05
 --- !u!1 &8882854899038029542
 GameObject:
   m_ObjectHideFlags: 0
@@ -442,6 +612,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: BasicGunPintle
       objectReference: {fileID: 0}
+    - target: {fileID: 4676953174740963180, guid: f88a5cea0e5b8214e8ab1f2a4ecc1588, type: 3}
+      propertyPath: m_Sprite
+      value: 
+      objectReference: {fileID: 539324758723851434, guid: e5c23392b8532a0408ea78a248bb3b43, type: 3}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []

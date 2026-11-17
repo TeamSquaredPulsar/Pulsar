@@ -976,7 +976,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 1147742596823905516, guid: 23b839cb7fca3b247ba1200fcaa33286, type: 3}
       propertyPath: shipManager
-      value: 
+      value:
       objectReference: {fileID: 0}
     - target: {fileID: 1960359507197604397, guid: 23b839cb7fca3b247ba1200fcaa33286, type: 3}
       propertyPath: OrthoSizeRange.x
@@ -1028,7 +1028,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4302849032076014864, guid: 23b839cb7fca3b247ba1200fcaa33286, type: 3}
       propertyPath: Targets.Array.data[1].Object
-      value: 
+      value:
       objectReference: {fileID: 1800055687}
     - target: {fileID: 4302849032076014864, guid: 23b839cb7fca3b247ba1200fcaa33286, type: 3}
       propertyPath: Targets.Array.data[1].Radius

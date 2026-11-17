@@ -3,12 +3,10 @@ using UnityEngine;
 namespace Pulsar.Hazards
 {
 /// <summary>
-/// Represents a Projectile
-///
-/// Reference: https://www.youtube.com/watch?v=2mThTAhD16M
-///
-/// @author Alfredo Luzardo
-/// @version 1.1
+///     Represents a Projectile
+///     Reference: https://www.youtube.com/watch?v=2mThTAhD16M
+///     @author Alfredo Luzardo
+///     @version 1.1
 /// </summary>
 [RequireComponent(typeof(Rigidbody2D))]
 public class ExplosiveProjectile : Projectile
