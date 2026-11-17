@@ -1,4 +1,7 @@
 using UnityEngine;
+using FMODUnity;
+using NaughtyAttributes;
+using Pulsar.Audio;
 
 namespace Pulsar.Hazards
 {
@@ -27,7 +30,7 @@ public class Projectile : MonoBehaviour
     private float lifeTime = 4;
 
     [SerializeField]
-    private GameObject hitEffectPrefab;
+    private ParticleSystem hitEffectPrefab;
 
     [SerializeField]
     private Collider2D coll2D;
@@ -38,7 +41,7 @@ public class Projectile : MonoBehaviour
     /// <summary>
     /// Start method.
     /// </summary>
-    private void Start()
+    protected virtual void Start()
     {
         Destroy(gameObject, lifeTime);
     }
@@ -56,12 +59,20 @@ public class Projectile : MonoBehaviour
             return;
         }
 
-        if (hitEffectPrefab != null)
+        if (hitEffectPrefab)
         {
-            Debug.Log("Hit Effect");
+            hitEffectPrefab.Play();
         }
+        PlayAudioEffect();
 
         Destroy(gameObject);
+    }
+
+    protected virtual void PlayAudioEffect()
+    {
+        AudioManager.Instance.PlayOneShot(
+            FmodEvents.Instance.ShipHit,
+            transform.position);
     }
 
     private void Initialize(Collider2D parentCollider)

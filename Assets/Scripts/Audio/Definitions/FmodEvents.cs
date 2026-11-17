@@ -28,6 +28,14 @@ public class FmodEvents : SoSingleton<FmodEvents>
     [field: SerializeField]
     public EventReference ShootHeavy { get; private set; }
 
+    [field: BoxGroup("Rocket")]
+    [field: SerializeField]
+    public EventReference RocketExplode { get; private set; }
+
+    [field: BoxGroup("Rocket")]
+    [field: SerializeField]
+    public EventReference RocketMove { get; private set; }
+
     [field: BoxGroup("UI")]
     [field: SerializeField]
     public EventReference ButtonClick { get; private set; }

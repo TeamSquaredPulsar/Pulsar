@@ -2,7 +2,7 @@
 <objects serializationModel="Studio.02.02.00">
 	<object class="AudioFile" id="{fefae61e-e11c-4734-b783-c3ab04389bfe}">
 		<property name="assetPath">
-			<value>Hologram Menu Open-2.wav</value>
+			<value>SFX/Shapeforms/Hologram Menu Open-2.wav</value>
 		</property>
 		<property name="frequencyInKHz">
 			<value>44.0999985</value>

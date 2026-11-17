@@ -4,6 +4,7 @@ using UnityEngine;
 using UnityEngine.InputSystem;
 using static Controls;
 
+namespace Pulsar.Settings {
 public interface IInputReader
 {
     void EnablePlayerActions();
@@ -80,7 +81,7 @@ public class InputReader : ScriptableObject, IPlayerActions, IInputReader
 
     public void OnMove(InputAction.CallbackContext context)
     {
-        if (context.performed)
+        if (context.started)
         {
             return;
         }
@@ -148,4 +149,5 @@ public class InputReader : ScriptableObject, IPlayerActions, IInputReader
             RotateSelectedTileEvent?.Invoke(-1);
         }
     }
+}
 }

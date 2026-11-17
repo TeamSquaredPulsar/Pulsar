@@ -92,6 +92,7 @@ public class ThrusterTile : Tile, IThrustable
         if (state == PLAYBACK_STATE.STOPPED)
         {
             _emitter.Play();
+            // [CB] Leaving this commented out code for reference.
             // _emitter.EventInstance.start();
         }
     }

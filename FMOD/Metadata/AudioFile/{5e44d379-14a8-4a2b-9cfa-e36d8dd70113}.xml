@@ -1,17 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <objects serializationModel="Studio.02.02.00">
-	<object class="AudioFile" id="{a5faf7ed-cb8a-4133-aa43-d45f0672488c}">
+	<object class="AudioFile" id="{5e44d379-14a8-4a2b-9cfa-e36d8dd70113}">
 		<property name="assetPath">
-			<value>SFX/Shapeforms/Old Terminal Alarm Loop.wav</value>
+			<value>Thruster or Wind Turbulence Loop_07.wav</value>
 		</property>
 		<property name="frequencyInKHz">
-			<value>44.0999985</value>
+			<value>48</value>
 		</property>
 		<property name="channelCount">
 			<value>2</value>
 		</property>
 		<property name="length">
-			<value>1.7407029478458049</value>
+			<value>10.988354166666667</value>
 		</property>
 		<relationship name="masterAssetFolder">
 			<destination>{8909ad75-74cc-4c66-9508-a79f24205421}</destination>

@@ -112,8 +112,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ThrusterManager
   rb: {fileID: 8716755017154123671}
-  rotationalThrust: 2
-  rotationScaler: 2
 --- !u!50 &8716755017154123671
 Rigidbody2D:
   serializedVersion: 5

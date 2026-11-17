@@ -2,6 +2,7 @@ using System.Collections;
 using Pulsar.DataClasses;
 using Pulsar.Utilities;
 using Pulsar.Player;
+using Pulsar.Settings;
 using UnityEngine;
 
 namespace Pulsar.UI

@@ -47,6 +47,20 @@ MonoBehaviour:
       Data3: -947611748
       Data4: 1321384672
     Path: event:/Attack/ShootMedium
+  <RocketExplode>k__BackingField:
+    Guid:
+      Data1: -1955135474
+      Data2: 1311902772
+      Data3: -364417408
+      Data4: 1111309416
+    Path: event:/Rocket/RocketExplode
+  <RocketMove>k__BackingField:
+    Guid:
+      Data1: -1248823132
+      Data2: 1141062011
+      Data3: 2070106497
+      Data4: 422962926
+    Path: event:/Rocket/RocketMove
   <ButtonClick>k__BackingField:
     Guid:
       Data1: 933815169

@@ -63,14 +63,6 @@ public abstract class Tile : MonoBehaviour
 
     public float Mass => _rbInfo.Mass; //It can return mass even when destroyed
 
-    [BoxGroup("Audio")]
-    [SerializeField]
-    protected EventReference damageStateChangeSound;
-
-    [BoxGroup("Audio")]
-    [SerializeField]
-    protected EventReference onHitSound;
-
     protected virtual void Awake()
     {
         //Initializing in awake to stop the chance of it being destroyed before caches

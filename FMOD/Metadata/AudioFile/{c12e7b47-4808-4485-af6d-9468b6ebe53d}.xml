@@ -2,7 +2,7 @@
 <objects serializationModel="Studio.02.02.00">
 	<object class="AudioFile" id="{c12e7b47-4808-4485-af6d-9468b6ebe53d}">
 		<property name="assetPath">
-			<value>Holographic Tap Interaction.wav</value>
+			<value>SFX/Shapeforms/Holographic Tap Interaction.wav</value>
 		</property>
 		<property name="frequencyInKHz">
 			<value>44.0999985</value>

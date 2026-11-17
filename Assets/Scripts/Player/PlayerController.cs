@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using Pulsar.DataClasses;
+using Pulsar.Settings;
 using Pulsar.Ship;
 using Pulsar.Utilities;
 using UnityEngine;
@@ -62,7 +63,7 @@ public class PlayerController : MonoBehaviour
 
     public bool TryGetTile(Vector2Int index, out Tile tile) =>
         ship.Cells.TryGetValue(index, out tile);
-    
+
     public Bounds GetShipBounds() => ship.GetLocalBounds();
 
     public bool OwnsTile(Tile tile) => ship.OwnsTile(tile);
@@ -81,7 +82,7 @@ public class PlayerController : MonoBehaviour
         TileInfo tileInfo,
         Vector3 worldPosition) =>
         ship.FindBestAttachment(tileInfo, worldPosition);
-    
+
     private void OnShipDestroyed(ShipManager obj)
     {
         PlayerLossEvent?.Invoke(this);

@@ -115,7 +115,7 @@ MonoBehaviour:
   coll2D: {fileID: -6108854548401063352}
   rb: {fileID: 7861646081704106804}
   <ExplosionRadius>k__BackingField: 2
-  ps: {fileID: 0}
+  ps: {fileID: 3520972651243610508, guid: 2bdd88d3449a85c40a34a282b5d022b8, type: 3}
   <EdgeDamageFraction>k__BackingField: 0.3
   acceleration: 4
   maxSpeed: 18
