@@ -6,6 +6,7 @@ namespace Pulsar.UI
 public class MainMenu : MonoBehaviour
 {
     [SerializeField] private Button playButton;
+    [SerializeField] private Button tutorialButton;
     [SerializeField] private Button settingsButton;
     [SerializeField] private Button quitButton;
     [SerializeField] private GameObject menuPanel;
@@ -15,6 +16,7 @@ public class MainMenu : MonoBehaviour
     private void OnEnable()
     {
         playButton.onClick.AddListener(Play);
+        tutorialButton.onClick.AddListener(Tutorial);
         settingsButton.onClick.AddListener(OpenSettings);
         quitButton.onClick.AddListener(Quit);
     }
@@ -29,6 +31,7 @@ public class MainMenu : MonoBehaviour
     private void OnDisable()
     {
         playButton.onClick.RemoveListener(Play);
+        tutorialButton.onClick.RemoveListener(Tutorial);
         settingsButton.onClick.RemoveListener(OpenSettings);
         quitButton.onClick.RemoveListener(Quit);
     }
@@ -42,6 +45,13 @@ public class MainMenu : MonoBehaviour
 
         Time.timeScale = 1f;
         SceneTransition.LoadScene(gameplayScene);
+    }
+
+    public void Tutorial()
+    {
+        if (SceneTransition.IsTransitioning) return;
+        Time.timeScale = 1f;
+        SceneTransition.LoadScene("Tutorial");
     }
 
     public void OpenSettings()

@@ -99,6 +99,7 @@ public class ShipManager : MonoBehaviour
     public bool OwnsTile(Tile tile) => Cells.Values.Contains(tile);
 
     public event Action ShipGridUpdate;
+    public event Action OnDetachTile;
 
     private void RefreshTiles()
     {
@@ -480,6 +481,7 @@ public class ShipManager : MonoBehaviour
 
         thrusterManager.CalculateThrusters(in _thrusters);
         ShipGridUpdate?.Invoke();
+        OnDetachTile?.Invoke();
     }
 
     #endregion

@@ -22,8 +22,12 @@ public class UIManager : MonoBehaviour
 
     [SerializeField]
     private bool useMainMenuScene;
-    
+
+    [SerializeField]
+    private TMP_Text finalScoreText;
+
     private TMP_Text _scoreText;
+    private int _score;
 
     private IEnumerator Start()
     {
@@ -47,6 +51,7 @@ public class UIManager : MonoBehaviour
 
     private void UpdateScore(int obj)
     {
+        _score = obj;
         _scoreText.text = "Score: " + obj;
     }
 
@@ -78,6 +83,7 @@ public class UIManager : MonoBehaviour
         GameStateChangeEvent?.Invoke(GameState.GameOver);
         mainMenu.SetActive(false);
         gameplayUI.SetActive(false);
+        if (finalScoreText) finalScoreText.text = "Final Score: " + _score;
         gameOverMenu.SetActive(true);
     }
 }
