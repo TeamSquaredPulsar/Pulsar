@@ -32,7 +32,7 @@ public class ThrusterTile : Tile, IThrustable
     {
         base.Awake();
         ps = GetComponentInChildren<ParticleSystem>();
-        if (ps != null && ps.isPlaying)
+        if (ps && ps.isPlaying)
         {
             ps.Stop();
         }
@@ -54,7 +54,7 @@ public class ThrusterTile : Tile, IThrustable
     public void ActivateThrust(float amount, in Rigidbody2D targetRb)
     {
         StartAudio();
-        if (!ps)
+        if (ps)
         {
             ps.Play();
         }
@@ -63,7 +63,7 @@ public class ThrusterTile : Tile, IThrustable
     public void DeactivateThrust()
     {
         StopAudio();
-        if (!ps)
+        if (ps)
         {
             ps.Stop();
         }
@@ -99,7 +99,6 @@ public class ThrusterTile : Tile, IThrustable
     private void StopAudio()
     {
         _emitter.EventInstance.getPlaybackState(out PLAYBACK_STATE state);
-        Debug.Log(state);
         if (state is not (PLAYBACK_STATE.STOPPING
             or PLAYBACK_STATE.STOPPED))
         {
