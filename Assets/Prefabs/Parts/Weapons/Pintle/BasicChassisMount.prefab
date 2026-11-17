@@ -164,10 +164,12 @@ MonoBehaviour:
   health: {fileID: 2303072813145309213}
   spritesOverride: {fileID: 11400000, guid: 98efc5c07251a3f43a4c2f648d1cb3f7, type: 2}
   spriteRenderer: {fileID: 497275641067805184}
+  <FireRatePerSecond>k__BackingField: 1.5
+  <ReloadingSprite>k__BackingField: {fileID: 0}
+  muzzleEffectPrefab: {fileID: 3746964275708600174, guid: a3146839e3348e04f8cc69417d7e4b6d, type: 3}
   <ProjectilePrefab>k__BackingField: {fileID: 1682859016921356063, guid: a133161848d51234b97f8554a243a1ab, type: 3}
   <ParentCollider>k__BackingField: {fileID: 0}
   <FirePoints>k__BackingField: []
-  <FireRatePerSecond>k__BackingField: 1.5
   <Strategy>k__BackingField: {fileID: 11400000, guid: 67d68c3e0a11e41479e9131cdc4b126a, type: 2}
   targetReticle: {fileID: 3694190862674088022}
   targetRadius: {fileID: 4066856357463732218}

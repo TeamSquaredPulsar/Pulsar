@@ -5,8 +5,21 @@ using UnityEngine;
 
 public class ThrusterTile : Tile, IThrustable
 {
-    [field:SerializeField]
-    [field:SerializableDictionaryOptions(keyHeader = "Direction",
+    [SerializeField]
+    private ParticleSystem ps;
+
+    protected override void Awake()
+    {
+        base.Awake();
+        ps = GetComponentInChildren<ParticleSystem>();
+        if (ps != null && ps.isPlaying)
+        {
+            ps.Stop();
+        }
+    }
+
+    [field: SerializeField]
+    [field: SerializableDictionaryOptions(keyHeader = "Direction",
         valueHeader = "Force")]
     public SerializableDictionary<TileRotation, float> DirectionalThrust
     {
@@ -20,12 +33,18 @@ public class ThrusterTile : Tile, IThrustable
 
     public void ActivateThrust(float amount, in Rigidbody2D targetRb)
     {
-        spriteRenderer.color = Color.red;
+        if (ps != null)
+        {
+            ps.Play();
+        }
     }
 
     public void DeactivateThrust()
     {
-        spriteRenderer.color = Color.white;
+        if (ps != null)
+        {
+            ps.Stop();
+        }
     }
 
     public void ActivateRotation(float amount, in Rigidbody2D targetRb)
@@ -34,5 +53,14 @@ public class ThrusterTile : Tile, IThrustable
 
     public void DeactivateRotation()
     {
+    }
+
+    // deactivate effect on detachment
+    public override void Detatch(
+        Vector2? velocity = null,
+        float angularVelocity = 0f)
+    {
+        DeactivateThrust();
+        base.Detatch(velocity, angularVelocity);
     }
 }
