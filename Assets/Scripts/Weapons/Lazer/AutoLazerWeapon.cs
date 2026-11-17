@@ -8,6 +8,8 @@ public class AutoLazerWeapon : AutoWeapon
 {
     private LazerBeam _beam;
 
+    protected override bool SnapToTarget => true;
+
     protected override void Awake()
     {
         base.Awake();

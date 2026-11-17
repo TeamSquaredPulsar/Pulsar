@@ -47,6 +47,8 @@ public class AutoWeapon : Weapon
     private Coroutine _searchCoroutine;
     private WaitForFixedUpdate _searchWait;
 
+    protected virtual bool SnapToTarget => false;
+
     protected override void Awake()
     {
         base.Awake();
@@ -156,9 +158,10 @@ public class AutoWeapon : Weapon
         Quaternion targetRotation = Quaternion.Euler(
             new Vector3(0f, 0f, angle - 90f));
 
-        mountingPoint.rotation = Quaternion.RotateTowards(
-            mountingPoint.rotation, targetRotation, rotSpeed
-                                                    * Time.deltaTime);
+        mountingPoint.rotation = SnapToTarget
+            ? targetRotation
+            : Quaternion.RotateTowards(
+                mountingPoint.rotation, targetRotation, rotSpeed * Time.deltaTime);
 
         Fire();
     }

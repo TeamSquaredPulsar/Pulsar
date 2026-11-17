@@ -522,8 +522,8 @@ MonoBehaviour:
   timeToOverheat: 2
   timeToCool: 1
   overheatLockTime: 2
-  coolColor: {r: 0, g: 1, b: 1, a: 1}
-  hotColor: {r: 1, g: 0, b: 0, a: 1}
+  coolColor: {r: 0.09203625, g: 1, b: 0, a: 1}
+  hotColor: {r: 1, g: 0.61126673, b: 0, a: 1}
   beam: {fileID: 3826569573896130254}
 --- !u!1 &8882854899038029542
 GameObject:
