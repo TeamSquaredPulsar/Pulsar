@@ -30,26 +30,13 @@ Transform:
   m_GameObject: {fileID: 9113379072927920375}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: -0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
-  m_Children: []
+  m_Children:
+  - {fileID: 5131822439533759200}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &8159396282816949206
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 9113379072927920375}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d1236c1e551165b48b0864561b6c2156, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Pulsar.Ship::Health
-  <MaxHealth>k__BackingField: 10
-  currentHealth: 10
 --- !u!114 &31458138794939124
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -65,16 +52,32 @@ MonoBehaviour:
   baseColor: {r: 1, g: 1, b: 1, a: 1}
   <IsAttached>k__BackingField: 0
   <TileInfo>k__BackingField: {fileID: 11400000, guid: efe30156b410eb149aa1cabe593e8f6d, type: 2}
-  tileCollider: {fileID: 6303449030629206126}
-  rigidBody: {fileID: 8993274152522921009}
-  health: {fileID: 8159396282816949206}
   spritesOverride: {fileID: 11400000, guid: 89f57687458a6104ab76ed377118085f, type: 2}
   spriteRenderer: {fileID: 8688311974718774552}
   <DirectionalThrust>k__BackingField:
     _entries:
     - key: 0
       value: 6
-  <RotationForce>k__BackingField: 2
+  <RotationForce>k__BackingField: 5
+  tileCollider: {fileID: 6303449030629206126}
+  rigidBody: {fileID: 8993274152522921009}
+  health: {fileID: 8159396282816949206}
+  _spriteRenderer: {fileID: 0}
+  ps: {fileID: 3520972651243610508, guid: 66687855b75631149b24e8649fa061df, type: 3}
+--- !u!114 &8159396282816949206
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 9113379072927920375}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d1236c1e551165b48b0864561b6c2156, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Pulsar.Ship::Health
+  <MaxHealth>k__BackingField: 10
+  currentHealth: 10
 --- !u!212 &8688311974718774552
 SpriteRenderer:
   serializedVersion: 2
@@ -124,7 +127,7 @@ SpriteRenderer:
   m_SortingLayer: 4
   m_SortingOrder: 0
   m_MaskInteraction: 0
-  m_Sprite: {fileID: 21300000, guid: 6b8d1d3a6ff32604a8795b0b012d615a, type: 3}
+  m_Sprite: {fileID: 557217962434929949, guid: d52d1ff1a42719749ac6897f40767c2d, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -207,3 +210,69 @@ Rigidbody2D:
   m_SleepingMode: 1
   m_CollisionDetection: 0
   m_Constraints: 0
+--- !u!1001 &4137569641175057683
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 1486952502805023581}
+    m_Modifications:
+    - target: {fileID: 1703721726743178020, guid: 66687855b75631149b24e8649fa061df, type: 3}
+      propertyPath: m_Name
+      value: ThrusterFlames
+      objectReference: {fileID: 0}
+    - target: {fileID: 3502581652326773443, guid: 66687855b75631149b24e8649fa061df, type: 3}
+      propertyPath: m_SortingOrder
+      value: -1
+      objectReference: {fileID: 0}
+    - target: {fileID: 9105289964138516467, guid: 66687855b75631149b24e8649fa061df, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 9105289964138516467, guid: 66687855b75631149b24e8649fa061df, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0.7
+      objectReference: {fileID: 0}
+    - target: {fileID: 9105289964138516467, guid: 66687855b75631149b24e8649fa061df, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 9105289964138516467, guid: 66687855b75631149b24e8649fa061df, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 0.7071068
+      objectReference: {fileID: 0}
+    - target: {fileID: 9105289964138516467, guid: 66687855b75631149b24e8649fa061df, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: -0.7071068
+      objectReference: {fileID: 0}
+    - target: {fileID: 9105289964138516467, guid: 66687855b75631149b24e8649fa061df, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 9105289964138516467, guid: 66687855b75631149b24e8649fa061df, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 9105289964138516467, guid: 66687855b75631149b24e8649fa061df, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: -90
+      objectReference: {fileID: 0}
+    - target: {fileID: 9105289964138516467, guid: 66687855b75631149b24e8649fa061df, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 9105289964138516467, guid: 66687855b75631149b24e8649fa061df, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: 66687855b75631149b24e8649fa061df, type: 3}
+--- !u!4 &5131822439533759200 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 9105289964138516467, guid: 66687855b75631149b24e8649fa061df, type: 3}
+  m_PrefabInstance: {fileID: 4137569641175057683}
+  m_PrefabAsset: {fileID: 0}

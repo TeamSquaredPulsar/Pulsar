@@ -3,12 +3,10 @@ using UnityEngine;
 namespace Pulsar.Hazards
 {
 /// <summary>
-/// Represents a Projectile
-///
-/// Reference: https://www.youtube.com/watch?v=2mThTAhD16M
-///
-/// @author Alfredo Luzardo
-/// @version 1.1
+///     Represents a Projectile
+///     Reference: https://www.youtube.com/watch?v=2mThTAhD16M
+///     @author Alfredo Luzardo
+///     @version 1.1
 /// </summary>
 [RequireComponent(typeof(Rigidbody2D))]
 public class ExplosiveProjectile : Projectile
@@ -17,6 +15,9 @@ public class ExplosiveProjectile : Projectile
     [field: Min(0f)]
     [field: Tooltip("Tiles within this distance of the hit point take damage.")]
     public float ExplosionRadius { get; private set; } = 1.5f;
+
+    [SerializeField]
+    private ParticleSystem ps;
 
     [field: SerializeField]
     [field: Range(0f, 1f)]
@@ -34,6 +35,11 @@ public class ExplosiveProjectile : Projectile
     [Min(0f)]
     private float maxSpeed = 10f;
 
+    private void Awake()
+    {
+        ps = GetComponentInChildren<ParticleSystem>();
+    }
+
     private void FixedUpdate()
     {
         Vector2 forward = transform.up;
@@ -48,8 +54,12 @@ public class ExplosiveProjectile : Projectile
         float boost = Mathf.Min(acceleration * Time.fixedDeltaTime,
             maxSpeed - forwardSpeed);
 
+        if (ps != null)
+        {
+            ps.Play();
+        }
+
         rb.linearVelocity += forward * boost;
     }
-
 }
 }
