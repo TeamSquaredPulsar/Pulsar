@@ -14,7 +14,7 @@ using Random = UnityEngine.Random;
 namespace Pulsar.Ship
 {
 [RequireComponent(typeof(CompositeCollider2D), typeof(Rigidbody2D))]
-public class ShipManager : MonoBehaviour
+public class ShipManager : MonoBehaviour, IDamageable
 {
     [Button]
     private void DebugKillShip()
@@ -163,6 +163,14 @@ public class ShipManager : MonoBehaviour
         else if (other.gameObject.TryGetComponent(out Projectile projectile))
         {
             tile.TakeDamage(projectile.Damage);
+        }
+    }
+
+    public void TakeDamageAt(Vector2 point, float damage)
+    {
+        if (_gridData.TryGetClosestTile(point, out Tile tile))
+        {
+            tile.TakeDamage(damage);
         }
     }
 

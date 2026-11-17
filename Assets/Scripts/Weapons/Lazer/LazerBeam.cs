@@ -1,10 +1,12 @@
-﻿using System.Collections;
+﻿using System;
 using Pulsar.Hazards;
+using Pulsar.Interfaces;
 using UnityEngine;
 
-namespace Pulsar.Weapons.Strategies
+namespace Pulsar.Weapons
 {
-public class LazerWeapon : ManualWeapon
+[RequireComponent(typeof(Weapon))]
+public class LazerBeam: MonoBehaviour
 {
     private const int k_MaxBeamHits = 16;
     private const int k_FirstFirePoint = 0;
@@ -46,24 +48,28 @@ public class LazerWeapon : ManualWeapon
     [SerializeField]
     private LineRenderer beam;
 
+    public event Action<float> Overheated;
+
     // k_MaxBeamHits is the number of things the raycast can report back
     // before it starts ignoring things
     private readonly RaycastHit2D[] _hits = new RaycastHit2D[k_MaxBeamHits];
     // Tells which colliders to count, gets set up in awake
     private ContactFilter2D _filter;
 
+    private Weapon _weapon;
     private bool _isFiring;
-    private float _lastFireTime;
+    private float _lastHoldTime;
     private float _tickTimer;
     // 0 -> 1 is overheated
     private float _heat;
     public float Heat => _heat;
 
-    private Transform FirePoint => FirePoints[k_FirstFirePoint];
+    private Transform FirePoint => _weapon.FirePoints[k_FirstFirePoint];
+    private bool IsTriggerHeld => Time.time - _lastHoldTime <= releaseDelay;
 
-    protected override void Awake()
+    private void Awake()
     {
-        base.Awake();
+        _weapon = GetComponent<Weapon>();
 
         // This is so that it can ignore triggers, like the circles that target
         // for the auto turrets
@@ -75,29 +81,11 @@ public class LazerWeapon : ManualWeapon
         beam.enabled = false;
     }
 
-    public override void Fire()
-    {
-        if (!CanFire)
-        {
-            return;
-        }
-
-        if (!_isFiring)
-        {
-            _isFiring = true;
-            _tickTimer = tickInterval;
-        }
-
-        _lastFireTime = Time.time;
-    }
-
     private void StopBeam()
     {
         _isFiring = false;
         beam.enabled = false;
     }
-
-    private bool IsTriggerHeld => Time.time - _lastFireTime <= releaseDelay;
 
     private void Update()
     {
@@ -107,7 +95,7 @@ public class LazerWeapon : ManualWeapon
             return;
         }
 
-        if (!IsTriggerHeld || !IsAttached)
+        if (!IsTriggerHeld || !_weapon.IsAttached)
         {
             StopBeam();
             return;
@@ -132,11 +120,9 @@ public class LazerWeapon : ManualWeapon
     {
         StopBeam();
         _heat = 0f;
-        StartCooldown(overheatLockTime);
+        Overheated?.Invoke(overheatLockTime);
     }
-    /// <summary>
-    /// Returns true once every tickInterval seconds.
-    /// </summary>
+
     private bool AdvanceTick()
     {
         _tickTimer += Time.deltaTime;
@@ -167,10 +153,6 @@ public class LazerWeapon : ManualWeapon
         DrawBeam(origin, end);
     }
 
-    /// <summary>
-    /// Casts the beam and returns the closest thing it hits
-    /// It ignores the plauers ship and projectiles
-    /// </summary>
     private bool TryCastBeam(
         Vector2 origin,
         Vector2 direction,
@@ -202,42 +184,15 @@ public class LazerWeapon : ManualWeapon
     }
 
     private bool ShouldIgnore(Collider2D other) =>
-        other == ParentCollider
-        || other == tileCollider
+        other == _weapon.ParentCollider
+        || other == _weapon.Coll2D
         || other.GetComponent<Projectile>();
 
     private void DamageHit(RaycastHit2D hit)
     {
-        Tile target = FindClosestTile(hit);
-        if (target)
-        {
-            target.TakeDamage(damagePerTick);
-        }
+        IDamageable target = hit.collider.GetComponentInParent<IDamageable>();
+        target?.TakeDamageAt(hit.point, damagePerTick);
     }
-
-    private static Tile FindClosestTile(RaycastHit2D hit)
-    {
-        Vector2 point = hit.point;
-        Transform root = hit.rigidbody
-            ? hit.rigidbody.transform
-            : hit.transform;
-
-        Tile closestTile = null;
-        float bestDistance = float.PositiveInfinity;
-        foreach (Tile tile in root.GetComponentsInChildren<Tile>())
-        {
-            float distance =
-                ((Vector2)tile.transform.position - point).sqrMagnitude;
-            if (distance < bestDistance)
-            {
-                bestDistance = distance;
-                closestTile = tile;
-            }
-        }
-
-        return closestTile;
-    }
-
 
     private void DrawBeam(Vector2 start, Vector2 end)
     {
@@ -250,11 +205,15 @@ public class LazerWeapon : ManualWeapon
         beam.enabled = true;
     }
 
-    private LineRenderer GetBeamLine(Transform firePoint)
+    public void Hold()
     {
-        LineRenderer line = firePoint.GetComponent<LineRenderer>();
-        return line ? line : beam;
-    }
+        if (!_isFiring)
+        {
+            _isFiring = true;
+            _tickTimer = tickInterval;
+        }
 
+        _lastHoldTime = Time.time;
+    }
 }
 }

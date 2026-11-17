@@ -15,6 +15,7 @@ GameObject:
   - component: {fileID: 6394848136817018224}
   - component: {fileID: 5928138776274610662}
   - component: {fileID: 7594200883628478121}
+  - component: {fileID: 207245905893972216}
   m_Layer: 0
   m_Name: p_Lazer
   m_TagString: Untagged
@@ -138,11 +139,6 @@ MonoBehaviour:
   <FireRatePerSecond>k__BackingField: 0.5
   <Strategy>k__BackingField: {fileID: 11400000, guid: 67d68c3e0a11e41479e9131cdc4b126a, type: 2}
   <ReloadingSprite>k__BackingField: {fileID: 0}
-  range: 6
-  damagePerTick: 0.2
-  tickInterval: 0.1
-  releaseDelay: 0.1
-  beam: {fileID: 7594200883628478121}
 --- !u!61 &6394848136817018224
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -326,6 +322,28 @@ LineRenderer:
   m_UseWorldSpace: 1
   m_Loop: 0
   m_ApplyActiveColorSpace: 1
+--- !u!114 &207245905893972216
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2402461002857692903}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 271f5d30700241d792044a01b9033576, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Pulsar.Weapons::Pulsar.Weapons.LazerBeam
+  range: 6
+  damagePerTick: 0.2
+  tickInterval: 0.1
+  releaseDelay: 0.1
+  timeToOverheat: 3
+  timeToCool: 2
+  overheatLockTime: 2
+  coolColor: {r: 0, g: 1, b: 1, a: 1}
+  hotColor: {r: 1, g: 0, b: 0, a: 1}
+  beam: {fileID: 7594200883628478121}
 --- !u!1 &4329379618448448082
 GameObject:
   m_ObjectHideFlags: 0

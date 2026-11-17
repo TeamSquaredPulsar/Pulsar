@@ -1,6 +1,7 @@
 using System;
 using Pulsar.DataClasses;
 using Pulsar.Interactions;
+using Pulsar.Interfaces;
 using UnityEngine;
 
 public struct TileRbInfo
@@ -13,7 +14,7 @@ public struct TileRbInfo
 [RequireComponent(typeof(BoxCollider2D),
     typeof(SpriteRenderer),
     typeof(Health)),]
-public abstract class Tile : MonoBehaviour
+public abstract class Tile : MonoBehaviour, IDamageable
 {
     public event Action<Tile> DestroyEvent;
 
@@ -109,6 +110,8 @@ public abstract class Tile : MonoBehaviour
     public float Mass => _rbInfo.Mass; //It can return mass even when destroyed
 
     public void TakeDamage(float damage) => health.TakeDamage(damage);
+
+    public void TakeDamageAt(Vector2 point, float damage) => TakeDamage(damage);
 
     /// <summary>
     /// To ask whether the rotated tile can connect from dir
