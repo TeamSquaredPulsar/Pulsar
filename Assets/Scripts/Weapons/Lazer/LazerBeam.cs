@@ -2,6 +2,7 @@
 using Pulsar.Hazards;
 using Pulsar.Interfaces;
 using UnityEngine;
+using Random = UnityEngine.Random;
 
 namespace Pulsar.Weapons
 {
@@ -48,6 +49,24 @@ public class LazerBeam: MonoBehaviour
     [SerializeField]
     private LineRenderer beam;
 
+    [Header("Electric look (Segments 1 = straight beam)")]
+    [SerializeField]
+    [Min(1)]
+    private int segments = 1;
+
+    [SerializeField]
+    [Min(0f)]
+    [Tooltip("How far each point can stray sideways from the straight line.")]
+    private float jitter = 0.15f;
+
+    [SerializeField]
+    [Min(0f)]
+    [Tooltip("Seconds between new random zigzags. Lower = more frantic crackle.")]
+    private float crackleInterval = 0.05f;
+
+    private float[] _offsets;
+    private float _nextCrackleTime;
+
     public event Action<float> Overheated;
 
     // k_MaxBeamHits is the number of things the raycast can report back
@@ -77,7 +96,9 @@ public class LazerBeam: MonoBehaviour
 
         beam.useWorldSpace = true;
         // This makes the line straight
-        beam.positionCount = 2;
+        // One more point than segments: start, the bends, and end
+        beam.positionCount = segments + 1;
+        _offsets = new float[segments + 1];
         beam.enabled = false;
     }
 
@@ -200,9 +221,31 @@ public class LazerBeam: MonoBehaviour
         beam.startColor = color;
         beam.endColor = color;
 
-        beam.SetPosition(0, start);
-        beam.SetPosition(1, end);
+        if (Time.time >= _nextCrackleTime)
+        {
+            Crackle();
+            _nextCrackleTime = Time.time + crackleInterval;
+        }
+
+        // Sideways direction, used to push each bend off the straight line
+        Vector2 normal = Vector2.Perpendicular(end - start).normalized;
+
+        for (int i = 0; i <= segments; i++)
+        {
+            float t = (float)i / segments;
+            Vector2 point = Vector2.Lerp(start, end, t) + normal * _offsets[i];
+            beam.SetPosition(i, point);
+        }
+
         beam.enabled = true;
+    }
+
+    private void Crackle()
+    {
+        for (int i = 1; i < segments; i++)
+        {
+            _offsets[i] = Random.Range(-jitter, jitter);
+        }
     }
 
     public void Hold()
