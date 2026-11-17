@@ -152,6 +152,7 @@ public class ThrusterManager : MonoBehaviour
             direction.Reset();
         }
 
+        _curRotThrust = 0;
         foreach (IThrustable thruster in thrusters.ToList())
         {
             foreach (TileRotation rotation in new TileRotation().Values())

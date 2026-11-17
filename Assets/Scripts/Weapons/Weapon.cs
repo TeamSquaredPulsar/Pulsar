@@ -1,9 +1,11 @@
 using System.Collections;
+using System.Collections.Generic;
 using NaughtyAttributes;
 using Pulsar.Hazards;
 using Pulsar.Interactions;
 using Pulsar.Weapons.Strategies;
 using UnityEngine;
+using UnityEngine.Serialization;
 
 namespace Pulsar.Weapons
 {
@@ -23,6 +25,12 @@ public abstract class Weapon : Tile, IProjectileSpawner, IWeapon
     [field: SerializeField]
     public Sprite ReloadingSprite { get; private set; }
 
+    [FormerlySerializedAs("ps")]
+    [SerializeField]
+    private ParticleSystem muzzleEffectPrefab;
+
+    private Dictionary<Transform, ParticleSystem> _fireEffectMap = new();
+
     private Coroutine _fireTimerRoutine;
     private Projectile _projectile;
 
@@ -30,6 +38,18 @@ public abstract class Weapon : Tile, IProjectileSpawner, IWeapon
     {
         base.Start();
         _projectile = ProjectilePrefab.gameObject.GetComponent<Projectile>();
+
+        // passing the muzzle particle effect as a child to each fire point
+        if (muzzleEffectPrefab == null)
+        {
+            return;
+        }
+
+        foreach (Transform firePoint in FirePoints)
+        {
+            ParticleSystem effect = Instantiate(muzzleEffectPrefab, firePoint);
+            _fireEffectMap[firePoint] = effect;
+        }
     }
 
     [Header("References")]
@@ -46,6 +66,15 @@ public abstract class Weapon : Tile, IProjectileSpawner, IWeapon
             = _projectile.SpawnProjectile(spawnPoint, ParentCollider);
         Physics2D.IgnoreCollision(projectile.GetComponent<Collider2D>(),
             Coll2D);
+
+        bool effectFound
+            = _fireEffectMap.TryGetValue(spawnPoint, out ParticleSystem effect);
+
+        if (effectFound)
+        {
+            effect.Play();
+        }
+
         return projectile;
     }
 
