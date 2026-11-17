@@ -89,7 +89,7 @@ public class ThrusterTile : Tile, IThrustable
     private void StartAudio()
     {
         _emitter.EventInstance.getPlaybackState(out PLAYBACK_STATE state);
-        if (state == PLAYBACK_STATE.STOPPED)
+        if (state is PLAYBACK_STATE.STOPPED or PLAYBACK_STATE.STOPPING)
         {
             _emitter.Play();
             // [CB] Leaving this commented out code for reference.
