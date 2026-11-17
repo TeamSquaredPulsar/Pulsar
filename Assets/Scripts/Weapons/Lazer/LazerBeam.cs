@@ -7,10 +7,13 @@ using Random = UnityEngine.Random;
 namespace Pulsar.Weapons
 {
 [RequireComponent(typeof(Weapon))]
-public class LazerBeam: MonoBehaviour
+public class LazerBeam : MonoBehaviour
 {
     private const int k_MaxBeamHits = 16;
     private const int k_FirstFirePoint = 0;
+    private const float k_MinHeat = 0f;
+    private const float k_MaxHeat = 1f;
+    private const int firstBend = 1;
 
     [SerializeField]
     [Min(0f)]
@@ -49,42 +52,39 @@ public class LazerBeam: MonoBehaviour
     [SerializeField]
     private LineRenderer beam;
 
-    [Header("Electric look (Segments 1 = straight beam)")]
     [SerializeField]
     [Min(1)]
     private int segments = 1;
 
     [SerializeField]
     [Min(0f)]
-    [Tooltip("How far each point can stray sideways from the straight line.")]
     private float jitter = 0.15f;
 
     [SerializeField]
     [Min(0f)]
-    [Tooltip("Seconds between new random zigzags. Lower = more frantic crackle.")]
     private float crackleInterval = 0.05f;
-
-    private float[] _offsets;
-    private float _nextCrackleTime;
-
-    public event Action<float> Overheated;
 
     // k_MaxBeamHits is the number of things the raycast can report back
     // before it starts ignoring things
     private readonly RaycastHit2D[] _hits = new RaycastHit2D[k_MaxBeamHits];
+
     // Tells which colliders to count, gets set up in awake
     private ContactFilter2D _filter;
 
-    private Weapon _weapon;
+    // 0 -> 1 is overheated
     private bool _isFiring;
     private float _lastHoldTime;
+    private float _nextCrackleTime;
+
+    private float[] _offsets;
     private float _tickTimer;
-    // 0 -> 1 is overheated
-    private float _heat;
-    public float Heat => _heat;
+
+    private Weapon _weapon;
+    private float Heat { get; set; }
 
     private Transform FirePoint => _weapon.FirePoints[k_FirstFirePoint];
     private bool IsTriggerHeld => Time.time - _lastHoldTime <= releaseDelay;
+    private int PointCount => segments + 1;
 
     private void Awake()
     {
@@ -92,19 +92,12 @@ public class LazerBeam: MonoBehaviour
 
         // This is so that it can ignore triggers, like the circles that target
         // for the auto turrets
-        _filter = new ContactFilter2D { useTriggers = false };
+        _filter = new ContactFilter2D { useTriggers = false, };
 
         beam.useWorldSpace = true;
-        // This makes the line straight
         // One more point than segments: start, the bends, and end
-        beam.positionCount = segments + 1;
-        _offsets = new float[segments + 1];
-        beam.enabled = false;
-    }
-
-    private void StopBeam()
-    {
-        _isFiring = false;
+        beam.positionCount = PointCount;
+        _offsets = new float[PointCount];
         beam.enabled = false;
     }
 
@@ -122,8 +115,8 @@ public class LazerBeam: MonoBehaviour
             return;
         }
 
-        _heat += Time.deltaTime / timeToOverheat;
-        if (_heat >= 1f)
+        Heat += Time.deltaTime / timeToOverheat;
+        if (Heat >= k_MaxHeat)
         {
             Overheat();
             return;
@@ -132,15 +125,23 @@ public class LazerBeam: MonoBehaviour
         UpdateBeam(AdvanceTick());
     }
 
+    public event Action<float> Overheated;
+
+    private void StopBeam()
+    {
+        _isFiring = false;
+        beam.enabled = false;
+    }
+
     private void Cool()
     {
-        _heat = Mathf.Max(0f, _heat - Time.deltaTime / timeToCool);
+        Heat = Mathf.Max(k_MinHeat, Heat - Time.deltaTime / timeToCool);
     }
 
     private void Overheat()
     {
         StopBeam();
-        _heat = 0f;
+        Heat = k_MinHeat;
         Overheated?.Invoke(overheatLockTime);
     }
 
@@ -179,7 +180,7 @@ public class LazerBeam: MonoBehaviour
         Vector2 direction,
         out RaycastHit2D closest)
     {
-        closest = default;
+        closest = default(RaycastHit2D);
         bool found = false;
 
         int count
@@ -194,11 +195,13 @@ public class LazerBeam: MonoBehaviour
                 continue;
             }
 
-            if (!found || hit.distance < closest.distance)
+            if (found && !(hit.distance < closest.distance))
             {
-                closest = hit;
-                found = true;
+                continue;
             }
+
+            closest = hit;
+            found = true;
         }
 
         return found;
@@ -217,27 +220,51 @@ public class LazerBeam: MonoBehaviour
 
     private void DrawBeam(Vector2 start, Vector2 end)
     {
-        Color color = Color.Lerp(coolColor, hotColor, _heat);
+        ApplyHeatColor();
+        UpdateCrackle();
+        PlaceBeamPoints(start, end);
+        beam.enabled = true;
+    }
+
+    private void ApplyHeatColor()
+    {
+        Color color = Color.Lerp(coolColor, hotColor, Heat);
         beam.startColor = color;
         beam.endColor = color;
+    }
 
-        if (Time.time >= _nextCrackleTime)
+    private void UpdateCrackle()
+    {
+        if (Time.time < _nextCrackleTime)
         {
-            Crackle();
-            _nextCrackleTime = Time.time + crackleInterval;
+            return;
         }
 
-        // Sideways direction, used to push each bend off the straight line
-        Vector2 normal = Vector2.Perpendicular(end - start).normalized;
+        RandomizeBends();
+        _nextCrackleTime = Time.time + crackleInterval;
+    }
 
-        for (int i = 0; i <= segments; i++)
+    private void PlaceBeamPoints(Vector2 start, Vector2 end)
+    {
+        Vector2 sideways = Vector2.Perpendicular(end - start).normalized;
+
+        for (int i = 0; i < PointCount; i++)
         {
-            float t = (float)i / segments;
-            Vector2 point = Vector2.Lerp(start, end, t) + normal * _offsets[i];
+            float alongBeam = (float)i / segments;
+            Vector2 point = Vector2.Lerp(start, end, alongBeam) +
+                            sideways * _offsets[i];
             beam.SetPosition(i, point);
         }
+    }
 
-        beam.enabled = true;
+    private void RandomizeBends()
+    {
+        int lastBend = PointCount - 2;
+
+        for (int i = firstBend; i <= lastBend; i++)
+        {
+            _offsets[i] = Random.Range(-jitter, jitter);
+        }
     }
 
     private void Crackle()

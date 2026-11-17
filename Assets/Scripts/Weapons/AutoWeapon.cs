@@ -41,11 +41,12 @@ public class AutoWeapon : Weapon
     [SerializeField]
     private SpriteRenderer activeTurretSprite;
 
-    private string TargetTag => gameObject.CompareTag("Player") ? "Enemy" : "Player";
-
-    private readonly HashSet<Transform> _targetsInRange = new HashSet<Transform>();
+    private readonly HashSet<Transform> _targetsInRange = new();
     private Coroutine _searchCoroutine;
     private WaitForFixedUpdate _searchWait;
+
+    private string TargetTag =>
+        gameObject.CompareTag("Player") ? "Enemy" : "Player";
 
     protected virtual bool SnapToTarget => false;
 
@@ -60,7 +61,6 @@ public class AutoWeapon : Weapon
         _searchWait = new WaitForFixedUpdate();
     }
 
-
     protected override void Start()
     {
         activeTurretSprite.sprite = turretSprites.Get(HealthState.FullHealth);
@@ -74,6 +74,24 @@ public class AutoWeapon : Weapon
         health.HealthStateChanged -= UpdateTurretSprite;
     }
 
+    private void OnTriggerEnter2D(Collider2D other)
+    {
+        if (other.isTrigger)
+        {
+            return;
+        }
+
+        if (other.CompareTag(TargetTag))
+        {
+            _targetsInRange.Add(other.transform);
+        }
+    }
+
+    private void OnTriggerExit2D(Collider2D other)
+    {
+        _targetsInRange.Remove(other.transform);
+    }
+
     private void UpdateTurretSprite(HealthState state)
     {
         Sprite next = turretSprites ? turretSprites.Get(state) : null;
@@ -83,6 +101,29 @@ public class AutoWeapon : Weapon
             activeTurretSprite.sprite = next;
         }
     }
+
+    public override void Attach(Vector2Int cell, TileRotation rotation)
+    {
+        base.Attach(cell, rotation);
+
+        _targetsInRange.Clear();
+
+        targetRadius.enabled = true;
+
+        _searchCoroutine = StartCoroutine(SearchForTargets());
+    }
+
+    public override void Detatch(
+        Vector2? velocity = null,
+        float angularVelocity = 0)
+    {
+        _searchCoroutine = null;
+
+        targetRadius.enabled = false;
+
+        base.Detatch(velocity, angularVelocity);
+    }
+
     #region Targetting
 
     private IEnumerator SearchForTargets()
@@ -130,7 +171,7 @@ public class AutoWeapon : Weapon
             float distance = dirToTarget.magnitude;
             float angleToTarget = Vector2.Angle(forwardDir, dirToTarget);
 
-            float score = distance + (angleToTarget * angleWeight);
+            float score = distance + angleToTarget * angleWeight;
 
             if (target == activeTarget)
             {
@@ -144,7 +185,7 @@ public class AutoWeapon : Weapon
             }
         }
 
-        return (bestTarget)
+        return bestTarget
             ? Result<Transform>.Pass(bestTarget)
             : Result<Transform>.Fail();
     }
@@ -161,7 +202,8 @@ public class AutoWeapon : Weapon
         mountingPoint.rotation = SnapToTarget
             ? targetRotation
             : Quaternion.RotateTowards(
-                mountingPoint.rotation, targetRotation, rotSpeed * Time.deltaTime);
+                mountingPoint.rotation, targetRotation,
+                rotSpeed * Time.deltaTime);
 
         Fire();
     }
@@ -172,45 +214,5 @@ public class AutoWeapon : Weapon
     }
 
     #endregion
-
-    private void OnTriggerEnter2D(Collider2D other)
-    {
-        if (other.isTrigger)
-        {
-            return;
-        }
-
-        if (other.CompareTag(TargetTag))
-        {
-            _targetsInRange.Add(other.transform);
-        }
-    }
-
-    private void OnTriggerExit2D(Collider2D other)
-    {
-        _targetsInRange.Remove(other.transform);
-    }
-
-    public override void Attach(Vector2Int cell, TileRotation rotation)
-    {
-        base.Attach(cell, rotation);
-
-        _targetsInRange.Clear();
-
-        targetRadius.enabled = true;
-
-        _searchCoroutine = StartCoroutine(SearchForTargets());
-    }
-
-    public override void Detatch(
-        Vector2? velocity = null,
-        float angularVelocity = 0)
-    {
-        _searchCoroutine = null;
-
-        targetRadius.enabled = false;
-
-        base.Detatch(velocity, angularVelocity);
-    }
 }
 }

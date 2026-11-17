@@ -1,8 +1,4 @@
-﻿using Pulsar.Hazards;
-using Pulsar.Interfaces;
-using UnityEngine;
-
-namespace Pulsar.Weapons.Strategies
+﻿namespace Pulsar.Weapons.Strategies
 {
 public class AutoLazerWeapon : AutoWeapon
 {
