@@ -54,4 +54,13 @@ public class ThrusterTile : Tile, IThrustable
     public void DeactivateRotation()
     {
     }
+
+    // deactivate effect on detachment
+    public override void Detatch(
+        Vector2? velocity = null,
+        float angularVelocity = 0f)
+    {
+        DeactivateThrust();
+        base.Detatch(velocity, angularVelocity);
+    }
 }
