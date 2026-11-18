@@ -14,7 +14,7 @@ using Random = UnityEngine.Random;
 namespace Pulsar.Ship
 {
 [RequireComponent(typeof(CompositeCollider2D), typeof(Rigidbody2D))]
-public class ShipManager : MonoBehaviour
+public class ShipManager : MonoBehaviour, IDamageable
 {
     [Header("Refs")]
     [SerializeField]
@@ -167,6 +167,14 @@ public class ShipManager : MonoBehaviour
         foreach (ManualWeapon weapon in _weapons)
         {
             weapon.Fire();
+        }
+    }
+
+    public void TakeDamageAt(Vector2 point, float damage)
+    {
+        if (_gridData.TryGetClosestTile(point, out Tile tile))
+        {
+            tile.TakeDamage(damage);
         }
     }
 
