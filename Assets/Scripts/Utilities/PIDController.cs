@@ -46,17 +46,24 @@ public struct PIDParams
     public class PIDController : MonoBehaviour
 {
     private float _integral;
-    private float _error;
-    private bool _hasError;
+    private float _oldError;
+    private bool _hasOldError;
 
-    public float CalculateDir(in PIDParams p)
+    public void Reset()
+    {
+        _integral = 0f;
+        _oldError = 0f;
+        _hasOldError = false;
+    }
+    
+    public float CalculateDir(in PIDParams p, float deltaTime, float error)
     {
         //TODO
         Debug.Log("NOT DONE");
         return -1f;
     }
 
-    public float CalculateAngle(in PIDParams p)
+    public float CalculateAngle(in PIDParams p, float deltaTime, float error)
     {
         //TODO
         Debug.Log("NOT DONE");
