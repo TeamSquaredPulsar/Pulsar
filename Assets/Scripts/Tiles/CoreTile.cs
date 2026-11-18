@@ -6,6 +6,9 @@ using UnityEngine;
 public class CoreTile : Tile, IThrustable, IShipCore
 {
     [field: SerializeField]
+    public GameObject DeathExplosionPrefab { get; private set; }
+
+    [field: SerializeField]
     [field: SerializableDictionaryOptions(keyHeader = "Direction",
         valueHeader = "Force")]
     public SerializableDictionary<TileRotation, float> DirectionalThrust

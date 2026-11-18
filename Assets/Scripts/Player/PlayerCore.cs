@@ -13,8 +13,11 @@ namespace Pulsar.Player
 /// </summary>
 public class PlayerCore : AutoWeapon, IThrustable, IShipCore
 {
-    [field:SerializeField]
-    [field:SerializableDictionaryOptions(keyHeader = "Direction",
+    [field: SerializeField]
+    public GameObject DeathExplosionPrefab { get; private set; }
+
+    [field: SerializeField]
+    [field: SerializableDictionaryOptions(keyHeader = "Direction",
         valueHeader = "Force")]
     public SerializableDictionary<TileRotation, float> DirectionalThrust
     {
