@@ -30,12 +30,19 @@ public struct PIDParams
      * allows for a bit more dynamic control of the value.
      * 1f should normally work tho, but its included everywhere so better safe
      */
-    private float integralWindup;
+    private float _integralWindup;
 
+    public PIDParams(float kP, float kD, float kI, float integralWindup = 1f)
+    {
+        _kP = kP;
+        _kD = kD;
+        _kI = kI;
+        _integralWindup = integralWindup;
+    }
 }
 
     public class PIDController : MonoBehaviour
     {
-        
+
     }
 }
