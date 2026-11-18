@@ -58,7 +58,12 @@ public class Projectile : MonoBehaviour
 
         if (hitEffectPrefab != null)
         {
-            Debug.Log("Hit Effect");
+            ContactPoint2D contact = collision.GetContact(0);
+            // Point the effect's cone along the surface normal (back toward the
+            // shooter), so sparks and chips bounce off the hull.
+            Quaternion facing
+                = Quaternion.LookRotation(contact.normal, Vector3.forward);
+            Instantiate(hitEffectPrefab, contact.point, facing);
         }
 
         Destroy(gameObject);
