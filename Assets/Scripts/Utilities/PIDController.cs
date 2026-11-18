@@ -1,3 +1,4 @@
+using UnityEditorInternal;
 using UnityEngine;
 
 namespace Pulsar.Utilities
@@ -12,27 +13,27 @@ public struct PIDParams
      * Expected range, 0.1 to 100
      * too low it doesnt reach its point, too passes the point and oscillates
      */
-    private float _kP;
+    public float _kP;
     /*
      * Derivative output of the current error,
      * how much we need to break to get to the point
      * Expected range, 0.001 to 10
      * Too low it doesn't break hard enough, too high it slows down too much
      */
-    private float _kD;
+    public float _kD;
     /*
      * Integral output of the error from external factors to account for
      * Expected range, 0.001 to 1.0 (how sharp it accounts in seconds)
      * higher eliminates outside forces faster but oscillates like kP
      */
-    private float _kI;
+    public float _kI;
 
     /*
      * The integral can accumulate and get crazy values and needs to be clamped
      * allows for a bit more dynamic control of the value.
      * 1f should normally work tho, but its included everywhere so better safe
      */
-    private float _integralWindup;
+    public float _integralWindup;
 
     public PIDParams(float kP, float kD, float kI, float integralWindup = 1f)
     {
@@ -55,12 +56,25 @@ public struct PIDParams
         _oldError = 0f;
         _hasOldError = false;
     }
-    
+
     public float CalculateDir(in PIDParams p, float deltaTime, float error)
     {
-        //TODO
-        Debug.Log("NOT DONE");
-        return -1f;
+        if (deltaTime <= 0f)
+        {
+            return 0f;
+        }
+
+        float errorOverTime = error * deltaTime;
+        _integral = Mathf.Clamp(_integral + errorOverTime,
+            -p._integralWindup, p._integralWindup);
+
+        float deriv = _hasOldError ? (error - _oldError)/deltaTime : 0f;
+        _oldError = error;
+        _hasOldError = true;
+
+        return Mathf.Clamp(p._kP * error +
+                           p._kI * _integral +
+                           p._kD * deriv, -1f, 1f);
     }
 
     public float CalculateAngle(in PIDParams p, float deltaTime, float error)
