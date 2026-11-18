@@ -1,4 +1,6 @@
-﻿namespace Pulsar.Interfaces
+﻿using UnityEngine;
+
+namespace Pulsar.Interfaces
 {
 /// <summary>
 /// Interface for any tile that wants to count as a ship core.
@@ -11,5 +13,9 @@
 /// </summary>
 public interface IShipCore
 {
+    /// <summary>
+    /// Effect the ship spawns when this core is destroyed. Can be null.
+    /// </summary>
+    GameObject DeathExplosionPrefab { get; }
 }
 }

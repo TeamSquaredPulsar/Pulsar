@@ -91,7 +91,7 @@ public class ShipManager : MonoBehaviour, IDamageable
     [Button]
     private void DebugKillShip()
     {
-        Tile core = ((Tile)Core);
+        Tile core = (Tile)Core;
         core.TakeDamage(core.CurrentHp);
     }
 
@@ -184,7 +184,7 @@ public class ShipManager : MonoBehaviour, IDamageable
     {
         float m1 = rb.mass;
         float m2 = otherShip.rb.mass;
-        float reducedMass = (m1 * m2) / (m1 + m2);
+        float reducedMass = m1 * m2 / (m1 + m2);
 
         float kineticEnergy
             = 0.5f * reducedMass * relativeVelocity * relativeVelocity;
@@ -280,6 +280,9 @@ public class ShipManager : MonoBehaviour, IDamageable
 
     private void OnCoreDestroyed()
     {
+        // Spawn before the tiles detach, so the ship's size is still known.
+        SpawnDeathExplosion();
+
         foreach (Tile tile in _gridData.Tiles)
         {
             if (tile is IShipCore)
@@ -292,6 +295,28 @@ public class ShipManager : MonoBehaviour, IDamageable
 
         ShipDestroyedEvent?.Invoke(this);
         Destroy(gameObject);
+    }
+
+    private void SpawnDeathExplosion()
+    {
+        // The core holds the effect
+        GameObject prefab = Core?.DeathExplosionPrefab;
+        if (prefab == null)
+        {
+            return;
+        }
+
+        Vector3 position = Core is Component core
+            ? core.transform.position
+            : transform.position;
+        GameObject explosion = Instantiate(prefab, position,
+            Quaternion.identity);
+
+        // Bigger ships get bigger explosions (min 1, max 2.5)
+        Bounds bounds = GetLocalBounds();
+        float shipSize = Mathf.Max(bounds.size.x, bounds.size.y);
+        explosion.transform.localScale
+            = Vector3.one * Mathf.Clamp(shipSize / 3f, 1f, 2.5f);
     }
 
     // returns a rectangle enclosing all ship tiles in the ship’s local space

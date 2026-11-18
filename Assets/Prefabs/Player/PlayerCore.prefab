@@ -313,6 +313,7 @@ MonoBehaviour:
   <FirePoints>k__BackingField:
   - {fileID: 4593652288710760860}
   <FireRatePerSecond>k__BackingField: 1.5
+  muzzleEffectPrefab: {fileID: 0}
   <Strategy>k__BackingField: {fileID: 11400000, guid: 67d68c3e0a11e41479e9131cdc4b126a, type: 2}
   <ReloadingSprite>k__BackingField: {fileID: 0}
   targetReticle: {fileID: 433469968832905233}
@@ -335,6 +336,7 @@ MonoBehaviour:
     - key: 3
       value: 5
   <RotationForce>k__BackingField: 2
+  <DeathExplosionPrefab>k__BackingField: {fileID: 4650023321338013299, guid: ca16f83ee0fe4a0a8f82bb5990ad5f59, type: 3}
 --- !u!61 &5095908355809572340
 BoxCollider2D:
   m_ObjectHideFlags: 0
