@@ -99,6 +99,8 @@ public class ShipManager : MonoBehaviour
     public bool OwnsTile(Tile tile) => Cells.Values.Contains(tile);
 
     public event Action ShipGridUpdate;
+
+    // this is only for Tutorial check for detaching tile
     public event Action OnDetachTile;
 
     private void RefreshTiles()
@@ -247,6 +249,8 @@ public class ShipManager : MonoBehaviour
 
         UnregisterTile(tile);
         ShipGridUpdate?.Invoke();
+        // The build controls remove owned tiles by destroying them.
+        OnDetachTile?.Invoke();
     }
 
     private void UnregisterTile(Tile tile)
@@ -481,7 +485,6 @@ public class ShipManager : MonoBehaviour
 
         thrusterManager.CalculateThrusters(in _thrusters);
         ShipGridUpdate?.Invoke();
-        OnDetachTile?.Invoke();
     }
 
     #endregion
