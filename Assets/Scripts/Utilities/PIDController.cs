@@ -78,11 +78,22 @@ public struct PIDParams
         return p.kP * error + p.kI * _integral + p.kD * deriv;
     }
 
-    public float CalculateAngle(in PIDParams p, float deltaTime, float error)
+    public float CalculateAngle(in PIDParams p, float deltaTime, 
+        float angleError,
+        float angVelError)
     {
-        //TODO
-        Debug.Log("NOT DONE");
-        return -1f;
+        if (deltaTime <= 0f)
+        {
+            return 0f;
+        }
+        
+        float errorOverTime = angleError * deltaTime;
+        _integral = Mathf.Clamp(_integral + errorOverTime,
+            -p.IntegralWindup, p.IntegralWindup);
+        
+        float deriv = -angVelError;
+
+        return p.kP * angleError + p.kI * _integral + p.kD * deriv;
     }
 }
 }
