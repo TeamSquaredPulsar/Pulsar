@@ -27,10 +27,9 @@ public class TutorialController : MonoBehaviour
     [SerializeField, Min(0f)] private float childFadeDuration = 0.5f;
     [SerializeField] private Color gateCompleteColor = new Color(0.2f, 1f, 0.4f);
 
-    private Coroutine _stepFade;
+    // private Coroutine _stepFade;
     private readonly List<Tile> _tilesWillBeAttached = new();
-    private Tile _attachedModule;
-    private int _step;
+    public int _step;
     private bool _finished;
     private Camera _mainCam;
 
@@ -46,7 +45,19 @@ public class TutorialController : MonoBehaviour
         retryButton.onClick.AddListener(Retry);
         menuButton.onClick.AddListener(BackToMenu);
         PlayerCursor.PlayerSelectTile += OnPlayerSelectTile;
+        player.GetComponent<ShipManager>().OnDetachTile += OnPlayerDetachTile;
         ShowStep();
+    }
+
+    private void OnPlayerDetachTile()
+    {
+        Debug.Log("tile detached");
+        if (_step >= 5)
+        {
+
+        Debug.Log("finsih");
+            Finish();
+        }
     }
 
     private void Update()
@@ -66,29 +77,21 @@ public class TutorialController : MonoBehaviour
         {
             foreach (Tile tile in _tilesWillBeAttached)
             {
-                if (!tile || !player.OwnsTile(tile)) continue;
-                _attachedModule = tile;
+                if (!player.OwnsTile(tile)) continue;
                 AdvanceStep();
                 break;
             }
-        }
-        // Holding an owned tile destroys it; a surviving detached tile also counts.
-        else if (_step == 5 && (!_attachedModule || !player.OwnsTile(_attachedModule)))
-        {
-            Finish();
         }
     }
 
     private void OnPlayerSelectTile(Result<Tile> result)
     {
-        if (_finished || _step != 3 || !result.IsSuccess || !result.Value) return;
-        if (result.Value.IsAttached || !_tilesWillBeAttached.Contains(result.Value)) return;
-        AdvanceStep();
+        if(result.IsSuccess && _step>=3)
+            AdvanceStep();
     }
 
     private void AdvanceStep()
     {
-        if (_finished) return;
         _step++;
         if (_step == 2) ActivateEnemy();
         ShowStep();
@@ -133,7 +136,7 @@ public class TutorialController : MonoBehaviour
 
     private void ShowStep()
     {
-        if (_stepFade != null) StopCoroutine(_stepFade);
+        // if (_stepFade != null) StopCoroutine(_stepFade);
         for (int i = 0; i < steps.Length; i++)
         {
             if (i == _step)
@@ -145,7 +148,8 @@ public class TutorialController : MonoBehaviour
         enemyCoreMarker.SetActive(_step == 2);
         if (_step < steps.Length)
         {
-            _stepFade = StartCoroutine(FadeStepChildren(steps[_step]));
+            // _stepFade = StartCoroutine(FadeStepChildren(steps[_step]));
+            StartCoroutine(FadeStepChildren(steps[_step]));
         }
     }
 
@@ -168,14 +172,13 @@ public class TutorialController : MonoBehaviour
             }
             yield return UIUtilities.FadeIn(child, childFadeDuration);
         }
-        _stepFade = null;
+        // _stepFade = null;
     }
 
     private void Finish()
     {
-        if (_finished) return;
         _finished = true;
-        if (_stepFade != null) StopCoroutine(_stepFade);
+        // if (_stepFade != null) StopCoroutine(_stepFade);
         completionPanel.gameObject.SetActive(true);
         completionPanel.transform.position = _mainCam.transform.position + new Vector3(0, 2f, 8f);
         retryButton.Select();
