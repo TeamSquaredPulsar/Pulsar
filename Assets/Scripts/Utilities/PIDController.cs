@@ -2,6 +2,8 @@ using UnityEngine;
 
 namespace Pulsar.Utilities
 {
+
+//Tuning values
 public struct PIDParams
 {
     /*
@@ -42,7 +44,23 @@ public struct PIDParams
 }
 
     public class PIDController : MonoBehaviour
-    {
+{
+    private float _integral;
+    private float _error;
+    private bool _hasError;
 
+    public float CalculateDir(in PIDParams p)
+    {
+        //TODO
+        Debug.Log("NOT DONE");
+        return -1f;
     }
+
+    public float CalculateAngle(in PIDParams p)
+    {
+        //TODO
+        Debug.Log("NOT DONE");
+        return -1f;
+    }
+}
 }
