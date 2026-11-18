@@ -100,6 +100,9 @@ public class ShipManager : MonoBehaviour, IDamageable
 
     public event Action ShipGridUpdate;
 
+    // this is only for Tutorial check for detaching tile
+    public event Action OnDetachTile;
+
     private void RefreshTiles()
     {
         _gridData = new ShipGridData();
@@ -254,6 +257,8 @@ public class ShipManager : MonoBehaviour, IDamageable
 
         UnregisterTile(tile);
         ShipGridUpdate?.Invoke();
+        // The build controls remove owned tiles by destroying them.
+        OnDetachTile?.Invoke();
     }
 
     private void UnregisterTile(Tile tile)

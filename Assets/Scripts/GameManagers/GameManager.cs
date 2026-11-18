@@ -78,6 +78,7 @@ public class GameManager : MonoBehaviour
 
     private void HandleGameStart()
     {
+        _score = 0;
         Tile[] tiles = FindObjectsByType<Tile>(FindObjectsSortMode.None);
         foreach (Tile tile in tiles)
         {
