@@ -30,12 +30,12 @@ public class PlayerCore : AutoWeapon, IThrustable, IShipCore
 
     public void ActivateThrust(float amount, in Rigidbody2D targetRb)
     {
-        spriteRenderer.color = Color.red;
+        //spriteRenderer.color = Color.red;
     }
 
     public void DeactivateThrust()
     {
-        spriteRenderer.color = Color.white;
+        // spriteRenderer.color = Color.white;
     }
 
     public void ActivateRotation(float amount, in Rigidbody2D targetRb)
