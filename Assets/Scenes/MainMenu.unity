@@ -2732,12 +2732,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Pulsar.UI.MainMenu
   playButton: {fileID: 1347810877}
+  sandboxButton: {fileID: 1148207843}
   tutorialButton: {fileID: 1663329785}
   settingsButton: {fileID: 1338694705}
   quitButton: {fileID: 1733452667}
   menuPanel: {fileID: 1900000000}
   settingsPanel: {fileID: 1900000012}
-  gameplayScene: Alpha
 --- !u!114 &1900000021
 MonoBehaviour:
   m_ObjectHideFlags: 0
