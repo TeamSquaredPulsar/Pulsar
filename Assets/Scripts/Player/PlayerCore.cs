@@ -2,6 +2,7 @@ using Audune.Utils.Dictionary;
 using Pulsar.DataClasses;
 using Pulsar.Interfaces;
 using Pulsar.Weapons;
+using Pulsar.Weapons.Strategies;
 using UnityEngine;
 
 namespace Pulsar.Player
@@ -11,7 +12,7 @@ namespace Pulsar.Player
 /// @author Corey Buchan
 /// @version 0.9
 /// </summary>
-public class PlayerCore : AutoWeapon, IThrustable, IShipCore
+public class PlayerCore : AutoLazerWeapon, IThrustable, IShipCore
 {
     [field: SerializeField]
     public GameObject DeathExplosionPrefab { get; private set; }
