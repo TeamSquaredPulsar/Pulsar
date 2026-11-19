@@ -84,7 +84,7 @@ public class UIManager : Singleton<UIManager>
         gameplayUI.SetActive(false);
         if (finalScoreText)
         {
-            finalScoreText.text = $"Final {_scoreText}";
+            finalScoreText.text = $"Final {_scoreText.text}";
         }
 
         gameOverMenu.SetActive(true);
