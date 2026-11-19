@@ -26,6 +26,8 @@ public class PlayerCore : AutoLazerWeapon, IThrustable, IShipCore
         private set;
     }
 
+    public bool IsThrusting { get; private set; }
+
     [field: SerializeField]
     public float RotationForce { get; private set; }
 
@@ -37,11 +39,13 @@ public class PlayerCore : AutoLazerWeapon, IThrustable, IShipCore
 
     public void ActivateThrust(float amount, in Rigidbody2D targetRb)
     {
+        IsThrusting = true;
         //spriteRenderer.color = Color.red;
     }
 
     public void DeactivateThrust()
     {
+        IsThrusting = false;
         // spriteRenderer.color = Color.white;
     }
 

@@ -2,7 +2,6 @@ using System;
 using System.Collections.Generic;
 using FMODUnity;
 using FMOD.Studio;
-using NUnit.Framework;
 using UnityEngine;
 using STOP_MODE = FMOD.Studio.STOP_MODE;
 

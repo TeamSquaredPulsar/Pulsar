@@ -1,6 +1,5 @@
 using System;
 using JetBrains.Annotations;
-using Pulsar.Audio;
 using Pulsar.DataClasses;
 using Pulsar.Interactions;
 using UnityEngine;

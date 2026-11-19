@@ -5,7 +5,6 @@ using Pulsar.Interfaces;
 using UnityEngine;
 using FMOD.Studio;
 using FMODUnity;
-using NaughtyAttributes;
 
 [RequireComponent(typeof(StudioEventEmitter))]
 public class ThrusterTile : Tile, IThrustable
@@ -18,6 +17,8 @@ public class ThrusterTile : Tile, IThrustable
         get;
         private set;
     }
+
+    public bool IsThrusting { get; private set; }
 
     [field: SerializeField]
     [Min(0f)]
@@ -36,6 +37,8 @@ public class ThrusterTile : Tile, IThrustable
         {
             ps.Stop();
         }
+
+        IsThrusting = false;
     }
 
     protected override void Start()
@@ -48,13 +51,15 @@ public class ThrusterTile : Tile, IThrustable
     protected override void OnDestroy()
     {
         _emitter.Stop();
+        IsThrusting = false;
         base.OnDestroy();
     }
 
     public void ActivateThrust(float amount, in Rigidbody2D targetRb)
     {
+        IsThrusting = true;
         StartAudio();
-        if (ps)
+        if (ps && !ps.isPlaying)
         {
             ps.Play();
         }
@@ -63,10 +68,12 @@ public class ThrusterTile : Tile, IThrustable
     public void DeactivateThrust()
     {
         StopAudio();
-        if (ps)
+        if (ps && ps.isPlaying)
         {
             ps.Stop();
         }
+
+        IsThrusting = false;
     }
 
     public void ActivateRotation(float amount, in Rigidbody2D targetRb)

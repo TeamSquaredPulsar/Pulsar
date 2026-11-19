@@ -1,5 +1,4 @@
 using System;
-using FMODUnity;
 using UnityEngine;
 
 namespace Pulsar.Weapons.Strategies
