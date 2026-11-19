@@ -2,7 +2,6 @@ using Audune.Utils.Dictionary;
 using Pulsar.DataClasses;
 using Pulsar.Interfaces;
 using Pulsar.Audio;
-using Pulsar.Weapons;
 using Pulsar.Weapons.Strategies;
 using UnityEngine;
 

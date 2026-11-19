@@ -1,7 +1,5 @@
 using System;
-using FMODUnity;
 using JetBrains.Annotations;
-using NaughtyAttributes;
 using Pulsar.Audio;
 using Pulsar.DataClasses;
 using Pulsar.Interactions;
@@ -126,9 +124,6 @@ public abstract class Tile : MonoBehaviour
 
     public void TakeDamage(float damage)
     {
-        AudioManager.Instance.PlayOneShot(
-            FmodEvents.Instance.ShipHit,
-            transform.position);
         health.TakeDamage(damage);
     }
 

@@ -488,10 +488,6 @@ PrefabInstance:
       propertyPath: m_Name
       value: PlayerCore
       objectReference: {fileID: 0}
-    - target: {fileID: 6101688074798165259, guid: 6c2626df1383fea4d93f18842b73f7bd, type: 3}
-      propertyPath: m_IsTrigger
-      value: 1
-      objectReference: {fileID: 0}
     - target: {fileID: 8333102018394350530, guid: 6c2626df1383fea4d93f18842b73f7bd, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0
@@ -533,7 +529,7 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8525024055157982409, guid: 6c2626df1383fea4d93f18842b73f7bd, type: 3}
-      propertyPath: spritesOverride
+      propertyPath: <ProjectilePrefab>k__BackingField
       value: 
       objectReference: {fileID: 0}
     m_RemovedComponents: []

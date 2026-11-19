@@ -33,6 +33,27 @@ public abstract class Weapon : Tile, IProjectileSpawner, IWeapon
     private Coroutine _fireTimerRoutine;
     private Projectile _projectile;
 
+    [Header("References")]
+    [field: SerializeField]
+    public GameObject ProjectilePrefab { get; private set; }
+
+    Collider2D IProjectileSpawner.ParentCollider => ParentCollider;
+
+    public Collider2D Coll2D => tileCollider;
+
+    [field: SerializeField]
+    public Collider2D ParentCollider { get; private set; }
+
+    [field: SerializeField]
+    [field: ReorderableList]
+    public Transform[] FirePoints { get; private set; }
+
+    [field: SerializeField]
+    [field: Expandable]
+    public WeaponStrategy Strategy { get; private set; }
+
+    public bool CanFire => _fireTimerRoutine == null;
+
     protected override void Start()
     {
         base.Start();
@@ -53,45 +74,6 @@ public abstract class Weapon : Tile, IProjectileSpawner, IWeapon
         }
     }
 
-    [Header("References")]
-    [field: SerializeField]
-    public GameObject ProjectilePrefab { get; private set; }
-
-    Collider2D IProjectileSpawner.ParentCollider => ParentCollider;
-
-    public Collider2D Coll2D => tileCollider;
-
-    public virtual GameObject SpawnProjectile(Transform spawnPoint)
-    {
-        GameObject projectile
-            = _projectile.SpawnProjectile(spawnPoint, ParentCollider);
-        Physics2D.IgnoreCollision(projectile.GetComponent<Collider2D>(),
-            Coll2D);
-
-        bool effectFound
-            = _fireEffectMap.TryGetValue(spawnPoint, out ParticleSystem effect);
-
-        if (effectFound)
-        {
-            effect.Play();
-        }
-
-        return projectile;
-    }
-
-    [field: SerializeField]
-    public Collider2D ParentCollider { get; private set; }
-
-    [field: SerializeField]
-    [field: ReorderableList]
-    public Transform[] FirePoints { get; private set; }
-
-    [field: SerializeField]
-    [field: Expandable]
-    public WeaponStrategy Strategy { get; private set; }
-
-    public bool CanFire => _fireTimerRoutine == null;
-
     public virtual void Fire()
     {
         if (!CanFire)
@@ -102,6 +84,21 @@ public abstract class Weapon : Tile, IProjectileSpawner, IWeapon
         Strategy.Fire(FirePoints, this, SpawnProjectile);
 
         StartFireTimer();
+    }
+
+    public virtual GameObject SpawnProjectile(Transform spawnPoint)
+    {
+        GameObject projectile
+            = _projectile.SpawnProjectile(spawnPoint, ParentCollider);
+        Physics2D.IgnoreCollision(projectile.GetComponent<Collider2D>(),
+            Coll2D);
+
+        if (_fireEffectMap.TryGetValue(spawnPoint, out ParticleSystem effect))
+        {
+            effect.Play();
+        }
+
+        return projectile;
     }
 
     private void StartFireTimer() => StartCooldown(1 / FireRatePerSecond);
