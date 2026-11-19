@@ -10,6 +10,8 @@ GameObject:
   m_Component:
   - component: {fileID: 7690346026950655372}
   - component: {fileID: 3325847302067099263}
+  - component: {fileID: 8931149673129828490}
+  - component: {fileID: 4533177236349318532}
   m_Layer: 0
   m_Name: GameManager
   m_TagString: Untagged
@@ -60,3 +62,52 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 3c98a37892be4035b5f9e790f10f9455, type: 2}
   audioManager: {fileID: 11400000, guid: b93f15ff1e15c794ba814aa4875bc1c1, type: 2}
   audioEvents: {fileID: 11400000, guid: f9dbdf1e115dd5c4087a04b8e3b63d99, type: 2}
+--- !u!114 &8931149673129828490
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7621465928010011671}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b9468c5f457ace64f8d4df6d642b107f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: FMODUnity::FMODUnity.StudioBankLoader
+  LoadEvent: 1
+  UnloadEvent: 2
+  Banks:
+  - Music
+  CollisionTag: 
+  PreloadSamples: 0
+--- !u!114 &4533177236349318532
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7621465928010011671}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9a6610d2e704f1648819acc8d7460285, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: FMODUnity::FMODUnity.StudioEventEmitter
+  CollisionTag: 
+  EventReference:
+    Guid:
+      Data1: -1163865226
+      Data2: 1152950576
+      Data3: -66796657
+      Data4: -749286060
+    Path: event:/GameStart
+  Event: 
+  EventPlayTrigger: 1
+  EventStopTrigger: 2
+  AllowFadeout: 1
+  TriggerOnce: 0
+  Preload: 0
+  NonRigidbodyVelocity: 0
+  Params: []
+  OverrideAttenuation: 0
+  OverrideMinDistance: 1
+  OverrideMaxDistance: 20
