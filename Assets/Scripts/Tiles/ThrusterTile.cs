@@ -33,7 +33,7 @@ public class ThrusterTile : Tile, IThrustable
     {
         base.Awake();
         ps = GetComponentInChildren<ParticleSystem>();
-        if (ps && ps.isPlaying)
+        if (ps)
         {
             ps.Stop();
         }
@@ -59,7 +59,7 @@ public class ThrusterTile : Tile, IThrustable
     {
         IsThrusting = true;
         StartAudio();
-        if (ps && !ps.isPlaying)
+        if (ps)
         {
             ps.Play();
         }
