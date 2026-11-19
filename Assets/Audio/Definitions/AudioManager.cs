@@ -13,8 +13,10 @@ namespace Pulsar.Audio
 [Serializable]
 public class AudioManager : SoSingleton<AudioManager>
 {
+    [NonSerialized]
     private List<EventInstance> _eventInstances = new();
 
+    [NonSerialized]
     private List<StudioEventEmitter> _eventEmitters
         = new();
 
