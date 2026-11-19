@@ -13,15 +13,10 @@ namespace Pulsar.Audio
 [Serializable]
 public class AudioManager : SoSingleton<AudioManager>
 {
-    private List<EventInstance> _eventInstances = new List<EventInstance>();
+    private List<EventInstance> _eventInstances = new();
 
     private List<StudioEventEmitter> _eventEmitters
-        = new List<StudioEventEmitter>();
-
-    protected override void Awake()
-    {
-        base.Awake();
-    }
+        = new();
 
     protected override void OnEnable()
     {
@@ -57,8 +52,10 @@ public class AudioManager : SoSingleton<AudioManager>
             = emitterObject.GetComponent<StudioEventEmitter>();
         if (emitter == null)
         {
-            throw new ArgumentException($"{emitterObject.name} does not have an emitter");
+            throw new ArgumentException(
+                $"{emitterObject.name} does not have an emitter");
         }
+
         emitter.EventReference = eventReference;
         _eventEmitters.Add(emitter);
         return emitter;

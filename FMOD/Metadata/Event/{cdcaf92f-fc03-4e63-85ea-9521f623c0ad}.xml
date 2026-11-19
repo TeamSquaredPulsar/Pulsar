@@ -105,15 +105,16 @@
 			<value>true</value>
 		</property>
 		<relationship name="sounds">
-			<destination>{473fbc4d-5c77-4e57-9e95-0a3ee90f1934}</destination>
-			<destination>{b3ae2729-48e5-4dc9-ba97-5b6ddfc56ad4}</destination>
-			<destination>{baeb2d27-475c-4f69-a86b-3257a58a97a8}</destination>
-			<destination>{5b8f89f0-695a-4fdf-bdfc-38959f4bda2f}</destination>
+			<destination>{f1a026a6-a88c-4f50-bc3e-69c952c535c6}</destination>
+			<destination>{f79eaa8f-4295-4418-a512-8c377b140cb6}</destination>
 		</relationship>
 	</object>
 	<object class="EventMixerGroup" id="{4a3d906c-e0e1-47a0-a466-8d0438e2ad07}">
+		<property name="volume">
+			<value>-8.5</value>
+		</property>
 		<property name="name">
-			<value>Audio 1</value>
+			<value>Rockets</value>
 		</property>
 		<relationship name="modulators">
 			<destination>{1ff9fb4f-0ac6-4352-947e-7278c327afd5}</destination>
@@ -130,10 +131,10 @@
 	</object>
 	<object class="LoopRegion" id="{2a6f5c20-2497-421b-8987-8079a3492e8f}">
 		<property name="position">
-			<value>0.30000000000000004</value>
+			<value>0</value>
 		</property>
 		<property name="length">
-			<value>7.2000000000000011</value>
+			<value>7.4000000000000012</value>
 		</property>
 		<relationship name="timeline">
 			<destination>{7b4b6f39-f14f-4050-ab2d-2dd29e258a63}</destination>
@@ -149,36 +150,14 @@
 	</object>
 	<object class="MixerBusPanner" id="{965bc432-ef2f-4c38-bf71-aa49be91d0f9}" />
 	<object class="MixerBusFader" id="{6828fd0a-2505-43d1-85c5-945f90c68310}" />
-	<object class="SingleSound" id="{473fbc4d-5c77-4e57-9e95-0a3ee90f1934}">
-		<property name="looping">
-			<value>true</value>
-		</property>
+	<object class="SingleSound" id="{f1a026a6-a88c-4f50-bc3e-69c952c535c6}">
 		<relationship name="audioFile">
-			<destination>{c919555f-fb4e-4d13-a514-98f91f7133d6}</destination>
+			<destination>{44688fa3-d792-4e2c-a946-4b8390b1d013}</destination>
 		</relationship>
 	</object>
-	<object class="SingleSound" id="{b3ae2729-48e5-4dc9-ba97-5b6ddfc56ad4}">
-		<property name="looping">
-			<value>true</value>
-		</property>
+	<object class="SingleSound" id="{f79eaa8f-4295-4418-a512-8c377b140cb6}">
 		<relationship name="audioFile">
-			<destination>{622c3dc0-c411-499a-b280-ef1e0154b7ed}</destination>
-		</relationship>
-	</object>
-	<object class="SingleSound" id="{baeb2d27-475c-4f69-a86b-3257a58a97a8}">
-		<property name="looping">
-			<value>true</value>
-		</property>
-		<relationship name="audioFile">
-			<destination>{6ac29721-2504-49bb-87b6-5044d58b33c0}</destination>
-		</relationship>
-	</object>
-	<object class="SingleSound" id="{5b8f89f0-695a-4fdf-bdfc-38959f4bda2f}">
-		<property name="looping">
-			<value>true</value>
-		</property>
-		<relationship name="audioFile">
-			<destination>{d181daf8-a154-46d8-acf3-5c2b140b690d}</destination>
+			<destination>{ce2a665b-16e9-4bf6-ac55-e3b6c2e3c396}</destination>
 		</relationship>
 	</object>
 	<object class="ADSRModulator" id="{1ff9fb4f-0ac6-4352-947e-7278c327afd5}">

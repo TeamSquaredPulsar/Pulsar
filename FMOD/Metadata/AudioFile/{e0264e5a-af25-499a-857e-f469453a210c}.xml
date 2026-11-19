@@ -1,20 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <objects serializationModel="Studio.02.02.00">
-	<object class="AudioFile" id="{701d93c2-cd19-4e40-879d-de8117e6c889}">
+	<object class="AudioFile" id="{e0264e5a-af25-499a-857e-f469453a210c}">
 		<property name="assetPath">
-			<value>Music/AlkaKrab/Sci-Fi 6.ogg</value>
-		</property>
-		<property name="isStreaming">
-			<value>true</value>
+			<value>SFX/voicebosch/Laser2.mp3</value>
 		</property>
 		<property name="frequencyInKHz">
 			<value>44.0999985</value>
 		</property>
 		<property name="channelCount">
-			<value>2</value>
+			<value>1</value>
 		</property>
 		<property name="length">
-			<value>109.99997732426304</value>
+			<value>0.62693877551020405</value>
 		</property>
 		<relationship name="masterAssetFolder">
 			<destination>{8909ad75-74cc-4c66-9508-a79f24205421}</destination>

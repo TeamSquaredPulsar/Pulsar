@@ -1,17 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <objects serializationModel="Studio.02.02.00">
-	<object class="AudioFile" id="{73bf0e4e-9b1f-44f8-a651-f647e705e506}">
+	<object class="AudioFile" id="{1db24863-cedc-40ec-ab24-2bb5bac40627}">
 		<property name="assetPath">
-			<value>SFX/Shapeforms/GUNSupr_Silenced Pistol Fire Short_01.wav</value>
+			<value>SFX/voicebosch/Laser7.mp3</value>
 		</property>
 		<property name="frequencyInKHz">
-			<value>48</value>
+			<value>44.0999985</value>
 		</property>
 		<property name="channelCount">
-			<value>2</value>
+			<value>1</value>
 		</property>
 		<property name="length">
-			<value>0.25312499999999999</value>
+			<value>0.62693877551020405</value>
 		</property>
 		<relationship name="masterAssetFolder">
 			<destination>{8909ad75-74cc-4c66-9508-a79f24205421}</destination>

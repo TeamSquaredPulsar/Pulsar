@@ -1,17 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <objects serializationModel="Studio.02.02.00">
-	<object class="AudioFile" id="{622c3dc0-c411-499a-b280-ef1e0154b7ed}">
+	<object class="AudioFile" id="{cfebe5ab-68ea-4c78-be58-5d119b69d5e3}">
 		<property name="assetPath">
-			<value>Inputs/benvibrant-thruster-loop-562715.mp3</value>
+			<value>SFX/voicebosch/Laser6.mp3</value>
 		</property>
 		<property name="frequencyInKHz">
 			<value>44.0999985</value>
 		</property>
 		<property name="channelCount">
-			<value>2</value>
+			<value>1</value>
 		</property>
 		<property name="length">
-			<value>8.0457142857142863</value>
+			<value>0.62693877551020405</value>
 		</property>
 		<relationship name="masterAssetFolder">
 			<destination>{8909ad75-74cc-4c66-9508-a79f24205421}</destination>

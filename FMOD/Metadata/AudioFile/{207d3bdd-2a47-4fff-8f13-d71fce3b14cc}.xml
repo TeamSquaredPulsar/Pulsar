@@ -1,17 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <objects serializationModel="Studio.02.02.00">
-	<object class="AudioFile" id="{6ac29721-2504-49bb-87b6-5044d58b33c0}">
+	<object class="AudioFile" id="{207d3bdd-2a47-4fff-8f13-d71fce3b14cc}">
 		<property name="assetPath">
-			<value>Inputs/freesound_community-rocketthrustmaxx-100019.mp3</value>
+			<value>SFX/voicebosch/Laser1.mp3</value>
 		</property>
 		<property name="frequencyInKHz">
-			<value>24</value>
+			<value>44.0999985</value>
 		</property>
 		<property name="channelCount">
-			<value>2</value>
+			<value>1</value>
 		</property>
 		<property name="length">
-			<value>7.6559999999999997</value>
+			<value>0.62693877551020405</value>
 		</property>
 		<relationship name="masterAssetFolder">
 			<destination>{8909ad75-74cc-4c66-9508-a79f24205421}</destination>

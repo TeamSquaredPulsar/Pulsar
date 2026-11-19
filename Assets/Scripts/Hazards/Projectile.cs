@@ -1,6 +1,4 @@
 using UnityEngine;
-using FMODUnity;
-using NaughtyAttributes;
 using Pulsar.Audio;
 
 namespace Pulsar.Hazards

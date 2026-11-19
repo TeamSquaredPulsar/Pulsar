@@ -2,7 +2,7 @@
 <objects serializationModel="Studio.02.02.00">
 	<object class="AudioFile" id="{5e44d379-14a8-4a2b-9cfa-e36d8dd70113}">
 		<property name="assetPath">
-			<value>Thruster or Wind Turbulence Loop_07.wav</value>
+			<value>SFX/Thruster or Wind Turbulence Loop_07.wav</value>
 		</property>
 		<property name="frequencyInKHz">
 			<value>48</value>
