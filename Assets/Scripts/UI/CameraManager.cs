@@ -1,3 +1,4 @@
+using FMODUnity;
 using NaughtyAttributes;
 using Pulsar.DataClasses;
 using Pulsar.Player;
@@ -20,10 +21,12 @@ public class CameraManager : MonoBehaviour
     [SerializeField]
     private CinemachineCamera gameplayCamera;
 
-    [BoxGroup("Target Group"), SerializeField,]
+    [BoxGroup("Target Group")]
+    [SerializeField]
     private CinemachineTargetGroup targetGroup;
 
-    [BoxGroup("Target Group"), SerializeField,]
+    [BoxGroup("Target Group")]
+    [SerializeField]
     private float playerRadius;
 
     [BoxGroup("Target Group")]
@@ -73,6 +76,8 @@ public class CameraManager : MonoBehaviour
     private void OnPlayerSpawned(PlayerController obj)
     {
         targetGroup.AddMember(obj.transform, playerWeight, playerRadius);
+        mainCamera.GetComponent<StudioListener>()
+            .SetAttentuationObject(obj.gameObject);
         PrioritizeGameplayCamera();
     }
 }

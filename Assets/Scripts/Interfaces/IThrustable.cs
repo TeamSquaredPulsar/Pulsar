@@ -15,6 +15,8 @@ public interface IThrustable
     [Tooltip("Treat up as 'Forward' and down as 'Back'")]
     SerializableDictionary<TileRotation, float> DirectionalThrust { get; }
 
+    bool IsThrusting { get; }
+
     float RotationForce { get; }
 
     TileRotation Rotation { get; }

@@ -2,13 +2,15 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using NaughtyAttributes;
+using Pulsar.Audio;
+using Pulsar.DataClasses;
 using Pulsar.Player;
 using Pulsar.UI;
 using UnityEngine;
 
 namespace Pulsar
 {
-public class GameManager : MonoBehaviour
+public class GameManager : Singleton<GameManager>
 {
     public static event Action<int> OnEnemyKill;
 
@@ -29,8 +31,17 @@ public class GameManager : MonoBehaviour
     private int _score;
     private Coroutine _awaitingWave;
 
-    private void Awake()
+    [BoxGroup("Audio")]
+    [SerializeField]
+    private AudioManager audioManager;
+
+    [BoxGroup("Audio")]
+    [SerializeField]
+    private FmodEvents audioEvents;
+
+    protected override void Awake()
     {
+        base.Awake();
         UIManager.GameStateChangeEvent += OnGameStateChange;
         EnemyController.EnemyDefeatedEvent += HandleEnemyKilled;
     }

@@ -12,3 +12,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 97ebc552411a9c44f9c66643541a6ecd, type: 3}
   m_Name: SingleShot
   m_EditorClassIdentifier: Assembly-CSharp::SingleShot
+  weaponFiredSound:
+    Guid:
+      Data1: 1046454040
+      Data2: 1273565976
+      Data3: 1212372111
+      Data4: -220254140
+    Path: event:/Attack/ShootLight

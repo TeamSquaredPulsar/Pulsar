@@ -1,4 +1,5 @@
 using System;
+using Pulsar.DataClasses;
 using System.Collections;
 using Pulsar.Player;
 using Pulsar.UI;
@@ -7,7 +8,7 @@ using UnityEngine;
 
 namespace Pulsar
 {
-public class UIManager : MonoBehaviour
+public class UIManager : Singleton<UIManager>
 {
     public static event Action<GameState> GameStateChangeEvent;
 
@@ -27,7 +28,6 @@ public class UIManager : MonoBehaviour
     private TMP_Text finalScoreText;
 
     private TMP_Text _scoreText;
-    private int _score;
 
     private IEnumerator Start()
     {
@@ -51,7 +51,6 @@ public class UIManager : MonoBehaviour
 
     private void UpdateScore(int obj)
     {
-        _score = obj;
         _scoreText.text = "Score: " + obj;
     }
 
@@ -83,8 +82,13 @@ public class UIManager : MonoBehaviour
         GameStateChangeEvent?.Invoke(GameState.GameOver);
         mainMenu.SetActive(false);
         gameplayUI.SetActive(false);
-        if (finalScoreText) finalScoreText.text = "Final Score: " + _score;
+        if (finalScoreText)
+        {
+            finalScoreText.text = $"Final {_scoreText.text}";
+        }
+
         gameOverMenu.SetActive(true);
     }
 }
 }
+

@@ -1,7 +1,7 @@
 using Audune.Utils.Dictionary;
 using Pulsar.DataClasses;
 using Pulsar.Interfaces;
-using Pulsar.Weapons;
+using Pulsar.Audio;
 using Pulsar.Weapons.Strategies;
 using UnityEngine;
 
@@ -26,16 +26,26 @@ public class PlayerCore : AutoLazerWeapon, IThrustable, IShipCore
         private set;
     }
 
+    public bool IsThrusting { get; private set; }
+
     [field: SerializeField]
     public float RotationForce { get; private set; }
 
+    protected override void PlayHealthStateAudio()
+    {
+        AudioManager.Instance.PlayOneShot(FmodEvents.Instance.ShipReduceState,
+            transform.position);
+    }
+
     public void ActivateThrust(float amount, in Rigidbody2D targetRb)
     {
+        IsThrusting = true;
         //spriteRenderer.color = Color.red;
     }
 
     public void DeactivateThrust()
     {
+        IsThrusting = false;
         // spriteRenderer.color = Color.white;
     }
 

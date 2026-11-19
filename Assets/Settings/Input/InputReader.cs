@@ -4,6 +4,7 @@ using UnityEngine;
 using UnityEngine.InputSystem;
 using static Controls;
 
+namespace Pulsar.Settings {
 public interface IInputReader
 {
     void EnablePlayerActions();
@@ -80,6 +81,10 @@ public class InputReader : ScriptableObject, IPlayerActions, IInputReader
 
     public void OnMove(InputAction.CallbackContext context)
     {
+        if (context.started)
+        {
+            return;
+        }
         MoveEvent?.Invoke(context.ReadValue<Vector2>());
     }
 
@@ -97,7 +102,7 @@ public class InputReader : ScriptableObject, IPlayerActions, IInputReader
     public void OnSelectTile(InputAction.CallbackContext context)
     {
         // Don't trigger on started because it causes
-        // the event to fire twice on mouse click   
+        // the event to fire twice on mouse click
         if (context.started)
         {
             return;
@@ -144,4 +149,5 @@ public class InputReader : ScriptableObject, IPlayerActions, IInputReader
             RotateSelectedTileEvent?.Invoke(-1);
         }
     }
+}
 }

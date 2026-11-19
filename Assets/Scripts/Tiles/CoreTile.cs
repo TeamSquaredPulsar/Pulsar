@@ -17,17 +17,21 @@ public class CoreTile : Tile, IThrustable, IShipCore
         private set;
     }
 
+    public bool IsThrusting { get; private set; }
+
     [field: SerializeField]
     [Min(0f)]
     public float RotationForce { get; private set; } = 0.1f;
 
     public void ActivateThrust(float amount, in Rigidbody2D targetRb)
     {
+        IsThrusting = true;
         //  spriteRenderer.color = Color.red;
     }
 
     public void DeactivateThrust()
     {
+        IsThrusting = false;
         //  spriteRenderer.color = Color.white;
     }
 

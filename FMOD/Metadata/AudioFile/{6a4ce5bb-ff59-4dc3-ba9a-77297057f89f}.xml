@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<objects serializationModel="Studio.02.02.00">
+	<object class="AudioFile" id="{6a4ce5bb-ff59-4dc3-ba9a-77297057f89f}">
+		<property name="assetPath">
+			<value>SFX/Shapeforms/Thruster Ignite Oneshot_02.wav</value>
+		</property>
+		<property name="frequencyInKHz">
+			<value>48</value>
+		</property>
+		<property name="channelCount">
+			<value>2</value>
+		</property>
+		<property name="length">
+			<value>3.6755833333333334</value>
+		</property>
+		<relationship name="masterAssetFolder">
+			<destination>{8909ad75-74cc-4c66-9508-a79f24205421}</destination>
+		</relationship>
+	</object>
+</objects>

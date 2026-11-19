@@ -78,7 +78,7 @@ LineRenderer:
   m_LightmapParameters: {fileID: 0}
   m_GlobalIlluminationMeshLod: 0
   m_SortingLayerID: -1273028609
-  m_SortingLayer: 5
+  m_SortingLayer: 6
   m_SortingOrder: 20
   m_MaskInteraction: 0
   m_Positions:
@@ -220,7 +220,7 @@ SpriteRenderer:
   m_LightmapParameters: {fileID: 0}
   m_GlobalIlluminationMeshLod: 0
   m_SortingLayerID: -1273028609
-  m_SortingLayer: 5
+  m_SortingLayer: 6
   m_SortingOrder: 15
   m_MaskInteraction: 0
   m_Sprite: {fileID: 21300000, guid: e1971f0ea03877b4da93f936927bf644, type: 3}
@@ -306,16 +306,16 @@ MonoBehaviour:
   tileCollider: {fileID: 5095908355809572340}
   rigidBody: {fileID: 2261048118168935301}
   health: {fileID: 4009485083793066549}
-  spritesOverride: {fileID: 11400000, guid: ec3e1b98f7cb9804e825880aa2014b85, type: 2}
+  spritesOverride: {fileID: 0}
   spriteRenderer: {fileID: 7540636520406933749}
+  <FireRatePerSecond>k__BackingField: 1.5
+  <ReloadingSprite>k__BackingField: {fileID: 0}
+  muzzleEffectPrefab: {fileID: 0}
   <ProjectilePrefab>k__BackingField: {fileID: 1682859016921356063, guid: a133161848d51234b97f8554a243a1ab, type: 3}
   <ParentCollider>k__BackingField: {fileID: 0}
   <FirePoints>k__BackingField:
   - {fileID: 4593652288710760860}
-  <FireRatePerSecond>k__BackingField: 1.5
-  muzzleEffectPrefab: {fileID: 0}
   <Strategy>k__BackingField: {fileID: 11400000, guid: 67d68c3e0a11e41479e9131cdc4b126a, type: 2}
-  <ReloadingSprite>k__BackingField: {fileID: 0}
   targetReticle: {fileID: 433469968832905233}
   targetRadius: {fileID: 6101688074798165259}
   mountingPoint: {fileID: 4131069597832306565}
@@ -325,6 +325,7 @@ MonoBehaviour:
   currentTargetBias: 1.5
   turretSprites: {fileID: 11400000, guid: 5508e9fb22a4fbd4c8270d7233ab46b8, type: 2}
   activeTurretSprite: {fileID: 8082630242208235203}
+  <DeathExplosionPrefab>k__BackingField: {fileID: 4650023321338013299, guid: ca16f83ee0fe4a0a8f82bb5990ad5f59, type: 3}
   <DirectionalThrust>k__BackingField:
     _entries:
     - key: 0
@@ -336,7 +337,6 @@ MonoBehaviour:
     - key: 3
       value: 5
   <RotationForce>k__BackingField: 2
-  <DeathExplosionPrefab>k__BackingField: {fileID: 4650023321338013299, guid: ca16f83ee0fe4a0a8f82bb5990ad5f59, type: 3}
 --- !u!61 &5095908355809572340
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -369,7 +369,7 @@ BoxCollider2D:
     m_Bits: 4294967295
   m_IsTrigger: 0
   m_UsedByEffector: 0
-  m_CompositeOperation: 0
+  m_CompositeOperation: 1
   m_CompositeOrder: 0
   m_Offset: {x: 0, y: 0}
   m_SpriteTilingProperty:
@@ -429,7 +429,7 @@ SpriteRenderer:
   m_LightmapParameters: {fileID: 0}
   m_GlobalIlluminationMeshLod: 0
   m_SortingLayerID: -1599613283
-  m_SortingLayer: 4
+  m_SortingLayer: 5
   m_SortingOrder: 0
   m_MaskInteraction: 0
   m_Sprite: {fileID: 21300000, guid: a8d434fca65296448af748cdd6e14302, type: 3}
@@ -499,7 +499,7 @@ CircleCollider2D:
   m_CallbackLayers:
     serializedVersion: 2
     m_Bits: 4294967295
-  m_IsTrigger: 0
+  m_IsTrigger: 1
   m_UsedByEffector: 0
   m_CompositeOperation: 0
   m_CompositeOrder: 0

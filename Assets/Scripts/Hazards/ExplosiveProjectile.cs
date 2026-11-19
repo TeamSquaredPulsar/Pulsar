@@ -1,3 +1,6 @@
+using FMODUnity;
+using NaughtyAttributes;
+using Pulsar.Audio;
 using UnityEngine;
 
 namespace Pulsar.Hazards
@@ -8,7 +11,7 @@ namespace Pulsar.Hazards
 ///     @author Alfredo Luzardo
 ///     @version 1.1
 /// </summary>
-[RequireComponent(typeof(Rigidbody2D))]
+[RequireComponent(typeof(Rigidbody2D), typeof(StudioEventEmitter))]
 public class ExplosiveProjectile : Projectile
 {
     [field: SerializeField]
@@ -35,9 +38,21 @@ public class ExplosiveProjectile : Projectile
     [Min(0f)]
     private float maxSpeed = 10f;
 
+    private StudioEventEmitter _emitter;
+
     private void Awake()
     {
         ps = GetComponentInChildren<ParticleSystem>();
+        _emitter = AudioManager.Instance.CreateEmitter(
+            FmodEvents.Instance.RocketMove,
+            gameObject);
+    }
+
+    protected override void Start()
+    {
+        base.Start();
+        ps.Play();
+        _emitter.Play();
     }
 
     private void FixedUpdate()
@@ -54,12 +69,15 @@ public class ExplosiveProjectile : Projectile
         float boost = Mathf.Min(acceleration * Time.fixedDeltaTime,
             maxSpeed - forwardSpeed);
 
-        if (ps != null)
-        {
-            ps.Play();
-        }
-
         rb.linearVelocity += forward * boost;
+    }
+
+    protected override void PlayAudioEffect()
+    {
+        _emitter.Stop();
+        AudioManager.Instance.PlayOneShot(
+            FmodEvents.Instance.RocketExplode,
+            transform.position);
     }
 }
 }

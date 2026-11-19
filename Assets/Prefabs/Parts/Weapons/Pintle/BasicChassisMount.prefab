@@ -140,7 +140,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: d1236c1e551165b48b0864561b6c2156, type: 3}
-  m_Name: 
+  m_Name:
   m_EditorClassIdentifier: Pulsar.Ship::Health
   <MaxHealth>k__BackingField: 10
   currentHealth: 10
@@ -154,7 +154,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: c019cc02558f4184caee033e91f9be62, type: 3}
-  m_Name: 
+  m_Name:
   m_EditorClassIdentifier: Weapons::Pulsar.Weapons.Weapons.PintleWeaponTile
   baseColor: {r: 1, g: 1, b: 1, a: 1}
   <IsAttached>k__BackingField: 0
@@ -164,6 +164,20 @@ MonoBehaviour:
   health: {fileID: 2303072813145309213}
   spritesOverride: {fileID: 11400000, guid: 98efc5c07251a3f43a4c2f648d1cb3f7, type: 2}
   spriteRenderer: {fileID: 497275641067805184}
+  damageStateChangeSound:
+    Guid:
+      Data1: 1660910153
+      Data2: 1263548361
+      Data3: -413367378
+      Data4: 1675320881
+    Path: event:/Damage/ReduceState
+  onHitSound:
+    Guid:
+      Data1: 1366578804
+      Data2: 1111099715
+      Data3: 1340059779
+      Data4: -543357253
+    Path: event:/Damage/Hit
   <FireRatePerSecond>k__BackingField: 1.5
   <ReloadingSprite>k__BackingField: {fileID: 0}
   muzzleEffectPrefab: {fileID: 3746964275708600174, guid: a3146839e3348e04f8cc69417d7e4b6d, type: 3}

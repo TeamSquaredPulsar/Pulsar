@@ -1,6 +1,7 @@
 using System;
 using Pulsar.DataClasses;
 using Pulsar.Player;
+using Pulsar.Settings;
 using Pulsar.Utilities;
 using UnityEngine;
 
@@ -10,9 +11,9 @@ namespace Pulsar.UI
 public class PlayerCursor : MonoBehaviour
 {
     public static event Action<Result<Tile>> PlayerSelectTile;
-    
+
     public static Vector3 CursorPosition = Vector3.zero;
-    
+
     [SerializeField]
     private InputReader input;
 
@@ -42,10 +43,10 @@ public class PlayerCursor : MonoBehaviour
     {
         Cursor.visible = false;
         Cursor.lockState = CursorLockMode.Confined;
-        
+
         Vector2 initPos = cameraData.ScreenSize / 2;
         OnCursorMove(initPos);
-        
+
         input.EnablePlayerActions();
     }
 
@@ -70,7 +71,7 @@ public class PlayerCursor : MonoBehaviour
             PlayerSelectTile?.Invoke(Result<Tile>.Fail());
             return;
         }
-        
+
         Tile tile = result.Value;
         if (tile == _selectedTile)
         {

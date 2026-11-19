@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<objects serializationModel="Studio.02.02.00">
+	<object class="AudioFile" id="{5e44d379-14a8-4a2b-9cfa-e36d8dd70113}">
+		<property name="assetPath">
+			<value>SFX/Thruster or Wind Turbulence Loop_07.wav</value>
+		</property>
+		<property name="frequencyInKHz">
+			<value>48</value>
+		</property>
+		<property name="channelCount">
+			<value>2</value>
+		</property>
+		<property name="length">
+			<value>10.988354166666667</value>
+		</property>
+		<relationship name="masterAssetFolder">
+			<destination>{8909ad75-74cc-4c66-9508-a79f24205421}</destination>
+		</relationship>
+	</object>
+</objects>

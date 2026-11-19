@@ -1,4 +1,5 @@
 using System;
+using JetBrains.Annotations;
 using Pulsar.DataClasses;
 using Pulsar.Interactions;
 using UnityEngine;
@@ -94,7 +95,17 @@ public abstract class Tile : MonoBehaviour
 
     private void OnHealthStateChanged(HealthState state)
     {
+        PlayHealthStateAudio();
         RefreshSprite();
+    }
+
+    /// <summary>
+    /// Overridable function so different tiles can play different audio when
+    /// their health state changes, if they want.
+    /// </summary>
+    protected virtual void PlayHealthStateAudio()
+    {
+        return; // Default tiles don't play anything
     }
 
     protected void RefreshSprite()
@@ -106,10 +117,14 @@ public abstract class Tile : MonoBehaviour
         }
     }
 
+    [CanBeNull]
     protected virtual Sprite GetCurrentSprite(HealthState state) =>
         Sprites ? Sprites.Get(state) : null;
 
-    public void TakeDamage(float damage) => health.TakeDamage(damage);
+    public void TakeDamage(float damage)
+    {
+        health.TakeDamage(damage);
+    }
 
     /// <summary>
     /// To ask whether the rotated tile can connect from dir
