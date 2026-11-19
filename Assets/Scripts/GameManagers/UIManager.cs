@@ -24,6 +24,9 @@ public class UIManager : Singleton<UIManager>
     [SerializeField]
     private bool useMainMenuScene;
 
+    [SerializeField]
+    private TMP_Text finalScoreText;
+
     private TMP_Text _scoreText;
 
     private IEnumerator Start()
@@ -79,6 +82,11 @@ public class UIManager : Singleton<UIManager>
         GameStateChangeEvent?.Invoke(GameState.GameOver);
         mainMenu.SetActive(false);
         gameplayUI.SetActive(false);
+        if (finalScoreText)
+        {
+            finalScoreText.text = $"Final {_scoreText}";
+        }
+
         gameOverMenu.SetActive(true);
     }
 }

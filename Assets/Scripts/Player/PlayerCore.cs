@@ -3,6 +3,7 @@ using Pulsar.DataClasses;
 using Pulsar.Interfaces;
 using Pulsar.Audio;
 using Pulsar.Weapons;
+using Pulsar.Weapons.Strategies;
 using UnityEngine;
 
 namespace Pulsar.Player
@@ -12,8 +13,11 @@ namespace Pulsar.Player
 /// @author Corey Buchan
 /// @version 0.9
 /// </summary>
-public class PlayerCore : AutoWeapon, IThrustable, IShipCore
+public class PlayerCore : AutoLazerWeapon, IThrustable, IShipCore
 {
+    [field: SerializeField]
+    public GameObject DeathExplosionPrefab { get; private set; }
+
     [field: SerializeField]
     [field: SerializableDictionaryOptions(keyHeader = "Direction",
         valueHeader = "Force")]
@@ -34,12 +38,12 @@ public class PlayerCore : AutoWeapon, IThrustable, IShipCore
 
     public void ActivateThrust(float amount, in Rigidbody2D targetRb)
     {
-        spriteRenderer.color = Color.red;
+        //spriteRenderer.color = Color.red;
     }
 
     public void DeactivateThrust()
     {
-        spriteRenderer.color = Color.white;
+        // spriteRenderer.color = Color.white;
     }
 
     public void ActivateRotation(float amount, in Rigidbody2D targetRb)

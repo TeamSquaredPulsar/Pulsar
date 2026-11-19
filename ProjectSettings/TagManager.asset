@@ -51,6 +51,9 @@ TagManager:
   - name: 3NearBackground
     uniqueID: 2651884553
     locked: 0
+  - name: Tutorial
+    uniqueID: 1791762699
+    locked: 0
   - name: CoreGame
     uniqueID: 2695354013
     locked: 0

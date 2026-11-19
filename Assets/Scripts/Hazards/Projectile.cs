@@ -28,7 +28,7 @@ public class Projectile : MonoBehaviour
     private float lifeTime = 4;
 
     [SerializeField]
-    private ParticleSystem hitEffectPrefab;
+    private GameObject hitEffectPrefab;
 
     [SerializeField]
     private Collider2D coll2D;
@@ -57,9 +57,14 @@ public class Projectile : MonoBehaviour
             return;
         }
 
-        if (hitEffectPrefab)
+        if (hitEffectPrefab  != null)
         {
-            hitEffectPrefab.Play();
+            ContactPoint2D contact = collision.GetContact(0);
+            // Point the effect's cone along the surface normal (back toward the
+            // shooter), so sparks and chips bounce off the hull.
+            Quaternion facing
+                = Quaternion.LookRotation(contact.normal, Vector3.forward);
+            Instantiate(hitEffectPrefab, contact.point, facing);
         }
         PlayAudioEffect();
 

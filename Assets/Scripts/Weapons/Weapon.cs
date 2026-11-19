@@ -10,12 +10,10 @@ using UnityEngine.Serialization;
 namespace Pulsar.Weapons
 {
 /// <summary>
-/// Represents a weapon
-///
-/// Reference: https://www.youtube.com/watch?v=2mThTAhD16M
-///
-/// @author Alfredo Luzardo
-/// @version 1.1
+///     Represents a weapon
+///     Reference: https://www.youtube.com/watch?v=2mThTAhD16M
+///     @author Alfredo Luzardo
+///     @version 1.1
 /// </summary>
 public abstract class Weapon : Tile, IProjectileSpawner, IWeapon
 {
@@ -29,7 +27,8 @@ public abstract class Weapon : Tile, IProjectileSpawner, IWeapon
     [SerializeField]
     private ParticleSystem muzzleEffectPrefab;
 
-    private Dictionary<Transform, ParticleSystem> _fireEffectMap = new();
+    private readonly Dictionary<Transform, ParticleSystem> _fireEffectMap
+        = new();
 
     private Coroutine _fireTimerRoutine;
     private Projectile _projectile;
@@ -37,7 +36,9 @@ public abstract class Weapon : Tile, IProjectileSpawner, IWeapon
     protected override void Start()
     {
         base.Start();
-        _projectile = ProjectilePrefab.gameObject.GetComponent<Projectile>();
+        _projectile = ProjectilePrefab
+            ? ProjectilePrefab.GetComponent<Projectile>()
+            : null;
 
         // passing the muzzle particle effect as a child to each fire point
         if (muzzleEffectPrefab == null)
@@ -60,7 +61,7 @@ public abstract class Weapon : Tile, IProjectileSpawner, IWeapon
 
     public Collider2D Coll2D => tileCollider;
 
-    public GameObject SpawnProjectile(Transform spawnPoint)
+    public virtual GameObject SpawnProjectile(Transform spawnPoint)
     {
         GameObject projectile
             = _projectile.SpawnProjectile(spawnPoint, ParentCollider);
@@ -91,7 +92,7 @@ public abstract class Weapon : Tile, IProjectileSpawner, IWeapon
 
     public bool CanFire => _fireTimerRoutine == null;
 
-    public void Fire()
+    public virtual void Fire()
     {
         if (!CanFire)
         {
@@ -103,15 +104,17 @@ public abstract class Weapon : Tile, IProjectileSpawner, IWeapon
         StartFireTimer();
     }
 
-    private void StartFireTimer()
+    private void StartFireTimer() => StartCooldown(1 / FireRatePerSecond);
+
+    protected void StartCooldown(float seconds)
     {
-        _fireTimerRoutine = StartCoroutine(ActivateFireTimer());
+        _fireTimerRoutine = StartCoroutine(ActivateFireTimer(seconds));
         RefreshSprite();
     }
 
-    private IEnumerator ActivateFireTimer()
+    private IEnumerator ActivateFireTimer(float seconds)
     {
-        yield return new WaitForSeconds(1 / FireRatePerSecond);
+        yield return new WaitForSeconds(seconds);
         _fireTimerRoutine = null;
         RefreshSprite();
     }

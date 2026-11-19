@@ -96,6 +96,7 @@ MonoBehaviour:
     - key: 3
       value: 5
   <RotationForce>k__BackingField: 25
+  <DeathExplosionPrefab>k__BackingField: {fileID: 4650023321338013299, guid: ca16f83ee0fe4a0a8f82bb5990ad5f59, type: 3}
 --- !u!212 &497275641067805184
 SpriteRenderer:
   serializedVersion: 2

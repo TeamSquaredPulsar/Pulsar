@@ -124,6 +124,7 @@ MonoBehaviour:
   input: {fileID: 11400000, guid: c5eb4fca90495374ca60a24df65307ec, type: 2}
   visual: {fileID: 1642738855117670638}
   circleCollider: {fileID: 7754232205911539395}
+  cameraData: {fileID: 11400000, guid: 3422a4889e5877b4fafae9f0099db266, type: 2}
 --- !u!58 &7754232205911539395
 CircleCollider2D:
   m_ObjectHideFlags: 0

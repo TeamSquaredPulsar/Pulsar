@@ -89,6 +89,7 @@ public class GameManager : Singleton<GameManager>
 
     private void HandleGameStart()
     {
+        _score = 0;
         Tile[] tiles = FindObjectsByType<Tile>(FindObjectsSortMode.None);
         foreach (Tile tile in tiles)
         {

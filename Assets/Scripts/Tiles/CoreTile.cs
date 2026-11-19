@@ -6,6 +6,9 @@ using UnityEngine;
 public class CoreTile : Tile, IThrustable, IShipCore
 {
     [field: SerializeField]
+    public GameObject DeathExplosionPrefab { get; private set; }
+
+    [field: SerializeField]
     [field: SerializableDictionaryOptions(keyHeader = "Direction",
         valueHeader = "Force")]
     public SerializableDictionary<TileRotation, float> DirectionalThrust
@@ -20,12 +23,12 @@ public class CoreTile : Tile, IThrustable, IShipCore
 
     public void ActivateThrust(float amount, in Rigidbody2D targetRb)
     {
-        spriteRenderer.color = Color.red;
+        //  spriteRenderer.color = Color.red;
     }
 
     public void DeactivateThrust()
     {
-        spriteRenderer.color = Color.white;
+        //  spriteRenderer.color = Color.white;
     }
 
     public void ActivateRotation(float amount, in Rigidbody2D targetRb)
