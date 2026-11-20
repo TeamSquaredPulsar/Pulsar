@@ -4,7 +4,7 @@ using UnityEngine;
 using UnityEngine.InputSystem;
 using static Controls;
 
-namespace Pulsar.Settings {
+namespace Pulsar.Settings.Input {
 public interface IInputReader
 {
     void EnablePlayerActions();

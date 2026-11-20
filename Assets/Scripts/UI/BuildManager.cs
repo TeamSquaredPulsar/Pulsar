@@ -2,7 +2,7 @@ using System.Collections;
 using Pulsar.DataClasses;
 using Pulsar.Utilities;
 using Pulsar.Player;
-using Pulsar.Settings;
+using Pulsar.Settings.Input;
 using UnityEngine;
 
 namespace Pulsar.UI
@@ -30,12 +30,11 @@ public class BuildManager : MonoBehaviour
     [SerializeField, Min(0.1f),]
     private float tileDestroySeconds;
 
-    private Tile _selectedTile;
+    private Tile _selectedTile = null!;
     private bool _atOutline;
     private float _orbitAngle;
     private Vector2Int _attachCell;
     private TileRotation _attachRotation;
-    private Tile _highlightedTile;
 
     private Coroutine _destroyTileCoroutine;
     private Coroutine _updateRadialRoutine;

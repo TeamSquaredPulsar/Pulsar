@@ -1,7 +1,7 @@
 using System;
 using Pulsar.DataClasses;
 using Pulsar.Player;
-using Pulsar.Settings;
+using Pulsar.Settings.Input;
 using Pulsar.Utilities;
 using UnityEngine;
 

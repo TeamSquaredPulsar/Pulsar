@@ -2,13 +2,13 @@ using System;
 using System.IO;
 using UnityEngine;
 
-namespace Pulsar.UI
+namespace Pulsar.Settings
 {
 public static class GameSettingsStore
 {
-    private const string FileName = "gamecof.data";
+    private const string k_FileName = "gamecof.data";
 
-    private static string FilePath => Path.Combine(Application.persistentDataPath, FileName);
+    private static string FilePath => Path.Combine(Application.persistentDataPath, k_FileName);
 
     public static event Action<bool, Vector2Int> ScreenChanged;
     public static event Action<float> MasterVolumeChanged;
@@ -93,11 +93,9 @@ public static class GameSettingsStore
             Directory.CreateDirectory(Application.persistentDataPath);
             File.WriteAllText(FilePath, JsonUtility.ToJson(_current, true));
         }
-        catch (Exception exception) when (exception is IOException
-                                          || exception is UnauthorizedAccessException)
+        catch (Exception exception) when (exception is IOException or UnauthorizedAccessException)
         {
             Debug.LogWarning($"Could not save settings to '{FilePath}': {exception.Message}");
-            return;
         }
     }
 

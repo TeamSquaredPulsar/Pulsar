@@ -39,7 +39,8 @@ public class TutorialController : MonoBehaviour
     [SerializeField]
     private Button menuButton;
 
-    [SerializeField, Min(0f)]
+    [SerializeField]
+    [Min(0f)]
     private float childFadeDuration = 0.5f;
 
     [SerializeField]
@@ -47,14 +48,13 @@ public class TutorialController : MonoBehaviour
 
     // private Coroutine _stepFade;
     private readonly List<Tile> _tilesWillBeAttached = new();
-    public int _step;
+    private int _step = -1;
     private bool _finished;
-    private Camera _mainCam;
 
     private void Awake()
     {
         PlayerController.PlayerSpawnedEvent += OnPlayerSpawned;
-        CameraData.MainCamera = _mainCam = Camera.main;
+        PlayerCursor.PlayerSelectTile += OnPlayerSelectTile;
         completionPanel.gameObject.SetActive(false);
     }
 
@@ -63,9 +63,6 @@ public class TutorialController : MonoBehaviour
         enemy.ShipDestroyedEvent += OnEnemyCoreDestroyed;
         retryButton.onClick.AddListener(Retry);
         menuButton.onClick.AddListener(BackToMenu);
-        PlayerCursor.PlayerSelectTile += OnPlayerSelectTile;
-        player.GetComponent<ShipManager>().OnDetachTile += OnPlayerDetachTile;
-        ShowStep();
     }
 
     private void OnDestroy()
@@ -113,18 +110,22 @@ public class TutorialController : MonoBehaviour
 
     private void LateUpdate()
     {
-        if (_finished)
+        if (_finished || !player)
         {
             return;
         }
 
         Vector3 position = player.transform.position;
-        _mainCam.transform.position = new Vector3(position.x, position.y, -10f);
+        CameraData.MainCamera.transform.position
+            = new Vector3(position.x, position.y, -10f);
     }
 
     private void OnPlayerSpawned(PlayerController playerController)
     {
         player = playerController;
+        player.GetComponent<ShipManager>().OnDetachTile += OnPlayerDetachTile;
+        _step = 0;
+        ShowStep();
     }
 
     private void OnPlayerDetachTile()
@@ -174,14 +175,9 @@ public class TutorialController : MonoBehaviour
     {
         defeated.ShipDestroyedEvent -= OnEnemyCoreDestroyed;
         enemyCoreMarker.SetActive(false);
-        foreach (Tile tile in _tilesWillBeAttached)
+        foreach (Rigidbody2D rb in _tilesWillBeAttached.Where(tile => tile)
+                     .Select(tile => tile.GetComponent<Rigidbody2D>()))
         {
-            if (tile == null)
-            {
-                continue;
-            }
-
-            Rigidbody2D rb = tile.GetComponent<Rigidbody2D>();
             rb.linearVelocity *= 0.2f;
             rb.angularVelocity = 0f;
             rb.linearDamping = 3f;
@@ -245,7 +241,7 @@ public class TutorialController : MonoBehaviour
         // if (_stepFade != null) StopCoroutine(_stepFade);
         completionPanel.gameObject.SetActive(true);
         completionPanel.transform.position
-            = _mainCam.transform.position + new Vector3(0, 2f, 8f);
+            = CameraData.MainCamera.transform.position + new Vector3(0, 2f, 8f);
         retryButton.Select();
     }
 

@@ -21,15 +21,6 @@ public class GameManager : Singleton<GameManager>
     [RequiredType(typeof(PlayerController))]
     private GameObject playerPrefab;
 
-    [BoxGroup("Enemy")]
-    [SerializeField]
-    [RequiredType(typeof(EnemySpawner))]
-    private GameObject enemySpawnerPrefab;
-
-    [BoxGroup("Enemy")]
-    [SerializeField]
-    private int waveDelaySeconds;
-
     [SerializeField]
     [field:
         SerializableDictionaryOptions(keyHeader = "State",
@@ -44,10 +35,10 @@ public class GameManager : Singleton<GameManager>
     [SerializeField]
     private FmodEvents audioEvents;
 
-    public int Score
+    private int Score
     {
         get => _score;
-        private set
+        set
         {
             _score = value;
             OnScoreChange?.Invoke(_score);
@@ -79,14 +70,14 @@ public class GameManager : Singleton<GameManager>
         //Handle case-specific logic here.
         switch (obj)
         {
+            case GameState.Sandbox:
+            case GameState.Tutorial:
             case GameState.Playing:
                 HandleGameStart();
                 break;
             case GameState.GameOver:
             case GameState.MainMenu:
             case GameState.Loading:
-            case GameState.Sandbox:
-            case GameState.Tutorial:
                 break;
             default:
                 throw new ArgumentOutOfRangeException(nameof(obj), obj, null);
@@ -96,18 +87,15 @@ public class GameManager : Singleton<GameManager>
     private void HandleGameStart()
     {
         Score = 0;
-        Tile[] tiles = FindObjectsByType<Tile>(FindObjectsSortMode.None);
-        foreach (Tile tile in tiles)
-        {
-            Destroy(tile.gameObject);
-        }
-
         Instantiate(playerPrefab, Vector3.zero, Quaternion.identity);
     }
 
     public async Task LoadLevel(GameState levelState)
     {
         StateManager.SetCurrentState(GameState.Loading);
+
+        CleanupTiles();
+
         if (!scenes.TryGetValue(levelState, out SceneReference scene))
         {
             throw new InvalidOperationException(
@@ -124,6 +112,15 @@ public class GameManager : Singleton<GameManager>
         }
 
         StateManager.SetCurrentState(levelState);
+    }
+
+    private static void CleanupTiles()
+    {
+        Tile[] tiles = FindObjectsByType<Tile>(FindObjectsSortMode.None);
+        foreach (Tile tile in tiles)
+        {
+            Destroy(tile.gameObject);
+        }
     }
 }
 }

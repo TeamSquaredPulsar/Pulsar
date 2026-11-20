@@ -1,5 +1,7 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
+using Pulsar.Settings;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -8,14 +10,6 @@ namespace Pulsar.UI
 {
 public class SettingsScreen : MonoBehaviour
 {
-    public static readonly Vector2Int[] Resolutions =
-    {
-        new Vector2Int(2560, 1440),
-        new Vector2Int(1920, 1080),
-        new Vector2Int(1600, 900),
-        new Vector2Int(1280, 720),
-    };
-
     [SerializeField] private MainMenu mainMenu;
     [SerializeField] private Button backButton;
     [SerializeField] private Slider volumeSlider;
@@ -89,25 +83,25 @@ public class SettingsScreen : MonoBehaviour
 
     public void SetResolution(int index)
     {
-        if (index < 0 || index >= Resolutions.Length)
+        if (index < 0 || index >= GameSettings.Resolutions.Length)
         {
             return;
         }
 
-        GameSettingsStore.SetResolution(Resolutions[index]);
+        GameSettingsStore.SetResolution(GameSettings.Resolutions[index]);
         resolutionDropdown.SetValueWithoutNotify(index);
         resolutionDropdown.RefreshShownValue();
     }
 
     private void RefreshResolutionDropdown()
     {
-        List<string> options = new List<string>(Resolutions.Length);
-        foreach (Vector2Int resolution in Resolutions)
-            options.Add($"{resolution.x} x {resolution.y}");
+        List<string> options = new List<string>(GameSettings.Resolutions.Length);
+        options.AddRange(GameSettings.Resolutions.Select(resolution => $"{resolution.x} x {resolution.y}"));
+
         resolutionDropdown.ClearOptions();
         resolutionDropdown.AddOptions(options);
         resolutionDropdown.interactable = options.Count > 0;
-        int index = Array.IndexOf(Resolutions, GameSettingsStore.Current.resolution);
+        int index = Array.IndexOf(GameSettings.Resolutions, GameSettingsStore.Current.resolution);
         resolutionDropdown.SetValueWithoutNotify(Mathf.Max(0, index));
         resolutionDropdown.RefreshShownValue();
     }
