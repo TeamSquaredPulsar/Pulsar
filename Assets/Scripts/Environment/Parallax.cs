@@ -9,6 +9,11 @@ public class Parallax : MonoBehaviour
     [SerializeField]
     private SpriteRenderer spriteRenderer;
 
+    public bool useOverrideCamera;
+
+    [EnableIf("useOverrideCamera")]
+    public Camera overrideCamera;
+
     [Header("Settings")]
     [OnValueChanged("SetupTiling")]
     [SerializeField]
@@ -38,8 +43,9 @@ public class Parallax : MonoBehaviour
 
     private void FixedUpdate()
     {
+        Camera cam = useOverrideCamera ? overrideCamera : CameraData.MainCamera;
         Vector2 distance
-            = CameraData.MainCamera.transform.position * parallaxEffect;
+            = cam.transform.position * parallaxEffect;
         transform.position = _startPos + distance;
         HandleInfiniteScroll();
     }

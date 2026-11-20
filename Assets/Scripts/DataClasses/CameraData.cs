@@ -20,7 +20,7 @@ public static class CameraData
 
     public static Camera MainCamera
     {
-        get => _mainCamera;
+        get => !_mainCamera ? Camera.main : _mainCamera;
         set
         {
             _mainCamera = value;

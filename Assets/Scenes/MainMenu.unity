@@ -231,7 +231,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3161630342289904867, guid: d5227e024d2f8b641832ebb8c0c5b82b, type: 3}
       propertyPath: m_fontSize
-      value: 193.85
+      value: 193.9
       objectReference: {fileID: 0}
     - target: {fileID: 3332715678570640297, guid: d5227e024d2f8b641832ebb8c0c5b82b, type: 3}
       propertyPath: m_AnchorMax.y
@@ -498,6 +498,14 @@ PrefabInstance:
       propertyPath: m_Name
       value: BGLayers
       objectReference: {fileID: 0}
+    - target: {fileID: 3222885318077331652, guid: ee943f43f9dd5434aab7831772e3150a, type: 3}
+      propertyPath: overrideCamera
+      value: 
+      objectReference: {fileID: 0}
+    - target: {fileID: 3222885318077331652, guid: ee943f43f9dd5434aab7831772e3150a, type: 3}
+      propertyPath: useOverrideCamera
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 5220745339151573005, guid: ee943f43f9dd5434aab7831772e3150a, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0
@@ -536,6 +544,22 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5220745339151573005, guid: ee943f43f9dd5434aab7831772e3150a, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6597580476545293458, guid: ee943f43f9dd5434aab7831772e3150a, type: 3}
+      propertyPath: overrideCamera
+      value: 
+      objectReference: {fileID: 0}
+    - target: {fileID: 6597580476545293458, guid: ee943f43f9dd5434aab7831772e3150a, type: 3}
+      propertyPath: useOverrideCamera
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8349437331049041967, guid: ee943f43f9dd5434aab7831772e3150a, type: 3}
+      propertyPath: overrideCamera
+      value: 
+      objectReference: {fileID: 0}
+    - target: {fileID: 8349437331049041967, guid: ee943f43f9dd5434aab7831772e3150a, type: 3}
+      propertyPath: useOverrideCamera
       value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
