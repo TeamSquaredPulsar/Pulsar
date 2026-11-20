@@ -23,9 +23,14 @@ public class WaveManager : MonoBehaviour
 
     private Coroutine _awaitingWave;
 
-    private void Awake()
+    private void OnEnable()
     {
         StateManager.GameStateChanged += OnGameStateChange;
+    }
+
+    private void OnDisable()
+    {
+        StateManager.GameStateChanged -= OnGameStateChange;
     }
 
     private void OnGameStateChange(GameState obj)

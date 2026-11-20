@@ -39,11 +39,11 @@ public class BuildManager : MonoBehaviour
     private Coroutine _destroyTileCoroutine;
     private Coroutine _updateRadialRoutine;
 
-    private void Awake()
+    private void OnEnable()
     {
         PlayerController.PlayerSpawnedEvent += OnPlayerSpawned;
         PlayerCursor.PlayerSelectTile += OnPlayerSelectTile;
-        input.RotateSelectedTileEvent += OnCwRotateSelectedTile;
+        input.RotateSelectedTileEvent += RotateSelectedTile;
     }
 
     private void Start()
@@ -52,11 +52,11 @@ public class BuildManager : MonoBehaviour
         radialMenu.Hide();
     }
 
-    private void OnDestroy()
+    private void OnDisable()
     {
         PlayerController.PlayerSpawnedEvent -= OnPlayerSpawned;
         PlayerCursor.PlayerSelectTile -= OnPlayerSelectTile;
-        input.RotateSelectedTileEvent -= OnCwRotateSelectedTile;
+        input.RotateSelectedTileEvent -= RotateSelectedTile;
     }
 
     private void OnPlayerSpawned(PlayerController obj)
@@ -279,10 +279,8 @@ public class BuildManager : MonoBehaviour
             _attachCell.CellToWorld(_player.transform), rotation);
     }
 
-    private void OnCwRotateSelectedTile(int i) => RotateSelectedTile(i);
-
     // Positive steps turn counterclockwise, negative steps turn clockwise.
-    public void RotateSelectedTile(int quarterTurns)
+    private void RotateSelectedTile(int quarterTurns)
     {
         if (!_selectedTile || _selectedTile.IsAttached || !_player)
         {
