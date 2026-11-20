@@ -689,7 +689,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: "AWSD to \nactivate thruster"
+  m_text: "WASD to \nactivate thruster"
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: e5d275e10c0a498479262265a2423103, type: 2}
   m_sharedMaterial: {fileID: 1362536636814517401, guid: e5d275e10c0a498479262265a2423103, type: 2}
@@ -2777,7 +2777,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   player: {fileID: 900000002}
   enemy: {fileID: 900000006}
-  cameraData: {fileID: 11400000, guid: 3422a4889e5877b4fafae9f0099db266, type: 2}
   gateOutlines:
   - {fileID: 89002860}
   - {fileID: 501368543}
@@ -2794,6 +2793,7 @@ MonoBehaviour:
   menuButton: {fileID: 371976429}
   childFadeDuration: 0.4
   gateCompleteColor: {r: 0.2, g: 1, b: 0.4, a: 1}
+  _step: 0
 --- !u!1 &982446027
 GameObject:
   m_ObjectHideFlags: 0

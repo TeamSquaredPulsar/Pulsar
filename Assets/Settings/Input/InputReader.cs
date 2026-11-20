@@ -20,9 +20,6 @@ public class InputReader : ScriptableObject, IPlayerActions, IInputReader
     public event Action<bool> SelectTileEvent;
     public event Action<int> RotateSelectedTileEvent;
 
-    [SerializeField]
-    private CameraData camData;
-
     private Controls _controls;
 
     private void Awake()
@@ -71,7 +68,10 @@ public class InputReader : ScriptableObject, IPlayerActions, IInputReader
         bool enabled = _controls.Player.enabled;
         _controls.Player.Disable();
         InputBindingStore.Load(_controls.asset);
-        if (enabled) _controls.Player.Enable();
+        if (enabled)
+        {
+            _controls.Player.Enable();
+        }
     }
 
     public void EnablePlayerActions()
@@ -124,7 +124,7 @@ public class InputReader : ScriptableObject, IPlayerActions, IInputReader
         input /= 2;
 
         // Multiply by camera dimensions so we can get full screen size
-        input *= camData.ScreenSize;
+        input *= CameraData.ScreenSize;
 
         MoveCursorEvent?.Invoke(input);
     }

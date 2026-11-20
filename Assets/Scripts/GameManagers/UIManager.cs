@@ -1,93 +1,88 @@
-using System;
 using Pulsar.DataClasses;
-using System.Collections;
+using System.Collections.Generic;
+using Audune.Utils.Dictionary;
 using Pulsar.Player;
-using Pulsar.UI;
 using TMPro;
 using UnityEngine;
+
+// ReSharper disable AsyncVoidMethod
 
 namespace Pulsar
 {
 public class UIManager : Singleton<UIManager>
 {
-    public static event Action<GameState> GameStateChangeEvent;
+    [SerializeField]
+    [field: SerializableDictionaryOptions(keyHeader = "State", valueHeader = "UI")]
+    private SerializableDictionary<GameState, GameObject> uiStates = new();
 
     [SerializeField]
-    private GameObject mainMenu;
-
-    [SerializeField]
-    private GameObject gameplayUI;
-
-    [SerializeField]
-    private GameObject gameOverMenu;
-
-    [SerializeField]
-    private bool useMainMenuScene;
+    private Canvas uiCanvas;
 
     [SerializeField]
     private TMP_Text finalScoreText;
 
-    private TMP_Text _scoreText;
+    [SerializeField]
+    private TMP_Text scoreText;
 
-    private IEnumerator Start()
+    protected override void Awake()
     {
-        GameManager.OnEnemyKill += UpdateScore;
+        base.Awake();
+        CameraData.MainCameraChanged += OnMainCameraChanged;
+        StateManager.GameStateChanged += SetUIMode;
+        GameManager.OnScoreChange += UpdateScore;
         PlayerController.PlayerLossEvent += OnPlayerLoss;
-        _scoreText = gameplayUI.GetComponentInChildren<TMP_Text>();
-
-        if (useMainMenuScene)
-        {
-            // Let the scene cameras and other managers finish initialization first.
-            yield return null;
-            OnStartGameClicked();
-        }
     }
 
     private void OnDestroy()
     {
-        GameManager.OnEnemyKill -= UpdateScore;
+        CameraData.MainCameraChanged -= OnMainCameraChanged;
+        StateManager.GameStateChanged -= SetUIMode;
+        GameManager.OnScoreChange -= UpdateScore;
         PlayerController.PlayerLossEvent -= OnPlayerLoss;
+    }
+
+    private void OnMainCameraChanged(Camera cam)
+    {
+        uiCanvas.worldCamera = cam;
+    }
+
+    private void SetUIMode(GameState state)
+    {
+        foreach (KeyValuePair<GameState, GameObject> uiState in uiStates)
+        {
+            uiState.Value.gameObject.SetActive(uiState.Key == state);
+        }
     }
 
     private void UpdateScore(int obj)
     {
-        _scoreText.text = "Score: " + obj;
+        scoreText.text = "Score: " + obj;
     }
 
-    public void OnStartGameClicked()
+
+    public async void OnStartGameClicked()
     {
-        GameStateChangeEvent?.Invoke(GameState.Playing);
-        mainMenu.SetActive(false);
-        gameplayUI.SetActive(true);
-        gameOverMenu.SetActive(false);
-        UpdateScore(0);
+        await GameManager.Instance.LoadLevel(GameState.Playing);
     }
 
-    public void OnToMainMenuClicked()
+    public async void OnToMainMenuClicked()
     {
-        if (useMainMenuScene)
-        {
-            SceneTransition.LoadScene("MainMenu");
-            return;
-        }
+        await GameManager.Instance.LoadLevel(GameState.MainMenu);
+    }
 
-        GameStateChangeEvent?.Invoke(GameState.MainMenu);
-        mainMenu.SetActive(true);
-        gameplayUI.SetActive(false);
-        gameOverMenu.SetActive(false);
+    public async void OnSandboxClicked()
+    {
+        await GameManager.Instance.LoadLevel(GameState.Sandbox);
+    }
+
+    public async void OnTutorialClicked()
+    {
+        await GameManager.Instance.LoadLevel(GameState.Tutorial);
     }
 
     private void OnPlayerLoss(PlayerController _)
     {
-        GameStateChangeEvent?.Invoke(GameState.GameOver);
-        mainMenu.SetActive(false);
-        gameplayUI.SetActive(false);
-        if (finalScoreText)
-        {
-            finalScoreText.text = $"Final {_scoreText.text}";
-        }
-
-        gameOverMenu.SetActive(true);
+        finalScoreText.text = $"Final {scoreText.text}";
     }
 }
 }

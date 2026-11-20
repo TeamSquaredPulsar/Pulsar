@@ -50,7 +50,7 @@ public class LazerBeam : MonoBehaviour
     private Color hotColor = Color.red;
 
     [SerializeField]
-    private LineRenderer beam;
+    private LineRenderer beamRenderer;
 
     [SerializeField]
     [Min(1)]
@@ -94,11 +94,11 @@ public class LazerBeam : MonoBehaviour
         // for the auto turrets
         _filter = new ContactFilter2D { useTriggers = false, };
 
-        beam.useWorldSpace = true;
+        beamRenderer.useWorldSpace = true;
         // One more point than segments: start, the bends, and end
-        beam.positionCount = PointCount;
+        beamRenderer.positionCount = PointCount;
         _offsets = new float[PointCount];
-        beam.enabled = false;
+        beamRenderer.enabled = false;
     }
 
     private void Update()
@@ -130,7 +130,7 @@ public class LazerBeam : MonoBehaviour
     private void StopBeam()
     {
         _isFiring = false;
-        beam.enabled = false;
+        beamRenderer.enabled = false;
     }
 
     private void Cool()
@@ -225,14 +225,14 @@ public class LazerBeam : MonoBehaviour
         ApplyHeatColor();
         UpdateCrackle();
         PlaceBeamPoints(start, end);
-        beam.enabled = true;
+        beamRenderer.enabled = true;
     }
 
     private void ApplyHeatColor()
     {
         Color color = Color.Lerp(coolColor, hotColor, Heat);
-        beam.startColor = color;
-        beam.endColor = color;
+        beamRenderer.startColor = color;
+        beamRenderer.endColor = color;
     }
 
     private void UpdateCrackle()
@@ -255,7 +255,7 @@ public class LazerBeam : MonoBehaviour
             float alongBeam = (float)i / segments;
             Vector2 point = Vector2.Lerp(start, end, alongBeam) +
                             sideways * _offsets[i];
-            beam.SetPosition(i, point);
+            beamRenderer.SetPosition(i, point);
         }
     }
 

@@ -1,35 +1,40 @@
 using System;
-using System.Collections;
-using System.Collections.Generic;
+using System.Threading.Tasks;
+using Audune.Utils.Dictionary;
 using NaughtyAttributes;
 using Pulsar.Audio;
 using Pulsar.DataClasses;
 using Pulsar.Player;
-using Pulsar.UI;
 using UnityEngine;
+using UnityEngine.AddressableAssets;
+using UnityEngine.ResourceManagement.AsyncOperations;
+using UnityEngine.ResourceManagement.ResourceProviders;
 
 namespace Pulsar
 {
 public class GameManager : Singleton<GameManager>
 {
-    public static event Action<int> OnEnemyKill;
+    public static event Action<int> OnScoreChange;
 
-    [SerializeField, RequiredType(typeof(PlayerController)),]
+    [BoxGroup("References")]
+    [SerializeField]
+    [RequiredType(typeof(PlayerController))]
     private GameObject playerPrefab;
 
-    [SerializeField, RequiredType(typeof(EnemySpawner)),]
+    [BoxGroup("Enemy")]
+    [SerializeField]
+    [RequiredType(typeof(EnemySpawner))]
     private GameObject enemySpawnerPrefab;
 
+    [BoxGroup("Enemy")]
     [SerializeField]
     private int waveDelaySeconds;
 
-    [SerializeField, ReorderableList,]
-    private List<WaveDefinition> waveDefinitions;
-
-    private EnemySpawner _enemySpawner;
-    private int _currentWave;
-    private int _score;
-    private Coroutine _awaitingWave;
+    [SerializeField]
+    [field:
+        SerializableDictionaryOptions(keyHeader = "State",
+            valueHeader = "Scene")]
+    private SerializableDictionary<GameState, SceneReference> scenes = new();
 
     [BoxGroup("Audio")]
     [SerializeField]
@@ -39,57 +44,58 @@ public class GameManager : Singleton<GameManager>
     [SerializeField]
     private FmodEvents audioEvents;
 
+    public int Score
+    {
+        get => _score;
+        private set
+        {
+            _score = value;
+            OnScoreChange?.Invoke(_score);
+        }
+    }
+
+    private int _score;
+
     protected override void Awake()
     {
         base.Awake();
-        UIManager.GameStateChangeEvent += OnGameStateChange;
         EnemyController.EnemyDefeatedEvent += HandleEnemyKilled;
-    }
-
-    private void HandleEnemyKilled(EnemyController _, int points)
-    {
-        _score += points;
-        OnEnemyKill?.Invoke(_score);
+        StateManager.GameStateChanged += OnGameStateChange;
     }
 
     private void OnDestroy()
     {
-        UIManager.GameStateChangeEvent -= OnGameStateChange;
+        StateManager.GameStateChanged -= OnGameStateChange;
         EnemyController.EnemyDefeatedEvent -= HandleEnemyKilled;
+    }
+
+    private void HandleEnemyKilled(EnemyController _, int points)
+    {
+        Score += points;
     }
 
     private void OnGameStateChange(GameState obj)
     {
+        //Handle case-specific logic here.
         switch (obj)
         {
-            case GameState.MainMenu:
-                _currentWave = 0;
-                break;
             case GameState.Playing:
                 HandleGameStart();
                 break;
             case GameState.GameOver:
-                HandleGameOver();
+            case GameState.MainMenu:
+            case GameState.Loading:
+            case GameState.Sandbox:
+            case GameState.Tutorial:
                 break;
             default:
                 throw new ArgumentOutOfRangeException(nameof(obj), obj, null);
         }
     }
 
-    private void HandleGameOver()
-    {
-        if (_awaitingWave is not null)
-        {
-            StopCoroutine(_awaitingWave);
-        }
-
-        Destroy(_enemySpawner.gameObject);
-        _currentWave = 0;
-    }
-
     private void HandleGameStart()
     {
-        _score = 0;
+        Score = 0;
         Tile[] tiles = FindObjectsByType<Tile>(FindObjectsSortMode.None);
         foreach (Tile tile in tiles)
         {
@@ -97,35 +103,27 @@ public class GameManager : Singleton<GameManager>
         }
 
         Instantiate(playerPrefab, Vector3.zero, Quaternion.identity);
-        _enemySpawner = Instantiate(enemySpawnerPrefab, Vector3.zero,
-            Quaternion.identity).GetComponent<EnemySpawner>();
-        _enemySpawner.WaveCompleteEvent += HandleWaveComplete;
-        LoadNextWave();
     }
 
-    private void HandleWaveComplete()
+    public async Task LoadLevel(GameState levelState)
     {
-        _currentWave++;
-        if (_currentWave >= waveDefinitions.Count)
+        StateManager.SetCurrentState(GameState.Loading);
+        if (!scenes.TryGetValue(levelState, out SceneReference scene))
         {
-            //TODO: Victory screen.
-            return;
+            throw new InvalidOperationException(
+                $"No scene found for state {levelState}!");
         }
 
-        LoadNextWave();
-    }
+        AsyncOperationHandle<SceneInstance> sceneLoading
+            = Addressables.LoadSceneAsync(scene);
+        await sceneLoading.Task;
+        if (sceneLoading.Status != AsyncOperationStatus.Succeeded)
+        {
+            throw new InvalidOperationException(
+                $"Failed to load {scene.SceneName}!");
+        }
 
-    private void LoadNextWave()
-    {
-        _enemySpawner.LoadNewWave(waveDefinitions[_currentWave]);
-        _awaitingWave = StartCoroutine(StartNextWaveAfterDelay());
-    }
-
-    private IEnumerator StartNextWaveAfterDelay()
-    {
-        yield return new WaitForSeconds(waveDelaySeconds);
-        _enemySpawner.StartWave();
-        _awaitingWave = null;
+        StateManager.SetCurrentState(levelState);
     }
 }
 }

@@ -7,10 +7,8 @@ using UnityEngine;
 
 namespace Pulsar.UI
 {
-public class CameraManager : MonoBehaviour
+public class CameraManager : Singleton<CameraManager>
 {
-    [SerializeField]
-    private CameraData cameraDataAsset;
 
     [SerializeField]
     private Camera mainCamera;
@@ -36,15 +34,16 @@ public class CameraManager : MonoBehaviour
     private const int k_HighPriority = 100;
     private const int k_LowPriority = 0;
 
-    private void Awake()
+    protected override void Awake()
     {
-        cameraDataAsset.MainCamera = mainCamera;
+        base.Awake();
         PlayerController.PlayerSpawnedEvent += OnPlayerSpawned;
         PlayerController.PlayerLossEvent += OnPlayerLoss;
     }
 
     private void Start()
     {
+        CameraData.MainCamera = mainCamera;
         PrioritizeMenuCamera();
     }
 

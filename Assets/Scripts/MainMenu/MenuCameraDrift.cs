@@ -7,15 +7,12 @@ namespace Pulsar.UI
     [DefaultExecutionOrder(-100)]
     public class MenuCameraDrift : MonoBehaviour
     {
-        [SerializeField] private CameraData cameraData;
         [SerializeField] private Vector2 velocity = new Vector2(0.5f, 0.15f);
+        [SerializeField] private Camera cam;
 
-        private Camera _camera;
-
-        private void Awake()
+        private void Start()
         {
-            _camera = GetComponent<Camera>();
-            cameraData.MainCamera = _camera;
+            CameraData.MainCamera = cam;
         }
 
         private void Update()
@@ -25,9 +22,9 @@ namespace Pulsar.UI
 
         private void OnDestroy()
         {
-            if (cameraData.MainCamera == _camera)
+            if (CameraData.MainCamera == cam)
             {
-                cameraData.MainCamera = null;
+                CameraData.MainCamera = null;
             }
         }
     }
