@@ -1,3 +1,4 @@
+using System;
 using FMODUnity;
 using NaughtyAttributes;
 using Pulsar.DataClasses;
@@ -39,6 +40,26 @@ public class CameraManager : Singleton<CameraManager>
         base.Awake();
         PlayerController.PlayerSpawnedEvent += OnPlayerSpawned;
         PlayerController.PlayerLossEvent += OnPlayerLoss;
+        StateManager.GameStateChanged += HandleStateChange;
+    }
+
+    private void HandleStateChange(GameState obj)
+    {
+        switch (obj)
+        {
+            case GameState.MainMenu:
+            case GameState.Loading:
+            case GameState.GameOver:
+                PrioritizeMenuCamera();
+                break;
+            case GameState.Sandbox:
+            case GameState.Tutorial:
+            case GameState.Playing:
+                PrioritizeGameplayCamera();
+                break;
+            default:
+                throw new ArgumentOutOfRangeException(nameof(obj), obj, null);
+        }
     }
 
     private void Start()
