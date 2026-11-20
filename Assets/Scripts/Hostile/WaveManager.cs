@@ -77,6 +77,11 @@ public class WaveManager : MonoBehaviour
 
     private void LoadNextWave()
     {
+        if (_currentWave >= waveDefinitions.Count)
+        {
+            Debug.Log("Cleared all waves");
+            return;
+        }
         enemySpawner.LoadNewWave(waveDefinitions[_currentWave]);
         _awaitingWave = StartCoroutine(StartNextWaveAfterDelay());
     }
