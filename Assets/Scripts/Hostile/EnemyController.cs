@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using Pulsar.Player;
 using Pulsar.Ship;
+using Pulsar.Utilities;
 using UnityEngine;
 using Random = UnityEngine.Random;
 
@@ -30,6 +31,10 @@ public class EnemyController : MonoBehaviour
     private const float InOutNoiseRow = 57.3f;
 
     private static readonly HashSet<EnemyController> _activeEnemies = new();
+
+    private readonly PIDController _moveXPID = new();
+    private readonly PIDController _moveYPID = new();
+    private readonly PIDController _turnPID = new();
 
     [SerializeField]
     private Rigidbody2D rb;
@@ -150,32 +155,81 @@ public class EnemyController : MonoBehaviour
         return radius;
     }
 
+    //private void HandleMovement(Vector3 dirToPlayer, float distance)
+    //{
+    //    Vector3 desiredDir = Vector3.zero;
+    //
+    //    if (distance > enemyInfo.stoppingDistance)
+    //    {
+    //        desiredDir = dirToPlayer;
+    //    }
+    //    else if (distance < enemyInfo.retreatDistance)
+    //    {
+    //        desiredDir = -dirToPlayer;
+    //    }
+    //
+    //    if (enemyInfo.driftAmount > 0f)
+    //    {
+    //        bool holdingPosition = desiredDir == Vector3.zero;
+    //        desiredDir += CalculateDrift(dirToPlayer, holdingPosition);
+    //    }
+    //
+    //    desiredDir += CalculateSeparation() * enemyInfo.separationStrength;
+    //
+    //    desiredDir = Vector3.ClampMagnitude(desiredDir, 1f) *
+    //                 Mathf.Clamp01(enemyInfo.speed);
+    //
+    //    Vector2 localDir = transform.InverseTransformDirection(desiredDir);
+    //    shipManager.Move(localDir);
+    //}
+
     private void HandleMovement(Vector3 dirToPlayer, float distance)
     {
-        Vector3 desiredDir = Vector3.zero;
+        Vector3 targetOffset = Vector3.zero;
 
         if (distance > enemyInfo.stoppingDistance)
         {
-            desiredDir = dirToPlayer;
+            targetOffset
+                = dirToPlayer * (distance - enemyInfo.stoppingDistance);
         }
         else if (distance < enemyInfo.retreatDistance)
         {
-            desiredDir = -dirToPlayer;
+            targetOffset
+                = -dirToPlayer * (enemyInfo.stoppingDistance - distance);
         }
-
         if (enemyInfo.driftAmount > 0f)
         {
-            bool holdingPosition = desiredDir == Vector3.zero;
-            desiredDir += CalculateDrift(dirToPlayer, holdingPosition);
+            bool holdingPosition = targetOffset == Vector3.zero;
+            targetOffset += CalculateDrift(dirToPlayer, holdingPosition);
         }
 
-        desiredDir += CalculateSeparation() * enemyInfo.separationStrength;
+        targetOffset += CalculateSeparation() * enemyInfo.separationStrength;
 
-        desiredDir = Vector3.ClampMagnitude(desiredDir, 1f) *
-                     Mathf.Clamp01(enemyInfo.speed);
+        //Finds the position error in local space
+        Vector2 localPosErr = transform.InverseTransformPoint(targetOffset);
+        Vector2 localVel
+            = transform.InverseTransformDirection(rb.linearVelocity);
 
-        Vector2 localDir = transform.InverseTransformDirection(desiredDir);
-        shipManager.Move(localDir);
+        //How effective the brakes are based on the current speed
+        Vector2 curBrakeStrength = new(-Mathf.Sign(localVel.x),
+            -Mathf.Sign(localVel.y));
+        //Get the brake strength by taking max accel in the opposite dir
+        Vector2 maxBrake = shipManager.GetMaxLocalAccel(curBrakeStrength);
+
+        float brakeScaleX = maxBrake.x > MinDistance
+            ? 1f / Mathf.Sqrt(maxBrake.x)
+            : 1f;
+        float brakeScaleY = maxBrake.y > MinDistance
+            ? 1f / Mathf.Sqrt(maxBrake.y)
+            : 1f;
+
+        float dt = Time.fixedDeltaTime;
+        float inputX = _moveXPID.CalculateVelocity(
+            in enemyInfo.movePID, dt, localPosErr.x, localVel.x * brakeScaleX);
+        float inputY = _moveXPID.CalculateVelocity(
+            in enemyInfo.movePID, dt, localPosErr.y, localVel.y * brakeScaleX);
+
+        shipManager.Move(new Vector2(inputX, inputY));
     }
 
     // Smooth, rhythm-free wandering so enemies feel piloted, not on rails.

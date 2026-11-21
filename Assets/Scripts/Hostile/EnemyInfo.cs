@@ -1,16 +1,11 @@
+using Pulsar.Utilities;
 using UnityEngine;
 
 [CreateAssetMenu(fileName = "NewEnemyInfo", menuName = "Pulsar/Enemy Info")]
 public class EnemyInfo : ScriptableObject
 {
-    [Header("Movement")]
-    public float
-        speed = 4f; // Thrust throttle, 0 to 1 (same range as player input)
-
-    public float acceleration = 6f;
     public float stoppingDistance = 6f; // Stop approaching once this close
     public float retreatDistance = 3f; // Back away if closer than this
-    public float turnSpeed = 4f; // Max spin speed, degrees per second
 
     public float
         driftAmount
@@ -23,6 +18,14 @@ public class EnemyInfo : ScriptableObject
     public float
         holdDrift
             = 0.5f; // Share of the drift kept while holding position (0 = sits still)
+
+    [Header("PID Tuning")]
+    [Tooltip("Movement positioning/breaking strength")]
+    public PIDParams movePID = new(1.0f, 1.2f, 0f, 1f);
+
+    [Tooltip("Turning positioning/breaking strength")]
+    public PIDParams turnPID = new(0.08f, 0.04f, 0f, 1f);
+
 
     [Header("Combat")]
     public float startTimeBtwShots = 1.5f;
