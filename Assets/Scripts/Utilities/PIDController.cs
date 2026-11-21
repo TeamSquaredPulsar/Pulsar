@@ -60,6 +60,7 @@ public struct PIDParams
         _hasOldError = false;
     }
 
+    //Unit Vector
     public float CalculateDir(in PIDParams p, float deltaTime, float error)
     {
         if (deltaTime <= 0f)
@@ -67,33 +68,58 @@ public struct PIDParams
             return 0f;
         }
 
-        float errorOverTime = error * deltaTime;
-        _integral = Mathf.Clamp(_integral + errorOverTime,
-            -p.IntegralWindup, p.IntegralWindup);
+        CalcIntegral(error * deltaTime, p.IntegralWindup);
 
         float deriv = _hasOldError ? (error - _oldError)/deltaTime : 0f;
         _oldError = error;
         _hasOldError = true;
 
-        return p.kP * error + p.kI * _integral + p.kD * deriv;
+        return Mathf.Clamp(p.kP * error + p.kI * _integral + p.kD * deriv,
+            -1f, 1f);
     }
 
-    public float CalculateAngle(in PIDParams p, float deltaTime, 
-        float angleError,
-        float angVelError)
+    public float CalculateVelocity(
+        in PIDParams p,
+        float deltaTime,
+        float error,
+        float currentVelocity)
     {
         if (deltaTime <= 0f)
         {
             return 0f;
         }
-        
-        float errorOverTime = angleError * deltaTime;
-        _integral = Mathf.Clamp(_integral + errorOverTime,
-            -p.IntegralWindup, p.IntegralWindup);
-        
-        float deriv = -angVelError;
 
-        return p.kP * angleError + p.kI * _integral + p.kD * deriv;
+        CalcIntegral(error * deltaTime, p.IntegralWindup);
+
+        float deriv = -currentVelocity;
+        _oldError = error;
+        _hasOldError = true;
+
+        return Mathf.Clamp(
+            p.kP * error + p.kI * _integral + p.kD * deriv, -1f, 1f);
+    }
+
+    //Same as calc with velocity (potentially)
+    //public float CalculateAngle(in PIDParams p, float deltaTime,
+    //    float angleError,
+    //    float angVelError)
+    //{
+    //    if (deltaTime <= 0f)
+    //    {
+    //        return 0f;
+    //    }
+    //
+    //    CalcIntegral(angleError * deltaTime, p.IntegralWindup);
+    //
+    //    float deriv = -angVelError;
+    //
+    //    return p.kP * angleError + p.kI * _integral + p.kD * deriv;
+    //}
+
+    private void CalcIntegral(float errorOverTime, float windUp)
+    {
+        _integral = Mathf.Clamp(_integral + errorOverTime,
+            -windUp, windUp);
     }
 }
 }
