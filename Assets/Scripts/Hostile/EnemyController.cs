@@ -116,6 +116,9 @@ public class EnemyController : MonoBehaviour
         rb.linearVelocity = Vector2.zero;
         rb.angularVelocity = 0f;
         transform.position = position;
+        _moveXPID.Reset();
+        _moveYPID.Reset();
+        _turnPID.Reset();
     }
 
     private void HandleShipDestroyed(ShipManager obj)

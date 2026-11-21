@@ -9,7 +9,7 @@ public class EnemyInfo : ScriptableObject
 
     public float
         driftAmount
-            = 0.3f; // How strongly the ship wanders off its straight path (0 = never)
+            = 3f; // How strongly the ship wanders off its straight path (0 = never)
 
     public float
         weaveFrequency = 1.5f; // How quickly the wander changes direction
