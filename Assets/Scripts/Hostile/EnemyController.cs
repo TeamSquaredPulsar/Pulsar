@@ -195,7 +195,7 @@ public class EnemyController : MonoBehaviour
         else if (distance < enemyInfo.retreatDistance)
         {
             targetOffset
-                = -dirToPlayer * (enemyInfo.stoppingDistance - distance);
+                = -dirToPlayer * (enemyInfo.retreatDistance - distance);
         }
 
         if (enemyInfo.driftAmount > 0f)
@@ -204,10 +204,10 @@ public class EnemyController : MonoBehaviour
             targetOffset += CalculateDrift(dirToPlayer, holdingPosition);
         }
 
-        targetOffset += CalculateSeparation();
+        targetOffset += CalculateSeparation() * enemyInfo.separationStrength;
 
         //Finds the position error in local space
-        Vector2 localPosErr = transform.InverseTransformPoint(targetOffset);
+        Vector2 localPosErr = transform.InverseTransformDirection(targetOffset);
         Vector2 localVel
             = transform.InverseTransformDirection(rb.linearVelocity);
 

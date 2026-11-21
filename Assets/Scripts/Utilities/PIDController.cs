@@ -1,9 +1,11 @@
+using System;
 using UnityEngine;
 
 namespace Pulsar.Utilities
 {
 
 //Tuning values
+[Serializable]
 public struct PIDParams
 {
     /*
