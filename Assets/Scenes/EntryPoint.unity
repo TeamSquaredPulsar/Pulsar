@@ -266,19 +266,19 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6694399800490252111, guid: 23b839cb7fca3b247ba1200fcaa33286, type: 3}
       propertyPath: orthographic size
-      value: 12
+      value: 15
       objectReference: {fileID: 0}
     - target: {fileID: 7067975659105368029, guid: 23b839cb7fca3b247ba1200fcaa33286, type: 3}
       propertyPath: m_LocalPosition.z
-      value: -35
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 7710444508102941617, guid: 23b839cb7fca3b247ba1200fcaa33286, type: 3}
       propertyPath: m_LocalPosition.z
-      value: -45
+      value: -9
       objectReference: {fileID: 0}
     - target: {fileID: 7781254101354357636, guid: 23b839cb7fca3b247ba1200fcaa33286, type: 3}
       propertyPath: m_LocalPosition.z
-      value: -45
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8255171805618094538, guid: 23b839cb7fca3b247ba1200fcaa33286, type: 3}
       propertyPath: m_Name

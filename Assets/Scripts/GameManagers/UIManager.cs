@@ -12,33 +12,24 @@ namespace Pulsar
 public class UIManager : Singleton<UIManager>
 {
     [SerializeField]
-    [field: SerializableDictionaryOptions(keyHeader = "State", valueHeader = "UI")]
+    [field:
+        SerializableDictionaryOptions(keyHeader = "State", valueHeader = "UI")]
     private SerializableDictionary<GameState, GameObject> uiStates = new();
 
     [SerializeField]
     private Canvas uiCanvas;
-
-    [SerializeField]
-    private TMP_Text finalScoreText;
-
-    [SerializeField]
-    private TMP_Text scoreText;
 
     protected override void Awake()
     {
         base.Awake();
         CameraData.MainCameraChanged += OnMainCameraChanged;
         StateManager.GameStateChanged += SetUIMode;
-        GameManager.OnScoreChange += UpdateScore;
-        PlayerController.PlayerLossEvent += OnPlayerLoss;
     }
 
     private void OnDestroy()
     {
         CameraData.MainCameraChanged -= OnMainCameraChanged;
         StateManager.GameStateChanged -= SetUIMode;
-        GameManager.OnScoreChange -= UpdateScore;
-        PlayerController.PlayerLossEvent -= OnPlayerLoss;
     }
 
     private void OnMainCameraChanged(Camera cam)
@@ -53,12 +44,6 @@ public class UIManager : Singleton<UIManager>
             uiState.Value.gameObject.SetActive(uiState.Key == state);
         }
     }
-
-    private void UpdateScore(int obj)
-    {
-        scoreText.text = "Score: " + obj;
-    }
-
 
     public async void OnStartGameClicked()
     {
@@ -79,11 +64,5 @@ public class UIManager : Singleton<UIManager>
     {
         await GameManager.Instance.LoadLevel(GameState.Tutorial);
     }
-
-    private void OnPlayerLoss(PlayerController _)
-    {
-        finalScoreText.text = $"Final {scoreText.text}";
-    }
 }
 }
-

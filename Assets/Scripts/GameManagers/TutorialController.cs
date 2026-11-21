@@ -46,6 +46,17 @@ public class TutorialController : MonoBehaviour
     [SerializeField]
     private Color gateCompleteColor = new Color(0.2f, 1f, 0.4f);
 
+    private enum Step
+    {
+        NotStarted = -1,
+        Move = 0,
+        Rotate = 1,
+        AttackEnemy = 2,
+        AttachTile = 3,
+        DetatchTile = 4,
+        Finished = 5,
+    }
+
     // private Coroutine _stepFade;
     private readonly List<Tile> _tilesWillBeAttached = new();
     private int _step = -1;
