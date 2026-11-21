@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using Pulsar.DataClasses;
 using Pulsar.Player;
 using Pulsar.Stations.Generation;
 using Pulsar.Stations.Guards;
@@ -16,8 +17,9 @@ namespace Pulsar.Stations
 /// a ring around itself. A new, harder wave comes once the last one is
 /// destroyed, up to the profile's wave count. The player flying into the
 /// station's detection range switches all its guards from Roaming to Chasing.
-/// GameManager starts and resets stations; with no GameManager in the scene
-/// (test scenes), the station starts itself.
+/// It follows the game's state (StateManager): Playing starts it from wave 1;
+/// Game Over, Main Menu and Loading clear its guards. In a test scene with no
+/// game loop, tick Start On Its Own.
 /// </summary>
 public class SpaceStation : MonoBehaviour
 {
@@ -30,6 +32,10 @@ public class SpaceStation : MonoBehaviour
     [Tooltip("How far out the guards spawn and patrol, as a multiple of the station's own radius.")]
     [SerializeField]
     private float ringScale = 1.8f;
+
+    [Tooltip("For test scenes without the game loop: start guarding as soon as the scene plays.")]
+    [SerializeField]
+    private bool startOnItsOwn;
 
     [Header("Debug (read only)")]
     [SerializeField]
@@ -45,13 +51,46 @@ public class SpaceStation : MonoBehaviour
     private Coroutine _nextWaveRoutine;
 
     public StationProfile Profile => profile;
+
+    /// <summary>How far the station's furthest tile reaches (measured when it starts defending).</summary>
+    public float Radius { get; private set; }
     public bool IsCleared { get; private set; }
+
+    private void OnEnable()
+    {
+        StateManager.GameStateChanged += HandleGameStateChanged;
+    }
+
+    private void OnDisable()
+    {
+        StateManager.GameStateChanged -= HandleGameStateChanged;
+    }
 
     private void Start()
     {
-        if (GameManager.Instance == null)
+        // The level may already be Playing by the time this scene's objects start.
+        if (startOnItsOwn || StateManager.CurrentState == GameState.Playing)
         {
             BeginDefense();
+        }
+    }
+
+    private void HandleGameStateChanged(GameState newState)
+    {
+        switch (newState)
+        {
+            case GameState.Playing:
+                if (!_defending)
+                {
+                    BeginDefense();
+                }
+
+                break;
+            case GameState.GameOver:
+            case GameState.MainMenu:
+            case GameState.Loading:
+                ResetStation();
+                break;
         }
     }
 
@@ -92,6 +131,7 @@ public class SpaceStation : MonoBehaviour
             return;
         }
 
+        Radius = CalculateRadius();
         _defending = true;
         SpawnWave(0);
     }
@@ -126,7 +166,7 @@ public class SpaceStation : MonoBehaviour
         currentWave = waveIndex;
         int guardCount = profile.waves[waveIndex].guardCount;
         Vector2 centre = transform.position;
-        float ringRadius = CalculateRadius() * ringScale;
+        float ringRadius = Radius * ringScale;
         float startAngle = Random.Range(0f, 360f);
 
         for (int i = 0; i < guardCount; i++)

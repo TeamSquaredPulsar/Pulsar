@@ -163,6 +163,7 @@ MonoBehaviour:
   rb: {fileID: 3141708206127563457}
   patrolDegreesPerSecond: 12
   patrolThrottle: 0.5
+  stationGap: 1.5
   state: 0
   combatState: 
 --- !u!114 &845873225613755758

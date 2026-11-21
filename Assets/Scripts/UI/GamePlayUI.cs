@@ -1,5 +1,6 @@
 using NaughtyAttributes;
 using Pulsar.Player;
+using Pulsar.Stations.Guards;
 using UnityEngine;
 using TMPro;
 
@@ -30,6 +31,7 @@ public class GamePlayUI : MonoBehaviour
     private void OnEnable()
     {
         EnemyController.EnemyDefeatedEvent += UpdateScore;
+        EnemyGuardAI.GuardDefeatedEvent += OnGuardDefeated;
         PlayerController.PlayerLossEvent += OnPlayerLoss;
         SetupScore();
     }
@@ -37,6 +39,7 @@ public class GamePlayUI : MonoBehaviour
     private void OnDisable()
     {
         EnemyController.EnemyDefeatedEvent -= UpdateScore;
+        EnemyGuardAI.GuardDefeatedEvent -= OnGuardDefeated;
         PlayerController.PlayerLossEvent -= OnPlayerLoss;
     }
 
@@ -45,6 +48,10 @@ public class GamePlayUI : MonoBehaviour
         score += killPoints;
         scoreText.text = $"{k_ScoreString} {score}";
     }
+
+    // Station guards score the same way as the old enemies.
+    private void OnGuardDefeated(EnemyGuardAI _, int killPoints) =>
+        UpdateScore(null, killPoints);
 
     private void SetupScore()
     {

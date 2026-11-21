@@ -26,7 +26,7 @@ public class EnemyGuardAI : MonoBehaviour
     private const float MinDistance = 0.001f;
     private const float TurnGain = 4f;
 
-    /// <summary>Any guard was destroyed. GameManager adds the points to the score.</summary>
+    /// <summary>Any guard was destroyed. GamePlayUI adds the points to the score.</summary>
     public static event Action<EnemyGuardAI, int> GuardDefeatedEvent;
 
     private static readonly HashSet<EnemyGuardAI> ActiveGuards = new();
@@ -46,6 +46,12 @@ public class EnemyGuardAI : MonoBehaviour
     [Range(0f, 1f)]
     [SerializeField]
     private float patrolThrottle = 0.5f;
+
+    [Header("Station avoidance")]
+    [Tooltip("Extra space kept between this guard and its station's outline.")]
+    [Min(0f)]
+    [SerializeField]
+    private float stationGap = 1.5f;
 
     [Header("Debug (read only)")]
     [SerializeField]
@@ -169,7 +175,10 @@ public class EnemyGuardAI : MonoBehaviour
         combatState = _behavior.CurrentStateName;
     }
 
-    // Fly after a point that slides around the station's circle.
+    // Fly after a point that slides around the station's circle. Each guard's
+    // point starts at its spawn angle, so the guards stay spread around the
+    // whole ring. (If a guard's path cuts across the station, AvoidStation
+    // slides it around the hull.)
     private void Patrol()
     {
         _patrolAngle += patrolDegreesPerSecond * Time.fixedDeltaTime;
@@ -216,7 +225,7 @@ public class EnemyGuardAI : MonoBehaviour
     {
         Vector2 desired = worldDirection +
                           Separation() * Info.separationStrength;
-        desired = Vector2.ClampMagnitude(desired, 1f) *
+        desired = AvoidStation(Vector2.ClampMagnitude(desired, 1f)) *
                   Mathf.Clamp01(Info.speed);
 
         Vector2 local = transform.InverseTransformDirection(desired);
@@ -256,6 +265,44 @@ public class EnemyGuardAI : MonoBehaviour
         float angleDiff = Mathf.DeltaAngle(rb.rotation, targetAngle);
         rb.angularVelocity = Mathf.Clamp(angleDiff * TurnGain,
             -Info.turnSpeed, Info.turnSpeed);
+    }
+
+    /// <summary>
+    /// Inside the keep-out circle around the home station, the part of a move
+    /// that points into the station is turned sideways, so the guard slides
+    /// around the station instead of thrusting into its hull. Closer in, it
+    /// also gets a push outward.
+    /// </summary>
+    private Vector2 AvoidStation(Vector2 desired)
+    {
+        if (!_home)
+        {
+            return desired;
+        }
+
+        Vector2 fromCentre = Position - (Vector2)_home.transform.position;
+        float distance = fromCentre.magnitude;
+        float keepOut = _home.Radius + Radius + stationGap;
+        if (distance >= keepOut || distance < MinDistance)
+        {
+            return desired;
+        }
+
+        Vector2 outward = fromCentre / distance;
+        float inward = -Vector2.Dot(desired, outward);
+        if (inward > 0f)
+        {
+            // Swap the inward part for the same amount of sideways movement,
+            // on whichever side the move was already leaning.
+            Vector2 tangent = new(-outward.y, outward.x);
+            float side = Vector2.Dot(desired, tangent) >= 0f ? 1f : -1f;
+            desired += outward * inward + tangent * (inward * side);
+        }
+
+        // The deeper inside the keep-out circle, the stronger the push out.
+        float depth = 1f - distance / keepOut;
+        desired += outward * depth;
+        return Vector2.ClampMagnitude(desired, 1f);
     }
 
     private Vector2 Separation()
