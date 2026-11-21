@@ -14,7 +14,6 @@ namespace Pulsar
 {
 public class GameManager : Singleton<GameManager>
 {
-    public static event Action<int> OnScoreChange;
 
     [BoxGroup("References")]
     [SerializeField]
@@ -22,8 +21,7 @@ public class GameManager : Singleton<GameManager>
     private GameObject playerPrefab;
 
     [SerializeField]
-    [field:
-        SerializableDictionaryOptions(keyHeader = "State",
+    [SerializableDictionaryOptions(keyHeader = "State",
             valueHeader = "Scene")]
     private SerializableDictionary<GameState, SceneReference> scenes = new();
 
@@ -35,34 +33,17 @@ public class GameManager : Singleton<GameManager>
     [SerializeField]
     private FmodEvents audioEvents;
 
-    private int Score
-    {
-        get => _score;
-        set
-        {
-            _score = value;
-            OnScoreChange?.Invoke(_score);
-        }
-    }
-
     private int _score;
 
     protected override void Awake()
     {
         base.Awake();
-        EnemyController.EnemyDefeatedEvent += HandleEnemyKilled;
         StateManager.GameStateChanged += OnGameStateChange;
     }
 
     private void OnDestroy()
     {
         StateManager.GameStateChanged -= OnGameStateChange;
-        EnemyController.EnemyDefeatedEvent -= HandleEnemyKilled;
-    }
-
-    private void HandleEnemyKilled(EnemyController _, int points)
-    {
-        Score += points;
     }
 
     private void OnGameStateChange(GameState obj)
@@ -86,7 +67,6 @@ public class GameManager : Singleton<GameManager>
 
     private void HandleGameStart()
     {
-        Score = 0;
         Instantiate(playerPrefab, Vector3.zero, Quaternion.identity);
     }
 

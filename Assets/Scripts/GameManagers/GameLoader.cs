@@ -11,9 +11,9 @@ namespace Pulsar
 /// </summary>
 public class GameLoader : MonoBehaviour
 {
-        private async void Start()
-        {
-            await GameManager.Instance.LoadLevel(GameState.MainMenu);
-        }
+    private async void Start()
+    {
+        await GameManager.Instance.LoadLevel(GameState.MainMenu);
     }
+}
 }

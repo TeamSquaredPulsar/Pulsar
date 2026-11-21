@@ -6,6 +6,8 @@ using UnityEngine.AddressableAssets;
 using UnityEditor;
 #endif
 
+namespace Pulsar.DataClasses
+{
 [Serializable]
 public class SceneReference : AssetReference
 {
@@ -21,15 +23,11 @@ public class SceneReference : AssetReference
         sceneName = scene.name;
     }
 
-    public override bool ValidateAsset(string path)
-    {
-        return ValidateAsset(AssetDatabase.LoadAssetAtPath<SceneAsset>(path));
-    }
+    public override bool ValidateAsset(string path) =>
+        ValidateAsset(AssetDatabase.LoadAssetAtPath<SceneAsset>(path));
 
-    public override bool ValidateAsset(UnityEngine.Object obj)
-    {
-        return (obj != null) && (obj is SceneAsset);
-    }
+    public override bool ValidateAsset(UnityEngine.Object obj) =>
+        (obj != null) && (obj is SceneAsset);
 
     public override bool SetEditorAsset(UnityEngine.Object value)
     {
@@ -51,4 +49,5 @@ public class SceneReference : AssetReference
     }
 
 #endif
+}
 }
