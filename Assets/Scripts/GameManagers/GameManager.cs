@@ -1,10 +1,10 @@
 using System;
-using System.Collections;
-using System.Collections.Generic;
 using NaughtyAttributes;
 using Pulsar.Audio;
 using Pulsar.DataClasses;
 using Pulsar.Player;
+using Pulsar.Stations;
+using Pulsar.Stations.Guards;
 using Pulsar.UI;
 using UnityEngine;
 
@@ -17,19 +17,11 @@ public class GameManager : Singleton<GameManager>
     [SerializeField, RequiredType(typeof(PlayerController)),]
     private GameObject playerPrefab;
 
-    [SerializeField, RequiredType(typeof(EnemySpawner)),]
-    private GameObject enemySpawnerPrefab;
+    // The old wave system (EnemySpawner, WaveDefinition, Wave01-10) is unplugged:
+    // enemies now come from the space stations (see SpaceStation). The old
+    // classes and assets stay in the project until the stations are proven.
 
-    [SerializeField]
-    private int waveDelaySeconds;
-
-    [SerializeField, ReorderableList,]
-    private List<WaveDefinition> waveDefinitions;
-
-    private EnemySpawner _enemySpawner;
-    private int _currentWave;
     private int _score;
-    private Coroutine _awaitingWave;
 
     [BoxGroup("Audio")]
     [SerializeField]
@@ -44,9 +36,20 @@ public class GameManager : Singleton<GameManager>
         base.Awake();
         UIManager.GameStateChangeEvent += OnGameStateChange;
         EnemyController.EnemyDefeatedEvent += HandleEnemyKilled;
+        EnemyGuardAI.GuardDefeatedEvent += HandleGuardKilled;
     }
 
     private void HandleEnemyKilled(EnemyController _, int points)
+    {
+        AddScore(points);
+    }
+
+    private void HandleGuardKilled(EnemyGuardAI _, int points)
+    {
+        AddScore(points);
+    }
+
+    private void AddScore(int points)
     {
         _score += points;
         OnEnemyKill?.Invoke(_score);
@@ -56,6 +59,7 @@ public class GameManager : Singleton<GameManager>
     {
         UIManager.GameStateChangeEvent -= OnGameStateChange;
         EnemyController.EnemyDefeatedEvent -= HandleEnemyKilled;
+        EnemyGuardAI.GuardDefeatedEvent -= HandleGuardKilled;
     }
 
     private void OnGameStateChange(GameState obj)
@@ -63,7 +67,7 @@ public class GameManager : Singleton<GameManager>
         switch (obj)
         {
             case GameState.MainMenu:
-                _currentWave = 0;
+                ResetStations();
                 break;
             case GameState.Playing:
                 HandleGameStart();
@@ -78,13 +82,7 @@ public class GameManager : Singleton<GameManager>
 
     private void HandleGameOver()
     {
-        if (_awaitingWave is not null)
-        {
-            StopCoroutine(_awaitingWave);
-        }
-
-        Destroy(_enemySpawner.gameObject);
-        _currentWave = 0;
+        ResetStations();
     }
 
     private void HandleGameStart()
@@ -97,35 +95,23 @@ public class GameManager : Singleton<GameManager>
         }
 
         Instantiate(playerPrefab, Vector3.zero, Quaternion.identity);
-        _enemySpawner = Instantiate(enemySpawnerPrefab, Vector3.zero,
-            Quaternion.identity).GetComponent<EnemySpawner>();
-        _enemySpawner.WaveCompleteEvent += HandleWaveComplete;
-        LoadNextWave();
-    }
 
-    private void HandleWaveComplete()
-    {
-        _currentWave++;
-        if (_currentWave >= waveDefinitions.Count)
+        // Every station in the scene starts guarding from its first wave.
+        foreach (SpaceStation station in FindStations())
         {
-            //TODO: Victory screen.
-            return;
+            station.BeginDefense();
         }
-
-        LoadNextWave();
     }
 
-    private void LoadNextWave()
+    private static void ResetStations()
     {
-        _enemySpawner.LoadNewWave(waveDefinitions[_currentWave]);
-        _awaitingWave = StartCoroutine(StartNextWaveAfterDelay());
+        foreach (SpaceStation station in FindStations())
+        {
+            station.ResetStation();
+        }
     }
 
-    private IEnumerator StartNextWaveAfterDelay()
-    {
-        yield return new WaitForSeconds(waveDelaySeconds);
-        _enemySpawner.StartWave();
-        _awaitingWave = null;
-    }
+    private static SpaceStation[] FindStations() =>
+        FindObjectsByType<SpaceStation>(FindObjectsSortMode.None);
 }
 }

@@ -1,0 +1,21 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d5984b22c70d4854a98abd039ce21891, type: 3}
+  m_Name: GreenHullSprites
+  m_EditorClassIdentifier:
+  spriteSheet: {fileID: 2800000, guid: 6d757cdf91ee503687867bcebeaa2deb, type: 3}
+  frames:
+  - {fileID: 3768642706054284024, guid: 6d757cdf91ee503687867bcebeaa2deb, type: 3}
+  - {fileID: -1579491830648608548, guid: 6d757cdf91ee503687867bcebeaa2deb, type: 3}
+  - {fileID: -189255215484834168, guid: 6d757cdf91ee503687867bcebeaa2deb, type: 3}
+  - {fileID: -4055020322475450087, guid: 6d757cdf91ee503687867bcebeaa2deb, type: 3}
+  - {fileID: -1479126736009032870, guid: 6d757cdf91ee503687867bcebeaa2deb, type: 3}

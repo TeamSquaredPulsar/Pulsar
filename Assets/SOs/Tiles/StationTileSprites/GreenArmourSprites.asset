@@ -1,0 +1,21 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d5984b22c70d4854a98abd039ce21891, type: 3}
+  m_Name: GreenArmourSprites
+  m_EditorClassIdentifier:
+  spriteSheet: {fileID: 2800000, guid: e365364bf120b632ad8c4e9366c69322, type: 3}
+  frames:
+  - {fileID: 3123208788172429760, guid: e365364bf120b632ad8c4e9366c69322, type: 3}
+  - {fileID: 3539006484888477412, guid: e365364bf120b632ad8c4e9366c69322, type: 3}
+  - {fileID: 1780575977513811937, guid: e365364bf120b632ad8c4e9366c69322, type: 3}
+  - {fileID: 3970174099382205091, guid: e365364bf120b632ad8c4e9366c69322, type: 3}
+  - {fileID: -4437426707665984598, guid: e365364bf120b632ad8c4e9366c69322, type: 3}
