@@ -1,6 +1,7 @@
 using System;
 using Pulsar.DataClasses;
 using Pulsar.Player;
+using Pulsar.Settings.Input;
 using Pulsar.Utilities;
 using UnityEngine;
 
@@ -10,9 +11,9 @@ namespace Pulsar.UI
 public class PlayerCursor : MonoBehaviour
 {
     public static event Action<Result<Tile>> PlayerSelectTile;
-    
+
     public static Vector3 CursorPosition = Vector3.zero;
-    
+
     [SerializeField]
     private InputReader input;
 
@@ -23,9 +24,6 @@ public class PlayerCursor : MonoBehaviour
 
     [SerializeField]
     private Collider2D circleCollider;
-
-    [SerializeField]
-    private CameraData cameraData;
 
     private PlayerController _player;
     private Tile _hoveredLooseTile;
@@ -42,10 +40,10 @@ public class PlayerCursor : MonoBehaviour
     {
         Cursor.visible = false;
         Cursor.lockState = CursorLockMode.Confined;
-        
-        Vector2 initPos = cameraData.ScreenSize / 2;
+
+        Vector2 initPos = CameraData.ScreenSize / 2;
         OnCursorMove(initPos);
-        
+
         input.EnablePlayerActions();
     }
 
@@ -63,14 +61,15 @@ public class PlayerCursor : MonoBehaviour
 
     private void OnTileSelect(bool isSelecting)
     {
-        Result<Tile> result = isSelecting ? GetTileAtCursor() : Result<Tile>.Fail();
+        Result<Tile> result
+            = isSelecting ? GetTileAtCursor() : Result<Tile>.Fail();
         if (!result.IsSuccess)
         {
             _selectedTile = null;
             PlayerSelectTile?.Invoke(Result<Tile>.Fail());
             return;
         }
-        
+
         Tile tile = result.Value;
         if (tile == _selectedTile)
         {
@@ -89,8 +88,10 @@ public class PlayerCursor : MonoBehaviour
         if (_player)
         {
             // The composite collider spans the ship, so resolve the cell at press time.
-            Vector3 localPosition = _player.transform.InverseTransformPoint(transform.position);
-            Vector2Int cell = ShipUtilities.LocalToGrid(localPosition).ToVector2Int();
+            Vector3 localPosition
+                = _player.transform.InverseTransformPoint(transform.position);
+            Vector2Int cell = ShipUtilities.LocalToGrid(localPosition)
+                .ToVector2Int();
             if (_player.TryGetTile(cell, out Tile tile))
             {
                 return tile ? Result<Tile>.Pass(tile) : Result<Tile>.Fail();
@@ -104,7 +105,12 @@ public class PlayerCursor : MonoBehaviour
 
     private void OnCursorMove(Vector2 obj)
     {
-        Vector3 worldPos = cameraData.MainCamera.ScreenToWorldPoint(obj);
+        if (!CameraData.MainCamera)
+        {
+            // Debug.LogWarning("No MainCamera");
+            return;
+        }
+        Vector3 worldPos = CameraData.MainCamera.ScreenToWorldPoint(obj);
 
         worldPos.z = 0f;
 

@@ -1,4 +1,5 @@
 using UnityEngine;
+using Pulsar.Audio;
 
 namespace Pulsar.Hazards
 {
@@ -38,7 +39,7 @@ public class Projectile : MonoBehaviour
     /// <summary>
     /// Start method.
     /// </summary>
-    private void Start()
+    protected virtual void Start()
     {
         Destroy(gameObject, lifeTime);
     }
@@ -56,12 +57,25 @@ public class Projectile : MonoBehaviour
             return;
         }
 
-        if (hitEffectPrefab != null)
+        if (hitEffectPrefab  != null)
         {
-            Debug.Log("Hit Effect");
+            ContactPoint2D contact = collision.GetContact(0);
+            // Point the effect's cone along the surface normal (back toward the
+            // shooter), so sparks and chips bounce off the hull.
+            Quaternion facing
+                = Quaternion.LookRotation(contact.normal, Vector3.forward);
+            Instantiate(hitEffectPrefab, contact.point, facing);
         }
+        PlayAudioEffect();
 
         Destroy(gameObject);
+    }
+
+    protected virtual void PlayAudioEffect()
+    {
+        AudioManager.Instance.PlayOneShot(
+            FmodEvents.Instance.ShipHit,
+            transform.position);
     }
 
     private void Initialize(Collider2D parentCollider)

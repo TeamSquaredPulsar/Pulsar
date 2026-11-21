@@ -51,7 +51,7 @@ MonoBehaviour:
   damageRadius: 1
   speed: 10
   lifeTime: 4
-  hitEffectPrefab: {fileID: 0}
+  hitEffectPrefab: {fileID: 4650023321338013299, guid: 35da71b9711c87e41a5e95336bf8bbe4, type: 3}
   coll2D: {fileID: -6108854548401063352}
   rb: {fileID: 7861646081704106804}
 --- !u!212 &5810745852898598321

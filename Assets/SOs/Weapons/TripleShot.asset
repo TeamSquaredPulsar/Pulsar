@@ -12,7 +12,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e795fe7f1470b7e4e98c9daf4edf2af0, type: 3}
   m_Name: TripleShot
   m_EditorClassIdentifier: Assembly-CSharp::TripleShot
-  k_LeftAngle: -45
-  k_MiddleAngle: 0
-  k_RightAngle: 45
-  k_DefaultRotation: 0
+  weaponFiredSound:
+    Guid:
+      Data1: -1573229566
+      Data2: 1171786981
+      Data3: -947611748
+      Data4: 1321384672
+    Path: event:/Attack/ShootMedium

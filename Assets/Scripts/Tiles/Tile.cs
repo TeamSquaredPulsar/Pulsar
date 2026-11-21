@@ -1,8 +1,12 @@
 using System;
+using JetBrains.Annotations;
+using NaughtyAttributes;
 using Pulsar.DataClasses;
 using Pulsar.Interactions;
+using Pulsar.Tiles.Extensions;
 using UnityEngine;
 
+[Serializable]
 public struct TileRbInfo
 {
     public float LinearDamping;
@@ -44,6 +48,8 @@ public abstract class Tile : MonoBehaviour
     [SerializeField]
     protected SpriteRenderer spriteRenderer;
 
+    [SerializeField]
+    [ReadOnly]
     private TileRbInfo _rbInfo;
 
     public Vector2Int Cell { get; private set; }
@@ -94,7 +100,17 @@ public abstract class Tile : MonoBehaviour
 
     private void OnHealthStateChanged(HealthState state)
     {
+        PlayHealthStateAudio();
         RefreshSprite();
+    }
+
+    /// <summary>
+    /// Overridable function so different tiles can play different audio when
+    /// their health state changes, if they want.
+    /// </summary>
+    protected virtual void PlayHealthStateAudio()
+    {
+        // Default tiles don't play anything
     }
 
     protected void RefreshSprite()
@@ -106,10 +122,14 @@ public abstract class Tile : MonoBehaviour
         }
     }
 
+    [CanBeNull]
     protected virtual Sprite GetCurrentSprite(HealthState state) =>
         Sprites ? Sprites.Get(state) : null;
 
-    public void TakeDamage(float damage) => health.TakeDamage(damage);
+    public void TakeDamage(float damage)
+    {
+        health.TakeDamage(damage);
+    }
 
     /// <summary>
     /// To ask whether the rotated tile can connect from dir

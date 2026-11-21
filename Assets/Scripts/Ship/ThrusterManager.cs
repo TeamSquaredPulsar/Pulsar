@@ -9,7 +9,7 @@ namespace Pulsar.Ship
 {
 public class ThrustAtRotation
 {
-    public float Thrust = 0;
+    public float Thrust;
     public readonly List<IThrustable> Thrusters = new();
 
     public void Reset()
@@ -57,6 +57,54 @@ public class ThrusterManager : MonoBehaviour
 
     public void HandleThrust(Vector2 thrust)
     {
+        _moveInput = thrust;
+        List<IThrustable> activatedThrusters = new();
+
+        ActivateThrustersByDirection(activatedThrusters);
+
+        CleanDirectedThrustList();
+
+        foreach (TileRotation rotation in new TileRotation().Values())
+        {
+            List<IThrustable> toDeactivate = _directedThrust[rotation].Thrusters
+                .Where(thruster => thruster.IsThrusting &&
+                                   !activatedThrusters.Contains(thruster))
+                .ToList();
+            foreach (IThrustable thruster in toDeactivate)
+            {
+                thruster.DeactivateThrust();
+            }
+        }
+    }
+
+    private void ActivateThrustersByDirection(
+        in List<IThrustable> activatedThrusters)
+    {
+        if (_moveInput.x < 0)
+        {
+            activatedThrusters.AddRange(ActivateThrusters(_moveInput.x,
+                TileRotation.Right));
+        }
+        else if (_moveInput.x > 0)
+        {
+            activatedThrusters.AddRange(ActivateThrusters(_moveInput.x,
+                TileRotation.Left));
+        }
+
+        if (_moveInput.y < 0)
+        {
+            activatedThrusters.AddRange(ActivateThrusters(_moveInput.y,
+                TileRotation.Up));
+        }
+        else if (_moveInput.y > 0)
+        {
+            activatedThrusters.AddRange(ActivateThrusters(_moveInput.y,
+                TileRotation.Down));
+        }
+    }
+
+    private void CleanDirectedThrustList()
+    {
         foreach (TileRotation rotation in new TileRotation().Values())
         {
             List<IThrustable> thrusters = _directedThrust[rotation].Thrusters;
@@ -72,31 +120,6 @@ public class ThrusterManager : MonoBehaviour
                     _directedThrust[rotation].Thrusters.Remove(thruster);
                 }
             }
-
-            foreach (IThrustable thruster in thrusters)
-            {
-                thruster.DeactivateThrust();
-            }
-        }
-
-        _moveInput = thrust;
-
-        if (_moveInput.x < 0)
-        {
-            ShowActiveThrusters(_moveInput.x, TileRotation.Right);
-        }
-        else if (_moveInput.x > 0)
-        {
-            ShowActiveThrusters(_moveInput.x, TileRotation.Left);
-        }
-
-        if (_moveInput.y < 0)
-        {
-            ShowActiveThrusters(_moveInput.y, TileRotation.Up);
-        }
-        else if (_moveInput.y > 0)
-        {
-            ShowActiveThrusters(_moveInput.y, TileRotation.Down);
         }
     }
 
@@ -187,14 +210,19 @@ public class ThrusterManager : MonoBehaviour
 
     #endregion
 
-    private void ShowActiveThrusters(
+    private List<IThrustable> ActivateThrusters(
         float amount,
         TileRotation direction)
     {
-        foreach (IThrustable t in _directedThrust[direction].Thrusters)
+        List<IThrustable> activatedThrusters = new();
+
+        foreach (IThrustable thruster in _directedThrust[direction].Thrusters)
         {
-            t.ActivateThrust(amount, in rb);
+            activatedThrusters.Add(thruster);
+            thruster.ActivateThrust(amount, in rb);
         }
+
+        return activatedThrusters;
     }
 }
 }

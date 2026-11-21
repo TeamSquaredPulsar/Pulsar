@@ -12,6 +12,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 09f019ce7f9eb9f4c9bb204f6f58985f, type: 3}
   m_Name: BurstShot
   m_EditorClassIdentifier: Assembly-CSharp::BurstShot
-  k_MaxBullets: 3
-  k_BulletStart: 0
+  weaponFiredSound:
+    Guid:
+      Data1: 1046454040
+      Data2: 1273565976
+      Data3: 1212372111
+      Data4: -220254140
+    Path: event:/Attack/ShootLight
+  maxBullets: 3
   k_bulletGapTime: 0.1

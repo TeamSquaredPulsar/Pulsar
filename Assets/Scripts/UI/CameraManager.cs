@@ -1,3 +1,5 @@
+using System;
+using FMODUnity;
 using NaughtyAttributes;
 using Pulsar.DataClasses;
 using Pulsar.Player;
@@ -6,10 +8,8 @@ using UnityEngine;
 
 namespace Pulsar.UI
 {
-public class CameraManager : MonoBehaviour
+public class CameraManager : Singleton<CameraManager>
 {
-    [SerializeField]
-    private CameraData cameraDataAsset;
 
     [SerializeField]
     private Camera mainCamera;
@@ -20,10 +20,12 @@ public class CameraManager : MonoBehaviour
     [SerializeField]
     private CinemachineCamera gameplayCamera;
 
-    [BoxGroup("Target Group"), SerializeField,]
+    [BoxGroup("Target Group")]
+    [SerializeField]
     private CinemachineTargetGroup targetGroup;
 
-    [BoxGroup("Target Group"), SerializeField,]
+    [BoxGroup("Target Group")]
+    [SerializeField]
     private float playerRadius;
 
     [BoxGroup("Target Group")]
@@ -33,15 +35,36 @@ public class CameraManager : MonoBehaviour
     private const int k_HighPriority = 100;
     private const int k_LowPriority = 0;
 
-    private void Awake()
+    protected override void Awake()
     {
-        cameraDataAsset.MainCamera = mainCamera;
+        base.Awake();
         PlayerController.PlayerSpawnedEvent += OnPlayerSpawned;
         PlayerController.PlayerLossEvent += OnPlayerLoss;
+        StateManager.GameStateChanged += HandleStateChange;
+    }
+
+    private void HandleStateChange(GameState obj)
+    {
+        switch (obj)
+        {
+            case GameState.MainMenu:
+            case GameState.Loading:
+            case GameState.GameOver:
+                PrioritizeMenuCamera();
+                break;
+            case GameState.Sandbox:
+            case GameState.Tutorial:
+            case GameState.Playing:
+                PrioritizeGameplayCamera();
+                break;
+            default:
+                throw new ArgumentOutOfRangeException(nameof(obj), obj, null);
+        }
     }
 
     private void Start()
     {
+        CameraData.MainCamera = mainCamera;
         PrioritizeMenuCamera();
     }
 
@@ -73,6 +96,8 @@ public class CameraManager : MonoBehaviour
     private void OnPlayerSpawned(PlayerController obj)
     {
         targetGroup.AddMember(obj.transform, playerWeight, playerRadius);
+        mainCamera.GetComponent<StudioListener>()
+            .SetAttentuationObject(obj.gameObject);
         PrioritizeGameplayCamera();
     }
 }

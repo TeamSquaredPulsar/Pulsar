@@ -26,7 +26,7 @@ Transform:
   m_GameObject: {fileID: 2549686187472598095}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: -1763}
+  m_LocalPosition: {x: 0, y: 0, z: -8495}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -63,7 +63,7 @@ GameObject:
   - component: {fileID: 7502709910855025263}
   - component: {fileID: 7903410290157337451}
   m_Layer: 0
-  m_Name: CinemachineCamera
+  m_Name: MenuCamera
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -175,7 +175,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 33f6fc25fb6e51d46a08aa3b04d1f8d8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Pulsar.UI::Pulsar.UI.CameraManager
-  cameraDataAsset: {fileID: 11400000, guid: 3422a4889e5877b4fafae9f0099db266, type: 2}
   mainCamera: {fileID: 6694399800490252111}
   mainMenuCamera: {fileID: 7903410290157337451}
   gameplayCamera: {fileID: 8681821143790247424}
@@ -196,7 +195,7 @@ GameObject:
   - component: {fileID: 1960359507197604397}
   - component: {fileID: 1147742596823905516}
   m_Layer: 0
-  m_Name: PlayerTrackCam
+  m_Name: GameplayCamera
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -211,7 +210,7 @@ Transform:
   m_GameObject: {fileID: 8558096481514896224}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: -1773}
+  m_LocalPosition: {x: 0, y: 0, z: -8505}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -348,7 +347,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1535299576213119972, guid: 353cdbf40f1135e49926004f779abd67, type: 3}
       propertyPath: m_LocalPosition.z
-      value: -1773
+      value: -8505
       objectReference: {fileID: 0}
     - target: {fileID: 1535299576213119972, guid: 353cdbf40f1135e49926004f779abd67, type: 3}
       propertyPath: m_LocalRotation.w
@@ -356,15 +355,15 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1535299576213119972, guid: 353cdbf40f1135e49926004f779abd67, type: 3}
       propertyPath: m_LocalRotation.x
-      value: -0
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 1535299576213119972, guid: 353cdbf40f1135e49926004f779abd67, type: 3}
       propertyPath: m_LocalRotation.y
-      value: -0
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 1535299576213119972, guid: 353cdbf40f1135e49926004f779abd67, type: 3}
       propertyPath: m_LocalRotation.z
-      value: -0
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 1535299576213119972, guid: 353cdbf40f1135e49926004f779abd67, type: 3}
       propertyPath: m_LocalEulerAnglesHint.x

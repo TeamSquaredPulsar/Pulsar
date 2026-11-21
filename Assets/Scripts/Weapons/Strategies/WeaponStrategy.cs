@@ -16,6 +16,7 @@ namespace Pulsar.Weapons.Strategies
 [Serializable]
 public abstract class WeaponStrategy : ScriptableObject
 {
+
     /// <summary>
     /// Abstract Fire function
     ///
@@ -23,11 +24,10 @@ public abstract class WeaponStrategy : ScriptableObject
     /// <param name="firePoints"></param>
     ///  <param name="weapon"></param>
     /// <param name="spawnProjectile"></param>
-    public abstract void
-        Fire(
-            Transform[] firePoints,
-            Weapon weapon,
-            Func<Transform, GameObject> spawnProjectile);
+    public abstract void Fire(
+        Transform[] firePoints,
+        Weapon weapon,
+        Func<Transform, GameObject> spawnProjectile);
 
     protected void VerifyFirePoints(
         Transform[] firePoints,

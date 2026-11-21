@@ -10,6 +10,8 @@ GameObject:
   m_Component:
   - component: {fileID: 7690346026950655372}
   - component: {fileID: 3325847302067099263}
+  - component: {fileID: 8931149673129828490}
+  - component: {fileID: 4533177236349318532}
   m_Layer: 0
   m_Name: GameManager
   m_TagString: Untagged
@@ -45,16 +47,88 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: '::'
   playerPrefab: {fileID: 1843940356141040302, guid: b8226397bde29ab4abb516fe64e2ab6f, type: 3}
-  enemySpawnerPrefab: {fileID: 697001318912693541, guid: c870ce8893d39f4409a7d84e3185bf7b, type: 3}
-  waveDelaySeconds: 5
-  waveDefinitions:
-  - {fileID: 11400000, guid: d95adc1974b84789aa9a3bf00509f350, type: 2}
-  - {fileID: 11400000, guid: cbb5bfedfcae4b0faea80f666280f33b, type: 2}
-  - {fileID: 11400000, guid: 2f73e111c092479abd40c2630b70eaeb, type: 2}
-  - {fileID: 11400000, guid: 0a232521b3ed4937884cc04e3297c28a, type: 2}
-  - {fileID: 11400000, guid: a90f1260bcdf4437bafd5ad836191936, type: 2}
-  - {fileID: 11400000, guid: f4f6d9619a734313bfdb8e924073601a, type: 2}
-  - {fileID: 11400000, guid: b105a19ebc8343f49d1fe20ec37f4d85, type: 2}
-  - {fileID: 11400000, guid: da419b9be66f4ec3b554f7d23fd4d645, type: 2}
-  - {fileID: 11400000, guid: 3f5b098804994908a10b326fda6d3b0b, type: 2}
-  - {fileID: 11400000, guid: 3c98a37892be4035b5f9e790f10f9455, type: 2}
+  scenes:
+    _entries:
+    - key: 0
+      value:
+        m_AssetGUID: 79bc927e6153cea49b1dcbcc44812622
+        m_SubObjectName: 
+        m_SubObjectType: 
+        m_SubObjectGUID: 
+        m_EditorAssetChanged: 0
+        sceneName: MainMenu
+    - key: 2
+      value:
+        m_AssetGUID: 18caf6f054b53be4681f971c4e5a5e4a
+        m_SubObjectName: 
+        m_SubObjectType: 
+        m_SubObjectGUID: 
+        m_EditorAssetChanged: 0
+        sceneName: Sandbox
+    - key: 4
+      value:
+        m_AssetGUID: 8c9cfa26abfee488c85f1582747f6a02
+        m_SubObjectName: 
+        m_SubObjectType: 
+        m_SubObjectGUID: 
+        m_EditorAssetChanged: 0
+        sceneName: GameScene
+    - key: 3
+      value:
+        m_AssetGUID: 466858851be531f45a3902e4934e0209
+        m_SubObjectName: 
+        m_SubObjectType: 
+        m_SubObjectGUID: 
+        m_EditorAssetChanged: 0
+        sceneName: Tutorial
+  audioManager: {fileID: 11400000, guid: b93f15ff1e15c794ba814aa4875bc1c1, type: 2}
+  audioEvents: {fileID: 11400000, guid: f9dbdf1e115dd5c4087a04b8e3b63d99, type: 2}
+--- !u!114 &8931149673129828490
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7621465928010011671}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b9468c5f457ace64f8d4df6d642b107f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: FMODUnity::FMODUnity.StudioBankLoader
+  LoadEvent: 1
+  UnloadEvent: 2
+  Banks:
+  - Music
+  CollisionTag: 
+  PreloadSamples: 0
+--- !u!114 &4533177236349318532
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7621465928010011671}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9a6610d2e704f1648819acc8d7460285, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: FMODUnity::FMODUnity.StudioEventEmitter
+  CollisionTag: 
+  EventReference:
+    Guid:
+      Data1: -1163865226
+      Data2: 1152950576
+      Data3: -66796657
+      Data4: -749286060
+    Path: event:/GameStart
+  Event: 
+  EventPlayTrigger: 1
+  EventStopTrigger: 2
+  AllowFadeout: 1
+  TriggerOnce: 0
+  Preload: 0
+  NonRigidbodyVelocity: 0
+  Params: []
+  OverrideAttenuation: 0
+  OverrideMinDistance: 1
+  OverrideMaxDistance: 20

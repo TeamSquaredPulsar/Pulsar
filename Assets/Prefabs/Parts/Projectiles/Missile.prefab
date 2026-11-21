@@ -13,6 +13,7 @@ GameObject:
   - component: {fileID: 2431768891157974211}
   - component: {fileID: -6108854548401063352}
   - component: {fileID: 7861646081704106804}
+  - component: {fileID: 6942582809986852290}
   m_Layer: 6
   m_Name: Missile
   m_TagString: Untagged
@@ -82,7 +83,7 @@ SpriteRenderer:
   m_LightmapParameters: {fileID: 0}
   m_GlobalIlluminationMeshLod: 0
   m_SortingLayerID: -1599613283
-  m_SortingLayer: 4
+  m_SortingLayer: 5
   m_SortingOrder: 0
   m_MaskInteraction: 0
   m_Sprite: {fileID: 21300000, guid: 0078b18462a57414594b08db376f921a, type: 3}
@@ -105,7 +106,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: d76569d6d3ec5cd4995f619e980ba9c7, type: 3}
-  m_Name:
+  m_Name: 
   m_EditorClassIdentifier: Pulsar.Hazards::Pulsar.Hazards.ExplosiveProjectile
   <Damage>k__BackingField: 10
   damageRadius: 2
@@ -115,7 +116,7 @@ MonoBehaviour:
   coll2D: {fileID: -6108854548401063352}
   rb: {fileID: 7861646081704106804}
   <ExplosionRadius>k__BackingField: 2
-  ps: {fileID: 0}
+  ps: {fileID: 3520972651243610508, guid: 2bdd88d3449a85c40a34a282b5d022b8, type: 3}
   <EdgeDamageFraction>k__BackingField: 0.3
   acceleration: 4
   maxSpeed: 18
@@ -192,6 +193,37 @@ Rigidbody2D:
   m_SleepingMode: 1
   m_CollisionDetection: 1
   m_Constraints: 4
+--- !u!114 &6942582809986852290
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1682859016921356063}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9a6610d2e704f1648819acc8d7460285, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: FMODUnity::FMODUnity.StudioEventEmitter
+  CollisionTag: 
+  EventReference:
+    Guid:
+      Data1: -1248823132
+      Data2: 1141062011
+      Data3: 2070106497
+      Data4: 422962926
+    Path: event:/Rocket/RocketMove
+  Event: 
+  EventPlayTrigger: 0
+  EventStopTrigger: 0
+  AllowFadeout: 1
+  TriggerOnce: 0
+  Preload: 0
+  NonRigidbodyVelocity: 0
+  Params: []
+  OverrideAttenuation: 0
+  OverrideMinDistance: 1
+  OverrideMaxDistance: 20
 --- !u!1001 &5851714342317061816
 PrefabInstance:
   m_ObjectHideFlags: 0

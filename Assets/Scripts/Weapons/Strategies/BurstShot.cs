@@ -1,5 +1,6 @@
 using System;
 using System.Collections;
+using Pulsar.Audio;
 using UnityEngine;
 
 namespace Pulsar.Weapons.Strategies
@@ -8,7 +9,7 @@ namespace Pulsar.Weapons.Strategies
 /// Represents a BurstShot
 ///
 /// Shoots bullets in a burst
-/// 
+///
 /// @author Alfredo Luzardo
 /// @version 1.0
 /// </summary>
@@ -48,6 +49,9 @@ public class BurstShot : WeaponStrategy
         for (int i = 0; i < maxBullets; i++)
         {
             spawnProjectile(firePoints[i % firePoints.Length]);
+            AudioManager.Instance.PlayOneShot(
+                FmodEvents.Instance.ShootLight,
+                firePoints[i % firePoints.Length].position);
             yield return new WaitForSeconds(k_bulletGapTime);
         }
     }

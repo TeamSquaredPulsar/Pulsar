@@ -1,9 +1,10 @@
+using System;
 using UnityEngine;
 
 namespace Pulsar.DataClasses
 {
-[CreateAssetMenu(menuName = "CameraData")]
-public class CameraData : ScriptableObject
+
+public static class CameraData
 {
     /*
      * Use this if you want to keep a reference to the camera, and listen for
@@ -13,10 +14,20 @@ public class CameraData : ScriptableObject
      * as an easy win.
      * If you do uncomment this, make it get called when MainCamera is set
      */
-    // public static event Action<Camera> MainCameraChanged;
+    public static event Action<Camera> MainCameraChanged;
 
-    public Camera MainCamera { get; set; }
+    private static Camera _mainCamera;
 
-    public Vector2 ScreenSize => MainCamera.pixelRect.size;
+    public static Camera MainCamera
+    {
+        get => !_mainCamera ? Camera.main : _mainCamera;
+        set
+        {
+            _mainCamera = value;
+            MainCameraChanged?.Invoke(value);
+        }
+    }
+
+    public static Vector2 ScreenSize => MainCamera ? MainCamera.pixelRect.size:  Vector2.zero;
 }
 }

@@ -13,6 +13,22 @@
 # Optionally collapse Unity YAML files on GitHub diffs
 [attr]unity-yaml        merge=unityyamlmerge text linguist-language=yaml linguist-generated
 
+* text=auto
+
+# Unity text files (force LF to prevent cross-platform churn)
+*.cs text eol=lf
+*.shader text eol=lf
+*.cginc text eol=lf
+*.hlsl text eol=lf
+*.compute text eol=lf
+*.unity text eol=lf
+*.prefab text eol=lf
+*.mat text eol=lf
+*.asset text eol=lf
+*.meta text eol=lf
+*.json text eol=lf
+*.xml text eol=lf
+
 # Unity source files
 *.cginc                 text
 *.compute               text linguist-language=hlsl
@@ -175,3 +191,7 @@ Packages/packages-lock.json linguist-generated
 
 # Exceptions for .asset files such as lightning pre-baking
 LightingData.asset     binary
+
+# FMOD
+Assets/Plugins/FMOD/**/*.bundle text eol=lf
+Assets/Plugins/FMOD/**/Info.plist text eol=lf
