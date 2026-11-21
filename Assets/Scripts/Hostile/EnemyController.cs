@@ -197,13 +197,14 @@ public class EnemyController : MonoBehaviour
             targetOffset
                 = -dirToPlayer * (enemyInfo.stoppingDistance - distance);
         }
+
         if (enemyInfo.driftAmount > 0f)
         {
             bool holdingPosition = targetOffset == Vector3.zero;
             targetOffset += CalculateDrift(dirToPlayer, holdingPosition);
         }
 
-        targetOffset += CalculateSeparation() * enemyInfo.separationStrength;
+        targetOffset += CalculateSeparation();
 
         //Finds the position error in local space
         Vector2 localPosErr = transform.InverseTransformPoint(targetOffset);
@@ -227,7 +228,7 @@ public class EnemyController : MonoBehaviour
         float inputX = _moveXPID.CalculateVelocity(
             in enemyInfo.movePID, dt, localPosErr.x, localVel.x * brakeScaleX);
         float inputY = _moveXPID.CalculateVelocity(
-            in enemyInfo.movePID, dt, localPosErr.y, localVel.y * brakeScaleX);
+            in enemyInfo.movePID, dt, localPosErr.y, localVel.y * brakeScaleY);
 
         shipManager.Move(new Vector2(inputX, inputY));
     }
@@ -287,23 +288,42 @@ public class EnemyController : MonoBehaviour
         return push;
     }
 
+    //private void HandleRotation(Vector3 dirToPlayer)
+    //{
+    //    //TODO Replace this with a PID controller that turns through
+    //    //  shipManager.Rotate instead of setting angularVelocity directly
+    //    //-90f corrects rotation ONLY for this specific Band-Aid
+    //    float targetAngle = Mathf.Atan2(
+    //        dirToPlayer.y, dirToPlayer.x) * Mathf.Rad2Deg - 90f;
+    //
+    //    float angleDiff = Mathf.DeltaAngle(rb.rotation, targetAngle);
+    //
+    //    float desiredVelocity = angleDiff * TurnGain;
+    //
+    //    rb.angularVelocity = Mathf.Clamp(desiredVelocity,
+    //        -enemyInfo.turnSpeed, enemyInfo.turnSpeed);
+    //}
+
     private void HandleRotation(Vector3 dirToPlayer)
     {
-        //TODO Replace this with a PID controller that turns through
-        //  shipManager.Rotate instead of setting angularVelocity directly
-        //-90f corrects rotation ONLY for this specific Band-Aid
-        float targetAngle = Mathf.Atan2(
-            dirToPlayer.y, dirToPlayer.x) * Mathf.Rad2Deg - 90f;
+        float targetAngle = Mathf.Atan2(dirToPlayer.y, dirToPlayer.x)
+            * Mathf.Rad2Deg - 90f;
 
-        float angleDiff = Mathf.DeltaAngle(rb.rotation, targetAngle);
+        float angleErr = Mathf.DeltaAngle(rb.rotation, targetAngle);
 
-        float desiredVelocity = angleDiff * TurnGain;
+        float maxAngAccel = shipManager.GetMaxAngleAccelDeg();
+        float angBrakeScale = maxAngAccel > 0.1f
+            ? 10f / Mathf.Sqrt(maxAngAccel)
+            : 1f;
 
-        rb.angularVelocity = Mathf.Clamp(desiredVelocity,
-            -enemyInfo.turnSpeed, enemyInfo.turnSpeed);
+        float rotInput = _turnPID.CalculateVelocity(
+            in enemyInfo.turnPID, Time.fixedDeltaTime, angleErr,
+            rb.angularVelocity * angBrakeScale);
+
+        shipManager.Rotate(rotInput);
     }
 
-    private void HandleShooting(Vector3 dirToPlayer, float distance)
+private void HandleShooting(Vector3 dirToPlayer, float distance)
     {
         _timeBtwShots -= Time.deltaTime;
         if (_timeBtwShots > 0f)
