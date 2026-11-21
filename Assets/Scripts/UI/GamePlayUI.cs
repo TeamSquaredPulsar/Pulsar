@@ -1,11 +1,9 @@
-using System;
-using System.Collections;
-using Pulsar.DataClasses;
+using NaughtyAttributes;
 using Pulsar.Player;
 using UnityEngine;
 using TMPro;
 
-namespace Pulsar
+namespace Pulsar.UI
 {
 public class GamePlayUI : MonoBehaviour
 {
@@ -23,31 +21,37 @@ public class GamePlayUI : MonoBehaviour
     [SerializeField]
     private GameObject playerLossObject;
 
+    [SerializeField]
+    [ReadOnly]
+    private int score;
+
     private const string k_ScoreString = "Score:";
 
     private void OnEnable()
     {
-        GameManager.OnScoreChange += UpdateScore;
+        EnemyController.EnemyDefeatedEvent += UpdateScore;
         PlayerController.PlayerLossEvent += OnPlayerLoss;
         SetupScore();
     }
 
     private void OnDisable()
     {
-        GameManager.OnScoreChange -= UpdateScore;
+        EnemyController.EnemyDefeatedEvent -= UpdateScore;
         PlayerController.PlayerLossEvent -= OnPlayerLoss;
     }
 
-    private void UpdateScore(int obj)
+    private void UpdateScore(EnemyController _, int killPoints)
     {
-        scoreText.text = $"{k_ScoreString} {obj}";
+        score += killPoints;
+        scoreText.text = $"{k_ScoreString} {score}";
     }
 
     private void SetupScore()
     {
         scoreObject.SetActive(true);
         playerLossObject.SetActive(false);
-        UpdateScore(0);
+        score = 0;
+        UpdateScore(null, 0);
     }
 
     private void OnPlayerLoss(PlayerController _)

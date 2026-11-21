@@ -1,8 +1,6 @@
 using Pulsar.DataClasses;
 using System.Collections.Generic;
 using Audune.Utils.Dictionary;
-using Pulsar.Player;
-using TMPro;
 using UnityEngine;
 
 // ReSharper disable AsyncVoidMethod
