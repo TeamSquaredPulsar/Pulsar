@@ -1,9 +1,12 @@
 using System;
 using JetBrains.Annotations;
+using NaughtyAttributes;
 using Pulsar.DataClasses;
 using Pulsar.Interactions;
+using Pulsar.Tiles.Extensions;
 using UnityEngine;
 
+[Serializable]
 public struct TileRbInfo
 {
     public float LinearDamping;
@@ -45,6 +48,8 @@ public abstract class Tile : MonoBehaviour
     [SerializeField]
     protected SpriteRenderer spriteRenderer;
 
+    [SerializeField]
+    [ReadOnly]
     private TileRbInfo _rbInfo;
 
     public Vector2Int Cell { get; private set; }
@@ -105,7 +110,7 @@ public abstract class Tile : MonoBehaviour
     /// </summary>
     protected virtual void PlayHealthStateAudio()
     {
-        return; // Default tiles don't play anything
+        // Default tiles don't play anything
     }
 
     protected void RefreshSprite()

@@ -12,6 +12,7 @@ public class AutoLazerWeapon : AutoWeapon
 
     protected override void Awake()
     {
+        base.Awake();
         if (!lazerBeam)
         {
             Debug.LogWarning(

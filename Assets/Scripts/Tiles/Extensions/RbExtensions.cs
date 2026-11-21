@@ -1,5 +1,7 @@
 ﻿using UnityEngine;
 
+namespace Pulsar.Tiles.Extensions
+{
 public static class RbExtensions
 {
     public static Rigidbody2D SetBuildRb(
@@ -32,4 +34,5 @@ public static class RbExtensions
         original.mass = rbInfo.Mass;
         return original;
     }
+}
 }

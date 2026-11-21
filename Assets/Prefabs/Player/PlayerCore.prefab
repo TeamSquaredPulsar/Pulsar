@@ -308,6 +308,10 @@ MonoBehaviour:
   health: {fileID: 4009485083793066549}
   spritesOverride: {fileID: 0}
   spriteRenderer: {fileID: 7540636520406933749}
+  _rbInfo:
+    LinearDamping: 0
+    AngularDamping: 0
+    Mass: 0
   <FireRatePerSecond>k__BackingField: 1.5
   <ReloadingSprite>k__BackingField: {fileID: 0}
   muzzleEffectPrefab: {fileID: 0}
