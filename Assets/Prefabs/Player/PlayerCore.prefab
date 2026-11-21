@@ -244,11 +244,11 @@ GameObject:
   - component: {fileID: 8333102018394350530}
   - component: {fileID: 4009485083793066549}
   - component: {fileID: 8525024055157982409}
+  - component: {fileID: -3269957206215241566}
   - component: {fileID: 5095908355809572340}
   - component: {fileID: 7540636520406933749}
   - component: {fileID: 2261048118168935301}
   - component: {fileID: 6101688074798165259}
-  - component: {fileID: -3269957206215241566}
   m_Layer: 0
   m_Name: PlayerCore
   m_TagString: Untagged
@@ -308,10 +308,14 @@ MonoBehaviour:
   health: {fileID: 4009485083793066549}
   spritesOverride: {fileID: 0}
   spriteRenderer: {fileID: 7540636520406933749}
+  _rbInfo:
+    LinearDamping: 0
+    AngularDamping: 0
+    Mass: 0
   <FireRatePerSecond>k__BackingField: 1.5
   <ReloadingSprite>k__BackingField: {fileID: 0}
   muzzleEffectPrefab: {fileID: 0}
-  <ProjectilePrefab>k__BackingField: {fileID: 1682859016921356063, guid: a133161848d51234b97f8554a243a1ab, type: 3}
+  <ProjectilePrefab>k__BackingField: {fileID: 0}
   <ParentCollider>k__BackingField: {fileID: 0}
   <FirePoints>k__BackingField:
   - {fileID: 4593652288710760860}
@@ -325,6 +329,7 @@ MonoBehaviour:
   currentTargetBias: 1.5
   turretSprites: {fileID: 11400000, guid: 5508e9fb22a4fbd4c8270d7233ab46b8, type: 2}
   activeTurretSprite: {fileID: 8082630242208235203}
+  lazerBeam: {fileID: -3269957206215241566}
   <DeathExplosionPrefab>k__BackingField: {fileID: 4650023321338013299, guid: ca16f83ee0fe4a0a8f82bb5990ad5f59, type: 3}
   <DirectionalThrust>k__BackingField:
     _entries:
@@ -337,6 +342,31 @@ MonoBehaviour:
     - key: 3
       value: 5
   <RotationForce>k__BackingField: 2
+--- !u!114 &-3269957206215241566
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5342938517668441560}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 271f5d30700241d792044a01b9033576, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Pulsar.Weapons::Pulsar.Weapons.LazerBeam
+  range: 6
+  damagePerTick: 0.1
+  tickInterval: 0.1
+  releaseDelay: 0.1
+  timeToOverheat: 2
+  timeToCool: 1
+  overheatLockTime: 2
+  coolColor: {r: 0.09203625, g: 1, b: 0, a: 1}
+  hotColor: {r: 1, g: 0.61126673, b: 0, a: 1}
+  beamRenderer: {fileID: 3826569573896130254}
+  segments: 8
+  jitter: 0.15
+  crackleInterval: 0.05
 --- !u!61 &5095908355809572340
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -505,31 +535,6 @@ CircleCollider2D:
   m_CompositeOrder: 0
   m_Offset: {x: 0, y: 0}
   m_Radius: 0.5
---- !u!114 &-3269957206215241566
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5342938517668441560}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 271f5d30700241d792044a01b9033576, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Pulsar.Weapons::Pulsar.Weapons.LazerBeam
-  range: 6
-  damagePerTick: 0.1
-  tickInterval: 0.1
-  releaseDelay: 0.1
-  timeToOverheat: 2
-  timeToCool: 1
-  overheatLockTime: 2
-  coolColor: {r: 0.09203625, g: 1, b: 0, a: 1}
-  hotColor: {r: 1, g: 0.61126673, b: 0, a: 1}
-  beam: {fileID: 3826569573896130254}
-  segments: 8
-  jitter: 0.15
-  crackleInterval: 0.05
 --- !u!1 &8882854899038029542
 GameObject:
   m_ObjectHideFlags: 0

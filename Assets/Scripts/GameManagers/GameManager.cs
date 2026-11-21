@@ -1,27 +1,29 @@
 using System;
+using System.Threading.Tasks;
+using Audune.Utils.Dictionary;
 using NaughtyAttributes;
 using Pulsar.Audio;
 using Pulsar.DataClasses;
 using Pulsar.Player;
-using Pulsar.Stations;
-using Pulsar.Stations.Guards;
-using Pulsar.UI;
 using UnityEngine;
+using UnityEngine.AddressableAssets;
+using UnityEngine.ResourceManagement.AsyncOperations;
+using UnityEngine.ResourceManagement.ResourceProviders;
 
 namespace Pulsar
 {
 public class GameManager : Singleton<GameManager>
 {
-    public static event Action<int> OnEnemyKill;
 
-    [SerializeField, RequiredType(typeof(PlayerController)),]
+    [BoxGroup("References")]
+    [SerializeField]
+    [RequiredType(typeof(PlayerController))]
     private GameObject playerPrefab;
 
-    // The old wave system (EnemySpawner, WaveDefinition, Wave01-10) is unplugged:
-    // enemies now come from the space stations (see SpaceStation). The old
-    // classes and assets stay in the project until the stations are proven.
-
-    private int _score;
+    [SerializeField]
+    [SerializableDictionaryOptions(keyHeader = "State",
+            valueHeader = "Scene")]
+    private SerializableDictionary<GameState, SceneReference> scenes = new();
 
     [BoxGroup("Audio")]
     [SerializeField]
@@ -31,87 +33,74 @@ public class GameManager : Singleton<GameManager>
     [SerializeField]
     private FmodEvents audioEvents;
 
+    private int _score;
+
     protected override void Awake()
     {
         base.Awake();
-        UIManager.GameStateChangeEvent += OnGameStateChange;
-        EnemyController.EnemyDefeatedEvent += HandleEnemyKilled;
-        EnemyGuardAI.GuardDefeatedEvent += HandleGuardKilled;
-    }
-
-    private void HandleEnemyKilled(EnemyController _, int points)
-    {
-        AddScore(points);
-    }
-
-    private void HandleGuardKilled(EnemyGuardAI _, int points)
-    {
-        AddScore(points);
-    }
-
-    private void AddScore(int points)
-    {
-        _score += points;
-        OnEnemyKill?.Invoke(_score);
+        StateManager.GameStateChanged += OnGameStateChange;
     }
 
     private void OnDestroy()
     {
-        UIManager.GameStateChangeEvent -= OnGameStateChange;
-        EnemyController.EnemyDefeatedEvent -= HandleEnemyKilled;
-        EnemyGuardAI.GuardDefeatedEvent -= HandleGuardKilled;
+        StateManager.GameStateChanged -= OnGameStateChange;
     }
 
     private void OnGameStateChange(GameState obj)
     {
+        //Handle case-specific logic here.
         switch (obj)
         {
-            case GameState.MainMenu:
-                ResetStations();
-                break;
+            case GameState.Sandbox:
+            case GameState.Tutorial:
             case GameState.Playing:
                 HandleGameStart();
                 break;
             case GameState.GameOver:
-                HandleGameOver();
+            case GameState.MainMenu:
+            case GameState.Loading:
                 break;
             default:
                 throw new ArgumentOutOfRangeException(nameof(obj), obj, null);
         }
     }
 
-    private void HandleGameOver()
-    {
-        ResetStations();
-    }
-
     private void HandleGameStart()
     {
-        _score = 0;
+        Instantiate(playerPrefab, Vector3.zero, Quaternion.identity);
+    }
+
+    public async Task LoadLevel(GameState levelState)
+    {
+        StateManager.SetCurrentState(GameState.Loading);
+
+        CleanupTiles();
+
+        if (!scenes.TryGetValue(levelState, out SceneReference scene))
+        {
+            throw new InvalidOperationException(
+                $"No scene found for state {levelState}!");
+        }
+
+        AsyncOperationHandle<SceneInstance> sceneLoading
+            = Addressables.LoadSceneAsync(scene);
+        await sceneLoading.Task;
+        if (sceneLoading.Status != AsyncOperationStatus.Succeeded)
+        {
+            throw new InvalidOperationException(
+                $"Failed to load {scene.SceneName}!");
+        }
+
+        StateManager.SetCurrentState(levelState);
+    }
+
+    private static void CleanupTiles()
+    {
         Tile[] tiles = FindObjectsByType<Tile>(FindObjectsSortMode.None);
         foreach (Tile tile in tiles)
         {
             Destroy(tile.gameObject);
         }
-
-        Instantiate(playerPrefab, Vector3.zero, Quaternion.identity);
-
-        // Every station in the scene starts guarding from its first wave.
-        foreach (SpaceStation station in FindStations())
-        {
-            station.BeginDefense();
-        }
     }
-
-    private static void ResetStations()
-    {
-        foreach (SpaceStation station in FindStations())
-        {
-            station.ResetStation();
-        }
-    }
-
-    private static SpaceStation[] FindStations() =>
-        FindObjectsByType<SpaceStation>(FindObjectsSortMode.None);
 }
 }

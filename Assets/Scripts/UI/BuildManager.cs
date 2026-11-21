@@ -2,7 +2,7 @@ using System.Collections;
 using Pulsar.DataClasses;
 using Pulsar.Utilities;
 using Pulsar.Player;
-using Pulsar.Settings;
+using Pulsar.Settings.Input;
 using UnityEngine;
 
 namespace Pulsar.UI
@@ -30,21 +30,20 @@ public class BuildManager : MonoBehaviour
     [SerializeField, Min(0.1f),]
     private float tileDestroySeconds;
 
-    private Tile _selectedTile;
+    private Tile _selectedTile = null!;
     private bool _atOutline;
     private float _orbitAngle;
     private Vector2Int _attachCell;
     private TileRotation _attachRotation;
-    private Tile _highlightedTile;
 
     private Coroutine _destroyTileCoroutine;
     private Coroutine _updateRadialRoutine;
 
-    private void Awake()
+    private void OnEnable()
     {
         PlayerController.PlayerSpawnedEvent += OnPlayerSpawned;
         PlayerCursor.PlayerSelectTile += OnPlayerSelectTile;
-        input.RotateSelectedTileEvent += OnCwRotateSelectedTile;
+        input.RotateSelectedTileEvent += RotateSelectedTile;
     }
 
     private void Start()
@@ -53,11 +52,11 @@ public class BuildManager : MonoBehaviour
         radialMenu.Hide();
     }
 
-    private void OnDestroy()
+    private void OnDisable()
     {
         PlayerController.PlayerSpawnedEvent -= OnPlayerSpawned;
         PlayerCursor.PlayerSelectTile -= OnPlayerSelectTile;
-        input.RotateSelectedTileEvent -= OnCwRotateSelectedTile;
+        input.RotateSelectedTileEvent -= RotateSelectedTile;
     }
 
     private void OnPlayerSpawned(PlayerController obj)
@@ -280,10 +279,8 @@ public class BuildManager : MonoBehaviour
             _attachCell.CellToWorld(_player.transform), rotation);
     }
 
-    private void OnCwRotateSelectedTile(int i) => RotateSelectedTile(i);
-
     // Positive steps turn counterclockwise, negative steps turn clockwise.
-    public void RotateSelectedTile(int quarterTurns)
+    private void RotateSelectedTile(int quarterTurns)
     {
         if (!_selectedTile || _selectedTile.IsAttached || !_player)
         {

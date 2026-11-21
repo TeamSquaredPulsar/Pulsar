@@ -15,6 +15,7 @@ namespace Pulsar.DataClasses
             }
 
             Instance = this as T;
+            DontDestroyOnLoad(gameObject);
         }
     }
 
