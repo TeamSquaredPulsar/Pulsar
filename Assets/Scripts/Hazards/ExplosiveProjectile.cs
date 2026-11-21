@@ -1,5 +1,4 @@
 using FMODUnity;
-using NaughtyAttributes;
 using Pulsar.Audio;
 using UnityEngine;
 

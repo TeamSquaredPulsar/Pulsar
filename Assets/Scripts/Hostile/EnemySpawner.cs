@@ -41,8 +41,9 @@ public class EnemySpawner : MonoBehaviour
     private float _patternAngle;
     private int _spawnCount;
 
-    private void Awake()
+    private void OnEnable()
     {
+        PlayerController.PlayerLossEvent += StopSpawning;
         EnemyController.EnemyDefeatedEvent += HandleEnemyDefeated;
     }
 
@@ -51,12 +52,9 @@ public class EnemySpawner : MonoBehaviour
         StartCoroutine(LeashStrays());
     }
 
-    private void OnDestroy()
+    private void OnDisable()
     {
-        if (_waveCoroutine is not null)
-        {
-            StopCoroutine(_waveCoroutine);
-        }
+        StopSpawning();
 
         foreach (EnemyController enemy in _spawnedEnemies)
         {
@@ -67,6 +65,20 @@ public class EnemySpawner : MonoBehaviour
         }
 
         EnemyController.EnemyDefeatedEvent -= HandleEnemyDefeated;
+        PlayerController.PlayerLossEvent -= StopSpawning;
+    }
+
+    private void StopSpawning(PlayerController _)
+    {
+        StopSpawning();
+    }
+
+    private void StopSpawning()
+    {
+        if (_waveCoroutine is not null)
+        {
+            StopCoroutine(_waveCoroutine);
+        }
     }
 
     public void LoadNewWave(WaveDefinition newWave)
@@ -82,10 +94,7 @@ public class EnemySpawner : MonoBehaviour
             return;
         }
 
-        if (_waveCoroutine is not null)
-        {
-            StopCoroutine(_waveCoroutine);
-        }
+        StopSpawning();
 
         _waveCoroutine = StartCoroutine(RunWave(_wave));
     }
