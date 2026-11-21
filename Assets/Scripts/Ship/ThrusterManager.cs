@@ -24,6 +24,8 @@ public class ThrusterManager : MonoBehaviour
     [SerializeField]
     private Rigidbody2D rb;
 
+    private const float FloatPointError = 0.001f;
+
     private readonly Dictionary<TileRotation, ThrustAtRotation> _directedThrust
         = new()
         {
@@ -203,6 +205,32 @@ public class ThrusterManager : MonoBehaviour
 
             _curRotThrust += thruster.RotationForce;
         }
+    }
+
+    //Used exclusively by the enemies currently, potentially could be made
+    //local in the controller or a derived thrust manager for jsut enemies
+    public Vector2 GetMaxLocalAccel(Vector2 localDir)
+    {
+        if (rb.mass <= FloatPointError)
+        {
+            return Vector2.zero;
+        }
+
+        float forceX = localDir.x < 0 ?
+            _directedThrust[TileRotation.Right].Thrust :
+            _directedThrust[TileRotation.Left].Thrust;
+
+        float forceY = localDir.y < 0 ?
+            _directedThrust[TileRotation.Up].Thrust :
+            _directedThrust[TileRotation.Down].Thrust;
+
+        return new Vector2(forceX / rb.mass, forceY / rb.mass);
+    }
+
+    public float GetMaxAngularAccelDeg()
+    {
+        float inertia = Mathf.Max(FloatPointError, rb.inertia);
+        return (_curRotThrust / inertia) * Mathf.Rad2Deg;
     }
 
     private ThrustAtRotation GetThrustAtRotation(TileRotation orientation) =>
