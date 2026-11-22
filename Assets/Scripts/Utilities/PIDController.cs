@@ -15,6 +15,7 @@ public struct PIDParams
      * too low it doesnt reach its point, too passes the point and oscillates
      */
     [Tooltip("Acceleration intensity")]
+    [Min(0.1f)]
     public float kP;
     /*
      * Derivative output of the current error,
@@ -23,6 +24,7 @@ public struct PIDParams
      * Too low it doesn't break hard enough, too high it slows down too much
      */
     [Tooltip("Braking against velocity")]
+    [Min(0.001f)]
     public float kD;
     /*
      * Integral output of the error from external factors to account for
@@ -30,6 +32,7 @@ public struct PIDParams
      * higher eliminates outside forces faster but oscillates like kP
      */
     [Tooltip("Account for external forces")]
+    [Min(0.001f)]
     public float kI;
 
     /*
@@ -38,6 +41,7 @@ public struct PIDParams
      * 1f should normally work tho, but its included everywhere so better safe
      */
     [Tooltip("Prevent integral accumulation")]
+    [Min(1f)]
     public float IntegralWindup;
 
     public PIDParams(float kP, float kD, float kI, float integralWindup = 1f)
@@ -100,23 +104,6 @@ public struct PIDParams
         return Mathf.Clamp(
             p.kP * error + p.kI * _integral + p.kD * deriv, -1f, 1f);
     }
-
-    //Same as calc with velocity (potentially)
-    //public float CalculateAngle(in PIDParams p, float deltaTime,
-    //    float angleError,
-    //    float angVelError)
-    //{
-    //    if (deltaTime <= 0f)
-    //    {
-    //        return 0f;
-    //    }
-    //
-    //    CalcIntegral(angleError * deltaTime, p.IntegralWindup);
-    //
-    //    float deriv = -angVelError;
-    //
-    //    return p.kP * angleError + p.kI * _integral + p.kD * deriv;
-    //}
 
     private void CalcIntegral(float errorOverTime, float windUp)
     {

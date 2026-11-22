@@ -1,3 +1,4 @@
+using NaughtyAttributes;
 using Pulsar.Utilities;
 using UnityEngine;
 
@@ -21,10 +22,12 @@ public class EnemyInfo : ScriptableObject
 
     [Header("PID Tuning")]
     [Tooltip("Movement positioning/breaking strength")]
-    public PIDParams movePID = new(1.0f, 1.2f, 0f, 1f);
+    [AllowNesting]
+    public PIDParams movePID = new(1.0f, 1.2f, 0f);
 
     [Tooltip("Turning positioning/breaking strength")]
-    public PIDParams turnPID = new(0.08f, 0.04f, 0f, 1f);
+    [AllowNesting]
+    public PIDParams turnPID = new(0.08f, 0.04f, .001f);
 
 
     [Header("Combat")]
