@@ -158,34 +158,6 @@ public class EnemyController : MonoBehaviour
         return radius;
     }
 
-    //private void HandleMovement(Vector3 dirToPlayer, float distance)
-    //{
-    //    Vector3 desiredDir = Vector3.zero;
-    //
-    //    if (distance > enemyInfo.stoppingDistance)
-    //    {
-    //        desiredDir = dirToPlayer;
-    //    }
-    //    else if (distance < enemyInfo.retreatDistance)
-    //    {
-    //        desiredDir = -dirToPlayer;
-    //    }
-    //
-    //    if (enemyInfo.driftAmount > 0f)
-    //    {
-    //        bool holdingPosition = desiredDir == Vector3.zero;
-    //        desiredDir += CalculateDrift(dirToPlayer, holdingPosition);
-    //    }
-    //
-    //    desiredDir += CalculateSeparation() * enemyInfo.separationStrength;
-    //
-    //    desiredDir = Vector3.ClampMagnitude(desiredDir, 1f) *
-    //                 Mathf.Clamp01(enemyInfo.speed);
-    //
-    //    Vector2 localDir = transform.InverseTransformDirection(desiredDir);
-    //    shipManager.Move(localDir);
-    //}
-
     private void HandleMovement(Vector3 dirToPlayer, float distance)
     {
         Vector3 targetOffset = Vector3.zero;
@@ -290,22 +262,6 @@ public class EnemyController : MonoBehaviour
 
         return push;
     }
-
-    //private void HandleRotation(Vector3 dirToPlayer)
-    //{
-    //    //TODO Replace this with a PID controller that turns through
-    //    //  shipManager.Rotate instead of setting angularVelocity directly
-    //    //-90f corrects rotation ONLY for this specific Band-Aid
-    //    float targetAngle = Mathf.Atan2(
-    //        dirToPlayer.y, dirToPlayer.x) * Mathf.Rad2Deg - 90f;
-    //
-    //    float angleDiff = Mathf.DeltaAngle(rb.rotation, targetAngle);
-    //
-    //    float desiredVelocity = angleDiff * TurnGain;
-    //
-    //    rb.angularVelocity = Mathf.Clamp(desiredVelocity,
-    //        -enemyInfo.turnSpeed, enemyInfo.turnSpeed);
-    //}
 
     private void HandleRotation(Vector3 dirToPlayer)
     {
