@@ -9,10 +9,10 @@ namespace Pulsar.Stations.Guards
 /// </summary>
 public abstract class GuardCombatBehavior : MonoBehaviour
 {
-    /// <summary>The current state's name, shown on EnemyGuardAI for debugging.</summary>
+    // The current state's name, shown on EnemyGuardAI for debugging.
     public abstract string CurrentStateName { get; }
 
-    /// <summary>Start the cycle over from its first state (Move).</summary>
+    // Start the cycle over from its first state (Move).
     public abstract void ResetCycle();
 
     public abstract void Tick(EnemyGuardAI guard, Vector2 target, float deltaTime);

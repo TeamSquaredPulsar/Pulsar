@@ -110,7 +110,7 @@ public static class EnemyGenerator
         return problem == null;
     }
 
-    // ---------------------------------------------------------------- layout
+    // layout
 
     private static Dictionary<Vector2Int, PlannedTile> PlanLayout(
         StationProfile profile,
@@ -280,7 +280,7 @@ public static class EnemyGenerator
         }
     }
 
-    // ------------------------------------------------- the same edge rules as ShipManager.CanAttach
+    // the same edge rules as ShipManager.CanAttach
 
     private static IEnumerable<(Vector2Int cell, TileRotation rotation)>
         FreeSpots(Dictionary<Vector2Int, PlannedTile> layout, TileInfo info)
@@ -351,7 +351,7 @@ public static class EnemyGenerator
             _ => TileRotation.Down,
         };
 
-    // ------------------------------------------------------------- helpers
+    // helpers
 
     private static void Place(
         Dictionary<Vector2Int, PlannedTile> layout,

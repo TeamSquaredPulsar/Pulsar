@@ -4,9 +4,7 @@ using UnityEngine;
 
 namespace Pulsar.Stations
 {
-/// <summary>
-/// One wave of a station: how many guards, and how big each guard can be.
-/// </summary>
+// One wave of a station: how many guards, and how big each guard can be.
 [Serializable]
 public struct WaveConfig
 {
@@ -91,9 +89,7 @@ public class StationProfile : ScriptableObject
     [Min(0f)]
     public float loseInterestMargin = 8f;
 
-    /// <summary>
-    /// This station's weapons plus every earlier station's weapons, no repeats.
-    /// </summary>
+    // This station's weapons plus every earlier station's weapons.
     public List<GameObject> GetAvailableWeapons()
     {
         List<GameObject> pool = new();

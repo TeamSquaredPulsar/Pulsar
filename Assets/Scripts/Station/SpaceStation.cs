@@ -23,7 +23,7 @@ namespace Pulsar.Stations
 /// </summary>
 public class SpaceStation : MonoBehaviour
 {
-    /// <summary>Every wave of this station was destroyed.</summary>
+    // Every wave of this station was destroyed.
     public static event Action<SpaceStation> StationClearedEvent;
 
     [SerializeField]
@@ -52,7 +52,7 @@ public class SpaceStation : MonoBehaviour
 
     public StationProfile Profile => profile;
 
-    /// <summary>How far the station's furthest tile reaches (measured when it starts defending).</summary>
+    // How far the station's furthest tile reaches (measured when it starts defending).
     public float Radius { get; private set; }
     public bool IsCleared { get; private set; }
 
@@ -121,7 +121,7 @@ public class SpaceStation : MonoBehaviour
         ? EnemyGuardAI.GuardState.Chasing
         : EnemyGuardAI.GuardState.Roaming;
 
-    /// <summary>Starts the station over from wave 1.</summary>
+    // Starts the station over from wave 1.
     public void BeginDefense()
     {
         ResetStation();
@@ -136,7 +136,7 @@ public class SpaceStation : MonoBehaviour
         SpawnWave(0);
     }
 
-    /// <summary>Removes this station's guards and stops it (game over, back to menu).</summary>
+    // Removes this station's guards and stops it (game over, back to menu).
     public void ResetStation()
     {
         if (_nextWaveRoutine != null)
