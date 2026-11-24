@@ -10,7 +10,7 @@ public enum MarkerType
 
 namespace Pulsar.UI
 {
-    public class MarkerController : MonoBehaviour
+public class MarkerController : MonoBehaviour
 {
     [SerializeField]
     private Transform markerTransform;
@@ -46,26 +46,57 @@ namespace Pulsar.UI
             return;
         }
 
-        Vector2 playerDir =
-            _playerObj.transform.position - markerTransform.position;
-
         //Provides values in 0 -> 1 range
         Vector2 viewPortPos
-            = _mainCam.WorldToViewportPoint(_playerObj.transform.position);
+            = _mainCam.WorldToViewportPoint(transform.position);
+
+        if (viewPortPos is { x: <= 1f, y: <= 1f, } and { x: >= 0f, y: >= 0f, })
+        {
+            markerTransform.position = transform.position;
+            sprite.enabled = false;
+            return;
+        }
+
+        sprite.enabled = true;
 
         Vector2 viewPortCenter =
             new Vector2(viewPortPos.x - .5f, viewPortPos.y - .5f);
 
         //Stop division by 0
-        float maxAxis = Mathf.Max(Mathf.Abs(viewPortCenter.x), Mathf.Abs(viewPortCenter.y));
-        if (maxAxis < 0.0001f) return;
-
-        float maxExtent = 0.5f - _halfMarker;
-        float scale = maxExtent / Mathf.Max(Mathf.Abs(viewPortCenter.x), Mathf.Abs(viewPortCenter.y));
-        viewPortCenter *= scale;
+        float maxAxis = Mathf.Max(Mathf.Abs(viewPortCenter.x),
+            Mathf.Abs(viewPortCenter.y));
+        if (maxAxis < 0.0001f)
+        {
+            return;
+        }
 
         float distanceFromCamera = Mathf.Abs(_mainCam.transform.position.z -
                                              _playerObj.transform.position.z);
+
+        //Converts the marker size to be in viewport coordinates
+        Vector3 viewportOrigin =
+            _mainCam.WorldToViewportPoint(new Vector3(0, 0,
+                _playerObj.transform.position.z));
+        Vector3 viewportOffset =
+            _mainCam.WorldToViewportPoint(new Vector3(_halfMarker, _halfMarker,
+                _playerObj.transform.position.z));
+        Vector2 halfMarkerViewport = new Vector2(
+            Mathf.Abs(viewportOffset.x - viewportOrigin.x),
+            Mathf.Abs(viewportOffset.y - viewportOrigin.y)
+        );
+
+        float maxExtentX = Mathf.Max(0.01f, 0.5f - halfMarkerViewport.x);
+        float maxExtentY = Mathf.Max(0.01f, 0.5f - halfMarkerViewport.y);
+
+        float scale = Mathf.Min(
+            maxExtentX / Mathf.Abs(viewPortCenter.x),
+            maxExtentY / Mathf.Abs(viewPortCenter.y));
+
+        //Only if its off-screen clamp itz
+        if (scale < 1f)
+        {
+            viewPortCenter *= scale;
+        }
 
         Vector3 clampedViewport = new Vector3(
             viewPortCenter.x + 0.5f,
@@ -73,24 +104,27 @@ namespace Pulsar.UI
             distanceFromCamera
         );
 
-        markerTransform.position = _mainCam.ViewportToWorldPoint(clampedViewport);
+        markerTransform.position
+            = _mainCam.ViewportToWorldPoint(clampedViewport);
+
+        markerTransform.rotation = clampedViewport.x switch
+        {
+            < .01f => Quaternion.Euler(0f, 0f, 270f),
+            > .99f => Quaternion.Euler(0f, 0f, 90f),
+            _ => Quaternion.Euler(0f, 0f, clampedViewport.y > .9f ? 180f : 0f),
+        };
     }
 
     private Color GetMarkerColor()
     {
         //TODO Read from player preferences for color of markers
-        switch (markerType)
+        return markerType switch
         {
-            case MarkerType.Objective:
-                return Color.lightBlue;
-            case MarkerType.Enemy:
-                return Color.red;
-            case MarkerType.Guide:
-                return Color.limeGreen;
-            default:
-                return Color.white;
-        }
-
+            MarkerType.Objective => Color.lightBlue,
+            MarkerType.Enemy => Color.red,
+            MarkerType.Guide => Color.limeGreen,
+            _ => Color.white,
+        };
     }
 }
 }
