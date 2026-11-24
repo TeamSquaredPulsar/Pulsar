@@ -1,4 +1,3 @@
-using System;
 using UnityEngine;
 
 public enum MarkerType
@@ -24,15 +23,17 @@ namespace Pulsar.UI
 
     private float _halfMarker;
     private GameObject _playerObj;
+    private Camera _mainCam;
 
     private void Start()
     {
+        _mainCam = Camera.main;
         sprite.color = GetMarkerColor();
         _halfMarker = sprite.bounds.size.x / 2;
         _playerObj = GameObject.FindWithTag("Player");
     }
 
-    private void FixedUpdate()
+    private void LateUpdate()
     {
         MoveMarker();
     }
@@ -48,29 +49,31 @@ namespace Pulsar.UI
         Vector2 playerDir =
             _playerObj.transform.position - markerTransform.position;
 
-        float markerAngle =
-            Mathf.Atan2(playerDir.y, playerDir.x) * Mathf.Rad2Deg;
+        //Provides values in 0 -> 1 range
+        Vector2 viewPortPos
+            = _mainCam.WorldToViewportPoint(_playerObj.transform.position);
 
-        float halfScreenWidth = (float)Screen.width / 2;
-        float halfScreenHeight = (float)Screen.height / 2;
+        Vector2 viewPortCenter =
+            new Vector2(viewPortPos.x - .5f, viewPortPos.y - .5f);
 
-        Vector2 nextPos = markerAngle switch
-        {
-            < -45 => new Vector2(-halfScreenWidth,
-                halfScreenHeight - _halfMarker),
+        //Stop division by 0
+        float maxAxis = Mathf.Max(Mathf.Abs(viewPortCenter.x), Mathf.Abs(viewPortCenter.y));
+        if (maxAxis < 0.0001f) return;
 
-            < 45 => new Vector2(halfScreenWidth,
-                halfScreenHeight - _halfMarker),
+        float maxExtent = 0.5f - _halfMarker;
+        float scale = maxExtent / Mathf.Max(Mathf.Abs(viewPortCenter.x), Mathf.Abs(viewPortCenter.y));
+        viewPortCenter *= scale;
 
-            > 45 => new Vector2(-halfScreenWidth,
-                -halfScreenHeight - _halfMarker),
+        float distanceFromCamera = Mathf.Abs(_mainCam.transform.position.z -
+                                             _playerObj.transform.position.z);
 
-            > -135 => new Vector2(halfScreenWidth,
-                halfScreenHeight - _halfMarker),
-            _ => Vector2.zero,
-        };
+        Vector3 clampedViewport = new Vector3(
+            viewPortCenter.x + 0.5f,
+            viewPortCenter.y + 0.5f,
+            distanceFromCamera
+        );
 
-        markerTransform.transform.position = nextPos;
+        markerTransform.position = _mainCam.ViewportToWorldPoint(clampedViewport);
     }
 
     private Color GetMarkerColor()
