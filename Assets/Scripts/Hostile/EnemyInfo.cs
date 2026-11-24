@@ -1,5 +1,3 @@
-using NaughtyAttributes;
-using Pulsar.Utilities;
 using UnityEngine;
 
 [CreateAssetMenu(fileName = "NewEnemyInfo", menuName = "Pulsar/Enemy Info")]
@@ -19,16 +17,6 @@ public class EnemyInfo : ScriptableObject
     public float
         holdDrift
             = 0.5f; // Share of the drift kept while holding position (0 = sits still)
-
-    [Header("PID Tuning")]
-    [Tooltip("Movement positioning/breaking strength")]
-    [AllowNesting]
-    public PIDParams movePID = new(1.0f, 1.2f, 0f);
-
-    [Tooltip("Turning positioning/breaking strength")]
-    [AllowNesting]
-    public PIDParams turnPID = new(0.08f, 0.04f, .001f);
-
 
     [Header("Combat")]
     public float startTimeBtwShots = 1.5f;

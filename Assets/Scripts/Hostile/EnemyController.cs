@@ -1,9 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
+using NaughtyAttributes;
 using Pulsar.Player;
 using Pulsar.Ship;
 using Pulsar.Utilities;
 using UnityEngine;
+using UnityEngine.Serialization;
 using Random = UnityEngine.Random;
 
 [RequireComponent(typeof(ShipManager))]
@@ -38,6 +40,18 @@ public class EnemyController : MonoBehaviour
 
     [SerializeField]
     private Rigidbody2D rb;
+
+    [FormerlySerializedAs("_movePID")]
+    [Header("PID Tuning")]
+    [Tooltip("Movement positioning/breaking strength")]
+    [AllowNesting]
+    [SerializeField]
+    private PIDParams movePID = new(1.0f, 1.2f, 0f);
+
+    [Tooltip("Turning positioning/breaking strength")]
+    [AllowNesting]
+    [SerializeField]
+    private PIDParams turnPID = new(0.08f, 0.04f, .001f);
 
     // TODO: make this a boolean value with a coroutine to handle if you can fire or not
     private float _timeBtwShots;
@@ -201,9 +215,9 @@ public class EnemyController : MonoBehaviour
 
         float dt = Time.fixedDeltaTime;
         float inputX = _moveXPID.CalculateVelocity(
-            in enemyInfo.movePID, dt, localPosErr.x, localVel.x * brakeScaleX);
+            movePID, dt, localPosErr.x, localVel.x * brakeScaleX);
         float inputY = _moveXPID.CalculateVelocity(
-            in enemyInfo.movePID, dt, localPosErr.y, localVel.y * brakeScaleY);
+            movePID, dt, localPosErr.y, localVel.y * brakeScaleY);
 
         shipManager.Move(new Vector2(inputX, inputY));
     }
@@ -276,7 +290,7 @@ public class EnemyController : MonoBehaviour
             : 1f;
 
         float rotInput = _turnPID.CalculateVelocity(
-            in enemyInfo.turnPID, Time.fixedDeltaTime, angleErr,
+            turnPID, Time.fixedDeltaTime, angleErr,
             rb.angularVelocity * angBrakeScale);
 
         shipManager.Rotate(rotInput);
