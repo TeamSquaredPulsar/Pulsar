@@ -296,7 +296,7 @@ public class EnemyController : MonoBehaviour
         shipManager.Rotate(rotInput);
     }
 
-private void HandleShooting(Vector3 dirToPlayer, float distance)
+    private void HandleShooting(Vector3 dirToPlayer, float distance)
     {
         _timeBtwShots -= Time.deltaTime;
         if (_timeBtwShots > 0f)

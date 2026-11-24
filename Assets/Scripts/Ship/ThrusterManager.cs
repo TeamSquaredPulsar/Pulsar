@@ -216,13 +216,13 @@ public class ThrusterManager : MonoBehaviour
             return Vector2.zero;
         }
 
-        float forceX = localDir.x < 0 ?
-            _directedThrust[TileRotation.Right].Thrust :
-            _directedThrust[TileRotation.Left].Thrust;
+        float forceX = localDir.x < 0
+            ? _directedThrust[TileRotation.Right].Thrust
+            : _directedThrust[TileRotation.Left].Thrust;
 
-        float forceY = localDir.y < 0 ?
-            _directedThrust[TileRotation.Up].Thrust :
-            _directedThrust[TileRotation.Down].Thrust;
+        float forceY = localDir.y < 0
+            ? _directedThrust[TileRotation.Up].Thrust
+            : _directedThrust[TileRotation.Down].Thrust;
 
         return new Vector2(forceX / rb.mass, forceY / rb.mass);
     }

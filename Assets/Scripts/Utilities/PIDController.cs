@@ -3,7 +3,6 @@ using UnityEngine;
 
 namespace Pulsar.Utilities
 {
-
 //Tuning values
 [Serializable]
 public struct PIDParams
@@ -17,6 +16,7 @@ public struct PIDParams
     [Tooltip("Acceleration intensity")]
     [Min(0.1f)]
     public float kP;
+
     /*
      * Derivative output of the current error,
      * how much we need to break to get to the point
@@ -26,6 +26,7 @@ public struct PIDParams
     [Tooltip("Braking against velocity")]
     [Min(0.001f)]
     public float kD;
+
     /*
      * Integral output of the error from external factors to account for
      * Expected range, 0.001 to 1.0 (how sharp it accounts in seconds)
@@ -53,7 +54,7 @@ public struct PIDParams
     }
 }
 
-    public class PIDController
+public class PIDController
 {
     private float _integral;
     private float _oldError;
@@ -76,7 +77,7 @@ public struct PIDParams
 
         CalcIntegral(error * deltaTime, p.IntegralWindup);
 
-        float deriv = _hasOldError ? (error - _oldError)/deltaTime : 0f;
+        float deriv = _hasOldError ? (error - _oldError) / deltaTime : 0f;
         _oldError = error;
         _hasOldError = true;
 
