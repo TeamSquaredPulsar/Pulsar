@@ -98,7 +98,7 @@ MonoBehaviour:
   scanPadding: 1
   selectedTint: {r: 0.3, g: 1, b: 0.8, a: 1}
   pullSpeed: 20
-  tileDestroySeconds: 1
+  tileDetatchSeconds: 1
 --- !u!114 &8893891361912782109
 MonoBehaviour:
   m_ObjectHideFlags: 0

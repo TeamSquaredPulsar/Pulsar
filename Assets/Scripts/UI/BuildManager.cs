@@ -12,8 +12,11 @@ public class BuildManager : MonoBehaviour
     private PlayerController _player;
 
     [Header("References")]
-    [SerializeField] private InputReader input;
-    [SerializeField] private RadialMenu radialMenu;
+    [SerializeField]
+    private InputReader input;
+
+    [SerializeField]
+    private RadialMenu radialMenu;
 
     [SerializeField]
     private GhostPreview ghostPreview;
@@ -28,7 +31,7 @@ public class BuildManager : MonoBehaviour
     private float pullSpeed = 8f;
 
     [SerializeField, Min(0.1f),]
-    private float tileDestroySeconds;
+    private float tileDetatchSeconds;
 
     private Tile _selectedTile = null!;
     private bool _atOutline;
@@ -36,7 +39,7 @@ public class BuildManager : MonoBehaviour
     private Vector2Int _attachCell;
     private TileRotation _attachRotation;
 
-    private Coroutine _destroyTileCoroutine;
+    private Coroutine _detatchTileCoroutine;
     private Coroutine _updateRadialRoutine;
 
     private void OnEnable()
@@ -87,10 +90,12 @@ public class BuildManager : MonoBehaviour
         }
     }
 
-    private IEnumerator DestroyTileTimer(Tile tile)
+    private IEnumerator DetatchTileTimer(Tile tile)
     {
-        yield return new WaitForSeconds(tileDestroySeconds);
-        tile.TakeDamage(tile.CurrentHp);
+        yield return new WaitForSeconds(tileDetatchSeconds);
+        _player.DetatchTile(tile);
+        _detatchTileCoroutine = null;
+        _selectedTile = null;
     }
 
     private void UpdateScanZoneShape()
@@ -129,12 +134,13 @@ public class BuildManager : MonoBehaviour
         {
             return;
         }
+
         _selectedTile = result.Value;
 
         if (_player.OwnsTile(_selectedTile))
         {
-            _destroyTileCoroutine
-                = StartCoroutine(DestroyTileTimer(_selectedTile));
+            _detatchTileCoroutine
+                = StartCoroutine(DetatchTileTimer(_selectedTile));
             return;
         }
 
@@ -152,8 +158,9 @@ public class BuildManager : MonoBehaviour
 
         _atOutline = false;
         ghostPreview.Hide();
-        Quaternion relativeRotation = Quaternion.Inverse(_player.transform.rotation)
-                                      * _selectedTile.transform.rotation;
+        Quaternion relativeRotation
+            = Quaternion.Inverse(_player.transform.rotation)
+              * _selectedTile.transform.rotation;
 
         _attachRotation = relativeRotation.eulerAngles.z.ToTileRotation();
         ApplySelectedRotation();
@@ -170,13 +177,14 @@ public class BuildManager : MonoBehaviour
 
     private void DeselectTile()
     {
-        //If we were destroying a tile, stop
-        if (_destroyTileCoroutine != null)
+        //If we were detaching a tile, stop
+        if (_detatchTileCoroutine != null)
         {
-            StopCoroutine(_destroyTileCoroutine);
-            _destroyTileCoroutine = null;
+            StopCoroutine(_detatchTileCoroutine);
+            _detatchTileCoroutine = null;
             _selectedTile = null;
         }
+
         //If we don't have a tile for some reason
         if (!_selectedTile)
         {
@@ -286,6 +294,7 @@ public class BuildManager : MonoBehaviour
         {
             return;
         }
+
         _attachRotation = _attachRotation.PlusInt(quarterTurns % 4);
         ApplySelectedRotation();
         if (_atOutline)
@@ -305,7 +314,8 @@ public class BuildManager : MonoBehaviour
     {
         Vector2 origin = _player.transform.InverseTransformPoint(
             _selectedTile.transform.position);
-        Vector2 core = _player.transform.InverseTransformPoint(_player.CorePosition);
+        Vector2 core
+            = _player.transform.InverseTransformPoint(_player.CorePosition);
         Vector2 toCore = core - origin;
         float length = toCore.magnitude;
         if (length < 0.0001f)
@@ -322,15 +332,20 @@ public class BuildManager : MonoBehaviour
         {
             return Result<Vector2Int>.Fail();
         }
+
         int stepX = direction.x > 0f ? 1 : -1;
         int stepY = direction.y > 0f ? 1 : -1;
-        float deltaX = direction.x == 0f ? float.PositiveInfinity
+        float deltaX = direction.x == 0f
+            ? float.PositiveInfinity
             : Mathf.Abs(1f / direction.x);
-        float deltaY = direction.y == 0f ? float.PositiveInfinity
+        float deltaY = direction.y == 0f
+            ? float.PositiveInfinity
             : Mathf.Abs(1f / direction.y);
-        float nextX = direction.x == 0f ? float.PositiveInfinity
+        float nextX = direction.x == 0f
+            ? float.PositiveInfinity
             : (cell.x + stepX * 0.5f - origin.x) / direction.x;
-        float nextY = direction.y == 0f ? float.PositiveInfinity
+        float nextY = direction.y == 0f
+            ? float.PositiveInfinity
             : (cell.y + stepY * 0.5f - origin.y) / direction.y;
 
         while (Mathf.Min(nextX, nextY) <= length)
@@ -346,6 +361,7 @@ public class BuildManager : MonoBehaviour
                 cell.y += stepY;
                 nextY += deltaY;
             }
+
             if (_player.TryGetTile(cell, out _))
             {
                 return _player.CanAttach(candidate, _selectedTile.TileInfo,
@@ -354,6 +370,7 @@ public class BuildManager : MonoBehaviour
                     : Result<Vector2Int>.Fail();
             }
         }
+
         return Result<Vector2Int>.Fail();
     }
 }

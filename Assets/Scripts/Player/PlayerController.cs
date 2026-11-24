@@ -78,6 +78,8 @@ public class PlayerController : MonoBehaviour
         Tile tile,
         TileRotation rotation) => ship.AttachTile(location, tile, rotation);
 
+    public void DetatchTile(Tile tile) => ship.DetatchTile(tile);
+
     public Result<(Vector2Int, TileRotation)> FindBestAttachment(
         TileInfo tileInfo,
         Vector3 worldPosition) =>
