@@ -101,11 +101,9 @@ MonoBehaviour:
   compositeCollider: {fileID: 2214052083980208980}
   rb: {fileID: 2776980645195997529}
   thrusterManager: {fileID: 8617872407729157336}
-  weapons: []
-  thrusters: []
   detachRadiateLinearVelocity: {x: 2, y: 5}
   detachRadiateAngularVelocity: {x: -180, y: 180}
-  CollisionDmgMultiplier: 0.5
+  collisionDmgMultiplier: 0.5
 --- !u!114 &8617872407729157336
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -119,9 +117,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ThrusterManager
   rb: {fileID: 2776980645195997529}
-  coreThrust: 2
-  rotationalThrust: 2
-  rotationScaler: 1
 --- !u!50 &2776980645195997529
 Rigidbody2D:
   serializedVersion: 5
@@ -364,6 +359,26 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 5534935226238068877}
     m_Modifications:
+    - target: {fileID: 497275641067805184, guid: 9d9b88b2fc3b2374c83c9e59dadfb864, type: 3}
+      propertyPath: m_Sprite
+      value: 
+      objectReference: {fileID: -8374111668515552943, guid: 3b84ebedfbd3c944c986fff0ae487458, type: 3}
+    - target: {fileID: 497275641067805184, guid: 9d9b88b2fc3b2374c83c9e59dadfb864, type: 3}
+      propertyPath: m_Color.b
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 497275641067805184, guid: 9d9b88b2fc3b2374c83c9e59dadfb864, type: 3}
+      propertyPath: m_Color.g
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 497275641067805184, guid: 9d9b88b2fc3b2374c83c9e59dadfb864, type: 3}
+      propertyPath: m_Color.r
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 497275641067805184, guid: 9d9b88b2fc3b2374c83c9e59dadfb864, type: 3}
+      propertyPath: 'm_Materials.Array.data[0]'
+      value: 
+      objectReference: {fileID: 2100000, guid: 29a8ce898a4779a4c8b969c323f671a6, type: 2}
     - target: {fileID: 1923082867568248035, guid: 9d9b88b2fc3b2374c83c9e59dadfb864, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0

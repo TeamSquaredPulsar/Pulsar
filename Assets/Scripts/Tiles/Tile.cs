@@ -20,6 +20,7 @@ public struct TileRbInfo
 public abstract class Tile : MonoBehaviour
 {
     private const int k_FloatingSortingOrder = 10;
+    private static readonly int k_ColorID = Shader.PropertyToID("_CoreColor");
 
     [Header("Basic Info")]
     [SerializeField]
@@ -105,8 +106,8 @@ public abstract class Tile : MonoBehaviour
     }
 
     /// <summary>
-    /// Overridable function so different tiles can play different audio when
-    /// their health state changes, if they want.
+    ///     Overridable function so different tiles can play different audio when
+    ///     their health state changes, if they want.
     /// </summary>
     protected virtual void PlayHealthStateAudio()
     {
@@ -132,10 +133,10 @@ public abstract class Tile : MonoBehaviour
     }
 
     /// <summary>
-    /// To ask whether the rotated tile can connect from dir
-    ///  example: tile is true:0 false:1 false:2 false:3 (allow connections from top only)
-    ///  tile.Rotation = 1 -> tile now allows connections from left
-    ///  pass EdgeConnectable(3) -> (3+1)%4==0 -> true => can connect
+    ///     To ask whether the rotated tile can connect from dir
+    ///     example: tile is true:0 false:1 false:2 false:3 (allow connections from top only)
+    ///     tile.Rotation = 1 -> tile now allows connections from left
+    ///     pass EdgeConnectable(3) -> (3+1)%4==0 -> true => can connect
     /// </summary>
     /// <param name="dir"></param>
     /// <returns></returns>
@@ -208,5 +209,13 @@ public abstract class Tile : MonoBehaviour
     {
         transform.rotation = rotation;
         Rotation = transform.localRotation.eulerAngles.z.ToTileRotation();
+    }
+
+    public void SetColor(Color color)
+    {
+        MaterialPropertyBlock block = new();
+        spriteRenderer.GetPropertyBlock(block);
+        block.SetColor(k_ColorID, color);
+        spriteRenderer.SetPropertyBlock(block);
     }
 }
