@@ -3,7 +3,6 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.InputSystem;
-using UnityEngine.InputSystem.Controls;
 using UnityEngine.UI;
 
 namespace Pulsar.UI
@@ -164,7 +163,7 @@ public class ControlsScreen : MonoBehaviour
         SetInteractable(false);
         heading.text = _gamepad
             ? "Press a button / Esc to cancel"
-            : "Press a key or mouse button / Esc to cancel";
+            : "Press a key, click, or scroll / Esc to cancel";
         _operation = binding.action.PerformInteractiveRebinding(binding.index)
             .WithCancelingThrough(_gamepad
                 ? "<Gamepad>/buttonEast"
@@ -181,10 +180,11 @@ public class ControlsScreen : MonoBehaviour
         }
         else
         {
-            _operation.WithExpectedControlType<ButtonControl>()
-                .WithControlsHavingToMatchPath("<Keyboard>")
-                .WithControlsHavingToMatchPath("<Mouse>")
-                .WithControlsExcluding("<Keyboard>/anyKey");
+            _operation.WithExpectedControlType("Axis")
+                .WithControlsHavingToMatchPath("<Keyboard>/<Key>")
+                .WithControlsHavingToMatchPath("<Mouse>/<Button>")
+                .WithControlsHavingToMatchPath("<Mouse>/scroll/up")
+                .WithControlsHavingToMatchPath("<Mouse>/scroll/down");
         }
 
         _operation.Start();
