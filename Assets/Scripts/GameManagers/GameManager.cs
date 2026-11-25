@@ -5,6 +5,7 @@ using NaughtyAttributes;
 using Pulsar.Audio;
 using Pulsar.DataClasses;
 using Pulsar.Player;
+using Pulsar.UI;
 using UnityEngine;
 using UnityEngine.AddressableAssets;
 using UnityEngine.ResourceManagement.AsyncOperations;
@@ -70,17 +71,21 @@ public class GameManager : Singleton<GameManager>
         Instantiate(playerPrefab, Vector3.zero, Quaternion.identity);
     }
 
-    public async Task LoadLevel(GameState levelState)
+    public Task LoadLevel(GameState levelState)
     {
-        StateManager.SetCurrentState(GameState.Loading);
-
-        CleanupTiles();
-
         if (!scenes.TryGetValue(levelState, out SceneReference scene))
         {
             throw new InvalidOperationException(
                 $"No scene found for state {levelState}!");
         }
+
+        return SceneTransition.Run(() => LoadLevelScene(levelState, scene));
+    }
+
+    private async Task LoadLevelScene(GameState levelState, SceneReference scene)
+    {
+        StateManager.SetCurrentState(GameState.Loading);
+        CleanupTiles();
 
         AsyncOperationHandle<SceneInstance> sceneLoading
             = Addressables.LoadSceneAsync(scene);
