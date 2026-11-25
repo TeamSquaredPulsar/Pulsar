@@ -252,7 +252,7 @@ public class TutorialController : MonoBehaviour
         // if (_stepFade != null) StopCoroutine(_stepFade);
         completionPanel.gameObject.SetActive(true);
         completionPanel.transform.position
-            = CameraData.MainCamera.transform.position + new Vector3(0, 2f, 8f);
+            = CameraData.MainCamera.transform.position + new Vector3(0, 6f, 8f);
         retryButton.Select();
     }
 
