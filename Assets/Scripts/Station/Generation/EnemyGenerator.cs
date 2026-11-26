@@ -40,9 +40,9 @@ public static class EnemyGenerator
             return null;
         }
 
-        WaveConfig wave = profile.waves[waveIndex];
-        // StationProfile.OnValidate keeps maxTiles >= minTiles.
-        int totalTiles = Random.Range(wave.minTiles, wave.maxTiles + 1);
+        WaveConfig wave = profile.Waves[waveIndex];
+        // StationProfile.OnValidate keeps MaxTiles >= MinTiles.
+        int totalTiles = Random.Range(wave.MinTiles, wave.MaxTiles + 1);
 
         // The first try always runs, so layout is never null below.
         bool hasGun = TryPlanLayout(profile, totalTiles,
@@ -59,7 +59,7 @@ public static class EnemyGenerator
                              "it spawns without one.");
         }
 
-        GameObject shell = GameObject.Instantiate(profile.guardShellPrefab,
+        GameObject shell = GameObject.Instantiate(profile.GuardShellPrefab,
             position, Quaternion.Euler(0f, 0f, rotationDegrees));
         shell.name = $"{profile.name} Guard (wave {waveIndex + 1})";
 
@@ -84,24 +84,24 @@ public static class EnemyGenerator
         {
             problem = "no StationProfile";
         }
-        else if (profile.waves == null || waveIndex < 0 ||
-                 waveIndex >= profile.waves.Length)
+        else if (profile.Waves == null || waveIndex < 0 ||
+                 waveIndex >= profile.Waves.Length)
         {
             problem
                 = $"wave {waveIndex + 1} isn't in {profile.name}'s wave list";
         }
-        else if (!profile.guardShellPrefab ||
-                 !profile.guardShellPrefab.GetComponent<EnemyGuardAI>())
+        else if (!profile.GuardShellPrefab ||
+                 !profile.GuardShellPrefab.GetComponent<EnemyGuardAI>())
         {
             problem
                 = $"{profile.name} needs a guard shell prefab with an EnemyGuardAI";
         }
-        else if (!profile.coreTilePrefab)
+        else if (!profile.CoreTilePrefab)
         {
             problem = $"{profile.name} has no core tile";
         }
         else if (profile.GetAvailableWeapons().Count == 0 ||
-                 profile.ownWeaponPrefabs.All(w => !w))
+                 profile.OwnWeaponPrefabs.All(w => !w))
         {
             problem = $"{profile.name} has no weapon of its own";
         }
@@ -122,14 +122,14 @@ public static class EnemyGenerator
         int totalTiles,
         out Dictionary<Vector2Int, PlannedTile> layout)
     {
-        int guns = Mathf.Max(1, totalTiles / profile.tilesPerGun);
-        int thrusters = profile.thrusterPrefab
+        int guns = Mathf.Max(1, totalTiles / profile.TilesPerGun);
+        int thrusters = profile.ThrusterPrefab
             ? (totalTiles >= SmallShipTiles ? 2 : 1)
             : 0;
         int bodyTiles = Mathf.Max(0, totalTiles - 1 - guns - thrusters);
 
         layout = new Dictionary<Vector2Int, PlannedTile>();
-        Place(layout, Vector2Int.zero, profile.coreTilePrefab, TileRotation.Up);
+        Place(layout, Vector2Int.zero, profile.CoreTilePrefab, TileRotation.Up);
 
         GrowBody(profile, layout, bodyTiles);
         bool hasGun = PlaceGuns(profile, layout, guns);
@@ -142,8 +142,8 @@ public static class EnemyGenerator
         Dictionary<Vector2Int, PlannedTile> layout,
         int count)
     {
-        List<GameObject> squares = Usable(profile.bodyTilePrefabs);
-        List<GameObject> corners = Usable(profile.cornerTilePrefabs);
+        List<GameObject> squares = Usable(profile.BodyTilePrefabs);
+        List<GameObject> corners = Usable(profile.CornerTilePrefabs);
         if (squares.Count == 0 && corners.Count == 0)
         {
             return;
@@ -155,7 +155,7 @@ public static class EnemyGenerator
         {
             bool useCorner = corners.Count > 0 &&
                              (squares.Count == 0 ||
-                              Random.value < profile.cornerChance);
+                              Random.value < profile.CornerChance);
             GameObject prefab = useCorner ? Pick(corners) : Pick(squares);
             TileInfo info = InfoOf(prefab);
 
@@ -204,7 +204,7 @@ public static class EnemyGenerator
         Dictionary<Vector2Int, PlannedTile> layout,
         int count)
     {
-        List<GameObject> ownWeapons = Usable(profile.ownWeaponPrefabs);
+        List<GameObject> ownWeapons = Usable(profile.OwnWeaponPrefabs);
         List<GameObject> pool = profile.GetAvailableWeapons();
         int placed = 0;
 
@@ -251,7 +251,7 @@ public static class EnemyGenerator
             return;
         }
 
-        TileInfo info = InfoOf(profile.thrusterPrefab);
+        TileInfo info = InfoOf(profile.ThrusterPrefab);
         int placed = 0;
         while (placed < count)
         {
@@ -272,14 +272,14 @@ public static class EnemyGenerator
                 ? Pick(sides)
                 : Pick(backRow);
 
-            Place(layout, cell, profile.thrusterPrefab, TileRotation.Down);
+            Place(layout, cell, profile.ThrusterPrefab, TileRotation.Down);
             placed++;
 
             Vector2Int mirror = new(-cell.x, cell.y);
             if (cell.x != 0 && placed < count &&
                 CanPlace(layout, mirror, info, TileRotation.Down))
             {
-                Place(layout, mirror, profile.thrusterPrefab,
+                Place(layout, mirror, profile.ThrusterPrefab,
                     TileRotation.Down);
                 placed++;
             }

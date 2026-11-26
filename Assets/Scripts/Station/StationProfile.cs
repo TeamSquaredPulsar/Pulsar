@@ -2,24 +2,46 @@ using System;
 using System.Collections.Generic;
 using NaughtyAttributes;
 using UnityEngine;
+using UnityEngine.Serialization;
 
 namespace Pulsar.Stations
 {
 // One wave of a station: how many guards, and how big each guard can be.
+// Read-only from outside: values are set in the Inspector (or the constructor).
+// FormerlySerializedAs keeps the values saved under the old field names.
 [Serializable]
 public struct WaveConfig
 {
-    [Min(1)]
-    public int guardCount;
+    [field: SerializeField]
+    [field: FormerlySerializedAs("guardCount")]
+    [field: Min(1)]
+    public int GuardCount { get; private set; }
 
-    [Tooltip(
+    [field: SerializeField]
+    [field: FormerlySerializedAs("minTiles")]
+    [field: Tooltip(
         "Smallest guard in this wave, counting every tile (core, body, guns, thrusters).")]
-    [Min(1)]
-    public int minTiles;
+    [field: Min(1)]
+    public int MinTiles { get; private set; }
 
-    [Tooltip("Biggest guard in this wave, counting every tile.")]
-    [Min(1)]
-    public int maxTiles;
+    [field: SerializeField]
+    [field: FormerlySerializedAs("maxTiles")]
+    [field: Tooltip("Biggest guard in this wave, counting every tile.")]
+    [field: Min(1)]
+    public int MaxTiles { get; private set; }
+
+    public WaveConfig(int guardCount, int minTiles, int maxTiles)
+    {
+        GuardCount = guardCount;
+        MinTiles = minTiles;
+        MaxTiles = maxTiles;
+    }
+
+    // Pushes MaxTiles up to MinTiles if it was set lower.
+    public void ClampMaxToMin()
+    {
+        MaxTiles = Mathf.Max(MaxTiles, MinTiles);
+    }
 }
 
 /// <summary>
@@ -27,92 +49,129 @@ public struct WaveConfig
 /// its weapons, its waves and how close the player has to get before the
 /// guards notice. One asset per station; the SpaceStation script is the same
 /// on every station.
+/// Every value is read-only from outside (get; private set;) because this one
+/// asset is shared by every guard at the station: a change made through any
+/// reference would change it for all of them, and in the Editor it would stay
+/// changed in the asset. FormerlySerializedAs keeps the values saved under the
+/// old field names.
 /// </summary>
 [CreateAssetMenu(fileName = "NewStationProfile",
     menuName = "Pulsar/Station Profile")]
 public class StationProfile : ScriptableObject
 {
-    [Header("Order")]
-    [Tooltip("0 for the first station. Higher tiers are later and harder.")]
-    [Min(0)]
-    public int stationTier;
+    [field: Header("Order")]
+    [field: SerializeField]
+    [field: FormerlySerializedAs("stationTier")]
+    [field:
+        Tooltip("0 for the first station. Higher tiers are later and harder.")]
+    [field: Min(0)]
+    public int StationTier { get; private set; }
 
-    [Tooltip(
+    [field: SerializeField]
+    [field: FormerlySerializedAs("previousStationProfile")]
+    [field: Tooltip(
         "The station before this one. Its weapons (and the ones before it) " +
         "are added to this station's pool. Leave empty for the first station.")]
-    public StationProfile previousStationProfile;
+    public StationProfile PreviousStationProfile { get; private set; }
 
-    [Header("Weapons")]
-    [Tooltip(
+    [field: Header("Weapons")]
+    [field: SerializeField]
+    [field: FormerlySerializedAs("ownWeaponPrefabs")]
+    [field: Tooltip(
         "This station's own new weapon tile(s). Every guard carries at least one.")]
-    public GameObject[] ownWeaponPrefabs;
+    public GameObject[] OwnWeaponPrefabs { get; private set; }
 
-    [Tooltip(
+    [field: SerializeField]
+    [field: FormerlySerializedAs("tilesPerGun")]
+    [field: Tooltip(
         "About one gun for every this many tiles (always at least one gun).")]
-    [Min(1)]
-    public int tilesPerGun = 3;
+    [field: Min(1)]
+    public int TilesPerGun { get; private set; } = 3;
 
-    [Header("Guard tiles (this station's colour)")]
-    public GameObject coreTilePrefab;
+    [field: Header("Guard tiles (this station's colour)")]
+    [field: SerializeField]
+    [field: FormerlySerializedAs("coreTilePrefab")]
+    public GameObject CoreTilePrefab { get; private set; }
 
-    [Tooltip("Square tiles that make up a guard's body.")]
-    public GameObject[] bodyTilePrefabs;
+    [field: SerializeField]
+    [field: FormerlySerializedAs("bodyTilePrefabs")]
+    [field: Tooltip("Square tiles that make up a guard's body.")]
+    public GameObject[] BodyTilePrefabs { get; private set; }
 
-    [Tooltip("Triangle tiles used on the edges of a guard's body.")]
-    public GameObject[] cornerTilePrefabs;
+    [field: SerializeField]
+    [field: FormerlySerializedAs("cornerTilePrefabs")]
+    [field: Tooltip("Triangle tiles used on the edges of a guard's body.")]
+    public GameObject[] CornerTilePrefabs { get; private set; }
 
-    [Range(0f, 1f)]
-    public float cornerChance = 0.3f;
+    [field: SerializeField]
+    [field: FormerlySerializedAs("cornerChance")]
+    [field: Range(0f, 1f)]
+    public float CornerChance { get; private set; } = 0.3f;
 
-    public GameObject thrusterPrefab;
+    [field: SerializeField]
+    [field: FormerlySerializedAs("thrusterPrefab")]
+    public GameObject ThrusterPrefab { get; private set; }
 
-    [Header("Guards")]
-    [Tooltip(
+    [field: Header("Guards")]
+    [field: SerializeField]
+    [field: FormerlySerializedAs("guardShellPrefab")]
+    [field: Tooltip(
         "The empty guard ship (ShipManager, AI, behaviours) that the tiles are built onto.")]
-    public GameObject guardShellPrefab;
+    public GameObject GuardShellPrefab { get; private set; }
 
-    [Tooltip("Movement, aiming and scoring numbers for this station's guards.")]
-    public EnemyInfo guardInfo;
+    [field: SerializeField]
+    [field: FormerlySerializedAs("guardInfo")]
+    [field:
+        Tooltip(
+            "Movement, aiming and scoring numbers for this station's guards.")]
+    public EnemyInfo GuardInfo { get; private set; }
 
-    [Header("Waves (the list length is the number of waves)")]
-    [ReorderableList]
-    public WaveConfig[] waves =
+    [field: Header("Waves (the list length is the number of waves)")]
+    [field: SerializeField]
+    [field: FormerlySerializedAs("waves")]
+    [field: ReorderableList]
+    public WaveConfig[] Waves { get; private set; } =
     {
-        new() { guardCount = 3, minTiles = 3, maxTiles = 5, },
-        new() { guardCount = 4, minTiles = 5, maxTiles = 7, },
-        new() { guardCount = 5, minTiles = 7, maxTiles = 10, },
+        new(guardCount: 3, minTiles: 3, maxTiles: 5),
+        new(guardCount: 4, minTiles: 5, maxTiles: 7),
+        new(guardCount: 5, minTiles: 7, maxTiles: 10),
     };
 
-    [Min(0f)]
-    public float secondsBetweenWaves = 2f;
+    [field: SerializeField]
+    [field: FormerlySerializedAs("secondsBetweenWaves")]
+    [field: Min(0f)]
+    public float SecondsBetweenWaves { get; private set; } = 2f;
 
-    [Header("Detection")]
-    [Tooltip(
+    [field: Header("Detection")]
+    [field: SerializeField]
+    [field: FormerlySerializedAs("detectionRange")]
+    [field: Tooltip(
         "When the player is this close to the station's centre, its guards chase.")]
-    [Min(0f)]
-    public float detectionRange = 25f;
+    [field: Min(0f)]
+    public float DetectionRange { get; private set; } = 25f;
 
-    [Tooltip(
+    [field: SerializeField]
+    [field: FormerlySerializedAs("loseInterestMargin")]
+    [field: Tooltip(
         "The guards give up once the player is this much further out than " +
         "the detection range (stops them flipping back and forth at the edge).")]
-    [Min(0f)]
-    public float loseInterestMargin = 8f;
+    [field: Min(0f)]
+    public float LoseInterestMargin { get; private set; } = 8f;
 
     // Runs whenever a value changes in the Inspector. NaughtyAttributes'
     // [MinValue] can't reach inside WaveConfig, so the profile keeps each
-    // wave's maxTiles at or above its minTiles here instead.
+    // wave's MaxTiles at or above its MinTiles here instead.
     private void OnValidate()
     {
-        if (waves == null)
+        if (Waves == null)
         {
             return;
         }
 
-        for (int i = 0; i < waves.Length; i++)
+        for (int i = 0; i < Waves.Length; i++)
         {
-            WaveConfig wave = waves[i];
-            wave.maxTiles = Mathf.Max(wave.maxTiles, wave.minTiles);
-            waves[i] = wave;
+            // Waves[i] is the array slot itself, so this changes it in place.
+            Waves[i].ClampMaxToMin();
         }
     }
 
@@ -124,14 +183,14 @@ public class StationProfile : ScriptableObject
 
         for (StationProfile station = this;
              station != null && visited.Add(station);
-             station = station.previousStationProfile)
+             station = station.PreviousStationProfile)
         {
-            if (station.ownWeaponPrefabs == null)
+            if (station.OwnWeaponPrefabs == null)
             {
                 continue;
             }
 
-            foreach (GameObject weapon in station.ownWeaponPrefabs)
+            foreach (GameObject weapon in station.OwnWeaponPrefabs)
             {
                 if (weapon != null && !pool.Contains(weapon))
                 {

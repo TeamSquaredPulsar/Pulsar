@@ -23,17 +23,16 @@ namespace Pulsar.Stations
 /// </summary>
 public class SpaceStation : MonoBehaviour
 {
-    // Every wave of this station was destroyed.
-    public static event Action<SpaceStation> StationClearedEvent;
-
     [SerializeField]
     private StationProfile profile;
 
-    [Tooltip("How far out the guards spawn and patrol, as a multiple of the station's own radius.")]
+    [Tooltip(
+        "How far out the guards spawn and patrol, as a multiple of the station's own radius.")]
     [SerializeField]
     private float ringScale = 1.8f;
 
-    [Tooltip("For test scenes without the game loop: start guarding as soon as the scene plays.")]
+    [Tooltip(
+        "For test scenes without the game loop: start guarding as soon as the scene plays.")]
     [SerializeField]
     private bool startOnItsOwn;
 
@@ -56,6 +55,42 @@ public class SpaceStation : MonoBehaviour
     public float Radius { get; private set; }
     public bool IsCleared { get; private set; }
 
+    private EnemyGuardAI.GuardState CurrentGuardState => playerInRange
+        ? EnemyGuardAI.GuardState.Chasing
+        : EnemyGuardAI.GuardState.Roaming;
+
+    private void Start()
+    {
+        // The level may already be Playing by the time this scene's objects start.
+        if (startOnItsOwn || StateManager.CurrentState == GameState.Playing)
+        {
+            BeginDefense();
+        }
+    }
+
+    private void Update()
+    {
+        if (!_defending)
+        {
+            return;
+        }
+
+        float distance = Vector2.Distance(transform.position,
+            PlayerController.PlayerPosition);
+        bool inRange = playerInRange
+            ? distance <= profile.DetectionRange + profile.LoseInterestMargin
+            : distance <= profile.DetectionRange;
+
+        if (inRange != playerInRange)
+        {
+            playerInRange = inRange;
+            foreach (EnemyGuardAI guard in spawnedGuards)
+            {
+                guard.SetState(CurrentGuardState);
+            }
+        }
+    }
+
     private void OnEnable()
     {
         StateManager.GameStateChanged += HandleGameStateChanged;
@@ -66,14 +101,8 @@ public class SpaceStation : MonoBehaviour
         StateManager.GameStateChanged -= HandleGameStateChanged;
     }
 
-    private void Start()
-    {
-        // The level may already be Playing by the time this scene's objects start.
-        if (startOnItsOwn || StateManager.CurrentState == GameState.Playing)
-        {
-            BeginDefense();
-        }
-    }
+    // Every wave of this station was destroyed.
+    public static event Action<SpaceStation> StationClearedEvent;
 
     private void HandleGameStateChanged(GameState newState)
     {
@@ -94,40 +123,14 @@ public class SpaceStation : MonoBehaviour
         }
     }
 
-    private void Update()
-    {
-        if (!_defending)
-        {
-            return;
-        }
-
-        float distance = Vector2.Distance(transform.position,
-            PlayerController.PlayerPosition);
-        bool inRange = playerInRange
-            ? distance <= profile.detectionRange + profile.loseInterestMargin
-            : distance <= profile.detectionRange;
-
-        if (inRange != playerInRange)
-        {
-            playerInRange = inRange;
-            foreach (EnemyGuardAI guard in spawnedGuards)
-            {
-                guard.SetState(CurrentGuardState);
-            }
-        }
-    }
-
-    private EnemyGuardAI.GuardState CurrentGuardState => playerInRange
-        ? EnemyGuardAI.GuardState.Chasing
-        : EnemyGuardAI.GuardState.Roaming;
-
     // Starts the station over from wave 1.
     public void BeginDefense()
     {
         ResetStation();
         if (!profile)
         {
-            Debug.LogError($"{name} has no StationProfile, so it can't spawn guards.");
+            Debug.LogError(
+                $"{name} has no StationProfile, so it can't spawn guards.");
             return;
         }
 
@@ -164,7 +167,7 @@ public class SpaceStation : MonoBehaviour
     private void SpawnWave(int waveIndex)
     {
         currentWave = waveIndex;
-        int guardCount = profile.waves[waveIndex].guardCount;
+        int guardCount = profile.Waves[waveIndex].GuardCount;
         Vector2 centre = transform.position;
         float ringRadius = Radius * ringScale;
         float startAngle = Random.Range(0f, 360f);
@@ -185,7 +188,7 @@ public class SpaceStation : MonoBehaviour
                 continue;
             }
 
-            guard.Init(this, profile.guardInfo, ringRadius, angle);
+            guard.Init(this, profile.GuardInfo, ringRadius, angle);
             guard.SetState(CurrentGuardState);
             guard.Defeated += HandleGuardDefeated;
             spawnedGuards.Add(guard);
@@ -202,7 +205,7 @@ public class SpaceStation : MonoBehaviour
         }
 
         int nextWave = currentWave + 1;
-        if (nextWave < profile.waves.Length)
+        if (nextWave < profile.Waves.Length)
         {
             _nextWaveRoutine = StartCoroutine(SpawnWaveAfterDelay(nextWave));
             return;
@@ -216,7 +219,7 @@ public class SpaceStation : MonoBehaviour
 
     private IEnumerator SpawnWaveAfterDelay(int waveIndex)
     {
-        yield return new WaitForSeconds(profile.secondsBetweenWaves);
+        yield return new WaitForSeconds(profile.SecondsBetweenWaves);
         _nextWaveRoutine = null;
         SpawnWave(waveIndex);
     }
@@ -225,9 +228,11 @@ public class SpaceStation : MonoBehaviour
     public float CalculateRadius()
     {
         float radius = 0f;
-        Vector2 stationCentre = new Vector2(transform.position.x, transform.position.y);
+        Vector2 stationCentre
+            = new Vector2(transform.position.x, transform.position.y);
 
-        foreach (SpriteRenderer tile in GetComponentsInChildren<SpriteRenderer>())
+        foreach (SpriteRenderer tile in
+                 GetComponentsInChildren<SpriteRenderer>())
         {
             Bounds bounds = tile.bounds;
             Vector3 extents = bounds.extents;
@@ -239,7 +244,8 @@ public class SpaceStation : MonoBehaviour
                     Vector2 corner = new Vector2(
                         bounds.center.x + extents.x * x,
                         bounds.center.y + extents.y * y);
-                    radius = Mathf.Max(radius, Vector2.Distance(stationCentre, corner));
+                    radius = Mathf.Max(radius,
+                        Vector2.Distance(stationCentre, corner));
                 }
             }
         }
