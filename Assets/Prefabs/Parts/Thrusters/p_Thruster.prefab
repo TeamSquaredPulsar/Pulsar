@@ -64,6 +64,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c73fc15b171ddc347ab826efbd8c2757, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ThrusterTile
+  nameOverride: Thruster
   baseColor: {r: 1, g: 1, b: 1, a: 1}
   <IsAttached>k__BackingField: 0
   <TileInfo>k__BackingField: {fileID: 11400000, guid: efe30156b410eb149aa1cabe593e8f6d, type: 2}
@@ -72,12 +73,16 @@ MonoBehaviour:
   health: {fileID: 8159396282816949206}
   spritesOverride: {fileID: 11400000, guid: 89f57687458a6104ab76ed377118085f, type: 2}
   spriteRenderer: {fileID: 8688311974718774552}
+  _rbInfo:
+    LinearDamping: 0
+    AngularDamping: 0
+    Mass: 0
+  ps: {fileID: 3520972651243610508, guid: 66687855b75631149b24e8649fa061df, type: 3}
   <DirectionalThrust>k__BackingField:
     _entries:
     - key: 0
       value: 6
   <RotationForce>k__BackingField: 5
-  ps: {fileID: 3520972651243610508, guid: 66687855b75631149b24e8649fa061df, type: 3}
 --- !u!212 &8688311974718774552
 SpriteRenderer:
   serializedVersion: 2

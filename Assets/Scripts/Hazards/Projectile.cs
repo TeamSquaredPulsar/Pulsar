@@ -1,15 +1,14 @@
-using UnityEngine;
+using System.Collections.Generic;
 using Pulsar.Audio;
+using UnityEngine;
 
 namespace Pulsar.Hazards
 {
 /// <summary>
-/// Represents a Projectile
-///
-/// Reference: https://www.youtube.com/watch?v=2mThTAhD16M
-///
-/// @author Alfredo Luzardo
-/// @version 1.1
+///     Represents a Projectile
+///     Reference: https://www.youtube.com/watch?v=2mThTAhD16M
+///     @author Alfredo Luzardo
+///     @version 1.1
 /// </summary>
 [RequireComponent(typeof(Rigidbody2D))]
 public class Projectile : MonoBehaviour
@@ -37,7 +36,7 @@ public class Projectile : MonoBehaviour
     protected Rigidbody2D rb;
 
     /// <summary>
-    /// Start method.
+    ///     Start method.
     /// </summary>
     protected virtual void Start()
     {
@@ -45,8 +44,8 @@ public class Projectile : MonoBehaviour
     }
 
     /// <summary>
-    /// When it collides, activate the hit effect, damage to the other,
-    /// and destroy itself
+    ///     When it collides, activate the hit effect, damage to the other,
+    ///     and destroy itself
     /// </summary>
     /// <param name="collision"></param>
     private void OnCollisionEnter2D(Collision2D collision)
@@ -57,7 +56,7 @@ public class Projectile : MonoBehaviour
             return;
         }
 
-        if (hitEffectPrefab  != null)
+        if (hitEffectPrefab != null)
         {
             ContactPoint2D contact = collision.GetContact(0);
             // Point the effect's cone along the surface normal (back toward the
@@ -66,6 +65,7 @@ public class Projectile : MonoBehaviour
                 = Quaternion.LookRotation(contact.normal, Vector3.forward);
             Instantiate(hitEffectPrefab, contact.point, facing);
         }
+
         PlayAudioEffect();
 
         Destroy(gameObject);
@@ -92,7 +92,7 @@ public class Projectile : MonoBehaviour
     }
 
     /// <summary>
-    /// Spawns the projectile
+    ///     Spawns the projectile
     /// </summary>
     /// <param name="spawnTransform"></param>
     /// <param name="parentCollider"></param>
@@ -111,6 +111,11 @@ public class Projectile : MonoBehaviour
             parentCollider);
 
         return projectile;
+    }
+
+    public virtual IEnumerable<(string label, string value)> GetStats()
+    {
+        yield return ("Damage", $"{Damage:0.#}");
     }
 }
 }

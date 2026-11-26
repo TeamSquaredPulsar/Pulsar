@@ -134,6 +134,25 @@ public abstract class Weapon : Tile, IProjectileSpawner, IWeapon
         }
 
         yield return ("Fire rate", $"{FireRatePerSecond:0.##}/s");
+
+        // not sure if we should keep this in weapon,
+        // or have manual weapon and auto weapon implement this,
+        // and lazer beam not
+        Projectile projectile = ProjectilePrefab
+            ? ProjectilePrefab.GetComponent<Projectile>()
+            : null;
+
+        if (!projectile)
+        {
+            yield break;
+        }
+
+        yield return ("Projectile", ProjectilePrefab.name);
+
+        foreach ((string label, string value) stat in projectile.GetStats())
+        {
+            yield return stat;
+        }
     }
 }
 }

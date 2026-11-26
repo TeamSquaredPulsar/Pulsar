@@ -21,9 +21,11 @@ public struct TileRbInfo
 public abstract class Tile : MonoBehaviour
 {
     private const int k_FloatingSortingOrder = 10;
-    private static readonly int k_ColorID = Shader.PropertyToID("_CoreColor");
 
     [Header("Basic Info")]
+    [SerializeField]
+    private string nameOverride;
+
     [SerializeField]
     private Color baseColor = Color.white;
 
@@ -70,9 +72,12 @@ public abstract class Tile : MonoBehaviour
 
     public Color BaseColor => baseColor;
 
-    public string DisplayName => TileInfo ? TileInfo.tileName : name;
+    public string DisplayName =>
+        !string.IsNullOrEmpty(nameOverride)
+            ? nameOverride
+            : name;
 
-    public float MaxHp => health.MaxHealth;
+    private float MaxHp => health.MaxHealth;
 
     protected virtual void Awake()
     {

@@ -1,3 +1,5 @@
+using System.Collections.Generic;
+using System.Linq;
 using FMODUnity;
 using Pulsar.Audio;
 using UnityEngine;
@@ -78,5 +80,8 @@ public class ExplosiveProjectile : Projectile
             FmodEvents.Instance.RocketExplode,
             transform.position);
     }
+
+    public override IEnumerable<(string label, string value)> GetStats() =>
+        base.GetStats().Append(("Blast radius", $"{ExplosionRadius:0.#}"));
 }
 }

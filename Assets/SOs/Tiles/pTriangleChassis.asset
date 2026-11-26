@@ -12,8 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 01a7f6ea17a9ed54a89b607ada273835, type: 3}
   m_Name: pTriangleChassis
   m_EditorClassIdentifier: Assembly-CSharp::Pulsar.Ship.TileDef
-  tileName: pChassis
+  tileName: pTriangleChassis
   hp: 10
-  minConnections: 2
   connectableEdges: 00010100
   sprites: {fileID: 11400000, guid: 08530f42817696f469c8ed035d999d4a, type: 2}

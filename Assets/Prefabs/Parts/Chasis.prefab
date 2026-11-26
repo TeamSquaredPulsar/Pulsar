@@ -62,6 +62,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ae52ac38b092d65468cc2ffd8bd18bf7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Tiles::ChassisTile
+  nameOverride: Chassis
   baseColor: {r: 1, g: 1, b: 1, a: 1}
   <IsAttached>k__BackingField: 0
   <TileInfo>k__BackingField: {fileID: 11400000, guid: 9c0e50de41345d743a48948f1809c761, type: 2}
@@ -70,21 +71,10 @@ MonoBehaviour:
   health: {fileID: 2303072813145309213}
   spritesOverride: {fileID: 11400000, guid: 98efc5c07251a3f43a4c2f648d1cb3f7, type: 2}
   spriteRenderer: {fileID: 497275641067805184}
-  audioManager: {fileID: 11400000, guid: b93f15ff1e15c794ba814aa4875bc1c1, type: 2}
-  damageStateChangeSound:
-    Guid:
-      Data1: 1660910153
-      Data2: 1263548361
-      Data3: -413367378
-      Data4: 1675320881
-    Path: event:/Damage/ReduceState
-  onHitSound:
-    Guid:
-      Data1: 1366578804
-      Data2: 1111099715
-      Data3: 1340059779
-      Data4: -543357253
-    Path: event:/Damage/Hit
+  _rbInfo:
+    LinearDamping: 0
+    AngularDamping: 0
+    Mass: 0
 --- !u!212 &497275641067805184
 SpriteRenderer:
   serializedVersion: 2
@@ -131,7 +121,7 @@ SpriteRenderer:
   m_LightmapParameters: {fileID: 0}
   m_GlobalIlluminationMeshLod: 0
   m_SortingLayerID: -1599613283
-  m_SortingLayer: 4
+  m_SortingLayer: 5
   m_SortingOrder: 0
   m_MaskInteraction: 0
   m_Sprite: {fileID: 3379337698142441667, guid: 5bf6d14457bf44a4ba2cec1ec088a6ca, type: 3}
