@@ -1,7 +1,6 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using Pulsar.DataClasses;
 using Pulsar.Player;
 using Pulsar.Stations.Generation;
 using Pulsar.Stations.Guards;
@@ -31,11 +30,6 @@ public class SpaceStation : MonoBehaviour
     [SerializeField]
     private float ringScale = 1.8f;
 
-    [Tooltip(
-        "For test scenes without the game loop: start guarding as soon as the scene plays.")]
-    [SerializeField]
-    private bool startOnItsOwn;
-
     [Header("Debug (read only)")]
     [SerializeField]
     private int currentWave = -1;
@@ -58,15 +52,6 @@ public class SpaceStation : MonoBehaviour
     private EnemyGuardAI.GuardState CurrentGuardState => playerInRange
         ? EnemyGuardAI.GuardState.Chasing
         : EnemyGuardAI.GuardState.Roaming;
-
-    private void Start()
-    {
-        // The level may already be Playing by the time this scene's objects start.
-        if (startOnItsOwn || StateManager.CurrentState == GameState.Playing)
-        {
-            BeginDefense();
-        }
-    }
 
     private void Update()
     {
@@ -93,35 +78,16 @@ public class SpaceStation : MonoBehaviour
 
     private void OnEnable()
     {
-        StateManager.GameStateChanged += HandleGameStateChanged;
+        BeginDefense();
     }
 
     private void OnDisable()
     {
-        StateManager.GameStateChanged -= HandleGameStateChanged;
+        ResetStation();
     }
 
     // Every wave of this station was destroyed.
     public static event Action<SpaceStation> StationClearedEvent;
-
-    private void HandleGameStateChanged(GameState newState)
-    {
-        switch (newState)
-        {
-            case GameState.Playing:
-                if (!_defending)
-                {
-                    BeginDefense();
-                }
-
-                break;
-            case GameState.GameOver:
-            case GameState.MainMenu:
-            case GameState.Loading:
-                ResetStation();
-                break;
-        }
-    }
 
     // Starts the station over from wave 1.
     public void BeginDefense()
