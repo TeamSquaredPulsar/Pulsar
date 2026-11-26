@@ -122,8 +122,8 @@ GameObject:
   - component: {fileID: -7642045392217383493}
   - component: {fileID: 2598797762427140248}
   - component: {fileID: 4676953174740963180}
-  - component: {fileID: 6394848136817018224}
   - component: {fileID: 2522681453652910296}
+  - component: {fileID: 469336413618854639}
   m_Layer: 0
   m_Name: p_BurstGun
   m_TagString: Untagged
@@ -178,7 +178,7 @@ MonoBehaviour:
   baseColor: {r: 1, g: 1, b: 1, a: 1}
   <IsAttached>k__BackingField: 0
   <TileInfo>k__BackingField: {fileID: 11400000, guid: 71fb61585e3013a43b3726d73a977655, type: 2}
-  tileCollider: {fileID: 6394848136817018224}
+  tileCollider: {fileID: 469336413618854639}
   rigidBody: {fileID: 2522681453652910296}
   health: {fileID: -7642045392217383493}
   spritesOverride: {fileID: 11400000, guid: 0585c281154e1734485b72b474742b88, type: 2}
@@ -254,8 +254,35 @@ SpriteRenderer:
   m_SpriteTileMode: 0
   m_WasSpriteAssigned: 1
   m_SpriteSortPoint: 0
---- !u!61 &6394848136817018224
-BoxCollider2D:
+--- !u!50 &2522681453652910296
+Rigidbody2D:
+  serializedVersion: 5
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2402461002857692903}
+  m_BodyType: 0
+  m_Simulated: 1
+  m_UseFullKinematicContacts: 0
+  m_UseAutoMass: 0
+  m_Mass: 0.7
+  m_LinearDamping: 0
+  m_AngularDamping: 0.05
+  m_GravityScale: 0
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_Interpolate: 0
+  m_SleepingMode: 1
+  m_CollisionDetection: 0
+  m_Constraints: 0
+--- !u!60 &469336413618854639
+PolygonCollider2D:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -298,35 +325,21 @@ BoxCollider2D:
     drawMode: 0
     adaptiveTiling: 0
   m_AutoTiling: 0
-  m_Size: {x: 1, y: 1}
-  m_EdgeRadius: 0
---- !u!50 &2522681453652910296
-Rigidbody2D:
-  serializedVersion: 5
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2402461002857692903}
-  m_BodyType: 0
-  m_Simulated: 1
-  m_UseFullKinematicContacts: 0
-  m_UseAutoMass: 0
-  m_Mass: 0.7
-  m_LinearDamping: 0
-  m_AngularDamping: 0.05
-  m_GravityScale: 0
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_Interpolate: 0
-  m_SleepingMode: 1
-  m_CollisionDetection: 0
-  m_Constraints: 0
+  m_Points:
+    m_Paths:
+    - - {x: -0.5, y: -0.5}
+      - {x: -0.5, y: -0.4375}
+      - {x: -0.125, y: -0.0625}
+      - {x: -0.125, y: 0.125}
+      - {x: -0.0625, y: 0.125}
+      - {x: -0.0625, y: 0.3125}
+      - {x: 0.0625, y: 0.3125}
+      - {x: 0.0625, y: 0.125}
+      - {x: 0.125, y: 0.125}
+      - {x: 0.125, y: -0.0625}
+      - {x: 0.5, y: -0.4375}
+      - {x: 0.5, y: -0.5}
+  m_UseDelaunayMesh: 1
 --- !u!1 &4329379618448448082
 GameObject:
   m_ObjectHideFlags: 0
