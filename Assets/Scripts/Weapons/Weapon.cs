@@ -33,27 +33,6 @@ public abstract class Weapon : Tile, IProjectileSpawner, IWeapon
     private Coroutine _fireTimerRoutine;
     private Projectile _projectile;
 
-    [Header("References")]
-    [field: SerializeField]
-    public GameObject ProjectilePrefab { get; private set; }
-
-    Collider2D IProjectileSpawner.ParentCollider => ParentCollider;
-
-    public Collider2D Coll2D => tileCollider;
-
-    [field: SerializeField]
-    public Collider2D ParentCollider { get; private set; }
-
-    [field: SerializeField]
-    [field: ReorderableList]
-    public Transform[] FirePoints { get; private set; }
-
-    [field: SerializeField]
-    [field: Expandable]
-    public WeaponStrategy Strategy { get; private set; }
-
-    public bool CanFire => _fireTimerRoutine == null;
-
     protected override void Start()
     {
         base.Start();
@@ -74,17 +53,13 @@ public abstract class Weapon : Tile, IProjectileSpawner, IWeapon
         }
     }
 
-    public virtual void Fire()
-    {
-        if (!CanFire)
-        {
-            return;
-        }
+    [Header("References")]
+    [field: SerializeField]
+    public GameObject ProjectilePrefab { get; private set; }
 
-        Strategy.Fire(FirePoints, this, SpawnProjectile);
+    Collider2D IProjectileSpawner.ParentCollider => ParentCollider;
 
-        StartFireTimer();
-    }
+    public Collider2D Coll2D => tileCollider;
 
     public virtual GameObject SpawnProjectile(Transform spawnPoint)
     {
@@ -99,6 +74,31 @@ public abstract class Weapon : Tile, IProjectileSpawner, IWeapon
         }
 
         return projectile;
+    }
+
+    [field: SerializeField]
+    public Collider2D ParentCollider { get; private set; }
+
+    [field: SerializeField]
+    [field: ReorderableList]
+    public Transform[] FirePoints { get; private set; }
+
+    [field: SerializeField]
+    [field: Expandable]
+    public WeaponStrategy Strategy { get; private set; }
+
+    public bool CanFire => _fireTimerRoutine == null;
+
+    public virtual void Fire()
+    {
+        if (!CanFire)
+        {
+            return;
+        }
+
+        Strategy.Fire(FirePoints, this, SpawnProjectile);
+
+        StartFireTimer();
     }
 
     private void StartFireTimer() => StartCooldown(1 / FireRatePerSecond);
@@ -125,5 +125,15 @@ public abstract class Weapon : Tile, IProjectileSpawner, IWeapon
         ReloadingSprite && !CanFire
             ? ReloadingSprite
             : base.GetCurrentSprite(state);
+
+    public override IEnumerable<(string label, string value)> GetStats()
+    {
+        foreach ((string label, string value) stat in base.GetStats())
+        {
+            yield return stat;
+        }
+
+        yield return ("Fire rate", $"{FireRatePerSecond:0.##}/s");
+    }
 }
 }

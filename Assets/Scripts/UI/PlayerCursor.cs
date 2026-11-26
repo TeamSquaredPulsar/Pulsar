@@ -10,14 +10,10 @@ namespace Pulsar.UI
 [RequireComponent(typeof(SpriteRenderer), typeof(CircleCollider2D))]
 public class PlayerCursor : MonoBehaviour
 {
-    public static event Action<Result<Tile>> PlayerSelectTile;
-
     public static Vector3 CursorPosition = Vector3.zero;
 
     [SerializeField]
     private InputReader input;
-
-    public InputReader Input => input;
 
     [SerializeField]
     private SpriteRenderer visual;
@@ -25,9 +21,12 @@ public class PlayerCursor : MonoBehaviour
     [SerializeField]
     private Collider2D circleCollider;
 
-    private PlayerController _player;
     private Tile _hoveredLooseTile;
+
+    private PlayerController _player;
     private Tile _selectedTile;
+
+    public InputReader Input => input;
 
     private void Awake()
     {
@@ -58,6 +57,25 @@ public class PlayerCursor : MonoBehaviour
         input.SelectTileEvent -= OnTileSelect;
         input.MoveCursorEvent -= OnCursorMove;
     }
+
+    private void OnTriggerEnter2D(Collider2D other)
+    {
+        if (other.TryGetComponent(out Tile tile) && !tile.IsAttached)
+        {
+            SetHoveredLooseTile(tile);
+        }
+    }
+
+    private void OnTriggerExit2D(Collider2D other)
+    {
+        if (other.TryGetComponent(out Tile tile) && tile == _hoveredLooseTile)
+        {
+            SetHoveredLooseTile(null);
+        }
+    }
+
+    public static event Action<Result<Tile>> PlayerSelectTile;
+    public static event Action<Tile> LooseTileHoverChanged;
 
     private void OnTileSelect(bool isSelecting)
     {
@@ -103,6 +121,18 @@ public class PlayerCursor : MonoBehaviour
             : Result<Tile>.Fail();
     }
 
+    private void SetHoveredLooseTile(Tile tile)
+    {
+        // This is basically to check if the same tile was hovered over,
+        if (tile == _hoveredLooseTile)
+        {
+            return;
+        }
+
+        _hoveredLooseTile = tile;
+        LooseTileHoverChanged?.Invoke(tile);
+    }
+
     private void OnCursorMove(Vector2 obj)
     {
         if (!CameraData.MainCamera)
@@ -110,27 +140,12 @@ public class PlayerCursor : MonoBehaviour
             // Debug.LogWarning("No MainCamera");
             return;
         }
+
         Vector3 worldPos = CameraData.MainCamera.ScreenToWorldPoint(obj);
 
         worldPos.z = 0f;
 
         transform.position = worldPos;
-    }
-
-    private void OnTriggerEnter2D(Collider2D other)
-    {
-        if (other.TryGetComponent(out Tile tile) && !tile.IsAttached)
-        {
-            _hoveredLooseTile = tile;
-        }
-    }
-
-    private void OnTriggerExit2D(Collider2D other)
-    {
-        if (other.TryGetComponent(out Tile tile) && tile == _hoveredLooseTile)
-        {
-            _hoveredLooseTile = null;
-        }
     }
 }
 }

@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using JetBrains.Annotations;
 using NaughtyAttributes;
 using Pulsar.DataClasses;
@@ -65,9 +66,13 @@ public abstract class Tile : MonoBehaviour
 
     public Sprite Sprite => spriteRenderer.sprite;
 
-    public float Mass => _rbInfo.Mass; //It can return mass even when destroyed
+    public float Mass => _rbInfo.Mass;
 
     public Color BaseColor => baseColor;
+
+    public string DisplayName => TileInfo ? TileInfo.tileName : name;
+
+    public float MaxHp => health.MaxHealth;
 
     protected virtual void Awake()
     {
@@ -211,5 +216,11 @@ public abstract class Tile : MonoBehaviour
     {
         transform.rotation = rotation;
         Rotation = transform.localRotation.eulerAngles.z.ToTileRotation();
+    }
+
+    public virtual IEnumerable<(string label, string value)> GetStats()
+    {
+        yield return ("Health", $"{CurrentHp:0} / {MaxHp:0}");
+        yield return ("Mass", $"{Mass:0.##}");
     }
 }

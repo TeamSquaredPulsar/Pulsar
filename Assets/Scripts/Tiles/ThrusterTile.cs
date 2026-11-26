@@ -1,33 +1,20 @@
+using System.Collections.Generic;
+using System.Linq;
 using Audune.Utils.Dictionary;
+using FMOD.Studio;
+using FMODUnity;
 using Pulsar.Audio;
 using Pulsar.DataClasses;
 using Pulsar.Interfaces;
 using UnityEngine;
-using FMOD.Studio;
-using FMODUnity;
 
 [RequireComponent(typeof(StudioEventEmitter))]
 public class ThrusterTile : Tile, IThrustable
 {
-    [field: SerializeField]
-    [field: SerializableDictionaryOptions(keyHeader = "Direction",
-        valueHeader = "Force")]
-    public SerializableDictionary<TileRotation, float> DirectionalThrust
-    {
-        get;
-        private set;
-    }
-
-    public bool IsThrusting { get; private set; }
-
-    [field: SerializeField]
-    [Min(0f)]
-    public float RotationForce { get; private set; }
-
-    private StudioEventEmitter _emitter;
-
     [SerializeField]
     private ParticleSystem ps;
+
+    private StudioEventEmitter _emitter;
 
     protected override void Awake()
     {
@@ -54,6 +41,21 @@ public class ThrusterTile : Tile, IThrustable
         IsThrusting = false;
         base.OnDestroy();
     }
+
+    [field: SerializeField]
+    [field: SerializableDictionaryOptions(keyHeader = "Direction",
+        valueHeader = "Force")]
+    public SerializableDictionary<TileRotation, float> DirectionalThrust
+    {
+        get;
+        private set;
+    }
+
+    public bool IsThrusting { get; private set; }
+
+    [field: SerializeField]
+    [Min(0f)]
+    public float RotationForce { get; private set; }
 
     public void ActivateThrust(float amount, in Rigidbody2D targetRb)
     {
@@ -113,5 +115,16 @@ public class ThrusterTile : Tile, IThrustable
             _emitter.Stop();
             // _emitter.EventInstance.stop(FMOD.Studio.STOP_MODE.ALLOWFADEOUT);
         }
+    }
+
+    public override IEnumerable<(string label, string value)> GetStats()
+    {
+        foreach ((string label, string value) stat in base.GetStats())
+        {
+            yield return stat;
+        }
+
+        yield return ("Thrust", $"{DirectionalThrust.Values.Max():0.#}");
+        yield return ("Rotation", $"{RotationForce:0.##}");
     }
 }
