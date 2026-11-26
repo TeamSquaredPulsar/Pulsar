@@ -11,14 +11,14 @@ namespace Pulsar.Stations
 {
 /// <summary>
 /// One script for every station. The station's StationProfile says what's
-/// different (colour tiles, weapons, waves). When the game starts, the station
-/// builds its first wave of guards with the EnemyGenerator and spreads them on
+/// different (colour tiles, weapons, waves). When the station is enabled (its
+/// scene loads), it builds its first wave of guards with the EnemyGenerator and spreads them on
 /// a ring around itself. A new, harder wave comes once the last one is
 /// destroyed, up to the profile's wave count. The player flying into the
 /// station's detection range switches all its guards from Roaming to Chasing.
-/// It follows the game's state (StateManager): Playing starts it from wave 1;
-/// Game Over, Main Menu and Loading clear its guards. In a test scene with no
-/// game loop, tick Start On Its Own.
+/// It doesn't follow the game's state: OnEnable starts it from wave 1, and
+/// OnDisable (which runs when its scene unloads) clears its guards. So it works
+/// the same in test scenes and in the real game.
 /// </summary>
 public class SpaceStation : MonoBehaviour
 {
@@ -105,7 +105,7 @@ public class SpaceStation : MonoBehaviour
         SpawnWave(0);
     }
 
-    // Removes this station's guards and stops it (game over, back to menu).
+    // Removes this station's guards and stops it (OnDisable, and before a restart).
     public void ResetStation()
     {
         if (_nextWaveRoutine != null)
