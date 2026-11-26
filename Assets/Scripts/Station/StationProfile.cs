@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using NaughtyAttributes;
 using UnityEngine;
 
 namespace Pulsar.Stations
@@ -11,7 +12,8 @@ public struct WaveConfig
     [Min(1)]
     public int guardCount;
 
-    [Tooltip("Smallest guard in this wave, counting every tile (core, body, guns, thrusters).")]
+    [Tooltip(
+        "Smallest guard in this wave, counting every tile (core, body, guns, thrusters).")]
     [Min(1)]
     public int minTiles;
 
@@ -35,15 +37,18 @@ public class StationProfile : ScriptableObject
     [Min(0)]
     public int stationTier;
 
-    [Tooltip("The station before this one. Its weapons (and the ones before it) " +
-             "are added to this station's pool. Leave empty for the first station.")]
+    [Tooltip(
+        "The station before this one. Its weapons (and the ones before it) " +
+        "are added to this station's pool. Leave empty for the first station.")]
     public StationProfile previousStationProfile;
 
     [Header("Weapons")]
-    [Tooltip("This station's own new weapon tile(s). Every guard carries at least one.")]
+    [Tooltip(
+        "This station's own new weapon tile(s). Every guard carries at least one.")]
     public GameObject[] ownWeaponPrefabs;
 
-    [Tooltip("About one gun for every this many tiles (always at least one gun).")]
+    [Tooltip(
+        "About one gun for every this many tiles (always at least one gun).")]
     [Min(1)]
     public int tilesPerGun = 3;
 
@@ -62,13 +67,15 @@ public class StationProfile : ScriptableObject
     public GameObject thrusterPrefab;
 
     [Header("Guards")]
-    [Tooltip("The empty guard ship (ShipManager, AI, behaviours) that the tiles are built onto.")]
+    [Tooltip(
+        "The empty guard ship (ShipManager, AI, behaviours) that the tiles are built onto.")]
     public GameObject guardShellPrefab;
 
     [Tooltip("Movement, aiming and scoring numbers for this station's guards.")]
     public EnemyInfo guardInfo;
 
     [Header("Waves (the list length is the number of waves)")]
+    [ReorderableList]
     public WaveConfig[] waves =
     {
         new() { guardCount = 3, minTiles = 3, maxTiles = 5, },
@@ -80,14 +87,34 @@ public class StationProfile : ScriptableObject
     public float secondsBetweenWaves = 2f;
 
     [Header("Detection")]
-    [Tooltip("When the player is this close to the station's centre, its guards chase.")]
+    [Tooltip(
+        "When the player is this close to the station's centre, its guards chase.")]
     [Min(0f)]
     public float detectionRange = 25f;
 
-    [Tooltip("The guards give up once the player is this much further out than " +
-             "the detection range (stops them flipping back and forth at the edge).")]
+    [Tooltip(
+        "The guards give up once the player is this much further out than " +
+        "the detection range (stops them flipping back and forth at the edge).")]
     [Min(0f)]
     public float loseInterestMargin = 8f;
+
+    // Runs whenever a value changes in the Inspector. NaughtyAttributes'
+    // [MinValue] can't reach inside WaveConfig, so the profile keeps each
+    // wave's maxTiles at or above its minTiles here instead.
+    private void OnValidate()
+    {
+        if (waves == null)
+        {
+            return;
+        }
+
+        for (int i = 0; i < waves.Length; i++)
+        {
+            WaveConfig wave = waves[i];
+            wave.maxTiles = Mathf.Max(wave.maxTiles, wave.minTiles);
+            waves[i] = wave;
+        }
+    }
 
     // This station's weapons plus every earlier station's weapons.
     public List<GameObject> GetAvailableWeapons()
