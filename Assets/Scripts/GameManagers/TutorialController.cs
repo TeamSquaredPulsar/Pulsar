@@ -211,7 +211,7 @@ public class TutorialController : MonoBehaviour
     private void OnPlayerSpawned(PlayerController playerController)
     {
         player = playerController;
-        player.GetComponent<ShipManager>().OnDetachTile += OnPlayerDetachTile;
+        player.GetComponent<BuildManager>().OnDetachTile += OnPlayerDetachTile;
         _step = 0;
         ShowStep();
     }
