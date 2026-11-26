@@ -1,16 +1,14 @@
 using System.Collections;
 using Pulsar.DataClasses;
-using Pulsar.Utilities;
 using Pulsar.Player;
 using Pulsar.Settings.Input;
+using Pulsar.Utilities;
 using UnityEngine;
 
 namespace Pulsar.UI
 {
 public class BuildManager : MonoBehaviour
 {
-    private PlayerController _player;
-
     [Header("References")]
     [SerializeField]
     private InputReader input;
@@ -21,38 +19,48 @@ public class BuildManager : MonoBehaviour
     [SerializeField]
     private GhostPreview ghostPreview;
 
-    [Header("Scan Zone"), SerializeField, Min(0.1f),]
+    [Header("Scan Zone")]
+    [SerializeField]
+    [Min(0.1f)]
     private float scanPadding = 2.5f;
 
-    [Header("Selection"), SerializeField,]
+    [Header("Selection")]
+    [SerializeField]
     private Color selectedTint = new(0.3f, 1f, 0.8f, 1f);
 
-    [SerializeField, Min(0.1f),]
+    [SerializeField]
+    private Color detachTint = Color.red;
+
+    [SerializeField]
+    [Min(0.1f)]
     private float pullSpeed = 8f;
 
-    [SerializeField, Min(0.1f),]
+    [SerializeField]
+    [Min(0.1f)]
     private float tileDetatchSeconds;
 
-    private Tile _selectedTile = null!;
     private bool _atOutline;
-    private float _orbitAngle;
     private Vector2Int _attachCell;
     private TileRotation _attachRotation;
 
     private Coroutine _detatchTileCoroutine;
+    private float _orbitAngle;
+    private PlayerController _player;
+
+    private Tile _selectedTile = null!;
     private Coroutine _updateRadialRoutine;
+
+    private void Start()
+    {
+        ghostPreview.Hide();
+        radialMenu.Hide();
+    }
 
     private void OnEnable()
     {
         PlayerController.PlayerSpawnedEvent += OnPlayerSpawned;
         PlayerCursor.PlayerSelectTile += OnPlayerSelectTile;
         input.RotateSelectedTileEvent += RotateSelectedTile;
-    }
-
-    private void Start()
-    {
-        ghostPreview.Hide();
-        radialMenu.Hide();
     }
 
     private void OnDisable()
@@ -92,7 +100,25 @@ public class BuildManager : MonoBehaviour
 
     private IEnumerator DetatchTileTimer(Tile tile)
     {
-        yield return new WaitForSeconds(tileDetatchSeconds);
+        float elapsed = 0f;
+        while (elapsed < tileDetatchSeconds)
+        {
+            //this is incas tile is destroyed mid detatch by a bullet
+            if (!tile)
+            {
+                _detatchTileCoroutine = null;
+                _selectedTile = null;
+                yield break;
+            }
+
+            float progress = elapsed / tileDetatchSeconds;
+            tile.Highlight(Color.Lerp(tile.BaseColor, detachTint, progress));
+
+            elapsed += Time.deltaTime;
+            yield return null;
+        }
+
+        tile.Unhighlight();
         _player.DetatchTile(tile);
         _detatchTileCoroutine = null;
         _selectedTile = null;
@@ -182,6 +208,12 @@ public class BuildManager : MonoBehaviour
         {
             StopCoroutine(_detatchTileCoroutine);
             _detatchTileCoroutine = null;
+
+            if (_selectedTile)
+            {
+                _selectedTile.Unhighlight();
+            }
+
             _selectedTile = null;
         }
 

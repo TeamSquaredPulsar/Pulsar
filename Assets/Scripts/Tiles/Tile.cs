@@ -67,6 +67,8 @@ public abstract class Tile : MonoBehaviour
 
     public float Mass => _rbInfo.Mass; //It can return mass even when destroyed
 
+    public Color BaseColor => baseColor;
+
     protected virtual void Awake()
     {
         //Initializing in awake to stop the chance of it being destroyed before caches
@@ -195,12 +197,12 @@ public abstract class Tile : MonoBehaviour
         rigidBody.SetFloatRb(selectedVel, angularVelocity, _rbInfo);
     }
 
-    private void Highlight(Color tint)
+    public void Highlight(Color tint)
     {
         spriteRenderer.color = tint;
     }
 
-    private void Unhighlight()
+    public void Unhighlight()
     {
         spriteRenderer.color = baseColor;
     }
@@ -209,13 +211,5 @@ public abstract class Tile : MonoBehaviour
     {
         transform.rotation = rotation;
         Rotation = transform.localRotation.eulerAngles.z.ToTileRotation();
-    }
-
-    public void SetColor(Color color)
-    {
-        MaterialPropertyBlock block = new();
-        spriteRenderer.GetPropertyBlock(block);
-        block.SetColor(k_ColorID, color);
-        spriteRenderer.SetPropertyBlock(block);
     }
 }
