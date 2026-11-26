@@ -163,19 +163,30 @@ public class ControlsScreen : MonoBehaviour
         SetInteractable(false);
         heading.text = _gamepad
             ? "Press a button / Esc to cancel"
-            : "Press a key / Esc to cancel";
+            : "Press a key, click, or scroll / Esc to cancel";
         _operation = binding.action.PerformInteractiveRebinding(binding.index)
             .WithCancelingThrough(_gamepad
                 ? "<Gamepad>/buttonEast"
                 : "<Keyboard>/escape")
             .WithControlsExcluding("<Pointer>/position")
             .WithControlsExcluding("<Pointer>/delta")
-            .WithControlsHavingToMatchPath(_gamepad ? "<Gamepad>" :
-                binding.action.bindings[binding.index].path
-                    .StartsWith("<Mouse>") ? "<Mouse>" : "<Keyboard>")
             .OnMatchWaitForAnother(0.1f)
             .OnCancel(_ => FinishRebind(false))
             .OnComplete(_ => FinishRebind(true));
+
+        if (_gamepad)
+        {
+            _operation.WithControlsHavingToMatchPath("<Gamepad>");
+        }
+        else
+        {
+            _operation.WithExpectedControlType("Axis")
+                .WithControlsHavingToMatchPath("<Keyboard>/<Key>")
+                .WithControlsHavingToMatchPath("<Mouse>/<Button>")
+                .WithControlsHavingToMatchPath("<Mouse>/scroll/up")
+                .WithControlsHavingToMatchPath("<Mouse>/scroll/down");
+        }
+
         _operation.Start();
     }
 

@@ -7,7 +7,9 @@ using Pulsar.Player;
 using Pulsar.Ship;
 using Pulsar.UI;
 using Pulsar.Utilities;
+using TMPro;
 using UnityEngine;
+using UnityEngine.InputSystem;
 using UnityEngine.UI;
 
 namespace Pulsar
@@ -59,6 +61,7 @@ public class TutorialController : MonoBehaviour
 
     // private Coroutine _stepFade;
     private readonly List<Tile> _tilesWillBeAttached = new();
+    private readonly Dictionary<TMP_Text, string> _inputPromptTemplates = new();
     private int _step = -1;
     private bool _finished;
 
@@ -67,6 +70,80 @@ public class TutorialController : MonoBehaviour
         PlayerController.PlayerSpawnedEvent += OnPlayerSpawned;
         PlayerCursor.PlayerSelectTile += OnPlayerSelectTile;
         completionPanel.gameObject.SetActive(false);
+        foreach (GameObject step in steps)
+        {
+            foreach (TMP_Text label in step.GetComponentsInChildren<TMP_Text>(true))
+            {
+                if (label.text.Contains('{'))
+                {
+                    _inputPromptTemplates.TryAdd(label, label.text);
+                }
+            }
+        }
+    }
+
+    private void OnEnable()
+    {
+        InputBindingStore.Changed += RefreshInputPrompts;
+        RefreshInputPrompts();
+    }
+
+    private void OnDisable()
+    {
+        InputBindingStore.Changed -= RefreshInputPrompts;
+    }
+
+    private void RefreshInputPrompts()
+    {
+        using Controls controls = new();
+        InputBindingStore.Load(controls.asset);
+
+        foreach ((TMP_Text label, string template) in _inputPromptTemplates)
+        {
+            string prompt = template;
+            foreach (InputAction action in controls.Player.Get().actions)
+            {
+                string controllerToken = $"{{Controller.{action.name}}}";
+                string keyboardMouseToken = $"{{KeyboardMouse.{action.name}}}";
+                if (prompt.Contains(controllerToken) || prompt.Contains(keyboardMouseToken))
+                {
+                    (string controller, string keyboardMouse) = GetPromptBindings(action);
+                    prompt = prompt.Replace(controllerToken, controller)
+                        .Replace(keyboardMouseToken, keyboardMouse);
+                }
+            }
+
+            label.text = prompt;
+        }
+    }
+
+    private static (string controller, string keyboardMouse) GetPromptBindings(InputAction action)
+    {
+        List<string> controller = new();
+        List<string> keyboardMouse = new();
+        for (int i = 0; i < action.bindings.Count; i++)
+        {
+            InputBinding binding = action.bindings[i];
+            if (binding.isPartOfComposite)
+            {
+                continue;
+            }
+
+            string path = binding.isComposite && i + 1 < action.bindings.Count
+                ? action.bindings[i + 1].path
+                : binding.path;
+            string label = action.GetBindingDisplayString(i);
+            if (!string.IsNullOrEmpty(label))
+            {
+                List<string> labels = InputControlPath.TryGetDeviceLayout(path) == nameof(Gamepad)
+                    ? controller
+                    : keyboardMouse;
+                labels.Add(label);
+            }
+        }
+
+        return (controller.Count == 0 ? "Unbound" : string.Join(" / ", controller),
+            keyboardMouse.Count == 0 ? "Unbound" : string.Join(" / ", keyboardMouse));
     }
 
     private void Start()
