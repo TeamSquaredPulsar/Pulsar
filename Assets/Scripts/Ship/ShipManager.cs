@@ -88,6 +88,14 @@ public class ShipManager : MonoBehaviour, IDamageable
         }
     }
 
+    public void TakeDamageAt(Vector2 point, float damage)
+    {
+        if (_gridData.TryGetClosestTile(point, out Tile tile))
+        {
+            tile.TakeDamage(damage);
+        }
+    }
+
     [Button]
     private void DebugKillShip()
     {
@@ -167,14 +175,6 @@ public class ShipManager : MonoBehaviour, IDamageable
         foreach (ManualWeapon weapon in _weapons)
         {
             weapon.Fire();
-        }
-    }
-
-    public void TakeDamageAt(Vector2 point, float damage)
-    {
-        if (_gridData.TryGetClosestTile(point, out Tile tile))
-        {
-            tile.TakeDamage(damage);
         }
     }
 
@@ -467,7 +467,7 @@ public class ShipManager : MonoBehaviour, IDamageable
 
     public void DetatchTile(Tile tile)
     {
-        if (!_gridData.ContainsCell(tile.Cell))
+        if (tile is IShipCore || !_gridData.ContainsCell(tile.Cell))
         {
             return;
         }

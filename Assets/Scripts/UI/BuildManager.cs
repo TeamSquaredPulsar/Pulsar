@@ -1,5 +1,6 @@
 using System.Collections;
 using Pulsar.DataClasses;
+using Pulsar.Interfaces;
 using Pulsar.Player;
 using Pulsar.Settings.Input;
 using Pulsar.Utilities;
@@ -165,6 +166,12 @@ public class BuildManager : MonoBehaviour
 
         if (_player.OwnsTile(_selectedTile))
         {
+            if (_selectedTile is IShipCore)
+            {
+                _selectedTile = null;
+                return;
+            }
+
             _detatchTileCoroutine
                 = StartCoroutine(DetatchTileTimer(_selectedTile));
             return;
