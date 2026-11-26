@@ -55,6 +55,16 @@ MonoBehaviour:
   enemyInfo: {fileID: 11400000, guid: 6ae6f0f976344938a83043949882cc1c, type: 2}
   shipManager: {fileID: 500316016107051698}
   rb: {fileID: 2633532515144847099}
+  movePID:
+    kP: 1
+    kD: 1.2
+    kI: 0
+    IntegralWindup: 1
+  turnPID:
+    kP: 0.08
+    kD: 0.04
+    kI: 0.001
+    IntegralWindup: 1
 --- !u!114 &500316016107051698
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -70,11 +80,10 @@ MonoBehaviour:
   compositeCollider: {fileID: 1255473932070963918}
   rb: {fileID: 2633532515144847099}
   thrusterManager: {fileID: 6106752217416643590}
-  weapons: []
-  thrusters: []
+  impactEffectPrefab: {fileID: 6933643990070309434, guid: 7bed20b6b4651ae43bab60f1cb86135e, type: 3}
   detachRadiateLinearVelocity: {x: 2, y: 5}
   detachRadiateAngularVelocity: {x: -180, y: 180}
-  CollisionDmgMultiplier: 0.5
+  collisionDmgMultiplier: 0.5
 --- !u!114 &6106752217416643590
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -88,9 +97,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ThrusterManager
   rb: {fileID: 2633532515144847099}
-  coreThrust: 2
-  rotationalThrust: 2
-  rotationScaler: 1
 --- !u!50 &2633532515144847099
 Rigidbody2D:
   serializedVersion: 5

@@ -26,6 +26,9 @@ public class ShipManager : MonoBehaviour, IDamageable
     [SerializeField]
     private ThrusterManager thrusterManager;
 
+    [SerializeField]
+    private ParticleSystem impactEffectPrefab;
+
     [Header("Detach Explosion")]
     [SerializeField]
     private Vector2 detachRadiateLinearVelocity = new(2f, 5f);
@@ -44,12 +47,6 @@ public class ShipManager : MonoBehaviour, IDamageable
     public IShipCore Core => _gridData.Core;
 
     public IReadOnlyDictionary<Vector2Int, Tile> Cells => _gridData.Cells;
-
-    public Vector2 GetMaxLocalAccel(Vector2 localDir) =>
-        thrusterManager.GetMaxLocalAccel(localDir);
-
-    public float GetMaxAngleAccelDeg() =>
-        thrusterManager.GetMaxAngularAccelDeg();
 
     private void Start()
     {
@@ -81,6 +78,9 @@ public class ShipManager : MonoBehaviour, IDamageable
             float relativeVelocity = other.relativeVelocity.magnitude;
             float damage = CalculateDmgFromOtherShip(ship, relativeVelocity);
             tile.TakeDamage(damage);
+            ContactPoint2D contact = other.GetContact(contactPointIndex);
+            Instantiate(impactEffectPrefab, contact.point,
+                Quaternion.LookRotation(Vector3.forward, contact.normal));
         }
         else if (other.gameObject.TryGetComponent(
                      out ExplosiveProjectile explosiveProjectile))
@@ -101,6 +101,12 @@ public class ShipManager : MonoBehaviour, IDamageable
             tile.TakeDamage(damage);
         }
     }
+
+    public Vector2 GetMaxLocalAccel(Vector2 localDir) =>
+        thrusterManager.GetMaxLocalAccel(localDir);
+
+    public float GetMaxAngleAccelDeg() =>
+        thrusterManager.GetMaxAngularAccelDeg();
 
     [Button]
     private void DebugKillShip()

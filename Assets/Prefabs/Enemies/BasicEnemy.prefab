@@ -86,6 +86,16 @@ MonoBehaviour:
   enemyInfo: {fileID: 11400000, guid: 5e1657929b5b4d998ca60905e22a3b08, type: 2}
   shipManager: {fileID: 8839766604302627257}
   rb: {fileID: 2776980645195997529}
+  movePID:
+    kP: 1
+    kD: 1.2
+    kI: 0
+    IntegralWindup: 1
+  turnPID:
+    kP: 0.08
+    kD: 0.04
+    kI: 0.001
+    IntegralWindup: 1
 --- !u!114 &8839766604302627257
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -101,6 +111,7 @@ MonoBehaviour:
   compositeCollider: {fileID: 2214052083980208980}
   rb: {fileID: 2776980645195997529}
   thrusterManager: {fileID: 8617872407729157336}
+  impactEffectPrefab: {fileID: 6933643990070309434, guid: 7bed20b6b4651ae43bab60f1cb86135e, type: 3}
   detachRadiateLinearVelocity: {x: 2, y: 5}
   detachRadiateAngularVelocity: {x: -180, y: 180}
   collisionDmgMultiplier: 0.5
@@ -193,22 +204,8 @@ CompositeCollider2D:
         Y: -15000000
       - X: 5000000
         Y: -15000000
-  - m_Collider: {fileID: 8965433384379521159}
-    m_ColliderPaths:
-    - - X: 5000000
-        Y: 15000000
-      - X: -5000000
-        Y: 15000000
-      - X: -5000000
-        Y: 5000000
-      - X: 5000000
-        Y: 5000000
   m_CompositePaths:
     m_Paths:
-    - - {x: 0.4999707, y: 0.5}
-      - {x: 0.4999707, y: 1.5}
-      - {x: -0.5, y: 1.4999707}
-      - {x: -0.4999707, y: 0.5}
     - - {x: 0.4999707, y: -1.5}
       - {x: 0.4999707, y: -0.5}
       - {x: -0.5, y: -0.5000293}
@@ -344,11 +341,6 @@ MonoBehaviour:
 --- !u!4 &3820188549360669812 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 1283674777054792067, guid: aa5c391c67940fe428fad2e4cebfb98c, type: 3}
-  m_PrefabInstance: {fileID: 2653902581634604535}
-  m_PrefabAsset: {fileID: 0}
---- !u!61 &8965433384379521159 stripped
-BoxCollider2D:
-  m_CorrespondingSourceObject: {fileID: 6394848136817018224, guid: aa5c391c67940fe428fad2e4cebfb98c, type: 3}
   m_PrefabInstance: {fileID: 2653902581634604535}
   m_PrefabAsset: {fileID: 0}
 --- !u!1001 &6312083904909966269

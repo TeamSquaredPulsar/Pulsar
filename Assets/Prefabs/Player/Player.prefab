@@ -77,6 +77,7 @@ MonoBehaviour:
   compositeCollider: {fileID: 70888490315140228}
   rb: {fileID: 8716755017154123671}
   thrusterManager: {fileID: 8893891361912782109}
+  impactEffectPrefab: {fileID: 6933643990070309434, guid: 7bed20b6b4651ae43bab60f1cb86135e, type: 3}
   detachRadiateLinearVelocity: {x: 2, y: 5}
   detachRadiateAngularVelocity: {x: -180, y: 180}
   collisionDmgMultiplier: 0.5
@@ -97,6 +98,7 @@ MonoBehaviour:
   ghostPreview: {fileID: 1592938529912175414}
   scanPadding: 1
   selectedTint: {r: 0.3, g: 1, b: 0.8, a: 1}
+  detachTint: {r: 1, g: 0, b: 0, a: 1}
   pullSpeed: 20
   tileDetatchSeconds: 1
 --- !u!114 &8893891361912782109
