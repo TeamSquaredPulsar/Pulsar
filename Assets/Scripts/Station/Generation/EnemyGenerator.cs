@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.Linq;
+using JetBrains.Annotations;
 using Pulsar.DataClasses;
 using Pulsar.Stations.Guards;
 using Pulsar.Utilities;
@@ -17,7 +18,9 @@ namespace Pulsar.Stations.Generation
 public static class EnemyGenerator
 {
     private const int MaxLayoutAttempts = 8;
-    private const int SmallShipTiles = 5; // below this, one thruster instead of two
+
+    private const int
+        SmallShipTiles = 5; // below this, one thruster instead of two
 
     private static readonly TileRotation[] AllDirections =
     {
@@ -25,13 +28,7 @@ public static class EnemyGenerator
         TileRotation.Right,
     };
 
-    private sealed class PlannedTile
-    {
-        public GameObject Prefab;
-        public TileInfo Info;
-        public TileRotation Rotation;
-    }
-
+    [CanBeNull]
     public static EnemyGuardAI GenerateEnemy(
         StationProfile profile,
         int waveIndex,
@@ -44,27 +41,32 @@ public static class EnemyGenerator
         }
 
         WaveConfig wave = profile.waves[waveIndex];
-        int min = Mathf.Min(wave.minTiles, wave.maxTiles);
-        int max = Mathf.Max(wave.minTiles, wave.maxTiles);
-        int totalTiles = Random.Range(min, max + 1);
+        // StationProfile.OnValidate keeps maxTiles >= minTiles.
+        int totalTiles = Random.Range(wave.minTiles, wave.maxTiles + 1);
 
-        Dictionary<Vector2Int, PlannedTile> layout = null;
-        for (int attempt = 0; attempt < MaxLayoutAttempts; attempt++)
+        // The first try always runs, so layout is never null below.
+        bool hasGun = TryPlanLayout(profile, totalTiles,
+            out Dictionary<Vector2Int, PlannedTile> layout);
+        for (int attempt = 1; !hasGun && attempt < MaxLayoutAttempts; attempt++)
         {
-            layout = PlanLayout(profile, totalTiles, out bool hasGun);
-            if (hasGun)
-            {
-                break;
-            }
+            hasGun = TryPlanLayout(profile, totalTiles, out layout);
         }
 
-        GameObject shell = Object.Instantiate(profile.guardShellPrefab,
+        if (!hasGun)
+        {
+            Debug.LogWarning($"EnemyGenerator couldn't fit a gun on a " +
+                             $"{profile.name} guard after {MaxLayoutAttempts} tries; " +
+                             "it spawns without one.");
+        }
+
+        GameObject shell = GameObject.Instantiate(profile.guardShellPrefab,
             position, Quaternion.Euler(0f, 0f, rotationDegrees));
         shell.name = $"{profile.name} Guard (wave {waveIndex + 1})";
 
         foreach ((Vector2Int cell, PlannedTile planned) in layout)
         {
-            GameObject tile = Object.Instantiate(planned.Prefab, shell.transform);
+            GameObject tile
+                = GameObject.Instantiate(planned.Prefab, shell.transform);
             tile.transform.SetLocalPositionAndRotation(
                 ShipUtilities.GridToLocal(cell),
                 ShipUtilities.RotateQuarterOnZAxis(planned.Rotation.ToInt()));
@@ -85,12 +87,14 @@ public static class EnemyGenerator
         else if (profile.waves == null || waveIndex < 0 ||
                  waveIndex >= profile.waves.Length)
         {
-            problem = $"wave {waveIndex + 1} isn't in {profile.name}'s wave list";
+            problem
+                = $"wave {waveIndex + 1} isn't in {profile.name}'s wave list";
         }
         else if (!profile.guardShellPrefab ||
                  !profile.guardShellPrefab.GetComponent<EnemyGuardAI>())
         {
-            problem = $"{profile.name} needs a guard shell prefab with an EnemyGuardAI";
+            problem
+                = $"{profile.name} needs a guard shell prefab with an EnemyGuardAI";
         }
         else if (!profile.coreTilePrefab)
         {
@@ -112,10 +116,11 @@ public static class EnemyGenerator
 
     // layout
 
-    private static Dictionary<Vector2Int, PlannedTile> PlanLayout(
+    // True when the layout got at least one gun. Only trust layout when true.
+    private static bool TryPlanLayout(
         StationProfile profile,
         int totalTiles,
-        out bool hasGun)
+        out Dictionary<Vector2Int, PlannedTile> layout)
     {
         int guns = Mathf.Max(1, totalTiles / profile.tilesPerGun);
         int thrusters = profile.thrusterPrefab
@@ -123,13 +128,13 @@ public static class EnemyGenerator
             : 0;
         int bodyTiles = Mathf.Max(0, totalTiles - 1 - guns - thrusters);
 
-        Dictionary<Vector2Int, PlannedTile> layout = new();
+        layout = new Dictionary<Vector2Int, PlannedTile>();
         Place(layout, Vector2Int.zero, profile.coreTilePrefab, TileRotation.Up);
 
         GrowBody(profile, layout, bodyTiles);
-        hasGun = PlaceGuns(profile, layout, guns);
+        bool hasGun = PlaceGuns(profile, layout, guns);
         PlaceThrusters(profile, layout, thrusters);
-        return layout;
+        return hasGun;
     }
 
     private static void GrowBody(
@@ -182,7 +187,8 @@ public static class EnemyGenerator
             placed++;
 
             Vector2Int mirror = new(-cell.x, cell.y);
-            TileRotation mirrorRotation = useCorner ? MirrorX(rotation) : rotation;
+            TileRotation mirrorRotation
+                = useCorner ? MirrorX(rotation) : rotation;
             if (cell.x != 0 && placed < count &&
                 CanPlace(layout, mirror, info, mirrorRotation))
             {
@@ -375,5 +381,12 @@ public static class EnemyGenerator
 
     private static T Pick<T>(IReadOnlyList<T> list) =>
         list[Random.Range(0, list.Count)];
+
+    private sealed class PlannedTile
+    {
+        public TileInfo Info;
+        public GameObject Prefab;
+        public TileRotation Rotation;
+    }
 }
 }
