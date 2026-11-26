@@ -465,8 +465,13 @@ public class ShipManager : MonoBehaviour, IDamageable
                 bestRot.Value));
     }
 
-    private void DetatchTile(Tile tile)
+    public void DetatchTile(Tile tile)
     {
+        if (!_gridData.ContainsCell(tile.Cell))
+        {
+            return;
+        }
+
         // Save the ship's motion so released tiles inherit it.
         Vector2 centerOfMass = rb.worldCenterOfMass;
         Vector2 linearVelocity = rb.linearVelocity;
