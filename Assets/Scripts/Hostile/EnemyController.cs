@@ -1,8 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
+using NaughtyAttributes;
 using Pulsar.Player;
 using Pulsar.Ship;
+using Pulsar.Utilities;
 using UnityEngine;
+using UnityEngine.Serialization;
 using Random = UnityEngine.Random;
 
 [RequireComponent(typeof(ShipManager))]
@@ -31,8 +34,24 @@ public class EnemyController : MonoBehaviour
 
     private static readonly HashSet<EnemyController> _activeEnemies = new();
 
+    private readonly PIDController _moveXPID = new();
+    private readonly PIDController _moveYPID = new();
+    private readonly PIDController _turnPID = new();
+
     [SerializeField]
     private Rigidbody2D rb;
+
+    [FormerlySerializedAs("_movePID")]
+    [Header("PID Tuning")]
+    [Tooltip("Movement positioning/breaking strength")]
+    [AllowNesting]
+    [SerializeField]
+    private PIDParams movePID = new(1.0f, 1.2f, 0f);
+
+    [Tooltip("Turning positioning/breaking strength")]
+    [AllowNesting]
+    [SerializeField]
+    private PIDParams turnPID = new(0.08f, 0.04f, .001f);
 
     // TODO: make this a boolean value with a coroutine to handle if you can fire or not
     private float _timeBtwShots;
@@ -111,6 +130,9 @@ public class EnemyController : MonoBehaviour
         rb.linearVelocity = Vector2.zero;
         rb.angularVelocity = 0f;
         transform.position = position;
+        _moveXPID.Reset();
+        _moveYPID.Reset();
+        _turnPID.Reset();
     }
 
     private void HandleShipDestroyed(ShipManager obj)
@@ -152,30 +174,52 @@ public class EnemyController : MonoBehaviour
 
     private void HandleMovement(Vector3 dirToPlayer, float distance)
     {
-        Vector3 desiredDir = Vector3.zero;
+        Vector3 targetOffset = Vector3.zero;
 
         if (distance > enemyInfo.stoppingDistance)
         {
-            desiredDir = dirToPlayer;
+            targetOffset
+                = dirToPlayer * (distance - enemyInfo.stoppingDistance);
         }
         else if (distance < enemyInfo.retreatDistance)
         {
-            desiredDir = -dirToPlayer;
+            targetOffset
+                = -dirToPlayer * (enemyInfo.retreatDistance - distance);
         }
 
         if (enemyInfo.driftAmount > 0f)
         {
-            bool holdingPosition = desiredDir == Vector3.zero;
-            desiredDir += CalculateDrift(dirToPlayer, holdingPosition);
+            bool holdingPosition = targetOffset == Vector3.zero;
+            targetOffset += CalculateDrift(dirToPlayer, holdingPosition);
         }
 
-        desiredDir += CalculateSeparation() * enemyInfo.separationStrength;
+        targetOffset += CalculateSeparation() * enemyInfo.separationStrength;
 
-        desiredDir = Vector3.ClampMagnitude(desiredDir, 1f) *
-                     Mathf.Clamp01(enemyInfo.speed);
+        //Finds the position error in local space
+        Vector2 localPosErr = transform.InverseTransformDirection(targetOffset);
+        Vector2 localVel
+            = transform.InverseTransformDirection(rb.linearVelocity);
 
-        Vector2 localDir = transform.InverseTransformDirection(desiredDir);
-        shipManager.Move(localDir);
+        //How effective the brakes are based on the current speed
+        Vector2 curBrakeStrength = new(-Mathf.Sign(localVel.x),
+            -Mathf.Sign(localVel.y));
+        //Get the brake strength by taking max accel in the opposite dir
+        Vector2 maxBrake = shipManager.GetMaxLocalAccel(curBrakeStrength);
+
+        float brakeScaleX = maxBrake.x > MinDistance
+            ? 1f / Mathf.Sqrt(maxBrake.x)
+            : 1f;
+        float brakeScaleY = maxBrake.y > MinDistance
+            ? 1f / Mathf.Sqrt(maxBrake.y)
+            : 1f;
+
+        float dt = Time.fixedDeltaTime;
+        float inputX = _moveXPID.CalculateVelocity(
+            movePID, dt, localPosErr.x, localVel.x * brakeScaleX);
+        float inputY = _moveXPID.CalculateVelocity(
+            movePID, dt, localPosErr.y, localVel.y * brakeScaleY);
+
+        shipManager.Move(new Vector2(inputX, inputY));
     }
 
     // Smooth, rhythm-free wandering so enemies feel piloted, not on rails.
@@ -235,18 +279,21 @@ public class EnemyController : MonoBehaviour
 
     private void HandleRotation(Vector3 dirToPlayer)
     {
-        //TODO Replace this with a PID controller that turns through
-        //  shipManager.Rotate instead of setting angularVelocity directly
-        //-90f corrects rotation ONLY for this specific Band-Aid
-        float targetAngle = Mathf.Atan2(
-            dirToPlayer.y, dirToPlayer.x) * Mathf.Rad2Deg - 90f;
+        float targetAngle = Mathf.Atan2(dirToPlayer.y, dirToPlayer.x)
+            * Mathf.Rad2Deg - 90f;
 
-        float angleDiff = Mathf.DeltaAngle(rb.rotation, targetAngle);
+        float angleErr = Mathf.DeltaAngle(rb.rotation, targetAngle);
 
-        float desiredVelocity = angleDiff * TurnGain;
+        float maxAngAccel = shipManager.GetMaxAngleAccelDeg();
+        float angBrakeScale = maxAngAccel > 0.1f
+            ? 10f / Mathf.Sqrt(maxAngAccel)
+            : 1f;
 
-        rb.angularVelocity = Mathf.Clamp(desiredVelocity,
-            -enemyInfo.turnSpeed, enemyInfo.turnSpeed);
+        float rotInput = _turnPID.CalculateVelocity(
+            turnPID, Time.fixedDeltaTime, angleErr,
+            rb.angularVelocity * angBrakeScale);
+
+        shipManager.Rotate(rotInput);
     }
 
     private void HandleShooting(Vector3 dirToPlayer, float distance)

@@ -45,6 +45,12 @@ public class ShipManager : MonoBehaviour, IDamageable
 
     public IReadOnlyDictionary<Vector2Int, Tile> Cells => _gridData.Cells;
 
+    public Vector2 GetMaxLocalAccel(Vector2 localDir) =>
+        thrusterManager.GetMaxLocalAccel(localDir);
+
+    public float GetMaxAngleAccelDeg() =>
+        thrusterManager.GetMaxAngularAccelDeg();
+
     private void Start()
     {
         RefreshTiles();
