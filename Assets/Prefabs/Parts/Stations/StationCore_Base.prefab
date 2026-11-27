@@ -1,0 +1,57 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1001 &1882274363755738558
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: 497275641067805184, guid: 9d9b88b2fc3b2374c83c9e59dadfb864, type: 3}
+      propertyPath: m_Sprite
+      value: 
+      objectReference: {fileID: 3664508377564518669, guid: ccd260bd6930503996ad421630c92df3, type: 3}
+    - target: {fileID: 497275641067805184, guid: 9d9b88b2fc3b2374c83c9e59dadfb864, type: 3}
+      propertyPath: 'm_Materials.Array.data[0]'
+      value: 
+      objectReference: {fileID: 2100000, guid: c8284f9b17d0856479bc0d13a54c1f65, type: 2}
+    - target: {fileID: 3485646891177161118, guid: 9d9b88b2fc3b2374c83c9e59dadfb864, type: 3}
+      propertyPath: m_Name
+      value: StationCore_Base
+      objectReference: {fileID: 0}
+    - target: {fileID: 4175188780896644608, guid: 9d9b88b2fc3b2374c83c9e59dadfb864, type: 3}
+      propertyPath: spritesOverride
+      value: 
+      objectReference: {fileID: 11400000, guid: 3be6466652a734ece9ff3a46634d5cf1, type: 2}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 3485646891177161118, guid: 9d9b88b2fc3b2374c83c9e59dadfb864, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 4800227833913814084}
+  m_SourcePrefab: {fileID: 100100000, guid: 9d9b88b2fc3b2374c83c9e59dadfb864, type: 3}
+--- !u!212 &2087843939094704062 stripped
+SpriteRenderer:
+  m_CorrespondingSourceObject: {fileID: 497275641067805184, guid: 9d9b88b2fc3b2374c83c9e59dadfb864, type: 3}
+  m_PrefabInstance: {fileID: 1882274363755738558}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1 &3044626787464315936 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 3485646891177161118, guid: 9d9b88b2fc3b2374c83c9e59dadfb864, type: 3}
+  m_PrefabInstance: {fileID: 1882274363755738558}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &4800227833913814084
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3044626787464315936}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 204d63e2ba219d44397d42a4985bfbc1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Pulsar.Stations::Pulsar.Stations.StationTintable
+  spriteRenderer: {fileID: 2087843939094704062}

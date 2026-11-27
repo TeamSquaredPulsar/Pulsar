@@ -1,0 +1,66 @@
+using UnityEngine;
+
+namespace Pulsar.Hostile.Behaviors
+{
+/// <summary>
+/// Bombard: Move -> in range? -> Fire. No repositioning after firing:
+/// it holds its spot and keeps shooting while the player stays in range.
+/// </summary>
+public class BombardBehavior : EnemyCombatBehavior
+{
+    private enum State
+    {
+        Move,
+        Fire,
+    }
+
+    [Tooltip("Leaves the Fire state when the player gets this many times the shooting range away.")]
+    [Min(1f)]
+    [SerializeField]
+    private float leaveRangeFactor = 1.15f;
+
+    private State _state = State.Move;
+
+    public override string CurrentStateName => $"Bombard: {_state}";
+
+    public override void ResetCycle() => _state = State.Move;
+
+    public override void Tick(EnemyController enemy, Vector2 target, float deltaTime)
+    {
+        Vector2 toTarget = target - enemy.Position;
+        float distance = toTarget.magnitude;
+        enemy.Face(toTarget);
+
+        switch (_state)
+        {
+            case State.Move:
+                enemy.Steer(EnemyController.Direction(toTarget));
+                if (enemy.InRange(distance))
+                {
+                    _state = State.Fire;
+                }
+
+                break;
+
+            case State.Fire:
+                // Hold position (only backs off if the player rams it).
+                if (distance < enemy.Info.retreatDistance)
+                {
+                    enemy.Steer(-EnemyController.Direction(toTarget));
+                }
+                else
+                {
+                    enemy.Steer(Vector2.zero);
+                }
+
+                enemy.TryFire(toTarget);
+                if (distance > enemy.Info.shootingRange * leaveRangeFactor)
+                {
+                    _state = State.Move;
+                }
+
+                break;
+        }
+    }
+}
+}

@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.Serialization;
 
 [CreateAssetMenu(fileName = "NewEnemyInfo", menuName = "Pulsar/Enemy Info")]
 public class EnemyInfo : ScriptableObject
@@ -30,7 +31,9 @@ public class EnemyInfo : ScriptableObject
 
     public float separationStrength = 6f;
 
-    [Header("Scoring")]
+    [Header("Scoring & Pressure")]
+    [Tooltip("Points for killing this enemy, and how much pressure it puts on its station's maxPressure.")]
     [Min(1)]
-    public int PointsOnKill = 10;
+    [FormerlySerializedAs("PointsOnKill")]
+    public int PressureScore = 10;
 }
