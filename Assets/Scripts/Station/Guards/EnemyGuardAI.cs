@@ -355,7 +355,7 @@ public class EnemyGuardAI : MonoBehaviour
 
     private void HandleShipDestroyed(ShipManager _)
     {
-        int points = Info ? Info.PointsOnKill : 0;
+        int points = Info ? Info.PressureScore : 0;
         Defeated?.Invoke(this);
         GuardDefeatedEvent?.Invoke(this, points);
     }

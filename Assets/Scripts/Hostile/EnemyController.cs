@@ -59,6 +59,9 @@ public class EnemyController : MonoBehaviour
 
     public float Radius { get; private set; }
 
+    // Read-only, so a station can check a prefab's PressureScore before spawning it.
+    public EnemyInfo Info => enemyInfo;
+
     private void Awake()
     {
         if (!rb)
@@ -138,7 +141,7 @@ public class EnemyController : MonoBehaviour
     private void HandleShipDestroyed(ShipManager obj)
     {
         //Game manager will use this for score
-        EnemyDefeatedEvent?.Invoke(this, enemyInfo.PointsOnKill);
+        EnemyDefeatedEvent?.Invoke(this, enemyInfo.PressureScore);
     }
 
     private void GetPlayerDirection(out Vector3 dirToPlayer, out float distance)

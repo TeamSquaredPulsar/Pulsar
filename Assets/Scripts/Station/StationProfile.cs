@@ -158,6 +158,25 @@ public class StationProfile : ScriptableObject
     [field: Min(0f)]
     public float LoseInterestMargin { get; private set; } = 8f;
 
+    [field: Header("Enemies (pressure)")]
+    [field: SerializeField]
+    [field: Tooltip(
+        "The most pressure this station's living enemies can add up to. " +
+        "Each enemy counts its EnemyInfo's PressureScore.")]
+    [field: Min(1)]
+    public int MaxPressure { get; private set; } = 30;
+
+    [field: SerializeField]
+    [field: Tooltip(
+        "The hand-built enemy prefabs this station can send. It picks one " +
+        "at random from those whose PressureScore fits the room left.")]
+    public EnemyController[] EnemyPrefabs { get; private set; }
+
+    [field: SerializeField]
+    [field: Tooltip("Wait between two enemy spawns, in seconds.")]
+    [field: Min(0.1f)]
+    public float SecondsBetweenSpawns { get; private set; } = 1.5f;
+
     // Runs whenever a value changes in the Inspector. NaughtyAttributes'
     // [MinValue] can't reach inside WaveConfig, so the profile keeps each
     // wave's MaxTiles at or above its MinTiles here instead.

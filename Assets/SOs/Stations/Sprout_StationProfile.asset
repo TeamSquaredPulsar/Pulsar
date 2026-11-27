@@ -42,3 +42,8 @@ MonoBehaviour:
   <SecondsBetweenWaves>k__BackingField: 2
   <DetectionRange>k__BackingField: 25
   <LoseInterestMargin>k__BackingField: 8
+  <MaxPressure>k__BackingField: 30
+  <EnemyPrefabs>k__BackingField:
+  - {fileID: 2408445827146903298, guid: 9dc0c2dda0134b64e8cb399608f4b80b, type: 3}
+  - {fileID: 650936910112136055, guid: 50e6449a2b964d0caeada879ad16d0b7, type: 3}
+  <SecondsBetweenSpawns>k__BackingField: 1.5
