@@ -17,6 +17,6 @@ MonoBehaviour:
   patternSpread: 40
   maxWaveTime: 120
   entries:
-  - enemyPrefab: {fileID: 8188435154698411991, guid: 9dc0c2dda0134b64e8cb399608f4b80b, type: 3}
+  - enemyPrefab: {fileID: 4250311386059603739, guid: 9dc0c2dda0134b64e8cb399608f4b80b, type: 3}
     count: 2
     spawnInterval: 3
