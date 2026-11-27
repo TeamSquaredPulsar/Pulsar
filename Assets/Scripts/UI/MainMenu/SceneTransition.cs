@@ -1,6 +1,6 @@
-using System.Collections;
+using System;
+using System.Threading.Tasks;
 using UnityEngine;
-using UnityEngine.SceneManagement;
 
 namespace Pulsar.UI
 {
@@ -48,65 +48,54 @@ public class SceneTransition : MonoBehaviour
         }
     }
     
-    public static void LoadScene(string sceneName)
+    public static async Task Run(Func<Task> loadScene)
     {
         if (IsTransitioning)
         {
             return;
         }
 
-        if (Instance != null)
+        if (Instance == null)
         {
-            Instance.StartCoroutine(Instance.Transition(sceneName));
+            Create();
         }
+
+        if (Instance == null)
+        {
+            await loadScene();
+            return;
+        }
+
+        await Instance.Transition(loadScene);
     }
 
     private static void Create()
     {
         GameObject prefab = Resources.Load<GameObject>("SceneTransition");
+        if (prefab == null)
+        {
+            Debug.LogWarning("SceneTransition prefab could not be loaded.");
+            return;
+        }
+
         Instantiate(prefab);
     }
 
-    private IEnumerator Transition(string sceneName)
+    private async Task Transition(Func<Task> loadScene)
     {
         _isTransitioning = true;
         _overlayGroup.blocksRaycasts = true;
-        AsyncOperation loading = null;
         try
         {
-            yield return Fade(_overlayGroup.alpha, 1f);
-            yield return null;
-
-            loading = SceneManager.LoadSceneAsync(sceneName);
-            if (loading == null)
-            {
-                Debug.LogError($"Scene '{sceneName}' could not be loaded.");
-                yield break;
-            }
-
-            loading.allowSceneActivation = false;
-            while (loading.progress < 0.9f)
-            {
-                yield return null;
-            }
-
-            loading.allowSceneActivation = true;
-            while (!loading.isDone)
-            {
-                yield return null;
-            }
-
-            yield return null;
-            yield return null;
-            yield return Fade(1f, 0f);
+            await Fade(_overlayGroup.alpha, 1f);
+            await Awaitable.NextFrameAsync();
+            await loadScene();
+            await Awaitable.NextFrameAsync();
+            await Awaitable.NextFrameAsync();
+            await Fade(1f, 0f);
         }
         finally
         {
-            if (loading != null && !loading.isDone)
-            {
-                loading.allowSceneActivation = true;
-            }
-
             if (_overlayGroup != null)
             {
                 _overlayGroup.alpha = 0f;
@@ -117,13 +106,13 @@ public class SceneTransition : MonoBehaviour
         }
     }
 
-    private IEnumerator Fade(float from, float to)
+    private async Awaitable Fade(float from, float to)
     {
         _overlayGroup.alpha = from;
         float elapsed = 0f;
         while (elapsed < fadeDuration)
         {
-            yield return null;
+            await Awaitable.NextFrameAsync();
             elapsed += Mathf.Min(Time.unscaledDeltaTime, 1f / 30f);
             _overlayGroup.alpha = Mathf.SmoothStep(from, to, elapsed / fadeDuration);
         }

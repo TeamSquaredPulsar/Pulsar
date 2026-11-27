@@ -3,18 +3,12 @@ using UnityEngine;
 [CreateAssetMenu(fileName = "NewEnemyInfo", menuName = "Pulsar/Enemy Info")]
 public class EnemyInfo : ScriptableObject
 {
-    [Header("Movement")]
-    public float
-        speed = 4f; // Thrust throttle, 0 to 1 (same range as player input)
-
-    public float acceleration = 6f;
     public float stoppingDistance = 6f; // Stop approaching once this close
     public float retreatDistance = 3f; // Back away if closer than this
-    public float turnSpeed = 4f; // Max spin speed, degrees per second
 
     public float
         driftAmount
-            = 0.3f; // How strongly the ship wanders off its straight path (0 = never)
+            = 3f; // How strongly the ship wanders off its straight path (0 = never)
 
     public float
         weaveFrequency = 1.5f; // How quickly the wander changes direction

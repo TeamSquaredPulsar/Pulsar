@@ -528,7 +528,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 8.57, y: -1.95}
+  m_AnchoredPosition: {x: 9.6, y: -1.95}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &163821911
@@ -551,7 +551,11 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: "WASD to \nactivate thruster"
+  m_text: 'Activate thruster
+
+    Controller: {Controller.Move}
+
+    K&M: {KeyboardMouse.Move}'
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: e5d275e10c0a498479262265a2423103, type: 2}
   m_sharedMaterial: {fileID: 1362536636814517401, guid: e5d275e10c0a498479262265a2423103, type: 2}
@@ -665,7 +669,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 18.21, y: 58.14}
+  m_AnchoredPosition: {x: 18.21, y: 58}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &194066965
@@ -688,9 +692,12 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: 'Hold rightclick on your tile
+  m_text: 'Hold on your tile to detach
 
-    to deatch'
+    Controller: {Controller.SelectTile}
+
+    K&M:
+    {KeyboardMouse.SelectTile}'
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: e5d275e10c0a498479262265a2423103, type: 2}
   m_sharedMaterial: {fileID: 1362536636814517401, guid: e5d275e10c0a498479262265a2423103, type: 2}
@@ -902,7 +909,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 5.03, y: 50.97}
+  m_AnchoredPosition: {x: 2.55, y: 49.76}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &198275071
@@ -925,9 +932,14 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: 'Space/Leftclick to fire
+  m_text: 'Fire your weapons
 
-    Some weapons are autofiring'
+    Controller: {Controller.Shoot}
+
+    K&M: {KeyboardMouse.Shoot}
+
+    Some
+    weapons fire automatically'
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: e5d275e10c0a498479262265a2423103, type: 2}
   m_sharedMaterial: {fileID: 1362536636814517401, guid: e5d275e10c0a498479262265a2423103, type: 2}
@@ -1720,7 +1732,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 32.37, y: 43.33}
+  m_AnchoredPosition: {x: 29.2, y: 43.33}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &622258095
@@ -1743,7 +1755,12 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: "Rightclick on a floating tile \nto pull it into radial menu\n"
+  m_text: 'Select a floating tile
+
+    Controller: {Controller.SelectTile}
+
+    K&M:
+    {KeyboardMouse.SelectTile}'
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: e5d275e10c0a498479262265a2423103, type: 2}
   m_sharedMaterial: {fileID: 1362536636814517401, guid: e5d275e10c0a498479262265a2423103, type: 2}
@@ -2802,7 +2819,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -9.08, y: -4.43}
+  m_AnchoredPosition: {x: -11.3, y: -4.43}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &995806960
@@ -2825,7 +2842,11 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: "QE to \nrotate your ship"
+  m_text: 'Rotate your ship
+
+    Controller: {Controller.Rotate}
+
+    K&M: {KeyboardMouse.Rotate}'
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: e5d275e10c0a498479262265a2423103, type: 2}
   m_sharedMaterial: {fileID: 1362536636814517401, guid: e5d275e10c0a498479262265a2423103, type: 2}
@@ -3702,7 +3723,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 32.84, y: 53.37}
+  m_AnchoredPosition: {x: 31.4, y: 52}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1524579424
@@ -3725,9 +3746,15 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: 'CV to adjust selected tile rotation
+  m_text: 'Rotate the selected tile
 
-    and release key to attach'
+    Controller: {Controller.CCWRotateSelectedTile}
+    / {Controller.CWRotateSelectedTile}
+
+    K&M: {KeyboardMouse.CCWRotateSelectedTile}
+    / {KeyboardMouse.CWRotateSelectedTile}
+
+    Release to attach'
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: e5d275e10c0a498479262265a2423103, type: 2}
   m_sharedMaterial: {fileID: 1362536636814517401, guid: e5d275e10c0a498479262265a2423103, type: 2}

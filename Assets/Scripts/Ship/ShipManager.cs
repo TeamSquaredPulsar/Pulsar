@@ -45,6 +45,12 @@ public class ShipManager : MonoBehaviour, IDamageable
 
     public IReadOnlyDictionary<Vector2Int, Tile> Cells => _gridData.Cells;
 
+    public Vector2 GetMaxLocalAccel(Vector2 localDir) =>
+        thrusterManager.GetMaxLocalAccel(localDir);
+
+    public float GetMaxAngleAccelDeg() =>
+        thrusterManager.GetMaxAngularAccelDeg();
+
     private void Start()
     {
         RefreshTiles();
@@ -465,8 +471,13 @@ public class ShipManager : MonoBehaviour, IDamageable
                 bestRot.Value));
     }
 
-    private void DetatchTile(Tile tile)
+    public void DetatchTile(Tile tile)
     {
+        if (!_gridData.ContainsCell(tile.Cell))
+        {
+            return;
+        }
+
         // Save the ship's motion so released tiles inherit it.
         Vector2 centerOfMass = rb.worldCenterOfMass;
         Vector2 linearVelocity = rb.linearVelocity;
