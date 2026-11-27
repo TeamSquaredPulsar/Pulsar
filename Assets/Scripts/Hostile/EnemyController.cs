@@ -304,13 +304,12 @@ public class EnemyController : MonoBehaviour
 
     private void HandleShooting(Vector3 dirToPlayer, float distance)
     {
-        _timeBtwShots -= Time.deltaTime;
-        if (_timeBtwShots > 0f)
+        if (distance > enemyInfo.shootingRange + _rangeOffset)
         {
             return;
         }
 
-        if (distance > enemyInfo.shootingRange + _rangeOffset)
+        if (!shipManager.CanFireAnyWeapon())
         {
             return;
         }

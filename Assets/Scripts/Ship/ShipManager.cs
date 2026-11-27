@@ -168,6 +168,18 @@ public class ShipManager : MonoBehaviour, IDamageable
         }
     }
 
+    public bool CanFireAnyWeapon()
+    {
+        foreach (ManualWeapon weapon in _weapons)
+        {
+            if (weapon.CanFire)
+            {
+                return true;
+            }
+        }
+        return false;
+    }
+
     public void Fire()
     {
         foreach (ManualWeapon weapon in _weapons)
