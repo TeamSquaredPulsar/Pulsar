@@ -28,27 +28,12 @@ MonoBehaviour:
   - {fileID: 9181210680783823004, guid: 6107522afb8c499f90bf713e550ecb43, type: 3}
   - {fileID: 8104342031972818538, guid: 929a74155f7e4b7291d6c800572c02e8, type: 3}
   <SecondsBetweenSpawns>k__BackingField: 1.5
-  <GuardShellPrefab>k__BackingField: {fileID: 3722479682760468644, guid: 0daabebb9663a6302dc1f44bfb215f3c, type: 3}
-  <OwnWeaponPrefabs>k__BackingField:
-  - {fileID: 2402461002857692903, guid: aa5c391c67940fe428fad2e4cebfb98c, type: 3}
+  <GuardShellPrefab>k__BackingField: {fileID: 0}
+  <OwnWeaponPrefabs>k__BackingField: []
   <TilesPerGun>k__BackingField: 3
-  <CoreTilePrefab>k__BackingField: {fileID: 853613329568842311, guid: c3169d6f3bd6af648ee3ad47a681318f, type: 3}
-  <BodyTilePrefabs>k__BackingField:
-  - {fileID: 887873816545634613, guid: 4a4d58ae316601d7a2109f05f68668e3, type: 3}
-  - {fileID: 2412070543041256123, guid: dbd79840aa1073360aa6fad20b0817ae, type: 3}
-  - {fileID: 3580476736384035590, guid: 70bca88343bcd9ab8314383b349842f5, type: 3}
-  - {fileID: 4090344110039857417, guid: 1be13ffbd22f7f50cfbef5fa353c2d37, type: 3}
-  <CornerTilePrefabs>k__BackingField:
-  - {fileID: 3298680984989483682, guid: 91d6884b78847162950356b573281e98, type: 3}
+  <CoreTilePrefab>k__BackingField: {fileID: 0}
+  <BodyTilePrefabs>k__BackingField: []
+  <CornerTilePrefabs>k__BackingField: []
   <CornerChance>k__BackingField: 0.3
-  <ThrusterPrefab>k__BackingField: {fileID: 9113379072927920375, guid: d41f92095f77c0c419e9feb661d7963f, type: 3}
-  <Waves>k__BackingField:
-  - <GuardCount>k__BackingField: 3
-    <MinTiles>k__BackingField: 3
-    <MaxTiles>k__BackingField: 5
-  - <GuardCount>k__BackingField: 4
-    <MinTiles>k__BackingField: 5
-    <MaxTiles>k__BackingField: 7
-  - <GuardCount>k__BackingField: 5
-    <MinTiles>k__BackingField: 7
-    <MaxTiles>k__BackingField: 10
+  <ThrusterPrefab>k__BackingField: {fileID: 0}
+  <Waves>k__BackingField: []
