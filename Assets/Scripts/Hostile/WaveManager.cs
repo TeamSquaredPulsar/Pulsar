@@ -55,7 +55,19 @@ public class WaveManager : MonoBehaviour
     [SerializeField]
     private bool startWithoutGameState;
 
+    [Tooltip("Testing overlay: shows the wave phase and its countdown at the " +
+             "top of the Game view.")]
+    [SerializeField]
+    private bool showWaveTimer = true;
+
     private int _currentWave;
+
+    // What the wave timer overlay shows.
+    private enum WavePhase { NotStarted, Waiting, Spawning, Clearing, AllCleared }
+    private WavePhase _phase = WavePhase.NotStarted;
+    private float _phaseEndsAt;
+    private string _currentWaveName;
+    private GUIStyle _timerStyle;
 
     private Coroutine _awaitingWave;
     private Coroutine _runningWave;
@@ -134,6 +146,7 @@ public class WaveManager : MonoBehaviour
         _activeSources.Clear();
         _currentWave = 0;
         _started = false;
+        _phase = WavePhase.NotStarted;
     }
 
     private void HandleWaveComplete()
@@ -143,6 +156,7 @@ public class WaveManager : MonoBehaviour
         {
             //TODO: Victory screen.
             Debug.Log("Cleared all waves");
+            _phase = WavePhase.AllCleared;
             return;
         }
 
@@ -154,6 +168,7 @@ public class WaveManager : MonoBehaviour
         if (_currentWave >= stationWaves.Count)
         {
             Debug.Log("Cleared all waves");
+            _phase = WavePhase.AllCleared;
             return;
         }
 
@@ -162,6 +177,8 @@ public class WaveManager : MonoBehaviour
 
     private IEnumerator StartNextWaveAfterDelay()
     {
+        _phase = WavePhase.Waiting;
+        _phaseEndsAt = Time.time + waveDelaySeconds;
         yield return new WaitForSeconds(waveDelaySeconds);
         _awaitingWave = null;
         _runningWave = StartCoroutine(RunWave(stationWaves[_currentWave]));
@@ -198,12 +215,17 @@ public class WaveManager : MonoBehaviour
             }
         }
 
+        _currentWaveName = wave.waveName;
+        _phase = WavePhase.Spawning;
+        _phaseEndsAt = Time.time + wave.durationSeconds;
         yield return new WaitForSeconds(wave.durationSeconds);
 
         foreach (IWaveEnemySource source in _activeSources)
         {
             source.StopSpawning();
         }
+
+        _phase = WavePhase.Clearing;
 
         yield return new WaitUntil(() =>
         {
@@ -222,6 +244,48 @@ public class WaveManager : MonoBehaviour
         _activeSources.Clear();
         _runningWave = null;
         HandleWaveComplete();
+    }
+
+    private int CountAliveEnemies()
+    {
+        int alive = 0;
+        foreach (IWaveEnemySource source in _activeSources)
+        {
+            alive += source.AliveEnemies;
+        }
+
+        return alive;
+    }
+
+    // Testing overlay: the wave phase and its countdown, top centre of the Game view.
+    private void OnGUI()
+    {
+        if (!showWaveTimer || _phase == WavePhase.NotStarted)
+        {
+            return;
+        }
+
+        int secondsLeft = Mathf.Max(0, Mathf.CeilToInt(_phaseEndsAt - Time.time));
+        int waveNumber = _currentWave + 1;
+
+        string text = _phase switch
+        {
+            WavePhase.Waiting => $"Next wave in {secondsLeft}s",
+            WavePhase.Spawning => $"Wave {waveNumber} ({_currentWaveName}): {secondsLeft}s left",
+            WavePhase.Clearing => $"Wave {waveNumber}: kill the rest ({CountAliveEnemies()} enemies left)",
+            WavePhase.AllCleared => "All waves cleared",
+            _ => string.Empty
+        };
+
+        _timerStyle ??= new GUIStyle(GUI.skin.label)
+        {
+            fontSize = 28,
+            fontStyle = FontStyle.Bold,
+            alignment = TextAnchor.UpperCenter,
+            normal = { textColor = Color.white }
+        };
+
+        GUI.Label(new Rect(0, 20, Screen.width, 50), text, _timerStyle);
     }
 }
 }
