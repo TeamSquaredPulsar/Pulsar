@@ -1,6 +1,6 @@
 using UnityEngine;
 
-namespace Pulsar.Stations.Guards
+namespace Pulsar.Hostile.Behaviors
 {
 /// <summary>
 /// Fighter (Connor's design): strafing runs in a figure 8 centred on the player.
@@ -10,7 +10,7 @@ namespace Pulsar.Stations.Guards
 /// Loop: swings around to face the player again. Each loop turns the opposite way
 /// to the last one (left, then right), which is what draws the 8 instead of a circle.
 /// </summary>
-public class FighterBehavior : GuardCombatBehavior
+public class FighterBehavior : EnemyCombatBehavior
 {
     [Tooltip(
         "Starts the pass (flies on through) once it's this close to the player.")]
@@ -60,42 +60,42 @@ public class FighterBehavior : GuardCombatBehavior
     }
 
     public override void Tick(
-        EnemyGuardAI guard,
+        EnemyController enemy,
         Vector2 target,
         float deltaTime)
     {
-        Vector2 toTarget = target - guard.Position;
+        Vector2 toTarget = target - enemy.Position;
         float distance = toTarget.magnitude;
-        Vector2 direction = EnemyGuardAI.Direction(toTarget);
+        Vector2 direction = EnemyController.Direction(toTarget);
 
         switch (_state)
         {
             case State.AttackRun:
-                guard.Face(toTarget);
-                guard.Steer(direction);
-                if (guard.InRange(distance))
+                enemy.Face(toTarget);
+                enemy.Steer(direction);
+                if (enemy.InRange(distance))
                 {
-                    guard.TryFire(toTarget);
+                    enemy.TryFire(toTarget);
                 }
 
                 // Close enough, or it's in range but already moving away
                 // (it went past to one side): fly on through.
-                bool missed = guard.InRange(distance) &&
+                bool missed = enemy.InRange(distance) &&
                               distance > _lastDistance;
                 if (distance <= passDistance || missed)
                 {
                     _heading = direction.sqrMagnitude > 0f
                         ? direction
-                        : guard.Forward;
+                        : enemy.Forward;
                     _state = State.Pass;
                 }
 
                 break;
 
             case State.Pass:
-                guard.Face(_heading);
-                guard.Steer(_heading);
-                if (distance >= guard.Info.shootingRange * breakAwayFactor)
+                enemy.Face(_heading);
+                enemy.Steer(_heading);
+                if (distance >= enemy.Info.shootingRange * breakAwayFactor)
                 {
                     _loopSide = -_loopSide;
                     _loopTimer = maxLoopSeconds;
@@ -107,8 +107,8 @@ public class FighterBehavior : GuardCombatBehavior
             case State.Loop:
                 _heading = Rotate(_heading,
                     loopDegreesPerSecond * _loopSide * deltaTime);
-                guard.Face(_heading);
-                guard.Steer(_heading);
+                enemy.Face(_heading);
+                enemy.Steer(_heading);
                 _loopTimer -= deltaTime;
                 if (Vector2.Angle(_heading, toTarget) <= lineUpDegrees ||
                     _loopTimer <= 0f)

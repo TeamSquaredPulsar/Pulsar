@@ -72,9 +72,7 @@ public static class EnemyGenerator
                 ShipUtilities.RotateQuarterOnZAxis(planned.Rotation.ToInt()));
         }
 
-        EnemyGuardAI guard = shell.GetComponent<EnemyGuardAI>();
-        guard.PickRandomBehavior();
-        return guard;
+        return shell.GetComponent<EnemyGuardAI>();
     }
 
     private static bool IsUsable(StationProfile profile, int waveIndex)

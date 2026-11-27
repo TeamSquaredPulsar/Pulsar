@@ -1,6 +1,6 @@
 using UnityEngine;
 
-namespace Pulsar.Stations.Guards
+namespace Pulsar.Hostile.Behaviors
 {
 /// <summary>
 /// Orbit: Move -> InRange check -> Fire -> Reposition -> back to the InRange
@@ -8,7 +8,7 @@ namespace Pulsar.Stations.Guards
 /// slides part of the way around the player at the same distance, so it stays
 /// close and keeps circling.
 /// </summary>
-public class OrbitBehavior : GuardCombatBehavior
+public class OrbitBehavior : EnemyCombatBehavior
 {
     private enum State
     {
@@ -42,17 +42,17 @@ public class OrbitBehavior : GuardCombatBehavior
 
     public override void ResetCycle() => _state = State.Move;
 
-    public override void Tick(EnemyGuardAI guard, Vector2 target, float deltaTime)
+    public override void Tick(EnemyController enemy, Vector2 target, float deltaTime)
     {
-        Vector2 toTarget = target - guard.Position;
+        Vector2 toTarget = target - enemy.Position;
         float distance = toTarget.magnitude;
-        guard.Face(toTarget);
+        enemy.Face(toTarget);
 
         switch (_state)
         {
             case State.Move:
-                guard.KeepDistance(toTarget, distance);
-                if (guard.InRange(distance))
+                enemy.KeepDistance(toTarget, distance);
+                if (enemy.InRange(distance))
                 {
                     _state = State.InRange;
                 }
@@ -61,8 +61,8 @@ public class OrbitBehavior : GuardCombatBehavior
 
             case State.InRange:
                 // Stays in this loop: if the player slipped out of range, close in again here.
-                guard.KeepDistance(toTarget, distance);
-                if (guard.InRange(distance))
+                enemy.KeepDistance(toTarget, distance);
+                if (enemy.InRange(distance))
                 {
                     _state = State.Fire;
                 }
@@ -70,12 +70,12 @@ public class OrbitBehavior : GuardCombatBehavior
                 break;
 
             case State.Fire:
-                guard.KeepDistance(toTarget, distance);
-                if (guard.TryFire(toTarget))
+                enemy.KeepDistance(toTarget, distance);
+                if (enemy.TryFire(toTarget))
                 {
-                    StartReposition(guard, toTarget, distance);
+                    StartReposition(enemy, toTarget, distance);
                 }
-                else if (!guard.InRange(distance))
+                else if (!enemy.InRange(distance))
                 {
                     _state = State.InRange;
                 }
@@ -88,8 +88,8 @@ public class OrbitBehavior : GuardCombatBehavior
                 Vector2 spot = target +
                                new Vector2(Mathf.Cos(radians), Mathf.Sin(radians)) *
                                _spotDistance;
-                Vector2 toSpot = spot - guard.Position;
-                guard.Steer(EnemyGuardAI.Direction(toSpot));
+                Vector2 toSpot = spot - enemy.Position;
+                enemy.Steer(EnemyController.Direction(toSpot));
                 _repositionTimer -= deltaTime;
                 if (toSpot.magnitude <= arriveDistance || _repositionTimer <= 0f)
                 {
@@ -100,15 +100,15 @@ public class OrbitBehavior : GuardCombatBehavior
         }
     }
 
-    private void StartReposition(EnemyGuardAI guard, Vector2 toTarget, float distance)
+    private void StartReposition(EnemyController enemy, Vector2 toTarget, float distance)
     {
-        // Angle of this guard as seen from the player, then swing it around.
+        // Angle of this enemy as seen from the player, then swing it around.
         Vector2 fromTarget = -toTarget;
         float currentAngle = Mathf.Atan2(fromTarget.y, fromTarget.x) * Mathf.Rad2Deg;
         float side = Random.value < 0.5f ? -1f : 1f;
         _spotAngle = currentAngle + repositionDegrees * side;
-        _spotDistance = Mathf.Clamp(distance, guard.Info.retreatDistance,
-            guard.Info.shootingRange * 0.9f);
+        _spotDistance = Mathf.Clamp(distance, enemy.Info.retreatDistance,
+            enemy.Info.shootingRange * 0.9f);
         _repositionTimer = maxRepositionSeconds;
         _state = State.Reposition;
     }

@@ -46,6 +46,9 @@ GameObject:
   - component: {fileID: 8617872407729157336}
   - component: {fileID: 2776980645195997529}
   - component: {fileID: 2214052083980208980}
+  - component: {fileID: 7771376391412748998}
+  - component: {fileID: -7406458115257751047}
+  - component: {fileID: -4403916219412490517}
   m_Layer: 0
   m_Name: BasicEnemy
   m_TagString: Enemy
@@ -86,6 +89,17 @@ MonoBehaviour:
   enemyInfo: {fileID: 11400000, guid: 5e1657929b5b4d998ca60905e22a3b08, type: 2}
   shipManager: {fileID: 8839766604302627257}
   rb: {fileID: 2776980645195997529}
+  movePID:
+    kP: 1
+    kD: 1.2
+    kI: 0
+    IntegralWindup: 1
+  turnPID:
+    kP: 0.08
+    kD: 0.04
+    kI: 0.001
+    IntegralWindup: 1
+  currentBehavior: 
 --- !u!114 &8839766604302627257
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -217,6 +231,51 @@ CompositeCollider2D:
   m_OffsetDistance: 0.00005
   m_UseDelaunayMesh: 0
   m_CompositeGameObject: {fileID: 8188435154698411991}
+--- !u!114 &7771376391412748998
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8188435154698411991}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 363977278bbe0ec1be668bdb7e06063f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Pulsar.Hostile::Pulsar.Hostile.Behaviors.OrbitBehavior
+  repositionDegrees: 60
+  arriveDistance: 1.5
+  maxRepositionSeconds: 3
+--- !u!114 &-7406458115257751047
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8188435154698411991}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4152288af1fb746f16fbcaea0524774e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Pulsar.Hostile::Pulsar.Hostile.Behaviors.FighterBehavior
+  passDistance: 2.5
+  breakAwayFactor: 1.25
+  loopDegreesPerSecond: 90
+  lineUpDegrees: 15
+  maxLoopSeconds: 6
+--- !u!114 &-4403916219412490517
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8188435154698411991}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 37b20f7aaa1cd95a9d0dbfb49b6e72e6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Pulsar.Hostile::Pulsar.Hostile.Behaviors.BombardBehavior
+  leaveRangeFactor: 1.15
 --- !u!1 &8853298268631309733
 GameObject:
   m_ObjectHideFlags: 0

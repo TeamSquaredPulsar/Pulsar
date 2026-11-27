@@ -1,12 +1,12 @@
 using UnityEngine;
 
-namespace Pulsar.Stations.Guards
+namespace Pulsar.Hostile.Behaviors
 {
 /// <summary>
 /// Bombard: Move -> in range? -> Fire. No repositioning after firing:
 /// it holds its spot and keeps shooting while the player stays in range.
 /// </summary>
-public class BombardBehavior : GuardCombatBehavior
+public class BombardBehavior : EnemyCombatBehavior
 {
     private enum State
     {
@@ -25,17 +25,17 @@ public class BombardBehavior : GuardCombatBehavior
 
     public override void ResetCycle() => _state = State.Move;
 
-    public override void Tick(EnemyGuardAI guard, Vector2 target, float deltaTime)
+    public override void Tick(EnemyController enemy, Vector2 target, float deltaTime)
     {
-        Vector2 toTarget = target - guard.Position;
+        Vector2 toTarget = target - enemy.Position;
         float distance = toTarget.magnitude;
-        guard.Face(toTarget);
+        enemy.Face(toTarget);
 
         switch (_state)
         {
             case State.Move:
-                guard.Steer(EnemyGuardAI.Direction(toTarget));
-                if (guard.InRange(distance))
+                enemy.Steer(EnemyController.Direction(toTarget));
+                if (enemy.InRange(distance))
                 {
                     _state = State.Fire;
                 }
@@ -44,17 +44,17 @@ public class BombardBehavior : GuardCombatBehavior
 
             case State.Fire:
                 // Hold position (only backs off if the player rams it).
-                if (distance < guard.Info.retreatDistance)
+                if (distance < enemy.Info.retreatDistance)
                 {
-                    guard.Steer(-EnemyGuardAI.Direction(toTarget));
+                    enemy.Steer(-EnemyController.Direction(toTarget));
                 }
                 else
                 {
-                    guard.Steer(Vector2.zero);
+                    enemy.Steer(Vector2.zero);
                 }
 
-                guard.TryFire(toTarget);
-                if (distance > guard.Info.shootingRange * leaveRangeFactor)
+                enemy.TryFire(toTarget);
+                if (distance > enemy.Info.shootingRange * leaveRangeFactor)
                 {
                     _state = State.Move;
                 }

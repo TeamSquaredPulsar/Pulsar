@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using NaughtyAttributes;
+using Pulsar.Hostile.Behaviors;
 using Pulsar.Player;
 using Pulsar.Ship;
 using Pulsar.Utilities;
@@ -53,14 +54,26 @@ public class EnemyController : MonoBehaviour
     [SerializeField]
     private PIDParams turnPID = new(0.08f, 0.04f, .001f);
 
+    [Header("Debug (read only)")]
+    [Tooltip("The combat behaviour this enemy kept, and its current state.")]
+    [SerializeField]
+    private string currentBehavior;
+
     // TODO: make this a boolean value with a coroutine to handle if you can fire or not
     private float _timeBtwShots;
     private float _weaveOffset;
+
+    // The one Fighter/Bombard/Orbit this enemy kept, or null to fight the
+    // old way (chase to stopping distance and hold).
+    private EnemyCombatBehavior _behavior;
 
     public float Radius { get; private set; }
 
     // Read-only, so a station can check a prefab's PressureScore before spawning it.
     public EnemyInfo Info => enemyInfo;
+
+    public Vector2 Position => rb.position;
+    public Vector2 Forward => transform.up;
 
     private void Awake()
     {
@@ -80,6 +93,33 @@ public class EnemyController : MonoBehaviour
         }
 
         shipManager.ShipDestroyedEvent += HandleShipDestroyed;
+        PickRandomBehavior();
+    }
+
+    // If this prefab carries combat behaviours, keeps one at random and
+    // removes the rest, so the same prefab can be a Fighter one game and an
+    // Orbit the next. With none, the enemy keeps its old chase-and-hold.
+    private void PickRandomBehavior()
+    {
+        EnemyCombatBehavior[] options
+            = GetComponents<EnemyCombatBehavior>();
+        if (options.Length == 0)
+        {
+            currentBehavior = "None (chase and hold)";
+            return;
+        }
+
+        _behavior = options[Random.Range(0, options.Length)];
+        foreach (EnemyCombatBehavior option in options)
+        {
+            if (option != _behavior)
+            {
+                Destroy(option);
+            }
+        }
+
+        _behavior.ResetCycle();
+        currentBehavior = _behavior.CurrentStateName;
     }
 
     private void Start()
@@ -98,6 +138,13 @@ public class EnemyController : MonoBehaviour
 
     private void Update()
     {
+        _timeBtwShots -= Time.deltaTime;
+        if (_behavior)
+        {
+            // The behaviour does its own shooting (TryFire) in FixedUpdate.
+            return;
+        }
+
         GetPlayerDirection(out Vector3 dirToPlayer, out float distance);
         HandleShooting(dirToPlayer, distance);
     }
@@ -106,6 +153,14 @@ public class EnemyController : MonoBehaviour
     // to the ship by physics, move in step with it instead of lagging behind.
     private void FixedUpdate()
     {
+        if (_behavior)
+        {
+            _behavior.Tick(this, PlayerController.PlayerPosition,
+                Time.fixedDeltaTime);
+            currentBehavior = _behavior.CurrentStateName;
+            return;
+        }
+
         GetPlayerDirection(out Vector3 dirToPlayer, out float distance);
         HandleMovement(dirToPlayer, distance);
         HandleRotation(dirToPlayer);
@@ -301,7 +356,7 @@ public class EnemyController : MonoBehaviour
 
     private void HandleShooting(Vector3 dirToPlayer, float distance)
     {
-        _timeBtwShots -= Time.deltaTime;
+        // (_timeBtwShots counts down in Update.)
         if (_timeBtwShots > 0f)
         {
             return;
@@ -320,5 +375,72 @@ public class EnemyController : MonoBehaviour
 
         shipManager.Fire();
         _timeBtwShots = enemyInfo.startTimeBtwShots;
+    }
+
+    // Tools for the combat behaviours (Fighter, Bombard, Orbit).
+
+    public static Vector2 Direction(Vector2 v) =>
+        v.sqrMagnitude > MinDistance * MinDistance
+            ? v.normalized
+            : Vector2.zero;
+
+    public bool InRange(float distance) =>
+        distance <= enemyInfo.shootingRange;
+
+    public bool IsAimedAt(Vector2 direction) =>
+        Vector2.Angle(Forward, direction) <= enemyInfo.aimTolerance;
+
+    // Fires every gun if the cooldown is over and it's aimed. True if it fired.
+    public bool TryFire(Vector2 toTarget)
+    {
+        if (_timeBtwShots > 0f || !IsAimedAt(toTarget))
+        {
+            return false;
+        }
+
+        shipManager.Fire();
+        _timeBtwShots = enemyInfo.startTimeBtwShots;
+        return true;
+    }
+
+    // Thrust toward a world direction (length 0..1 = throttle), plus the
+    // push away from nearby enemies so they don't stack on top of each other.
+    public void Steer(Vector2 worldDirection)
+    {
+        Vector2 separation = CalculateSeparation();
+        Vector2 desired = Vector2.ClampMagnitude(
+            worldDirection + separation * enemyInfo.separationStrength, 1f);
+        Vector2 local = transform.InverseTransformDirection(desired);
+        shipManager.Move(local);
+    }
+
+    // Approach to stopping distance, back off if too close, otherwise hold.
+    public void KeepDistance(Vector2 toTarget, float distance)
+    {
+        Vector2 direction = Direction(toTarget);
+        if (distance > enemyInfo.stoppingDistance)
+        {
+            Steer(direction);
+        }
+        else if (distance < enemyInfo.retreatDistance)
+        {
+            Steer(-direction);
+        }
+        else
+        {
+            Steer(Vector2.zero);
+        }
+    }
+
+    // Turns the nose toward a direction with the same PID turning as the
+    // old chase (HandleRotation).
+    public void Face(Vector2 direction)
+    {
+        if (direction.sqrMagnitude < MinDistance * MinDistance)
+        {
+            return;
+        }
+
+        HandleRotation(direction);
     }
 }

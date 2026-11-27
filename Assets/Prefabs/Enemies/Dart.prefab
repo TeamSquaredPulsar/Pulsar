@@ -14,6 +14,9 @@ GameObject:
   - component: {fileID: 6106752217416643590}
   - component: {fileID: 2633532515144847099}
   - component: {fileID: 1255473932070963918}
+  - component: {fileID: 2593411033366682295}
+  - component: {fileID: 3536313551092049435}
+  - component: {fileID: 7316669897113156305}
   m_Layer: 0
   m_Name: Dart
   m_TagString: Enemy
@@ -55,6 +58,17 @@ MonoBehaviour:
   enemyInfo: {fileID: 11400000, guid: 6ae6f0f976344938a83043949882cc1c, type: 2}
   shipManager: {fileID: 500316016107051698}
   rb: {fileID: 2633532515144847099}
+  movePID:
+    kP: 1
+    kD: 1.2
+    kI: 0
+    IntegralWindup: 1
+  turnPID:
+    kP: 0.08
+    kD: 0.04
+    kI: 0.001
+    IntegralWindup: 1
+  currentBehavior: 
 --- !u!114 &500316016107051698
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -70,11 +84,9 @@ MonoBehaviour:
   compositeCollider: {fileID: 1255473932070963918}
   rb: {fileID: 2633532515144847099}
   thrusterManager: {fileID: 6106752217416643590}
-  weapons: []
-  thrusters: []
   detachRadiateLinearVelocity: {x: 2, y: 5}
   detachRadiateAngularVelocity: {x: -180, y: 180}
-  CollisionDmgMultiplier: 0.5
+  collisionDmgMultiplier: 0.5
 --- !u!114 &6106752217416643590
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -88,9 +100,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ThrusterManager
   rb: {fileID: 2633532515144847099}
-  coreThrust: 2
-  rotationalThrust: 2
-  rotationScaler: 1
 --- !u!50 &2633532515144847099
 Rigidbody2D:
   serializedVersion: 5
@@ -163,6 +172,51 @@ CompositeCollider2D:
   m_OffsetDistance: 0.00005
   m_UseDelaunayMesh: 0
   m_CompositeGameObject: {fileID: 939562278696158235}
+--- !u!114 &2593411033366682295
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 939562278696158235}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 363977278bbe0ec1be668bdb7e06063f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Pulsar.Hostile::Pulsar.Hostile.Behaviors.OrbitBehavior
+  repositionDegrees: 60
+  arriveDistance: 1.5
+  maxRepositionSeconds: 3
+--- !u!114 &3536313551092049435
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 939562278696158235}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4152288af1fb746f16fbcaea0524774e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Pulsar.Hostile::Pulsar.Hostile.Behaviors.FighterBehavior
+  passDistance: 2.5
+  breakAwayFactor: 1.25
+  loopDegreesPerSecond: 90
+  lineUpDegrees: 15
+  maxLoopSeconds: 6
+--- !u!114 &7316669897113156305
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 939562278696158235}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 37b20f7aaa1cd95a9d0dbfb49b6e72e6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Pulsar.Hostile::Pulsar.Hostile.Behaviors.BombardBehavior
+  leaveRangeFactor: 1.15
 --- !u!1 &1357192934303483016
 GameObject:
   m_ObjectHideFlags: 0

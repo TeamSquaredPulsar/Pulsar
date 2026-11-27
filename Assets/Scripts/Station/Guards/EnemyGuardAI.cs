@@ -4,7 +4,6 @@ using NaughtyAttributes;
 using Pulsar.Ship;
 using Pulsar.Utilities;
 using UnityEngine;
-using Random = UnityEngine.Random;
 
 namespace Pulsar.Stations.Guards
 {
@@ -12,9 +11,8 @@ namespace Pulsar.Stations.Guards
 /// The brain of a station guard. Guards only patrol: they circle their home
 /// station, never chase the player and never shoot. Movement and turning use
 /// PID controllers (like EnemyController) through ShipManager.Move and Rotate.
-/// The combat tools further down (Steer, KeepDistance, TryFire...) are only
-/// still here because Fighter, Bombard and Orbit call them; they move to the
-/// wave enemies in the next step.
+/// (Fighter, Bombard and Orbit now belong to the wave enemies, in
+/// Hostile/Behaviors, driven by EnemyController.)
 /// </summary>
 [RequireComponent(typeof(ShipManager), typeof(Rigidbody2D))]
 public class EnemyGuardAI : MonoBehaviour
@@ -52,7 +50,6 @@ public class EnemyGuardAI : MonoBehaviour
     private SpaceStation _home;
     private float _patrolRadius;
     private float _patrolAngle;
-    private float _fireCooldown;
     private bool _ready;
 
     private readonly PIDController _moveXPID = new();
@@ -102,28 +99,6 @@ public class EnemyGuardAI : MonoBehaviour
         shipManager.ShipDestroyedEvent -= HandleShipDestroyed;
     }
 
-    // Keeps one of the combat behaviours on this ship at random and removes
-    // the others. Called by the EnemyGenerator when it builds the guard.
-    // Guards don't fight any more, so the kept one sits idle; this goes away
-    // with the generator once enemies are prefabs.
-    public void PickRandomBehavior()
-    {
-        GuardCombatBehavior[] options = GetComponents<GuardCombatBehavior>();
-        if (options.Length == 0)
-        {
-            return;
-        }
-
-        GuardCombatBehavior kept = options[Random.Range(0, options.Length)];
-        foreach (GuardCombatBehavior option in options)
-        {
-            if (option != kept)
-            {
-                Destroy(option);
-            }
-        }
-    }
-
     // Called by the station right after it spawns this guard.
     public void Init(
         SpaceStation home,
@@ -135,7 +110,6 @@ public class EnemyGuardAI : MonoBehaviour
         Info = info;
         _patrolRadius = patrolRadius;
         _patrolAngle = startAngleDegrees;
-        _fireCooldown = info ? info.startTimeBtwShots : 1f;
         Radius = EnemyController.CalculateRadius(transform);
         _ready = info;
         if (!info)
@@ -151,8 +125,6 @@ public class EnemyGuardAI : MonoBehaviour
         {
             return;
         }
-
-        _fireCooldown -= Time.fixedDeltaTime;
 
         if (!_home)
         {
@@ -212,60 +184,10 @@ public class EnemyGuardAI : MonoBehaviour
         shipManager.Move(new Vector2(inputX, inputY) * patrolThrottle);
     }
 
-    // tools for the combat behaviours
-
-    public static Vector2 Direction(Vector2 v) =>
+    private static Vector2 Direction(Vector2 v) =>
         v.sqrMagnitude > MinDistance * MinDistance
             ? v.normalized
             : Vector2.zero;
-
-    public bool InRange(float distance) => distance <= Info.shootingRange;
-
-    public bool IsAimedAt(Vector2 direction) =>
-        Vector2.Angle(Forward, direction) <= Info.aimTolerance;
-
-    // Fires every gun if the cooldown is over and it's aimed. True if it fired.
-    public bool TryFire(Vector2 toTarget)
-    {
-        if (_fireCooldown > 0f || !IsAimedAt(toTarget))
-        {
-            return false;
-        }
-
-        shipManager.Fire();
-        _fireCooldown = Info.startTimeBtwShots;
-        return true;
-    }
-
-    // Thrust toward a world direction (length 0..1 = throttle). Adds the push
-    // away from nearby guards so they don't stack on top of each other.
-    public void Steer(Vector2 worldDirection)
-    {
-        Vector2 desired = worldDirection +
-                          Separation() * Info.separationStrength;
-        desired = AvoidStation(Vector2.ClampMagnitude(desired, 1f));
-
-        Vector2 local = transform.InverseTransformDirection(desired);
-        shipManager.Move(local);
-    }
-
-    // Approach to stopping distance, back off if too close, otherwise hold.
-    public void KeepDistance(Vector2 toTarget, float distance)
-    {
-        Vector2 direction = Direction(toTarget);
-        if (distance > Info.stoppingDistance)
-        {
-            Steer(direction);
-        }
-        else if (distance < Info.retreatDistance)
-        {
-            Steer(-direction);
-        }
-        else
-        {
-            Steer(Vector2.zero);
-        }
-    }
 
     // Turns the nose toward a direction (same turning as EnemyController).
     public void Face(Vector2 direction)
