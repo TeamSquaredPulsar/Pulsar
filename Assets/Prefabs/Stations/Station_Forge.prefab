@@ -5736,9 +5736,10 @@ GameObject:
   m_Component:
   - component: {fileID: 2710230144867918070}
   - component: {fileID: 8619154561551768553}
-  - component: {fileID: 1229862637775853930}
+  - component: {fileID: 3543448956639035550}
+  - component: {fileID: 7236298690761880842}
   m_Layer: 0
-  m_Name: Dock_3_5
+  m_Name: Bay_3_5
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -5808,7 +5809,7 @@ SpriteRenderer:
   m_SortingLayer: 5
   m_SortingOrder: 0
   m_MaskInteraction: 0
-  m_Sprite: {fileID: 7031053161224002, guid: 8a33208b5f94e40f633bbbf9a16eb39f, type: 3}
+  m_Sprite: {fileID: -4186549636535331686, guid: 6b0a36d2b8534b509afd19b6d5156ed4, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -5818,7 +5819,7 @@ SpriteRenderer:
   m_SpriteTileMode: 0
   m_WasSpriteAssigned: 1
   m_SpriteSortPoint: 0
---- !u!60 &1229862637775853930
+--- !u!60 &3543448956639035550
 PolygonCollider2D:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -5864,13 +5865,23 @@ PolygonCollider2D:
   m_AutoTiling: 0
   m_Points:
     m_Paths:
-    - - {x: -0.375, y: 0.5}
-      - {x: -0.5, y: 0}
-      - {x: -0.5, y: -0.5}
+    - - {x: -0.5, y: 0.5}
+      - {x: 0.5, y: 0.5}
       - {x: 0.5, y: -0.5}
-      - {x: 0.5, y: 0.3125}
-      - {x: 0.3125, y: 0.5}
+      - {x: -0.5, y: -0.5}
   m_UseDelaunayMesh: 1
+--- !u!114 &7236298690761880842
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4704305446125149293}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 266a48936da3a734093ebdb3f8b50e07, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Pulsar.Stations::Pulsar.Stations.StationBay
 --- !u!1 &4784282985261545216
 GameObject:
   m_ObjectHideFlags: 0
@@ -6617,34 +6628,6 @@ CompositeCollider2D:
   m_GenerationType: 0
   m_EdgeRadius: 0
   m_ColliderPaths:
-  - m_Collider: {fileID: 1227107556001424824}
-    m_ColliderPaths:
-    - - X: -25000000
-        Y: 53125000
-      - X: -26875000
-        Y: 55000000
-      - X: -33750000
-        Y: 55000000
-      - X: -35000000
-        Y: 50000000
-      - X: -35000000
-        Y: 45000000
-      - X: -25000000
-        Y: 45000000
-  - m_Collider: {fileID: 1229862637775853930}
-    m_ColliderPaths:
-    - - X: 35000000
-        Y: 53125000
-      - X: 33125000
-        Y: 55000000
-      - X: 26250000
-        Y: 55000000
-      - X: 25000000
-        Y: 50000000
-      - X: 25000000
-        Y: 45000000
-      - X: 35000000
-        Y: 45000000
   - m_Collider: {fileID: 2482589795296091088}
     m_ColliderPaths:
     - - X: -25000000
@@ -7393,6 +7376,26 @@ CompositeCollider2D:
         Y: -55000000
       - X: 15000000
         Y: -55000000
+  - m_Collider: {fileID: 7107841776428636631}
+    m_ColliderPaths:
+    - - X: -25000000
+        Y: 55000000
+      - X: -35000000
+        Y: 55000000
+      - X: -35000000
+        Y: 45000000
+      - X: -25000000
+        Y: 45000000
+  - m_Collider: {fileID: 3543448956639035550}
+    m_ColliderPaths:
+    - - X: 35000000
+        Y: 55000000
+      - X: 25000000
+        Y: 55000000
+      - X: 25000000
+        Y: 45000000
+      - X: 35000000
+        Y: 45000000
   m_CompositePaths:
     m_Paths:
     - - {x: -1.3125108, y: -5.5}
@@ -7414,10 +7417,8 @@ CompositeCollider2D:
       - {x: 4.4999924, y: 1.6875076}
       - {x: 3.6874893, y: 2.5}
       - {x: 3.5, y: 2.5000293}
-      - {x: 3.4999924, y: 5.3125076}
-      - {x: 3.3124893, y: 5.5}
-      - {x: 2.6249948, y: 5.499979}
-      - {x: 2.5, y: 4.999997}
+      - {x: 3.499971, y: 5.5}
+      - {x: 2.5, y: 5.499971}
       - {x: 2.4999385, y: 2.6875618}
       - {x: 1.6874893, y: 3.5}
       - {x: 1.5, y: 3.5000296}
@@ -7428,10 +7429,8 @@ CompositeCollider2D:
       - {x: -1.5000294, y: 3.5}
       - {x: -1.6875076, y: 3.4999924}
       - {x: -2.5, y: 2.6875875}
-      - {x: -2.5000076, y: 5.3125076}
-      - {x: -2.6875107, y: 5.5}
-      - {x: -3.3750052, y: 5.499979}
-      - {x: -3.5, y: 4.999997}
+      - {x: -2.5000293, y: 5.5}
+      - {x: -3.5, y: 5.499971}
       - {x: -3.5000296, y: 2.5}
       - {x: -3.6875076, y: 2.4999924}
       - {x: -4.5, y: 1.6874893}
@@ -7465,6 +7464,8 @@ MonoBehaviour:
   ringScale: 1.8
   enemySpawnGap: 3
   spawnClearance: 1
+  bayGap: 0.25
+  launchSeconds: 1
   currentPressure: 0
 --- !u!1 &5245630178439077642
 GameObject:
@@ -9196,9 +9197,10 @@ GameObject:
   m_Component:
   - component: {fileID: 5397682627615629776}
   - component: {fileID: 6864008690948711348}
-  - component: {fileID: 1227107556001424824}
+  - component: {fileID: 7107841776428636631}
+  - component: {fileID: 2464115040627211635}
   m_Layer: 0
-  m_Name: Dock_-3_5
+  m_Name: Bay_-3_5
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -9268,7 +9270,7 @@ SpriteRenderer:
   m_SortingLayer: 5
   m_SortingOrder: 0
   m_MaskInteraction: 0
-  m_Sprite: {fileID: 7031053161224002, guid: 8a33208b5f94e40f633bbbf9a16eb39f, type: 3}
+  m_Sprite: {fileID: -4186549636535331686, guid: 6b0a36d2b8534b509afd19b6d5156ed4, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -9278,7 +9280,7 @@ SpriteRenderer:
   m_SpriteTileMode: 0
   m_WasSpriteAssigned: 1
   m_SpriteSortPoint: 0
---- !u!60 &1227107556001424824
+--- !u!60 &7107841776428636631
 PolygonCollider2D:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -9324,13 +9326,23 @@ PolygonCollider2D:
   m_AutoTiling: 0
   m_Points:
     m_Paths:
-    - - {x: -0.375, y: 0.5}
-      - {x: -0.5, y: 0}
-      - {x: -0.5, y: -0.5}
+    - - {x: -0.5, y: 0.5}
+      - {x: 0.5, y: 0.5}
       - {x: 0.5, y: -0.5}
-      - {x: 0.5, y: 0.3125}
-      - {x: 0.3125, y: 0.5}
+      - {x: -0.5, y: -0.5}
   m_UseDelaunayMesh: 1
+--- !u!114 &2464115040627211635
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6710036503991391781}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 266a48936da3a734093ebdb3f8b50e07, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Pulsar.Stations::Pulsar.Stations.StationBay
 --- !u!1 &6842150071505588585
 GameObject:
   m_ObjectHideFlags: 0

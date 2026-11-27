@@ -4448,9 +4448,10 @@ GameObject:
   m_Component:
   - component: {fileID: 8177622484824118512}
   - component: {fileID: 237482196474898914}
-  - component: {fileID: 274970185726500440}
+  - component: {fileID: 5972803921233703604}
+  - component: {fileID: 8874987877532581191}
   m_Layer: 0
-  m_Name: Dock_0_7
+  m_Name: Bay_0_7
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -4520,7 +4521,7 @@ SpriteRenderer:
   m_SortingLayer: 5
   m_SortingOrder: 0
   m_MaskInteraction: 0
-  m_Sprite: {fileID: -1146789726287424196, guid: 95914d4c7ae512c17370df65f63edf71, type: 3}
+  m_Sprite: {fileID: -4186549636535331686, guid: 6b0a36d2b8534b509afd19b6d5156ed4, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -4530,7 +4531,7 @@ SpriteRenderer:
   m_SpriteTileMode: 0
   m_WasSpriteAssigned: 1
   m_SpriteSortPoint: 0
---- !u!60 &274970185726500440
+--- !u!60 &5972803921233703604
 PolygonCollider2D:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -4576,13 +4577,23 @@ PolygonCollider2D:
   m_AutoTiling: 0
   m_Points:
     m_Paths:
-    - - {x: -0.375, y: 0.5}
-      - {x: -0.5, y: 0}
-      - {x: -0.5, y: -0.5}
+    - - {x: -0.5, y: 0.5}
+      - {x: 0.5, y: 0.5}
       - {x: 0.5, y: -0.5}
-      - {x: 0.5, y: 0.3125}
-      - {x: 0.3125, y: 0.5}
+      - {x: -0.5, y: -0.5}
   m_UseDelaunayMesh: 1
+--- !u!114 &8874987877532581191
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4881260543022389058}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 266a48936da3a734093ebdb3f8b50e07, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Pulsar.Stations::Pulsar.Stations.StationBay
 --- !u!1 &5195678671695080632
 GameObject:
   m_ObjectHideFlags: 0
@@ -4882,20 +4893,6 @@ CompositeCollider2D:
   m_GenerationType: 0
   m_EdgeRadius: 0
   m_ColliderPaths:
-  - m_Collider: {fileID: 274970185726500440}
-    m_ColliderPaths:
-    - - X: 5000000
-        Y: 73125000
-      - X: 3125000
-        Y: 75000000
-      - X: -3750000
-        Y: 75000000
-      - X: -5000000
-        Y: 70000000
-      - X: -5000000
-        Y: 65000000
-      - X: 5000000
-        Y: 65000000
   - m_Collider: {fileID: 778909531631749985}
     m_ColliderPaths:
     - - X: -5000000
@@ -5474,6 +5471,16 @@ CompositeCollider2D:
         Y: -65000000
       - X: 3750000
         Y: -65000000
+  - m_Collider: {fileID: 5972803921233703604}
+    m_ColliderPaths:
+    - - X: 5000000
+        Y: 75000000
+      - X: -5000000
+        Y: 75000000
+      - X: -5000000
+        Y: 65000000
+      - X: 5000000
+        Y: 65000000
   m_CompositePaths:
     m_Paths:
     - - {x: 0.37498, y: -6.5}
@@ -5512,10 +5519,8 @@ CompositeCollider2D:
       - {x: 1.4999924, y: 5.6875076}
       - {x: 0.6874892, y: 6.5}
       - {x: 0.5, y: 6.5000296}
-      - {x: 0.4999924, y: 7.312507}
-      - {x: 0.3124892, y: 7.5}
-      - {x: -0.37500522, y: 7.4999795}
-      - {x: -0.5, y: 6.9999967}
+      - {x: 0.4999707, y: 7.5}
+      - {x: -0.5, y: 7.4999704}
       - {x: -0.5000294, y: 6.5}
       - {x: -0.6875076, y: 6.4999924}
       - {x: -1.5, y: 5.687489}
@@ -5572,6 +5577,8 @@ MonoBehaviour:
   ringScale: 1.8
   enemySpawnGap: 3
   spawnClearance: 1
+  bayGap: 0.25
+  launchSeconds: 1
   currentPressure: 0
 --- !u!1 &5275323879352421653
 GameObject:

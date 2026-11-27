@@ -35,7 +35,7 @@ public class SpaceStation : MonoBehaviour, IWaveEnemySource
     private float ringScale = 1.8f;
 
     [Tooltip(
-        "How far outside the guard ring enemies appear, so they don't spawn in the guards' lane. (The bay replaces this later.)")]
+        "How far outside the guard ring enemies appear, so they don't spawn in the guards' lane. Only for a station with no bay.")]
     [Min(0f)]
     [SerializeField]
     private float enemySpawnGap = 3f;
@@ -47,8 +47,21 @@ public class SpaceStation : MonoBehaviour, IWaveEnemySource
     [SerializeField]
     private float spawnClearance = 1f;
 
+    [Tooltip("Gap between the bay's opening and a new enemy's hull.")]
+    [Min(0f)]
+    [SerializeField]
+    private float bayGap = 0.25f;
+
+    [Tooltip("Seconds a new enemy flies straight out of the bay before its AI takes over.")]
+    [Min(0f)]
+    [SerializeField]
+    private float launchSeconds = 1f;
+
     // How many random spots a spawn tries before giving up until the next tick.
     private const int MaxSpawnAttempts = 8;
+
+    // This station's launch bays (none = enemies appear on the spawn ring).
+    private StationBay[] _bays = System.Array.Empty<StationBay>();
 
     // Reused for the "is this spot empty?" check (no allocations per spawn).
     private readonly List<Collider2D> _spotHits = new();
@@ -107,6 +120,7 @@ public class SpaceStation : MonoBehaviour, IWaveEnemySource
         }
 
         Radius = CalculateRadius();
+        _bays = GetComponentsInChildren<StationBay>();
         SpawnGuards();
     }
 
@@ -244,21 +258,76 @@ public class SpaceStation : MonoBehaviour, IWaveEnemySource
 
         EnemyController chosen = fits[Random.Range(0, fits.Count)];
 
-        // Comes out just outside the guard ring at a random angle, nose
-        // pointing away from the station. (The bay comes later.) The spot has
-        // to be empty: two ships that appear inside each other get stuck.
-        // No empty spot after a few tries = skip this tick, try next time.
-        if (!TryFindSpawnSpot(chosen, out Vector2 position, out float angle))
+        // Comes out of a launch bay, nose pointing out, and flies straight out
+        // for launchSeconds. A station with no bay uses the old spawn: just
+        // outside the guard ring at a random angle. Either way the spot has
+        // to be empty (two ships that appear inside each other get stuck);
+        // no empty spot = skip this tick, try next time.
+        Vector2 position;
+        Vector2 outward;
+        StationBay bay = null;
+        if (_bays.Length > 0)
         {
-            return;
+            if (!TryFindBaySpot(chosen, out bay, out position))
+            {
+                return;
+            }
+
+            outward = bay.Direction;
+        }
+        else
+        {
+            if (!TryFindSpawnSpot(chosen, out position, out float angle))
+            {
+                return;
+            }
+
+            float radians = angle * Mathf.Deg2Rad;
+            outward = new Vector2(Mathf.Cos(radians), Mathf.Sin(radians));
         }
 
-        Quaternion facing = Quaternion.Euler(0f, 0f, angle - 90f);
+        Quaternion facing = Quaternion.Euler(0f, 0f,
+            Mathf.Atan2(outward.y, outward.x) * Mathf.Rad2Deg - 90f);
 
         EnemyController enemy = Instantiate(chosen, position, facing);
         StationTintable.TintAll(enemy.gameObject, profile.StationColour);
+        if (bay)
+        {
+            enemy.Launch(outward, launchSeconds);
+        }
+
         spawnedEnemies.Add(enemy);
         RecalculatePressure();
+    }
+
+    // A bay (tried in random order) whose opening has nothing solid in front
+    // of it for the new enemy. False if every bay is blocked.
+    private bool TryFindBaySpot(EnemyController prefab, out StationBay bay, out Vector2 position)
+    {
+        float shipRadius = EnemyController.CalculateRadius(prefab.transform);
+        float checkRadius = shipRadius + spawnClearance;
+        ContactFilter2D solidOnly = new() { useTriggers = false };
+
+        int start = Random.Range(0, _bays.Length);
+        for (int i = 0; i < _bays.Length; i++)
+        {
+            bay = _bays[(start + i) % _bays.Length];
+            if (!bay)
+            {
+                continue;
+            }
+
+            position = bay.Mouth(shipRadius, bayGap);
+            Physics2D.OverlapCircle(position, checkRadius, solidOnly, _spotHits);
+            if (!HitsAShip(_spotHits))
+            {
+                return true;
+            }
+        }
+
+        bay = null;
+        position = default;
+        return false;
     }
 
     // A random spot on the spawn ring with nothing solid inside the new

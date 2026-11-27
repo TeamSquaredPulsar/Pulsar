@@ -3842,20 +3842,6 @@ CompositeCollider2D:
         Y: -45000000
       - X: 13750000
         Y: -45000000
-  - m_Collider: {fileID: 5715774598842141422}
-    m_ColliderPaths:
-    - - X: 5000000
-        Y: 43125000
-      - X: 3125000
-        Y: 45000000
-      - X: -3750000
-        Y: 45000000
-      - X: -5000000
-        Y: 40000000
-      - X: -5000000
-        Y: 35000000
-      - X: 5000000
-        Y: 35000000
   - m_Collider: {fileID: 933427377090294227}
     m_ColliderPaths:
     - - X: -5000000
@@ -3878,6 +3864,16 @@ CompositeCollider2D:
         Y: -25000000
       - X: -5000000
         Y: -25000000
+  - m_Collider: {fileID: 3631408919155021613}
+    m_ColliderPaths:
+    - - X: 5000000
+        Y: 45000000
+      - X: -5000000
+        Y: 45000000
+      - X: -5000000
+        Y: 35000000
+      - X: 5000000
+        Y: 35000000
   m_CompositePaths:
     m_Paths:
     - - {x: -0.62502, y: -4.5}
@@ -3907,10 +3903,8 @@ CompositeCollider2D:
       - {x: 1.4999924, y: 2.6875076}
       - {x: 0.6874892, y: 3.5}
       - {x: 0.5, y: 3.5000296}
-      - {x: 0.4999924, y: 4.3125076}
-      - {x: 0.3124892, y: 4.5}
-      - {x: -0.37500522, y: 4.499979}
-      - {x: -0.5, y: 3.9999971}
+      - {x: 0.4999707, y: 4.5}
+      - {x: -0.5, y: 4.499971}
       - {x: -0.5000294, y: 3.5}
       - {x: -0.6875076, y: 3.4999924}
       - {x: -1.5, y: 2.6874893}
@@ -3950,8 +3944,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::Pulsar.Stations.SpaceStation
   profile: {fileID: 11400000, guid: 35f77f1df465dde207b7532cb0048653, type: 2}
   ringScale: 1.8
-  currentWave: -1
-  playerInRange: 0
+  enemySpawnGap: 3
+  spawnClearance: 1
+  bayGap: 0.25
+  launchSeconds: 1
+  currentPressure: 0
 --- !u!1 &5380281916238715598
 GameObject:
   m_ObjectHideFlags: 0
@@ -6399,9 +6396,10 @@ GameObject:
   m_Component:
   - component: {fileID: 4600357490775111021}
   - component: {fileID: 6274469513349237325}
-  - component: {fileID: 5715774598842141422}
+  - component: {fileID: 3631408919155021613}
+  - component: {fileID: 990333869782273502}
   m_Layer: 0
-  m_Name: Dock_0_4
+  m_Name: Bay_0_4
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -6471,7 +6469,7 @@ SpriteRenderer:
   m_SortingLayer: 5
   m_SortingOrder: 0
   m_MaskInteraction: 0
-  m_Sprite: {fileID: -4386314723904583636, guid: d1008ecef3fbc821ac88abff2e0dec4a, type: 3}
+  m_Sprite: {fileID: -4186549636535331686, guid: 6b0a36d2b8534b509afd19b6d5156ed4, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -6481,7 +6479,7 @@ SpriteRenderer:
   m_SpriteTileMode: 0
   m_WasSpriteAssigned: 1
   m_SpriteSortPoint: 0
---- !u!60 &5715774598842141422
+--- !u!60 &3631408919155021613
 PolygonCollider2D:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -6527,13 +6525,23 @@ PolygonCollider2D:
   m_AutoTiling: 0
   m_Points:
     m_Paths:
-    - - {x: -0.375, y: 0.5}
-      - {x: -0.5, y: 0}
-      - {x: -0.5, y: -0.5}
+    - - {x: -0.5, y: 0.5}
+      - {x: 0.5, y: 0.5}
       - {x: 0.5, y: -0.5}
-      - {x: 0.5, y: 0.3125}
-      - {x: 0.3125, y: 0.5}
+      - {x: -0.5, y: -0.5}
   m_UseDelaunayMesh: 1
+--- !u!114 &990333869782273502
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8650500484368465502}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 266a48936da3a734093ebdb3f8b50e07, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Pulsar.Stations::Pulsar.Stations.StationBay
 --- !u!1 &8679492769454157635
 GameObject:
   m_ObjectHideFlags: 0

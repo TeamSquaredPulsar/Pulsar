@@ -114,6 +114,11 @@ public class EnemyController : MonoBehaviour
     private Vector2 _avoidHeading;
     private float _avoidWeight;
 
+    // Launch out of a station bay: for a short time the enemy flies straight
+    // out (still avoiding things) and doesn't fight, then its AI takes over.
+    private Vector2 _launchDirection;
+    private float _launchTimeLeft;
+
     public float Radius { get; private set; }
 
     // Read-only, so a station can check a prefab's PressureScore before spawning it.
@@ -191,7 +196,7 @@ public class EnemyController : MonoBehaviour
     private void Update()
     {
         _timeBtwShots -= Time.deltaTime;
-        if (_behavior)
+        if (_behavior || _launchTimeLeft > 0f)
         {
             // The behaviour does its own shooting (TryFire) in FixedUpdate.
             return;
@@ -205,6 +210,14 @@ public class EnemyController : MonoBehaviour
     // to the ship by physics, move in step with it instead of lagging behind.
     private void FixedUpdate()
     {
+        if (_launchTimeLeft > 0f)
+        {
+            _launchTimeLeft -= Time.fixedDeltaTime;
+            Face(_launchDirection);
+            Steer(_launchDirection);
+            return;
+        }
+
         if (_behavior)
         {
             _behavior.Tick(this, PlayerController.PlayerPosition,
@@ -231,6 +244,14 @@ public class EnemyController : MonoBehaviour
     private void OnDestroy()
     {
         shipManager.ShipDestroyedEvent -= HandleShipDestroyed;
+    }
+
+    // Flies straight along direction for the given seconds (out of a station
+    // bay) before the normal AI takes over. No shooting while launching.
+    public void Launch(Vector2 direction, float seconds)
+    {
+        _launchDirection = Direction(direction);
+        _launchTimeLeft = _launchDirection == Vector2.zero ? 0f : seconds;
     }
 
     // Puts a stray enemy back near the fight, stopped, as if it just spawned.
