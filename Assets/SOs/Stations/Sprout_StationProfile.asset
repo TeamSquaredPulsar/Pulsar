@@ -14,6 +14,18 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::Pulsar.Stations.StationProfile
   <StationTier>k__BackingField: 0
   <PreviousStationProfile>k__BackingField: {fileID: 0}
+  <GuardPrefabs>k__BackingField:
+  - {fileID: 1499275203938478107, guid: 900534399c4c4b24cbdc3c9163d74694, type: 3}
+  - {fileID: 1499275203938478107, guid: 900534399c4c4b24cbdc3c9163d74694, type: 3}
+  - {fileID: 974974987105249476, guid: c7eed6fd48826b54da36b072e1635d14, type: 3}
+  - {fileID: 2337145799023380159, guid: 1060654131a974c4588acdb0cfb7f90e, type: 3}
+  <GuardInfo>k__BackingField: {fileID: 11400000, guid: fdf30e87ed7094befa1d6560593137ed, type: 2}
+  <MaxPressure>k__BackingField: 30
+  <EnemyPrefabs>k__BackingField:
+  - {fileID: 5123560400209960732, guid: 9dc0c2dda0134b64e8cb399608f4b80b, type: 3}
+  - {fileID: 3194850146676455874, guid: 50e6449a2b964d0caeada879ad16d0b7, type: 3}
+  <SecondsBetweenSpawns>k__BackingField: 1.5
+  <GuardShellPrefab>k__BackingField: {fileID: 3722479682760468644, guid: 0daabebb9663a6302dc1f44bfb215f3c, type: 3}
   <OwnWeaponPrefabs>k__BackingField:
   - {fileID: 2402461002857692903, guid: aa5c391c67940fe428fad2e4cebfb98c, type: 3}
   <TilesPerGun>k__BackingField: 3
@@ -27,8 +39,6 @@ MonoBehaviour:
   - {fileID: 3298680984989483682, guid: 91d6884b78847162950356b573281e98, type: 3}
   <CornerChance>k__BackingField: 0.3
   <ThrusterPrefab>k__BackingField: {fileID: 9113379072927920375, guid: d41f92095f77c0c419e9feb661d7963f, type: 3}
-  <GuardShellPrefab>k__BackingField: {fileID: 3722479682760468644, guid: 0daabebb9663a6302dc1f44bfb215f3c, type: 3}
-  <GuardInfo>k__BackingField: {fileID: 11400000, guid: fdf30e87ed7094befa1d6560593137ed, type: 2}
   <Waves>k__BackingField:
   - <GuardCount>k__BackingField: 3
     <MinTiles>k__BackingField: 3
@@ -39,11 +49,3 @@ MonoBehaviour:
   - <GuardCount>k__BackingField: 5
     <MinTiles>k__BackingField: 7
     <MaxTiles>k__BackingField: 10
-  <SecondsBetweenWaves>k__BackingField: 2
-  <DetectionRange>k__BackingField: 25
-  <LoseInterestMargin>k__BackingField: 8
-  <MaxPressure>k__BackingField: 30
-  <EnemyPrefabs>k__BackingField:
-  - {fileID: 5123560400209960732, guid: 9dc0c2dda0134b64e8cb399608f4b80b, type: 3}
-  - {fileID: 3194850146676455874, guid: 50e6449a2b964d0caeada879ad16d0b7, type: 3}
-  <SecondsBetweenSpawns>k__BackingField: 1.5

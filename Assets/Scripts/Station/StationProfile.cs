@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using NaughtyAttributes;
+using Pulsar.Stations.Guards;
 using UnityEngine;
 using UnityEngine.Serialization;
 
@@ -45,10 +46,10 @@ public struct WaveConfig
 }
 
 /// <summary>
-/// Everything that makes one station different from another: its colour tiles,
-/// its weapons, its waves and how close the player has to get before the
-/// guards notice. One asset per station; the SpaceStation script is the same
-/// on every station.
+/// Everything that makes one station different from another: its guards, the
+/// enemies it sends and how much pressure they may add up to. (The generator
+/// section at the bottom is only for the disconnected EnemyGenerator.) One
+/// asset per station; the SpaceStation script is the same on every station.
 /// Every value is read-only from outside (get; private set;) because this one
 /// asset is shared by every guard at the station: a change made through any
 /// reference would change it for all of them, and in the Editor it would stay
@@ -74,7 +75,46 @@ public class StationProfile : ScriptableObject
         "are added to this station's pool. Leave empty for the first station.")]
     public StationProfile PreviousStationProfile { get; private set; }
 
-    [field: Header("Weapons")]
+    [field: Header("Guards")]
+    [field: SerializeField]
+    [field: Tooltip(
+        "One entry = one guard. Each spawns once when the station starts, " +
+        "spread evenly around the ring, and circles it. Killed guards don't come back.")]
+    public EnemyGuardAI[] GuardPrefabs { get; private set; }
+
+    [field: SerializeField]
+    [field: FormerlySerializedAs("guardInfo")]
+    [field:
+        Tooltip(
+            "Movement and separation numbers for this station's guards.")]
+    public EnemyInfo GuardInfo { get; private set; }
+
+    [field: Header("Enemies (pressure)")]
+    [field: SerializeField]
+    [field: Tooltip(
+        "The most pressure this station's living enemies can add up to. " +
+        "Each enemy counts its EnemyInfo's PressureScore.")]
+    [field: Min(1)]
+    public int MaxPressure { get; private set; } = 30;
+
+    [field: SerializeField]
+    [field: Tooltip(
+        "The hand-built enemy prefabs this station can send. It picks one " +
+        "at random from those whose PressureScore fits the room left.")]
+    public EnemyController[] EnemyPrefabs { get; private set; }
+
+    [field: SerializeField]
+    [field: Tooltip("Wait between two enemy spawns, in seconds.")]
+    [field: Min(0.1f)]
+    public float SecondsBetweenSpawns { get; private set; } = 1.5f;
+
+    [field: Header("Generator (disconnected, kept just in case)")]
+    [field: SerializeField]
+    [field: FormerlySerializedAs("guardShellPrefab")]
+    [field: Tooltip(
+        "EnemyGenerator only: the empty guard ship its tiles are built onto.")]
+    public GameObject GuardShellPrefab { get; private set; }
+
     [field: SerializeField]
     [field: FormerlySerializedAs("ownWeaponPrefabs")]
     [field: Tooltip(
@@ -88,7 +128,6 @@ public class StationProfile : ScriptableObject
     [field: Min(1)]
     public int TilesPerGun { get; private set; } = 3;
 
-    [field: Header("Guard tiles (this station's colour)")]
     [field: SerializeField]
     [field: FormerlySerializedAs("coreTilePrefab")]
     public GameObject CoreTilePrefab { get; private set; }
@@ -112,21 +151,7 @@ public class StationProfile : ScriptableObject
     [field: FormerlySerializedAs("thrusterPrefab")]
     public GameObject ThrusterPrefab { get; private set; }
 
-    [field: Header("Guards")]
-    [field: SerializeField]
-    [field: FormerlySerializedAs("guardShellPrefab")]
-    [field: Tooltip(
-        "The empty guard ship (ShipManager, AI, behaviours) that the tiles are built onto.")]
-    public GameObject GuardShellPrefab { get; private set; }
-
-    [field: SerializeField]
-    [field: FormerlySerializedAs("guardInfo")]
-    [field:
-        Tooltip(
-            "Movement, aiming and scoring numbers for this station's guards.")]
-    public EnemyInfo GuardInfo { get; private set; }
-
-    [field: Header("Waves (the list length is the number of waves)")]
+    [field: Tooltip("EnemyGenerator only: guard sizes (MinTiles/MaxTiles) per old wave.")]
     [field: SerializeField]
     [field: FormerlySerializedAs("waves")]
     [field: ReorderableList]
@@ -136,46 +161,6 @@ public class StationProfile : ScriptableObject
         new(guardCount: 4, minTiles: 5, maxTiles: 7),
         new(guardCount: 5, minTiles: 7, maxTiles: 10),
     };
-
-    [field: SerializeField]
-    [field: FormerlySerializedAs("secondsBetweenWaves")]
-    [field: Min(0f)]
-    public float SecondsBetweenWaves { get; private set; } = 2f;
-
-    [field: Header("Detection")]
-    [field: SerializeField]
-    [field: FormerlySerializedAs("detectionRange")]
-    [field: Tooltip(
-        "When the player is this close to the station's centre, its guards chase.")]
-    [field: Min(0f)]
-    public float DetectionRange { get; private set; } = 25f;
-
-    [field: SerializeField]
-    [field: FormerlySerializedAs("loseInterestMargin")]
-    [field: Tooltip(
-        "The guards give up once the player is this much further out than " +
-        "the detection range (stops them flipping back and forth at the edge).")]
-    [field: Min(0f)]
-    public float LoseInterestMargin { get; private set; } = 8f;
-
-    [field: Header("Enemies (pressure)")]
-    [field: SerializeField]
-    [field: Tooltip(
-        "The most pressure this station's living enemies can add up to. " +
-        "Each enemy counts its EnemyInfo's PressureScore.")]
-    [field: Min(1)]
-    public int MaxPressure { get; private set; } = 30;
-
-    [field: SerializeField]
-    [field: Tooltip(
-        "The hand-built enemy prefabs this station can send. It picks one " +
-        "at random from those whose PressureScore fits the room left.")]
-    public EnemyController[] EnemyPrefabs { get; private set; }
-
-    [field: SerializeField]
-    [field: Tooltip("Wait between two enemy spawns, in seconds.")]
-    [field: Min(0.1f)]
-    public float SecondsBetweenSpawns { get; private set; } = 1.5f;
 
     // Runs whenever a value changes in the Inspector. NaughtyAttributes'
     // [MinValue] can't reach inside WaveConfig, so the profile keeps each

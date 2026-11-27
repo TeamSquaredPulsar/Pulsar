@@ -19,9 +19,6 @@ public class EnemyGuardAI : MonoBehaviour
 {
     private const float MinDistance = 0.001f;
 
-    // Any guard was destroyed. GamePlayUI adds the points to the score.
-    public static event Action<EnemyGuardAI, int> GuardDefeatedEvent;
-
     private static readonly HashSet<EnemyGuardAI> ActiveGuards = new();
 
     [SerializeField]
@@ -40,6 +37,14 @@ public class EnemyGuardAI : MonoBehaviour
     [Range(0f, 1f)]
     [SerializeField]
     private float patrolThrottle = 0.5f;
+
+    [Tooltip(
+        "The nose aims at a spot this many degrees further along the ring " +
+        "(a look-ahead point), so the heading stays steady instead of " +
+        "swinging around the moving patrol point.")]
+    [Range(0f, 90f)]
+    [SerializeField]
+    private float lookAheadDegrees = 25f;
 
     [Header("Station avoidance")]
     [Tooltip("Extra space kept between this guard and its station's outline.")]
@@ -67,7 +72,7 @@ public class EnemyGuardAI : MonoBehaviour
     [SerializeField]
     private PIDParams turnPID = new(0.08f, 0.04f, .001f);
 
-    // This guard was destroyed. Its station counts it off the wave.
+    // This guard was destroyed. Its station takes it off its list. (Guards give no score.)
     public event Action<EnemyGuardAI> Defeated;
 
     public EnemyInfo Info { get; private set; }
@@ -159,7 +164,20 @@ public class EnemyGuardAI : MonoBehaviour
         offset = AvoidStation(Direction(offset)) * Mathf.Max(distance, 1f);
 
         MoveTowardOffset(offset);
-        Face(toPoint.sqrMagnitude > 1f ? toPoint : rb.linearVelocity);
+
+        // Aim the nose at a look-ahead point further along the ring, not at
+        // the patrol point itself. Close to the patrol point, the direction to
+        // it flips around every time the guard overshoots, which made the
+        // nose swing and the thrusters flicker. The look-ahead point is far
+        // enough away that the heading only changes smoothly.
+        // (Sign: ahead in whichever direction the guards circle.)
+        float aheadRadians = (_patrolAngle +
+                              lookAheadDegrees * Mathf.Sign(patrolDegreesPerSecond)) *
+                             Mathf.Deg2Rad;
+        Vector2 aheadPoint = (Vector2)_home.transform.position +
+                             new Vector2(Mathf.Cos(aheadRadians),
+                                 Mathf.Sin(aheadRadians)) * _patrolRadius;
+        Face(aheadPoint - Position);
     }
 
     // PID movement, the same as EnemyController.HandleMovement: the PID
@@ -272,14 +290,29 @@ public class EnemyGuardAI : MonoBehaviour
             push += offset * ((1f - distance / range) / distance);
         }
 
+        // Guards also make way for enemies (enemies don't dodge guards back:
+        // their code can't see the station assembly).
+        foreach (EnemyController enemy in EnemyController.ActiveEnemies)
+        {
+            Vector2 offset = Position - (Vector2)enemy.transform.position;
+            float range = Radius + enemy.Radius + Info.separationPadding;
+            float sqrDistance = offset.sqrMagnitude;
+            if (sqrDistance < MinDistance * MinDistance ||
+                sqrDistance >= range * range)
+            {
+                continue;
+            }
+
+            float distance = Mathf.Sqrt(sqrDistance);
+            push += offset * ((1f - distance / range) / distance);
+        }
+
         return push;
     }
 
     private void HandleShipDestroyed(ShipManager _)
     {
-        int points = Info ? Info.PressureScore : 0;
         Defeated?.Invoke(this);
-        GuardDefeatedEvent?.Invoke(this, points);
     }
 }
 }

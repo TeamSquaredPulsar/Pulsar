@@ -14,9 +14,6 @@ GameObject:
   - component: {fileID: 3141708206127563457}
   - component: {fileID: 4297930864325995559}
   - component: {fileID: 2494384939165437676}
-  - component: {fileID: 845873225613755758}
-  - component: {fileID: 7550676219341692332}
-  - component: {fileID: 2297258462946227122}
   m_Layer: 0
   m_Name: GuardShell
   m_TagString: Enemy
@@ -54,11 +51,9 @@ MonoBehaviour:
   compositeCollider: {fileID: 4297930864325995559}
   rb: {fileID: 3141708206127563457}
   thrusterManager: {fileID: 2071562710769028092}
-  weapons: []
-  thrusters: []
   detachRadiateLinearVelocity: {x: 2, y: 5}
   detachRadiateAngularVelocity: {x: -180, y: 180}
-  CollisionDmgMultiplier: 0.5
+  collisionDmgMultiplier: 0.5
 --- !u!114 &2071562710769028092
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -72,9 +67,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ThrusterManager
   rb: {fileID: 3141708206127563457}
-  coreThrust: 2
-  rotationalThrust: 2
-  rotationScaler: 1
 --- !u!50 &3141708206127563457
 Rigidbody2D:
   serializedVersion: 5
@@ -164,47 +156,13 @@ MonoBehaviour:
   patrolDegreesPerSecond: 12
   patrolThrottle: 0.5
   stationGap: 1.5
-  state: 0
-  combatState: 
---- !u!114 &845873225613755758
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3722479682760468644}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 37b20f7aaa1cd95a9d0dbfb49b6e72e6, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::Pulsar.Stations.Guards.BombardBehavior
-  leaveRangeFactor: 1.15
---- !u!114 &7550676219341692332
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3722479682760468644}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4152288af1fb746f16fbcaea0524774e, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::Pulsar.Stations.Guards.FighterBehavior
-  strafeSeconds: 1.5
-  leaveRangeFactor: 1.15
---- !u!114 &2297258462946227122
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3722479682760468644}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 363977278bbe0ec1be668bdb7e06063f, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::Pulsar.Stations.Guards.OrbitBehavior
-  repositionDegrees: 60
-  arriveDistance: 1.5
-  maxRepositionSeconds: 3
+  movePID:
+    kP: 1
+    kD: 1.2
+    kI: 0
+    IntegralWindup: 1
+  turnPID:
+    kP: 0.08
+    kD: 0.04
+    kI: 0.001
+    IntegralWindup: 1
