@@ -144,6 +144,7 @@ public class SpaceStation : MonoBehaviour
             EnemyGuardAI guard = Instantiate(prefabs[i], position,
                 Quaternion.Euler(0f, 0f, angle));
             guard.name = $"{name} {prefabs[i].name}";
+            StationTintable.TintAll(guard.gameObject, profile.StationColour);
             guard.Init(this, profile.GuardInfo, ringRadius, angle);
             guard.Defeated += HandleGuardDefeated;
             spawnedGuards.Add(guard);
@@ -229,6 +230,7 @@ public class SpaceStation : MonoBehaviour
         Quaternion facing = Quaternion.Euler(0f, 0f, angle - 90f);
 
         EnemyController enemy = Instantiate(chosen, position, facing);
+        StationTintable.TintAll(enemy.gameObject, profile.StationColour);
         spawnedEnemies.Add(enemy);
         RecalculatePressure();
     }

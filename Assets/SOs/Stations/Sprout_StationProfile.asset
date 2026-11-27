@@ -14,6 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::Pulsar.Stations.StationProfile
   <StationTier>k__BackingField: 0
   <PreviousStationProfile>k__BackingField: {fileID: 0}
+  <StationColour>k__BackingField: {r: 0.34509805, g: 0.627451, b: 0.15686275, a: 1}
   <GuardPrefabs>k__BackingField:
   - {fileID: 1499275203938478107, guid: 900534399c4c4b24cbdc3c9163d74694, type: 3}
   - {fileID: 1499275203938478107, guid: 900534399c4c4b24cbdc3c9163d74694, type: 3}

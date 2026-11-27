@@ -75,6 +75,14 @@ public class StationProfile : ScriptableObject
         "are added to this station's pool. Leave empty for the first station.")]
     public StationProfile PreviousStationProfile { get; private set; }
 
+    [field: Header("Look")]
+    [field: SerializeField]
+    [field: Tooltip(
+        "This station's colour. Its guards' and enemies' station tiles are " +
+        "rebuilt in it (glass, the core gem, embers, guns and thrusters keep " +
+        "their own colours). Sprout's art was made for 88, 160, 40.")]
+    public Color StationColour { get; private set; } = Color.white;
+
     [field: Header("Guards")]
     [field: SerializeField]
     [field: Tooltip(
