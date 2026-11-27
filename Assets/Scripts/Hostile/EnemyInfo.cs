@@ -22,6 +22,7 @@ public class EnemyInfo : ScriptableObject
     public float startTimeBtwShots = 1.5f;
 
     public float shootingRange = 8f;
+    public float rangeVariance = 3f;
     public float aimTolerance = 15f;
     public float maxAimTrackSpeed = 110f;
 

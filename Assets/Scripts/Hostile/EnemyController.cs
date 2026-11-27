@@ -56,6 +56,7 @@ public class EnemyController : MonoBehaviour
     private float _timeBtwShots;
     private float _weaveOffset;
     private Vector3 _trackedAimDir;
+    private float _rangeOffset;
 
     public float Radius { get; private set; }
 
@@ -91,6 +92,7 @@ public class EnemyController : MonoBehaviour
 
         _timeBtwShots = enemyInfo.startTimeBtwShots;
         _weaveOffset = Random.value * MaxWeaveOffset;
+        _rangeOffset = Random.Range(-enemyInfo.rangeVariance, enemyInfo.rangeVariance);
         _trackedAimDir = transform.up;
     }
 
@@ -179,16 +181,16 @@ public class EnemyController : MonoBehaviour
     private void HandleMovement(Vector3 dirToPlayer, float distance)
     {
         Vector3 targetOffset = Vector3.zero;
+        float desiredStop = enemyInfo.stoppingDistance + _rangeOffset;
+        float desiredRetreat = enemyInfo.retreatDistance + _rangeOffset;
 
-        if (distance > enemyInfo.stoppingDistance)
+        if (distance > desiredStop)
         {
-            targetOffset
-                = dirToPlayer * (distance - enemyInfo.stoppingDistance);
+            targetOffset = dirToPlayer * (distance - desiredStop);
         }
-        else if (distance < enemyInfo.retreatDistance)
+        else if (distance < desiredRetreat)
         {
-            targetOffset
-                = -dirToPlayer * (enemyInfo.retreatDistance - distance);
+            targetOffset = -dirToPlayer * (desiredRetreat - distance);
         }
 
         if (enemyInfo.driftAmount > 0f)
@@ -308,7 +310,7 @@ public class EnemyController : MonoBehaviour
             return;
         }
 
-        if (distance > enemyInfo.shootingRange)
+        if (distance > enemyInfo.shootingRange + _rangeOffset)
         {
             return;
         }
