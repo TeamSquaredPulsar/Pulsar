@@ -286,8 +286,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d1236c1e551165b48b0864561b6c2156, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Interactions::Pulsar.Interactions.Health
-  <MaxHealth>k__BackingField: 10
-  currentHealth: 10
+  <MaxHealth>k__BackingField: 20
+  currentHealth: 20
 --- !u!114 &8525024055157982409
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -341,7 +341,7 @@ MonoBehaviour:
       value: 5
     - key: 3
       value: 5
-  <RotationForce>k__BackingField: 2
+  <RotationForce>k__BackingField: 4
 --- !u!114 &-3269957206215241566
 MonoBehaviour:
   m_ObjectHideFlags: 0

@@ -48,8 +48,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d1236c1e551165b48b0864561b6c2156, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Pulsar.Ship::Health
-  <MaxHealth>k__BackingField: 10
-  currentHealth: 10
+  <MaxHealth>k__BackingField: 20
+  currentHealth: 20
 --- !u!114 &-4920047954809644643
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -70,6 +70,10 @@ MonoBehaviour:
   health: {fileID: 2303072813145309213}
   spritesOverride: {fileID: 11400000, guid: 08530f42817696f469c8ed035d999d4a, type: 2}
   spriteRenderer: {fileID: 497275641067805184}
+  _rbInfo:
+    LinearDamping: 0
+    AngularDamping: 0
+    Mass: 0
 --- !u!212 &497275641067805184
 SpriteRenderer:
   serializedVersion: 2
@@ -116,7 +120,7 @@ SpriteRenderer:
   m_LightmapParameters: {fileID: 0}
   m_GlobalIlluminationMeshLod: 0
   m_SortingLayerID: -1599613283
-  m_SortingLayer: 4
+  m_SortingLayer: 5
   m_SortingOrder: 0
   m_MaskInteraction: 0
   m_Sprite: {fileID: -7018085805182037971, guid: 3e5d66f2efebcfc46aa1fd405e0ccdb3, type: 3}

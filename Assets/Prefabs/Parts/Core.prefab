@@ -70,33 +70,22 @@ MonoBehaviour:
   health: {fileID: 2303072813145309213}
   spritesOverride: {fileID: 11400000, guid: 085efe85fed4e2b44a3b05eb11c1f7d6, type: 2}
   spriteRenderer: {fileID: 497275641067805184}
-  audioManager: {fileID: 11400000, guid: b93f15ff1e15c794ba814aa4875bc1c1, type: 2}
-  damageStateChangeSound:
-    Guid:
-      Data1: 1660910153
-      Data2: 1263548361
-      Data3: -413367378
-      Data4: 1675320881
-    Path: event:/Damage/ReduceState
-  onHitSound:
-    Guid:
-      Data1: 1366578804
-      Data2: 1111099715
-      Data3: 1340059779
-      Data4: -543357253
-    Path: event:/Damage/Hit
+  _rbInfo:
+    LinearDamping: 0
+    AngularDamping: 0
+    Mass: 0
+  <DeathExplosionPrefab>k__BackingField: {fileID: 4650023321338013299, guid: ca16f83ee0fe4a0a8f82bb5990ad5f59, type: 3}
   <DirectionalThrust>k__BackingField:
     _entries:
     - key: 0
-      value: 5
+      value: 2
     - key: 2
-      value: 5
+      value: 2
     - key: 1
-      value: 5
+      value: 2
     - key: 3
-      value: 5
-  <RotationForce>k__BackingField: 25
-  <DeathExplosionPrefab>k__BackingField: {fileID: 4650023321338013299, guid: ca16f83ee0fe4a0a8f82bb5990ad5f59, type: 3}
+      value: 2
+  <RotationForce>k__BackingField: 1
 --- !u!212 &497275641067805184
 SpriteRenderer:
   serializedVersion: 2
@@ -143,7 +132,7 @@ SpriteRenderer:
   m_LightmapParameters: {fileID: 0}
   m_GlobalIlluminationMeshLod: 0
   m_SortingLayerID: -1599613283
-  m_SortingLayer: 4
+  m_SortingLayer: 5
   m_SortingOrder: 0
   m_MaskInteraction: 0
   m_Sprite: {fileID: 21300000, guid: a8d434fca65296448af748cdd6e14302, type: 3}
