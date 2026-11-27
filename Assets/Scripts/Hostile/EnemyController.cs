@@ -25,7 +25,6 @@ public class EnemyController : MonoBehaviour
     private const float MaxWeaveOffset = 10f;
     private const float MinDistance = 0.001f;
     private const float TileHalfDiagonal = 0.7071f;
-    private const float TurnGain = 4f;
 
     // Two far-apart rows of the noise, so sideways and in-out drift
     // don't move in lockstep.
@@ -56,6 +55,7 @@ public class EnemyController : MonoBehaviour
     // TODO: make this a boolean value with a coroutine to handle if you can fire or not
     private float _timeBtwShots;
     private float _weaveOffset;
+    private Vector3 _trackedAimDir;
 
     public float Radius { get; private set; }
 
@@ -91,12 +91,7 @@ public class EnemyController : MonoBehaviour
 
         _timeBtwShots = enemyInfo.startTimeBtwShots;
         _weaveOffset = Random.value * MaxWeaveOffset;
-    }
-
-    private void Update()
-    {
-        GetPlayerDirection(out Vector3 dirToPlayer, out float distance);
-        HandleShooting(dirToPlayer, distance);
+        _trackedAimDir = transform.up;
     }
 
     // Movement runs on the physics clock so the tiles, which are joined
@@ -104,8 +99,17 @@ public class EnemyController : MonoBehaviour
     private void FixedUpdate()
     {
         GetPlayerDirection(out Vector3 dirToPlayer, out float distance);
+
+        //Separate enemy targeting from exact player position to make the enemy less snappy
+
+        float maxTargetingSpeed = enemyInfo.maxAimTrackSpeed * Mathf.Deg2Rad
+            * Time.fixedDeltaTime;
+        _trackedAimDir = Vector3.RotateTowards(_trackedAimDir,
+            dirToPlayer, maxTargetingSpeed, 0f);
+
         HandleMovement(dirToPlayer, distance);
-        HandleRotation(dirToPlayer);
+        HandleRotation(_trackedAimDir);
+        HandleShooting(dirToPlayer, distance);
     }
 
     private void OnEnable()

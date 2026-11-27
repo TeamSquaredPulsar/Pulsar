@@ -23,6 +23,7 @@ public class EnemyInfo : ScriptableObject
 
     public float shootingRange = 8f;
     public float aimTolerance = 15f;
+    public float maxAimTrackSpeed = 110f;
 
     [Header("Separation")]
     public float
