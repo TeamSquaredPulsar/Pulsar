@@ -25,6 +25,8 @@ MonoBehaviour:
   <EnemyPrefabs>k__BackingField:
   - {fileID: 5123560400209960732, guid: 9dc0c2dda0134b64e8cb399608f4b80b, type: 3}
   - {fileID: 3194850146676455874, guid: 50e6449a2b964d0caeada879ad16d0b7, type: 3}
+  - {fileID: 9181210680783823004, guid: 6107522afb8c499f90bf713e550ecb43, type: 3}
+  - {fileID: 8104342031972818538, guid: 929a74155f7e4b7291d6c800572c02e8, type: 3}
   <SecondsBetweenSpawns>k__BackingField: 1.5
   <GuardShellPrefab>k__BackingField: {fileID: 3722479682760468644, guid: 0daabebb9663a6302dc1f44bfb215f3c, type: 3}
   <OwnWeaponPrefabs>k__BackingField:

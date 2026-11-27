@@ -1,0 +1,40 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b5a852ae17cec582065266327057f48d, type: 3}
+  m_Name: Rose_StationProfile
+  m_EditorClassIdentifier: Assembly-CSharp::Pulsar.Stations.StationProfile
+  <StationTier>k__BackingField: 1
+  <PreviousStationProfile>k__BackingField: {fileID: 11400000, guid: 35f77f1df465dde207b7532cb0048653, type: 2}
+  <StationColour>k__BackingField: {r: 0.8392157, g: 0.28235295, b: 0.5019608, a: 1}
+  <GuardPrefabs>k__BackingField:
+  - {fileID: 1499275203938478107, guid: 900534399c4c4b24cbdc3c9163d74694, type: 3}
+  - {fileID: 1499275203938478107, guid: 900534399c4c4b24cbdc3c9163d74694, type: 3}
+  - {fileID: 974974987105249476, guid: c7eed6fd48826b54da36b072e1635d14, type: 3}
+  - {fileID: 2337145799023380159, guid: 1060654131a974c4588acdb0cfb7f90e, type: 3}
+  <GuardInfo>k__BackingField: {fileID: 11400000, guid: fdf30e87ed7094befa1d6560593137ed, type: 2}
+  <MaxPressure>k__BackingField: 40
+  <EnemyPrefabs>k__BackingField:
+  - {fileID: 6547698361386085094, guid: 066a27f89cca417bbf862bb54ef7b612, type: 3}
+  - {fileID: 3138310300724572485, guid: 6a6a746bee8c4d40a9b8ecc68c33b98e, type: 3}
+  - {fileID: 4424718285575981337, guid: 6399b865050a4e85b46b5fdb75bf1474, type: 3}
+  - {fileID: 7125982590771319473, guid: a1647d54da1c4d1f81fe239464d01ade, type: 3}
+  - {fileID: 3194850146676455874, guid: 50e6449a2b964d0caeada879ad16d0b7, type: 3}
+  <SecondsBetweenSpawns>k__BackingField: 1.5
+  <GuardShellPrefab>k__BackingField: {fileID: 0}
+  <OwnWeaponPrefabs>k__BackingField: []
+  <TilesPerGun>k__BackingField: 3
+  <CoreTilePrefab>k__BackingField: {fileID: 0}
+  <BodyTilePrefabs>k__BackingField: []
+  <CornerTilePrefabs>k__BackingField: []
+  <CornerChance>k__BackingField: 0.3
+  <ThrusterPrefab>k__BackingField: {fileID: 0}
+  <Waves>k__BackingField: []
