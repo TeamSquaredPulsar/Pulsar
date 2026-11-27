@@ -1,5 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
+using Pulsar.Hostile;
+using Pulsar.Ship;
 using Pulsar.Stations.Guards;
 using UnityEngine;
 using Random = UnityEngine.Random;
@@ -12,16 +14,17 @@ namespace Pulsar.Stations
 /// the profile's Guard Prefabs once, spread evenly on a ring around itself.
 /// Guards only circle the station; killed guards don't come back.
 ///
-/// It also sends enemies at the player, topping them up under the profile's
+/// While WaveManager has it switched on (StartSpawning / StopSpawning), it
+/// also sends enemies at the player, topping them up under the profile's
 /// MaxPressure: each living enemy counts its PressureScore, and the station
 /// only spawns one whose score fits the room left. The list of living enemies
 /// is the truth; the current pressure is always added up from it.
 ///
-/// It doesn't follow the game's state: OnEnable starts it, and OnDisable
+/// Its guards don't follow the game's state: OnEnable spawns them, and OnDisable
 /// (which runs when its scene unloads) clears its guards and enemies. So it
 /// works the same in test scenes and in the real game.
 /// </summary>
-public class SpaceStation : MonoBehaviour
+public class SpaceStation : MonoBehaviour, IWaveEnemySource
 {
     [SerializeField]
     private StationProfile profile;
@@ -36,6 +39,19 @@ public class SpaceStation : MonoBehaviour
     [Min(0f)]
     [SerializeField]
     private float enemySpawnGap = 3f;
+
+    [Tooltip(
+        "Extra empty space needed around a new enemy's spawn spot. A spot " +
+        "with any ship, tile or station part inside it is skipped.")]
+    [Min(0f)]
+    [SerializeField]
+    private float spawnClearance = 1f;
+
+    // How many random spots a spawn tries before giving up until the next tick.
+    private const int MaxSpawnAttempts = 8;
+
+    // Reused for the "is this spot empty?" check (no allocations per spawn).
+    private readonly List<Collider2D> _spotHits = new();
 
     [Header("Debug (read only)")]
     [SerializeField]
@@ -56,6 +72,16 @@ public class SpaceStation : MonoBehaviour
     public int CurrentPressure => currentPressure;
     public bool IsSpawning => _spawnRoutine != null;
 
+    // Enemies this station sent that are still alive (WaveManager waits for 0).
+    public int AliveEnemies
+    {
+        get
+        {
+            RecalculatePressure();
+            return spawnedEnemies.Count;
+        }
+    }
+
     private void OnEnable()
     {
         EnemyController.EnemyDefeatedEvent += HandleEnemyDefeated;
@@ -68,7 +94,8 @@ public class SpaceStation : MonoBehaviour
         ResetStation();
     }
 
-    // Starts the station over: fresh guards, and enemies start coming.
+    // Starts the station over with fresh guards. Enemies only come once
+    // WaveManager calls StartSpawning.
     public void BeginDefense()
     {
         ResetStation();
@@ -81,9 +108,6 @@ public class SpaceStation : MonoBehaviour
 
         Radius = CalculateRadius();
         SpawnGuards();
-        // TODO: WaveManager will call StartSpawning / StopSpawning once it
-        // drives the stations. Until then the station starts on its own.
-        StartSpawning();
     }
 
     // Removes this station's guards and enemies and stops it (OnDisable, and before a restart).
@@ -221,18 +245,62 @@ public class SpaceStation : MonoBehaviour
         EnemyController chosen = fits[Random.Range(0, fits.Count)];
 
         // Comes out just outside the guard ring at a random angle, nose
-        // pointing away from the station. (The bay comes later.)
-        float angle = Random.Range(0f, 360f);
-        float radians = angle * Mathf.Deg2Rad;
-        Vector2 direction = new Vector2(Mathf.Cos(radians), Mathf.Sin(radians));
-        Vector2 position = (Vector2)transform.position
-                           + direction * (Radius * ringScale + enemySpawnGap);
+        // pointing away from the station. (The bay comes later.) The spot has
+        // to be empty: two ships that appear inside each other get stuck.
+        // No empty spot after a few tries = skip this tick, try next time.
+        if (!TryFindSpawnSpot(chosen, out Vector2 position, out float angle))
+        {
+            return;
+        }
+
         Quaternion facing = Quaternion.Euler(0f, 0f, angle - 90f);
 
         EnemyController enemy = Instantiate(chosen, position, facing);
         StationTintable.TintAll(enemy.gameObject, profile.StationColour);
         spawnedEnemies.Add(enemy);
         RecalculatePressure();
+    }
+
+    // A random spot on the spawn ring with nothing solid inside the new
+    // enemy's radius (plus spawnClearance). False if every try was blocked.
+    private bool TryFindSpawnSpot(EnemyController prefab, out Vector2 position, out float angle)
+    {
+        float checkRadius = EnemyController.CalculateRadius(prefab.transform) + spawnClearance;
+        float spawnRadius = Radius * ringScale + enemySpawnGap;
+        ContactFilter2D solidOnly = new() { useTriggers = false };
+
+        for (int attempt = 0; attempt < MaxSpawnAttempts; attempt++)
+        {
+            angle = Random.Range(0f, 360f);
+            float radians = angle * Mathf.Deg2Rad;
+            position = (Vector2)transform.position +
+                       new Vector2(Mathf.Cos(radians), Mathf.Sin(radians)) * spawnRadius;
+
+            Physics2D.OverlapCircle(position, checkRadius, solidOnly, _spotHits);
+            if (!HitsAShip(_spotHits))
+            {
+                return true;
+            }
+        }
+
+        position = default;
+        angle = 0f;
+        return false;
+    }
+
+    // Only ships and loose tiles block a spawn spot (not background hazards
+    // or anything else with a big collider).
+    private static bool HitsAShip(List<Collider2D> hits)
+    {
+        foreach (Collider2D hit in hits)
+        {
+            if (hit.GetComponentInParent<ShipManager>() || hit.GetComponentInParent<Tile>())
+            {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     // EnemyDefeatedEvent fires for every enemy in the game, so only react
