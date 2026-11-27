@@ -390,6 +390,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 8182043985451685013, guid: cbf81fb3e0d30ea43bcb9959fc8e96a5, type: 3}
+      propertyPath: enemyInfo
+      value: 
+      objectReference: {fileID: 11400000, guid: 7e7a37366b704ccd927550aecec20f13, type: 2}
     - target: {fileID: 894770476383777938, guid: cbf81fb3e0d30ea43bcb9959fc8e96a5, type: 3}
       propertyPath: m_Name
       value: HammerHead
