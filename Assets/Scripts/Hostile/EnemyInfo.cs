@@ -18,6 +18,9 @@ public class EnemyInfo : ScriptableObject
         holdDrift
             = 0.5f; // Share of the drift kept while holding position (0 = sits still)
 
+    [Range(0f, 1f)]
+    public float turnEfficiency = .50f;
+
     [Header("Combat")]
     public float startTimeBtwShots = 1.5f;
 

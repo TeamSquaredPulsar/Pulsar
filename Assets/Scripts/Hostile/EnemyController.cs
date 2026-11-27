@@ -290,16 +290,19 @@ public class EnemyController : MonoBehaviour
 
         float angleErr = Mathf.DeltaAngle(rb.rotation, targetAngle);
 
-        float maxAngAccel = shipManager.GetMaxAngleAccelDeg();
+        float maxAngleAccel = shipManager.GetMaxAngleAccelDeg();
+        float maxAngAccel = maxAngleAccel *
+                            enemyInfo.turnEfficiency;
         float angBrakeScale = maxAngAccel > 0.1f
             ? 10f / Mathf.Sqrt(maxAngAccel)
             : 1f;
 
-        float rotInput = _turnPID.CalculateVelocity(
-            turnPID, Time.fixedDeltaTime, angleErr,
-            rb.angularVelocity * angBrakeScale);
+        float rotInput = (rb.angularVelocity < maxAngleAccel)
+            ? _turnPID.CalculateVelocity(turnPID, Time.fixedDeltaTime,
+                angleErr, rb.angularVelocity * angBrakeScale)
+            : 0f;
 
-        shipManager.Rotate(rotInput);
+        shipManager.Rotate(rotInput * enemyInfo.turnEfficiency);
     }
 
     private void HandleShooting(Vector3 dirToPlayer, float distance)
