@@ -1,7 +1,6 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using Pulsar.Player;
 using Pulsar.Stations.Generation;
 using Pulsar.Stations.Guards;
 using UnityEngine;
@@ -14,9 +13,8 @@ namespace Pulsar.Stations
 /// different (colour tiles, weapons, waves). When the station is enabled (its
 /// scene loads), it builds its first wave of guards with the EnemyGenerator and spreads them on
 /// a ring around itself. A new, harder wave comes once the last one is
-/// destroyed, up to the profile's wave count. The player flying into the
-/// station's detection range switches all its guards from Roaming to Chasing.
-/// It doesn't follow the game's state: OnEnable starts it from wave 1, and
+/// destroyed, up to the profile's wave count. Guards only patrol around the
+/// station; they never chase the player. It doesn't follow the game's state: OnEnable starts it from wave 1, and
 /// OnDisable (which runs when its scene unloads) clears its guards. So it works
 /// the same in test scenes and in the real game.
 /// </summary>
@@ -34,9 +32,6 @@ public class SpaceStation : MonoBehaviour
     [SerializeField]
     private int currentWave = -1;
 
-    [SerializeField]
-    private bool playerInRange;
-
     // The guards this station spawned that are still alive.
     private readonly List<EnemyGuardAI> spawnedGuards = new();
 
@@ -48,33 +43,6 @@ public class SpaceStation : MonoBehaviour
     // How far the station's furthest tile reaches (measured when it starts defending).
     public float Radius { get; private set; }
     public bool IsCleared { get; private set; }
-
-    private EnemyGuardAI.GuardState CurrentGuardState => playerInRange
-        ? EnemyGuardAI.GuardState.Chasing
-        : EnemyGuardAI.GuardState.Roaming;
-
-    private void Update()
-    {
-        if (!_defending)
-        {
-            return;
-        }
-
-        float distance = Vector2.Distance(transform.position,
-            PlayerController.PlayerPosition);
-        bool inRange = playerInRange
-            ? distance <= profile.DetectionRange + profile.LoseInterestMargin
-            : distance <= profile.DetectionRange;
-
-        if (inRange != playerInRange)
-        {
-            playerInRange = inRange;
-            foreach (EnemyGuardAI guard in spawnedGuards)
-            {
-                guard.SetState(CurrentGuardState);
-            }
-        }
-    }
 
     private void OnEnable()
     {
@@ -125,7 +93,6 @@ public class SpaceStation : MonoBehaviour
 
         spawnedGuards.Clear();
         currentWave = -1;
-        playerInRange = false;
         _defending = false;
         IsCleared = false;
     }
@@ -155,7 +122,6 @@ public class SpaceStation : MonoBehaviour
             }
 
             guard.Init(this, profile.GuardInfo, ringRadius, angle);
-            guard.SetState(CurrentGuardState);
             guard.Defeated += HandleGuardDefeated;
             spawnedGuards.Add(guard);
         }

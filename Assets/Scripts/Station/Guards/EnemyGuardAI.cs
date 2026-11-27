@@ -1,30 +1,25 @@
 using System;
 using System.Collections.Generic;
-using Pulsar.Player;
+using NaughtyAttributes;
 using Pulsar.Ship;
+using Pulsar.Utilities;
 using UnityEngine;
 using Random = UnityEngine.Random;
 
 namespace Pulsar.Stations.Guards
 {
 /// <summary>
-/// The brain of a station guard. Two states:
-/// Roaming: patrols a circle around its home station no shooting.
-/// Chasing: hands control to its combat behaviour (Bombard, Fighter or Orbit).
-/// The station decides which state its guards are in.
-/// Movement goes through ShipManager.Move, like every other ship.
+/// The brain of a station guard. Guards only patrol: they circle their home
+/// station, never chase the player and never shoot. Movement and turning use
+/// PID controllers (like EnemyController) through ShipManager.Move and Rotate.
+/// The combat tools further down (Steer, KeepDistance, TryFire...) are only
+/// still here because Fighter, Bombard and Orbit call them; they move to the
+/// wave enemies in the next step.
 /// </summary>
 [RequireComponent(typeof(ShipManager), typeof(Rigidbody2D))]
 public class EnemyGuardAI : MonoBehaviour
 {
-    public enum GuardState
-    {
-        Roaming,
-        Chasing,
-    }
-
     private const float MinDistance = 0.001f;
-    private const float TurnGain = 4f;
 
     // Any guard was destroyed. GamePlayUI adds the points to the score.
     public static event Action<EnemyGuardAI, int> GuardDefeatedEvent;
@@ -38,11 +33,12 @@ public class EnemyGuardAI : MonoBehaviour
     private Rigidbody2D rb;
 
     [Header("Roaming")]
-    [Tooltip("How fast the patrol point moves around the station, in degrees per second.")]
+    [Tooltip(
+        "How fast the patrol point moves around the station, in degrees per second.")]
     [SerializeField]
     private float patrolDegreesPerSecond = 12f;
 
-    [Tooltip("Share of full thrust used while patrolling.")]
+    [Tooltip("Share of full thrust used while patrolling (caps the PID's output).")]
     [Range(0f, 1f)]
     [SerializeField]
     private float patrolThrottle = 0.5f;
@@ -53,25 +49,31 @@ public class EnemyGuardAI : MonoBehaviour
     [SerializeField]
     private float stationGap = 1.5f;
 
-    [Header("Debug (read only)")]
-    [SerializeField]
-    private GuardState state = GuardState.Roaming;
-
-    [SerializeField]
-    private string combatState;
-
-    private GuardCombatBehavior _behavior;
     private SpaceStation _home;
     private float _patrolRadius;
     private float _patrolAngle;
     private float _fireCooldown;
     private bool _ready;
 
+    private readonly PIDController _moveXPID = new();
+    private readonly PIDController _moveYPID = new();
+    private readonly PIDController _turnPID = new();
+
+    [Header("PID Tuning")]
+    [Tooltip("Movement positioning/breaking strength")]
+    [AllowNesting]
+    [SerializeField]
+    private PIDParams movePID = new(1.0f, 1.2f, 0f);
+
+    [Tooltip("Turning positioning/breaking strength")]
+    [AllowNesting]
+    [SerializeField]
+    private PIDParams turnPID = new(0.08f, 0.04f, .001f);
+
     // This guard was destroyed. Its station counts it off the wave.
     public event Action<EnemyGuardAI> Defeated;
 
     public EnemyInfo Info { get; private set; }
-    public GuardState State => state;
     public float Radius { get; private set; }
     public Vector2 Position => rb.position;
     public Vector2 Forward => transform.up;
@@ -102,19 +104,20 @@ public class EnemyGuardAI : MonoBehaviour
 
     // Keeps one of the combat behaviours on this ship at random and removes
     // the others. Called by the EnemyGenerator when it builds the guard.
+    // Guards don't fight any more, so the kept one sits idle; this goes away
+    // with the generator once enemies are prefabs.
     public void PickRandomBehavior()
     {
         GuardCombatBehavior[] options = GetComponents<GuardCombatBehavior>();
         if (options.Length == 0)
         {
-            Debug.LogError($"{name} has no combat behaviour to pick from.");
             return;
         }
 
-        _behavior = options[Random.Range(0, options.Length)];
+        GuardCombatBehavior kept = options[Random.Range(0, options.Length)];
         foreach (GuardCombatBehavior option in options)
         {
-            if (option != _behavior)
+            if (option != kept)
             {
                 Destroy(option);
             }
@@ -134,22 +137,12 @@ public class EnemyGuardAI : MonoBehaviour
         _patrolAngle = startAngleDegrees;
         _fireCooldown = info ? info.startTimeBtwShots : 1f;
         Radius = EnemyController.CalculateRadius(transform);
-        _ready = info && _behavior;
+        _ready = info;
         if (!info)
         {
-            Debug.LogError($"{name} has no EnemyInfo (set Guard Info on the station profile).");
+            Debug.LogError(
+                $"{name} has no EnemyInfo (set Guard Info on the station profile).");
         }
-    }
-
-    public void SetState(GuardState newState)
-    {
-        if (state == newState)
-        {
-            return;
-        }
-
-        state = newState;
-        _behavior?.ResetCycle();
     }
 
     private void FixedUpdate()
@@ -161,16 +154,13 @@ public class EnemyGuardAI : MonoBehaviour
 
         _fireCooldown -= Time.fixedDeltaTime;
 
-        if (state == GuardState.Roaming || !_home)
+        if (!_home)
         {
-            combatState = "Roaming";
-            Patrol();
+            shipManager.Move(Vector2.zero);
             return;
         }
 
-        Vector2 playerPosition = PlayerController.PlayerPosition;
-        _behavior.Tick(this, playerPosition, Time.fixedDeltaTime);
-        combatState = _behavior.CurrentStateName;
+        Patrol();
     }
 
     // Fly after a point that slides around the station's circle. Each guard's
@@ -186,16 +176,48 @@ public class EnemyGuardAI : MonoBehaviour
                         _patrolRadius;
 
         Vector2 toPoint = point - Position;
-        // Ease off when close, so it doesn't overshoot the point.
-        float throttle = patrolThrottle * Mathf.Clamp01(toPoint.magnitude / 3f);
-        Steer(Direction(toPoint) * throttle);
+
+        // Where we want to be, relative to where we are (the PID's "error"):
+        // the patrol point, plus the push away from nearby guards, bent
+        // around the station's hull. AvoidStation works on a direction, so
+        // the distance is put back on afterwards (at least 1, so its outward
+        // push still counts when the guard is right on its point).
+        Vector2 offset = toPoint + Separation() * Info.separationStrength;
+        float distance = offset.magnitude;
+        offset = AvoidStation(Direction(offset)) * Mathf.Max(distance, 1f);
+
+        MoveTowardOffset(offset);
         Face(toPoint.sqrMagnitude > 1f ? toPoint : rb.linearVelocity);
+    }
+
+    // PID movement, the same as EnemyController.HandleMovement: the PID
+    // pushes toward the offset and brakes against the current velocity,
+    // braking harder for ships whose thrusters can stop them faster.
+    private void MoveTowardOffset(Vector2 worldOffset)
+    {
+        Vector2 localPosErr = transform.InverseTransformDirection(worldOffset);
+        Vector2 localVel = transform.InverseTransformDirection(rb.linearVelocity);
+
+        Vector2 brakeDir = new(-Mathf.Sign(localVel.x), -Mathf.Sign(localVel.y));
+        Vector2 maxBrake = shipManager.GetMaxLocalAccel(brakeDir);
+        float brakeScaleX = maxBrake.x > MinDistance ? 1f / Mathf.Sqrt(maxBrake.x) : 1f;
+        float brakeScaleY = maxBrake.y > MinDistance ? 1f / Mathf.Sqrt(maxBrake.y) : 1f;
+
+        float dt = Time.fixedDeltaTime;
+        float inputX = _moveXPID.CalculateVelocity(
+            movePID, dt, localPosErr.x, localVel.x * brakeScaleX);
+        float inputY = _moveYPID.CalculateVelocity(
+            movePID, dt, localPosErr.y, localVel.y * brakeScaleY);
+
+        shipManager.Move(new Vector2(inputX, inputY) * patrolThrottle);
     }
 
     // tools for the combat behaviours
 
     public static Vector2 Direction(Vector2 v) =>
-        v.sqrMagnitude > MinDistance * MinDistance ? v.normalized : Vector2.zero;
+        v.sqrMagnitude > MinDistance * MinDistance
+            ? v.normalized
+            : Vector2.zero;
 
     public bool InRange(float distance) => distance <= Info.shootingRange;
 
@@ -221,8 +243,7 @@ public class EnemyGuardAI : MonoBehaviour
     {
         Vector2 desired = worldDirection +
                           Separation() * Info.separationStrength;
-        desired = AvoidStation(Vector2.ClampMagnitude(desired, 1f)) *
-                  Mathf.Clamp01(Info.speed);
+        desired = AvoidStation(Vector2.ClampMagnitude(desired, 1f));
 
         Vector2 local = transform.InverseTransformDirection(desired);
         shipManager.Move(local);
@@ -254,14 +275,22 @@ public class EnemyGuardAI : MonoBehaviour
             return;
         }
 
-        // TODO: swap for PID controller once it's merged.
         // -90 because the ship's nose is its local up.
         float targetAngle =
             Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg - 90f;
-        float angleDiff = Mathf.DeltaAngle(rb.rotation, targetAngle);
-        rb.angularVelocity = Mathf.Clamp(angleDiff * TurnGain,
-            -Info.turnSpeed, Info.turnSpeed);
+        float angleErr = Mathf.DeltaAngle(rb.rotation, targetAngle);
+
+        // PID turning, the same as EnemyController.HandleRotation: it asks
+        // the thrusters to turn instead of setting the spin directly.
+        float maxAngAccel = shipManager.GetMaxAngleAccelDeg();
+        float angBrakeScale = maxAngAccel > 0.1f ? 10f / Mathf.Sqrt(maxAngAccel) : 1f;
+        float rotInput = _turnPID.CalculateVelocity(
+            turnPID, Time.fixedDeltaTime, angleErr,
+            rb.angularVelocity * angBrakeScale);
+
+        shipManager.Rotate(rotInput);
     }
+
     // Inside the keep-out circle around the home station, the part of a move
     // that points into the station is turned sideways, so the guard slides
     // around the station instead of thrusting into its hull. Closer in, it
