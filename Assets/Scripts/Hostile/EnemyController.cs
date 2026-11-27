@@ -54,6 +54,38 @@ public class EnemyController : MonoBehaviour
     [SerializeField]
     private PIDParams turnPID = new(0.08f, 0.04f, .001f);
 
+    // Obstacle avoidance, like a driver: "headlights" sweep ahead along where
+    // the ship is moving and it swerves around what's in its lane, and a
+    // "personal space" circle pushes it away from anything that gets close
+    // from the side. Obstacles are everything solid except this ship, the
+    // player's ship and bullets.
+    [Header("Obstacle Avoidance")]
+    [Tooltip("Seconds ahead the enemy looks along where it's moving. " +
+             "Faster = looks further.")]
+    [Min(0f)]
+    [SerializeField]
+    private float lookAheadSeconds = 1f;
+
+    [Tooltip("The shortest look-ahead distance, used when slow or stopped.")]
+    [Min(0f)]
+    [SerializeField]
+    private float minLookAhead = 3f;
+
+    [Tooltip("Anything closer than this to the hull gets pushed away from.")]
+    [Min(0.01f)]
+    [SerializeField]
+    private float personalSpace = 1.5f;
+
+    [Tooltip("How hard it swerves around something in its path.")]
+    [Min(0f)]
+    [SerializeField]
+    private float swerveStrength = 1f;
+
+    [Tooltip("How hard it pushes away from things inside its personal space.")]
+    [Min(0f)]
+    [SerializeField]
+    private float personalSpacePush = 1f;
+
     [Header("Debug (read only)")]
     [Tooltip("The combat behaviour this enemy kept, and its current state.")]
     [SerializeField]
@@ -66,6 +98,21 @@ public class EnemyController : MonoBehaviour
     // The one Fighter/Bombard/Orbit this enemy kept, or null to fight the
     // old way (chase to stopping distance and hold).
     private EnemyCombatBehavior _behavior;
+
+    private ContactFilter2D _obstacleFilter;
+    private readonly List<RaycastHit2D> _aheadHits = new();
+    private readonly List<Collider2D> _nearbyHits = new();
+
+    // Last look-ahead, for the Scene view gizmo.
+    private Vector2 _lastHeading;
+    private float _lastLookDistance;
+
+    // "Turning the wheel": while something is close, the nose turns toward
+    // the swerve direction instead of the player, so the rear thrusters push
+    // the ship around the obstacle. Weight 0 = aim at the player, 1 = fully
+    // along the swerve.
+    private Vector2 _avoidHeading;
+    private float _avoidWeight;
 
     public float Radius { get; private set; }
 
@@ -85,6 +132,11 @@ public class EnemyController : MonoBehaviour
         }
 
         Radius = CalculateRadius(transform);
+
+        // Solid colliders only, and never bullets.
+        _obstacleFilter = new ContactFilter2D { useTriggers = false };
+        _obstacleFilter.SetLayerMask(~LayerMask.GetMask("Projectile"));
+
         // Smooth the ship and its tiles between physics steps so they
         // don't stutter on frames where physics doesn't run.
         foreach (Rigidbody2D body in GetComponentsInChildren<Rigidbody2D>())
@@ -253,6 +305,13 @@ public class EnemyController : MonoBehaviour
 
         targetOffset += CalculateSeparation() * enemyInfo.separationStrength;
 
+        // Swerve around obstacles. Avoidance works on a direction, so the
+        // offset's length is put back after (at least 1, so the push away
+        // still counts while holding position).
+        float offsetLength = targetOffset.magnitude;
+        targetOffset = (Vector3)(AvoidObstacles(Direction(targetOffset))
+                                 * Mathf.Max(offsetLength, 1f));
+
         //Finds the position error in local space
         Vector2 localPosErr = transform.InverseTransformDirection(targetOffset);
         Vector2 localVel
@@ -340,6 +399,15 @@ public class EnemyController : MonoBehaviour
         float targetAngle = Mathf.Atan2(dirToPlayer.y, dirToPlayer.x)
             * Mathf.Rad2Deg - 90f;
 
+        // Turn the wheel: the closer an obstacle, the more the nose turns
+        // toward the swerve direction instead of the player.
+        if (_avoidWeight > 0f)
+        {
+            float swerveAngle = Mathf.Atan2(_avoidHeading.y, _avoidHeading.x)
+                * Mathf.Rad2Deg - 90f;
+            targetAngle = Mathf.LerpAngle(targetAngle, swerveAngle, _avoidWeight);
+        }
+
         float angleErr = Mathf.DeltaAngle(rb.rotation, targetAngle);
 
         float maxAngAccel = shipManager.GetMaxAngleAccelDeg();
@@ -410,6 +478,7 @@ public class EnemyController : MonoBehaviour
         Vector2 separation = CalculateSeparation();
         Vector2 desired = Vector2.ClampMagnitude(
             worldDirection + separation * enemyInfo.separationStrength, 1f);
+        desired = AvoidObstacles(desired);
         Vector2 local = transform.InverseTransformDirection(desired);
         shipManager.Move(local);
     }
@@ -442,5 +511,195 @@ public class EnemyController : MonoBehaviour
         }
 
         HandleRotation(direction);
+    }
+
+    // Takes the way the enemy wants to go (length 0..1) and bends it so it
+    // doesn't crash, like a driver:
+    // 1. Headlights: sweep a circle the ship's size ahead along where it's
+    //    moving. If something is in the lane, the part of the move that points
+    //    into it turns sideways (it slides around), harder the closer it is.
+    // 2. Personal space: anything already close gets the same slide plus a
+    //    push away, so things touching it or coming in from the side are
+    //    handled too.
+    // It also sets the "wheel" (_avoidHeading/_avoidWeight) that
+    // HandleRotation uses, because most enemies only have rear thrusters and
+    // can't move sideways without turning their nose first.
+    private Vector2 AvoidObstacles(Vector2 desired)
+    {
+        float closestThreat = 0f;
+
+        Vector2 velocity = rb.linearVelocity;
+        float speed = velocity.magnitude;
+        Vector2 heading = speed > 0.5f ? velocity / speed
+            : desired.sqrMagnitude > MinDistance * MinDistance ? desired.normalized
+            : Forward;
+        float lookDistance = Mathf.Max(minLookAhead, speed * lookAheadSeconds);
+        _lastHeading = heading;
+        _lastLookDistance = lookDistance;
+
+        // 1. Headlights.
+        if (TryFindObstacleAhead(heading, lookDistance, out RaycastHit2D hit))
+        {
+            float closeness = 1f - hit.distance / lookDistance; // 0 far .. 1 touching
+            Vector2 away = hit.normal; // points out of the obstacle, toward us
+            Vector2 tangent = new(-away.y, away.x);
+
+            if (desired.sqrMagnitude < MinDistance * MinDistance)
+            {
+                // Coasting into it with no move of its own: steer to the side.
+                float side = Vector2.Dot(heading, tangent) >= 0f ? 1f : -1f;
+                desired += tangent * (side * closeness * swerveStrength);
+            }
+            else
+            {
+                desired = SlideAround(desired, away, closeness * swerveStrength);
+            }
+
+            closestThreat = closeness;
+        }
+
+        // 2. Personal space.
+        desired = ApplyPersonalSpace(desired, ref closestThreat);
+        desired = Vector2.ClampMagnitude(desired, 1f);
+
+        // Set the wheel for HandleRotation.
+        _avoidWeight = Mathf.Clamp01(closestThreat);
+        if (desired.sqrMagnitude > MinDistance * MinDistance)
+        {
+            _avoidHeading = desired.normalized;
+        }
+        else
+        {
+            _avoidWeight = 0f;
+        }
+
+        return desired;
+    }
+
+    // Swaps the part of a move that points into an obstacle (whose surface
+    // faces "away") for the same amount of sideways, on whichever side the
+    // move was already leaning, scaled by strength (0..1+). Head-on picks a
+    // side, so it slides off instead of stalling.
+    private static Vector2 SlideAround(Vector2 desired, Vector2 away, float strength)
+    {
+        float into = -Vector2.Dot(desired, away);
+        if (into <= 0f)
+        {
+            return desired;
+        }
+
+        Vector2 tangent = new(-away.y, away.x);
+        float side = Vector2.Dot(desired, tangent) >= 0f ? 1f : -1f;
+        return desired + (away * into + tangent * (into * side)) * strength;
+    }
+
+    // The nearest obstacle in the lane ahead (things already touching the
+    // ship are left to personal space).
+    private bool TryFindObstacleAhead(Vector2 heading, float lookDistance,
+        out RaycastHit2D closest)
+    {
+        closest = default;
+        bool found = false;
+        Physics2D.CircleCast(Position, Radius, heading, _obstacleFilter,
+            _aheadHits, lookDistance);
+
+        foreach (RaycastHit2D hit in _aheadHits)
+        {
+            if (hit.distance <= 0f || !IsObstacle(hit.collider))
+            {
+                continue;
+            }
+
+            if (!found || hit.distance < closest.distance)
+            {
+                closest = hit;
+                found = true;
+            }
+        }
+
+        return found;
+    }
+
+    // For everything inside personal space: slide around it and get pushed
+    // away, both stronger the closer it is. Raises closestThreat (0..1) to
+    // the strongest one found.
+    private Vector2 ApplyPersonalSpace(Vector2 desired, ref float closestThreat)
+    {
+        Vector2 push = Vector2.zero;
+        Physics2D.OverlapCircle(Position, Radius + personalSpace,
+            _obstacleFilter, _nearbyHits);
+
+        foreach (Collider2D other in _nearbyHits)
+        {
+            if (!IsObstacle(other))
+            {
+                continue;
+            }
+
+            Vector2 offset = Position - other.ClosestPoint(Position);
+            float distance = offset.magnitude;
+            if (distance < MinDistance)
+            {
+                // Our centre is inside it: push away from its middle.
+                offset = Position - (Vector2)other.bounds.center;
+                distance = offset.magnitude;
+                if (distance < MinDistance)
+                {
+                    continue;
+                }
+            }
+
+            float gap = Mathf.Max(0f, distance - Radius);
+            float strength = 1f - Mathf.Clamp01(gap / personalSpace);
+            Vector2 away = offset / distance;
+
+            desired = SlideAround(desired, away, strength);
+            push += away * strength;
+            closestThreat = Mathf.Max(closestThreat, strength);
+        }
+
+        return desired + Vector2.ClampMagnitude(push, 1f) * personalSpacePush;
+    }
+
+    // Everything solid counts, except this ship's own tiles and the player's
+    // ship (bullets are already left out by the filter).
+    private bool IsObstacle(Collider2D other)
+    {
+        if (!other)
+        {
+            return false;
+        }
+
+        if (other.GetComponentInParent<ShipManager>() == shipManager)
+        {
+            return false;
+        }
+
+        return !other.GetComponentInParent<PlayerController>();
+    }
+
+    // Select an enemy in the Scene view to see its look-ahead.
+    private void OnDrawGizmosSelected()
+    {
+        if (!Application.isPlaying || !rb)
+        {
+            return;
+        }
+
+        Gizmos.color = Color.yellow;
+        Vector3 start = rb.position;
+        Vector3 end = start + (Vector3)(_lastHeading * _lastLookDistance);
+        Gizmos.DrawLine(start, end);
+        Gizmos.DrawWireSphere(end, Radius);
+        Gizmos.color = Color.cyan;
+        Gizmos.DrawWireSphere(start, Radius + personalSpace);
+
+        // The "wheel": where the nose is being turned, longer = turned harder.
+        if (_avoidWeight > 0f)
+        {
+            Gizmos.color = Color.magenta;
+            Gizmos.DrawLine(start,
+                start + (Vector3)(_avoidHeading * (Radius + 3f * _avoidWeight)));
+        }
     }
 }
