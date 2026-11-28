@@ -211,7 +211,7 @@ public class TutorialController : MonoBehaviour
     private void OnPlayerSpawned(PlayerController playerController)
     {
         player = playerController;
-        player.GetComponent<ShipManager>().OnDetachTile += OnPlayerDetachTile;
+        player.GetComponent<BuildManager>().OnDetachTile += OnPlayerDetachTile;
         _step = 0;
         ShowStep();
     }
@@ -329,7 +329,7 @@ public class TutorialController : MonoBehaviour
         // if (_stepFade != null) StopCoroutine(_stepFade);
         completionPanel.gameObject.SetActive(true);
         completionPanel.transform.position
-            = CameraData.MainCamera.transform.position + new Vector3(0, 2f, 8f);
+            = CameraData.MainCamera.transform.position + new Vector3(0, 6f, 8f);
         retryButton.Select();
     }
 

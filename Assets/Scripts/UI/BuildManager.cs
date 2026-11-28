@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using Pulsar.DataClasses;
 using Pulsar.Utilities;
@@ -41,6 +42,8 @@ public class BuildManager : MonoBehaviour
 
     private Coroutine _detatchTileCoroutine;
     private Coroutine _updateRadialRoutine;
+
+    public event Action OnDetachTile;
 
     private void OnEnable()
     {
@@ -94,6 +97,7 @@ public class BuildManager : MonoBehaviour
     {
         yield return new WaitForSeconds(tileDetatchSeconds);
         _player.DetatchTile(tile);
+        OnDetachTile?.Invoke();
         _detatchTileCoroutine = null;
         _selectedTile = null;
     }
