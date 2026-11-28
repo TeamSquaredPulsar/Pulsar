@@ -98,7 +98,11 @@ MonoBehaviour:
   LoadEvent: 1
   UnloadEvent: 0
   Banks:
+  - Damage
+  - Input
   - Music
+  - UI
+  - Weapon
   CollisionTag: 
   PreloadSamples: 0
 --- !u!114 &4533177236349318532

@@ -43,5 +43,13 @@ public class FmodEvents : SoSingleton<FmodEvents>
     [field: BoxGroup("Inputs")]
     [field: SerializeField]
     public EventReference Thrust { get; private set; }
+
+    [field: BoxGroup("Inputs")]
+    [field: SerializeField]
+    public EventReference Attach { get; private set; }
+
+    [field: BoxGroup("Inputs")]
+    [field: SerializeField]
+    public EventReference Detach { get; private set; }
 }
 }
