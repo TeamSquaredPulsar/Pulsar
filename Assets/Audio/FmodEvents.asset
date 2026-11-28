@@ -75,3 +75,17 @@ MonoBehaviour:
       Data3: 563473029
       Data4: -1379916810
     Path: event:/Inputs/Thrust
+  <Attach>k__BackingField:
+    Guid:
+      Data1: 294743996
+      Data2: 1274612138
+      Data3: -1764806221
+      Data4: 1498932878
+    Path: event:/Inputs/Attach
+  <Detach>k__BackingField:
+    Guid:
+      Data1: 773220104
+      Data2: 1136122086
+      Data3: 131086012
+      Data4: -1974846268
+    Path: event:/Inputs/Detatch

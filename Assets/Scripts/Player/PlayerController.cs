@@ -1,5 +1,6 @@
 using System;
 using System.Collections;
+using Pulsar.Audio;
 using Pulsar.DataClasses;
 using Pulsar.Settings.Input;
 using Pulsar.Ship;
@@ -76,14 +77,20 @@ public class PlayerController : MonoBehaviour
     public void AttachTile(
         Vector2Int location,
         Tile tile,
-        TileRotation rotation) => ship.AttachTile(location, tile, rotation);
+        TileRotation rotation)
+    {
+        ship.AttachTile(location, tile, rotation);
+        AudioManager.Instance.PlayOneShot(
+            FmodEvents.Instance.Attach,
+            transform.position);
+    }
 
-    public void DetatchTile(Tile tile) => ship.DetatchTile(tile);
-
-    public Result<(Vector2Int, TileRotation)> FindBestAttachment(
-        TileInfo tileInfo,
-        Vector3 worldPosition) =>
-        ship.FindBestAttachment(tileInfo, worldPosition);
+    public void DetatchTile(Tile tile) {
+        ship.DetatchTile(tile);
+        AudioManager.Instance.PlayOneShot(
+            FmodEvents.Instance.Detach,
+            transform.position);
+    }
 
     private void OnShipDestroyed(ShipManager obj)
     {
